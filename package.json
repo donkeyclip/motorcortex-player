@@ -1,0 +1,14 @@
+{
+  "name": "@kissmybutton/motorcortex-textillate",
+  "version": "0.0.1-rc.1",
+  "main": "main.js",
+  "repository": "https://github.com/kissmybutton/motorcortex-textillate",
+  "author": "KissMyButton",
+  "license": "MIT",
+  "dependencies": {
+    "@kissmybutton/motorcortex-animate": "^1.1.0"
+  },
+  "peerDependencies": {
+    "@kissmybutton/motorcortex": "^1.8.13"
+  }
+}
