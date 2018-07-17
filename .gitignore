@@ -1,0 +1,69 @@
+# Node modules
+node_modules
+
+# Coverage
+coverage
+
+# Output folders
+dist
+build
+compiled
+.nyc_output
+
+# Cachses
+.awcache
+.rpt2_cache
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# VSCode
+.vscode
+
+# Cloud9
+.c9revisions
+.c9
+
+# Intelij
+.idea
+cmake-build-*/
+
+# Sublime text
+*.iws
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+*.lnk
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+$RECYCLE.BIN/
+[Dd]esktop.ini
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
