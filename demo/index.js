@@ -12,18 +12,14 @@ const config = {
     #one {
       background: #7fdbff;
       height: 64px;
-      left: 41.25%;
-      position: absolute;
-      top: 41.25%;
-      width: 64px;
+      font-size:40px;
+      width: 100%;
     }
     #two {
       background: #7fdbff;
       height: 64px;
-      left: 20.25%;
-      position: absolute;
-      top: 41.25%;
-      width: 64px;
+      font-size:30px;
+      width: 100%;
     }
     .container {
       height: 384px;
@@ -55,7 +51,7 @@ new MotorCortex.Timer({
 
 // Create an Animate effect
 const animate = new Textillate.Textillate(
-  { type: "fadeInLeftBig" },
+  { type: "fadeInDown" },
   { duration: 3000, selector: ".element" }
 );
 

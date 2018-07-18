@@ -38,13 +38,28 @@ class Textillate extends MC.Group {
   }
 
   onGetContext() {
-    const splitRegex =
-      this.configurations.type === "char" ? undefined : /(\s+)/;
+    const { type } = this.configurations;
+    const splitRegex = type === "char" ? undefined : /(\s+)/;
+
+    const isInEffect = this.isInEffect(this.attrs.type);
+    const isOutEffect = this.isOutEffect(this.attrs.type);
+
     for (const i in this.elements) {
       charming(this.elements[i], { splitRegex });
       const childDivs = this.elements[i].getElementsByTagName("span");
-      // console.log(childDivs )
+
       for (let q = 1; q <= childDivs.length; q++) {
+        childDivs[q - 1].style.display = "inline-block";
+
+        isInEffect ? (childDivs[q - 1].style.opacity = 0) : null;
+
+        isOutEffect ? (childDivs[q - 1].style.opacity = 1) : null;
+
+        childDivs[q - 1].innerHTML = childDivs[q - 1].innerHTML.replace(
+          " ",
+          "&nbsp;"
+        );
+
         const animate = new MCAnimate.Animate(
           { type: this.attrs.type },
           {
@@ -52,9 +67,20 @@ class Textillate extends MC.Group {
             selector: `.char${q}`
           }
         );
+
         this.addIncident(animate, (this.props.duration / childDivs.length) * q);
       }
     }
+  }
+
+  isInEffect(effect) {
+    const { inEffects } = this.configurations;
+    return /In/.test(effect) || inEffects.indexOf(effect) >= 0;
+  }
+
+  isOutEffect(effect) {
+    const { outEffects } = this.configurations;
+    return /Out/.test(effect) || outEffects.indexOf(effect) >= 0;
   }
 }
 
