@@ -1,6 +1,6 @@
 {
   "name": "@kissmybutton/motorcortex-textillate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Textillate plugin for MotorCortex",
   "main": "src/main.js",
   "author": "KissMyButton PC (kissmybutton.gr) <opensource@kissmybutton.gr>",
