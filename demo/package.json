@@ -1,112 +1,46 @@
 {
-  "name": "@kissmybutton/motorcortex-textillate",
-  "version": "0.0.0-development",
-  "description": "Textillate plugin for motorcotex",
-  "keywords": [],
-  "main": "src/main.js",
-  "files": [
-    "dist"
-  ],
-  "author": "KissMyButton PC (kissmybutton.gr) <opensource@kissmybutton.gr>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kissmybutton/motorcortex-textillate.git"
-  },
-  "license": "MIT",
-  "engines": {
-    "node": ">=8.3.2"
-  },
-  "dependencies": {
-    "@kissmybutton/motorcortex": "^1.10.2"
-  },
+  "name": "motorcortex-textillate-demo",
+  "version": "1.0.0",
+  "description": "Textillate library for MotorCortex",
+  "main": "./index.js",
   "scripts": {
-    "concurrently": "concurrently -c \"cyan.bold,magenta.bold\" --names \"JS,Styles\"",
-    "lint:styles": "stylelint  \"src/**.css\" \"src/**/*.scss\" --config .stylelintrc.json",
-    "lint:js": "eslint -c .eslintrc src/**/*.{js,jsx} ",
-    "lint": "npm run concurrently \"npm run lint:js\" \"npm run lint:styles\" ",
-    "lint:fix": "npm run concurrently  \"npm run lint:js -- --fix\" \"npm run lint:styles -- --fix\"",
-    "build": "webpack --config webpack.config.js",
-    "start": "webpack-dev-server --config webpack.config.js",
-    "test": "HERE GOES YOUR TEST TASK",
-    "test:prod": "npm run lint && npm run test ADD ANY OTHER PARAMS THAT ARE NEEDED TO GENERATE CODE COVERAGE",
-    "report-coverage": "cat ./coverage/lcov.info | coveralls",
-    "commit": "git-cz",
-    "prebuild": "rimraf dist",
-    "precommit": "lint-staged",
-    "prepush": "npm run test:prod && npm run build",
-    "commitmsg": "commitlint -E GIT_PARAMS"
+    "start": "webpack-dev-server --inline --hot --disableHostCheck",
+    "build": "webpack --config webpack.config.js"
   },
-  "lint-staged": {
-    "linters": {
-      "*.json": [
-        "prettier --write",
-        "git add"
-      ],
-      "*.{css,scss}": [
-        "stylelint  \"src/**.css\" \"src/**/*.scss\" --config .stylelintrc.json --fix",
-        "git add"
-      ],
-      "*.{js,jsx}": [
-        "eslint --fix",
-        "git add"
-      ]
-    }
-  },
-  "release": {
-    "verifyConditions": [
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/github",
-      "@semantic-release/git"
-    ],
-    "prepare": [
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/git"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
+  "keywords": [
+    "MotorCortex",
+    "animation",
+    "threejs"
+  ],
+  "peerDependencies": {
+    "@kissmybutton/motorcortex": "^1.8.9",
+    "babel-core": "^6.26.3"
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.0.0",
-    "@commitlint/config-conventional": "^7.0.1",
-    "@semantic-release/changelog": "^2.0.2",
-    "@semantic-release/git": "^5.0.0",
-    "@semantic-release/github": "^4.2.17",
-    "@semantic-release/npm": "^3.3.1",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "commitizen": "^2.10.1",
-    "concurrently": "^3.6.0",
-    "coveralls": "^3.0.0",
-    "cz-conventional-changelog": "^2.1.0",
+    "@kissmybutton/motorcortex": "^1.8.13",
+    "babel-eslint": "^8.2.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-es2015-node5": "^1.2.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^0.28.11",
+    "es6-promise": "^4.2.4",
     "eslint": "^4.19.1",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-babel": "^5.1.0",
-    "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-prettier": "^2.2.0",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "husky": "^0.14.0",
-    "lint-staged": "^7.0.0",
-    "prettier": "^1.4.4",
-    "rimraf": "^2.6.1",
-    "semantic-release": "^15.6.0",
-    "shelljs": "^0.8.2",
-    "stylelint": "^9.3.0",
-    "stylelint-config-prettier": "^3.3.0",
-    "stylelint-config-recommended": "^2.1.0",
-    "stylelint-config-recommended-scss": "^3.2.0",
-    "stylelint-config-sass-guidelines": "^5.0.0",
-    "stylelint-config-standard": "^18.2.0",
-    "stylelint-scss": "^3.1.3",
+    "json-stringify-safe": "^5.0.1",
+    "node-sass": "^4.8.3",
+    "sass-loader": "^7.0.1",
     "webpack": "^4.14.0",
     "webpack-cli": "^3.0.8",
     "webpack-dev-server": "^3.1.4"
+  },
+  "author": "KissMyButton.gr",
+  "license": "MIT",
+  "dependencies": {
+    "@kissmybutton/motorcortex-animate": "^1.1.0",
+    "@kissmybutton/motorcortex-textillate": "0.0.1",
+    "babel-core": "^6.26.3",
+    "exports-loader": "^0.7.0",
+    "imports-loader": "^0.8.0",
+    "three": "^0.93.0",
+    "whatwg-fetch": "^2.0.4"
   }
 }

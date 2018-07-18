@@ -1,4 +1,4 @@
-const MotorCortex = require("@kissmybutton/motorcortex");
+const MotorCortex = require("../node_modules/@kissmybutton/motorcortex");
 const TextillateDefinition = require("../src/main");
 
 // console.log(TextillateDefinition);
@@ -9,10 +9,18 @@ const Textillate = MotorCortex.loadPlugin(TextillateDefinition);
 // Configure clip
 const config = {
   css: `
-    .element {
+    #one {
       background: #7fdbff;
       height: 64px;
       left: 41.25%;
+      position: absolute;
+      top: 41.25%;
+      width: 64px;
+    }
+    #two {
+      background: #7fdbff;
+      height: 64px;
+      left: 20.25%;
       position: absolute;
       top: 41.25%;
       width: 64px;
@@ -23,7 +31,10 @@ const config = {
       width: 384px;
     }
   `,
-  html: `<div class="container"><div class="element">I am an element</div></div>`,
+  html: `<div class="container">
+    <div id="one" class="element">I am an element</div>
+    <div id="two" class="element">I am an element</div>
+  </div>`,
   host: document.getElementById("clip"),
   containerParams: {
     width: "384px",
@@ -37,20 +48,15 @@ const clip = new MotorCortex.Clip(null, config);
 // Add clip to timer
 new MotorCortex.Timer({
   Incident: clip,
-  width: 294 // timer width must be .bar width minus #time-cursor width
+  width: 980 // timer width must be .bar width minus #time-cursor width
 });
 
-// Create a Group
-const group = new MotorCortex.Group();
-
 // Add Group to Clip
-clip.addIncident(group, 0);
 
 // Create an Animate effect
 const animate = new Textillate.Textillate(
-  { type: "rotateOut" },
-  { duration: 10000, selector: ".element" }
+  { type: "fadeInLeftBig" },
+  { duration: 3000, selector: ".element" }
 );
 
-// Test Animate plugin
-group.addIncident(animate, 0);
+clip.addIncident(animate, 0);

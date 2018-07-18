@@ -1,12 +1,8 @@
 {
   "name": "@kissmybutton/motorcortex-textillate",
-  "version": "0.0.0-development",
-  "description": "Textillate plugin for motorcotex",
-  "keywords": [],
+  "version": "1.0.0",
+  "description": "Textillate plugin for MotorCortex",
   "main": "src/main.js",
-  "files": [
-    "dist"
-  ],
   "author": "KissMyButton PC (kissmybutton.gr) <opensource@kissmybutton.gr>",
   "repository": {
     "type": "git",
@@ -15,11 +11,6 @@
   "license": "MIT",
   "engines": {
     "node": ">=8.3.2"
-  },
-  "dependencies": {
-    "@kissmybutton/motorcortex": "^1.10.2",
-    "@kissmybutton/motorcortex-animate": "^1.1.0",
-    "charming": "^2.2.4"
   },
   "scripts": {
     "concurrently": "concurrently -c \"cyan.bold,magenta.bold\" --names \"JS,Styles\"",
@@ -38,6 +29,11 @@
     "prepush": "npm run test:prod",
     "commitmsg": "commitlint -E GIT_PARAMS"
   },
+  "keywords": [
+    "motorcortex",
+    "animation",
+    "textillate"
+  ],
   "lint-staged": {
     "linters": {
       "*.json": [
@@ -72,21 +68,34 @@
       "path": "cz-conventional-changelog"
     }
   },
+  "dependencies": {
+    "@kissmybutton/motorcortex-animate": "^1.1.1",
+    "exports-loader": "^0.7.0",
+    "imports-loader": "^0.8.0",
+    "whatwg-fetch": "^2.0.4"
+  },
+  "peerDependencies": {
+    "@kissmybutton/motorcortex": "1.10.1-rc.2",
+    "babel-core": "^6.26.3"
+  },
   "devDependencies": {
-    "babel-eslint": "^8.2.6",
-    "es6-promise": "^4.2.4",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
+    "@kissmybutton/motorcortex": "^1.10.2",
     "@semantic-release/changelog": "^2.0.2",
     "@semantic-release/git": "^5.0.0",
     "@semantic-release/github": "^4.2.17",
     "@semantic-release/npm": "^3.3.1",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
+    "babel-eslint": "^8.2.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-es2015-node5": "^1.2.0",
+    "babel-preset-stage-2": "^6.24.1",
     "commitizen": "^2.10.1",
     "concurrently": "^3.6.0",
     "coveralls": "^3.0.0",
+    "css-loader": "^0.28.11",
     "cz-conventional-changelog": "^2.1.0",
+    "es6-promise": "^4.2.4",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-config-standard": "^11.0.0",
@@ -97,9 +106,12 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "husky": "^0.14.0",
+    "json-stringify-safe": "^5.0.1",
     "lint-staged": "^7.0.0",
+    "node-sass": "^4.8.3",
     "prettier": "^1.4.4",
     "rimraf": "^2.6.1",
+    "sass-loader": "^7.0.1",
     "semantic-release": "^15.6.0",
     "shelljs": "^0.8.2",
     "stylelint": "^9.3.0",
