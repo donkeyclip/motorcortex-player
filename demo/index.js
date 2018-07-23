@@ -10,31 +10,28 @@ const Textillate = MotorCortex.loadPlugin(TextillateDefinition);
 const config = {
   css: `
     #one {
-      background: #7fdbff;
-      height: 64px;
       font-size:40px;
-      width: 100%;
-    }
-    #two {
-      background: #7fdbff;
-      height: 64px;
-      font-size:30px;
-      width: 100%;
+      display: table-cell;
+      vertical-align: middle;
+      text-align:center;
+      font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+      color:#4b475f;
+      
     }
     .container {
-      height: 300px;
-      position: relative;
-      width: 300px;
+      display: table;
+      position: absolute;
+      height: 100%;
+      width: 100%;
     }
   `,
   html: `<div class="container">
-    <div id="one" class="element">I am an element</div>
-    <div id="two" class="element">I am an element</div>
+    <div id="one" class="element">MotorCortex\n Textillate-Plugin</div>
   </div>`,
   host: document.getElementById("clip"),
   containerParams: {
-    width: "300px",
-    height: "300px"
+    width: "400px",
+    height: "400px"
   }
 };
 
@@ -50,9 +47,30 @@ new MotorCortex.Timer({
 
 // Add Group to Clip
 
+document.getElementById("animate").addEventListener("click", function() {
+  const iframe = document.getElementById("clip").firstChild.contentDocument;
+  iframe.getElementsByClassName(
+    "element"
+  )[0].innerHTML = iframe
+    .getElementsByClassName("element")[0]
+    .getAttribute("aria-label");
+  const animate = new Textillate.Textillate(
+    {
+      type: document.getElementById("animation-type").value,
+      splitType: document.getElementById("split-type").value
+    },
+    { duration: 3000, selector: ".element" }
+  );
+  clip.removeIncident(clip.incidents[0].id);
+  clip.addIncident(animate, 0);
+  clip.flashDOM();
+});
 // Create an Animate effect
 const animate = new Textillate.Textillate(
-  { type: "fadeInDown" },
+  {
+    type: document.getElementById("animation-type").value,
+    splitType: document.getElementById("split-type").value
+  },
   { duration: 3000, selector: ".element" }
 );
 

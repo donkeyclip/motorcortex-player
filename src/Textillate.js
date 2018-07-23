@@ -33,7 +33,7 @@ class Textillate extends MC.Group {
       inEffects: [],
       outEffects: ["hinge"],
       callback: function() {},
-      type: "word"
+      type: attrs.splitType || "word"
     };
   }
 
@@ -67,7 +67,6 @@ class Textillate extends MC.Group {
             selector: `.char${q}`
           }
         );
-
         this.addIncident(animate, (this.props.duration / childDivs.length) * q);
       }
     }
