@@ -22,9 +22,9 @@ const config = {
       width: 100%;
     }
     .container {
-      height: 384px;
+      height: 300px;
       position: relative;
-      width: 384px;
+      width: 300px;
     }
   `,
   html: `<div class="container">
@@ -33,8 +33,8 @@ const config = {
   </div>`,
   host: document.getElementById("clip"),
   containerParams: {
-    width: "384px",
-    height: "384px"
+    width: "300px",
+    height: "300px"
   }
 };
 
@@ -44,7 +44,8 @@ const clip = new MotorCortex.Clip(null, config);
 // Add clip to timer
 new MotorCortex.Timer({
   Incident: clip,
-  width: 980 // timer width must be .bar width minus #time-cursor width
+  width: 290, // timer width must be .bar width minus #time-cursor width
+  cursorWidth: 10
 });
 
 // Add Group to Clip

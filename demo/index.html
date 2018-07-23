@@ -8,89 +8,102 @@
             height: 100%;
             margin: 0;
         }
+        #main{
+            margin: 0 auto;
+            width:440px;
+            height: 640px;
+        }
         #clip {
-            border: 1px solid black;
-            margin: auto;
-            width: 90%;
-            height: 90%;
+            margin: 0 auto;
+            width: 400px;
+            height: 400px;
         }
         #controls {
+            margin: 0;
+            padding: 0;
+            border-top: 1px solid lightgrey;
+        }
+
+        #timer, #timer-buttons{ /* controls */
+            width: 400px;
+            height: 30px;
             position: relative;
-            width: 1108px;
-            bottom: 50px;
-            z-index: 5;
-            margin: auto;
+            margin-top: 10px;
         }
-
-        #timer, #timer-buttons{
-            width:1108px;
-            margin-right:auto;
-            margin-left:auto;
-            height:30px;
-            background:whitesmoke;
-            margin-top:10px;
+        #timer{
+            background-color: whitesmoke;
         }
-
-        #timer-buttons{
+        #timer-buttons{/* play-pause*/
             background:none;
             text-align: center;
         }
 
-        #timer-buttons #play-pause{
-            background: black;
+        #timer-buttons #play-pause{ /* play pause*/
+            background: grey;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 3px 8px;
             cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
-        #timer .slot{
-            display: inline-block;
+        #timer .slot{ /* show time played-left*/
+            float: left;
             width:50px;
-            background-color: black;
+            background-color: lightgrey;
             color:white;
             text-align: center;
+            margin: 0;
             height: 100%;
         }
 
         #timer .bar{
             display: inline-block;
-            width:1000px;
+            width:300px;
             height:100%;
-            position:relative;
+            position: relative;
         }
-
-        #timer .bar #time-cursor{
-            position:relative;
-            width:20px;
+        #timer .right-slot{
+            float: right;
+        }
+        #timer .bar #time-cursor{ /*time cursor*/
+            position:absolute;
+            width:10px;
             height:100%;
-            background:red;
+            background:#999;
             left:0;
             top:0;
         }
 
-        #my-video-test{
-            width:1000px;
-            margin-left:auto;
-            margin-right:auto;
-        }
+        
     </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div id="clip"></div>
-    
-    <div id= "controls">
-        <div id="timer-buttons">
-            <button id="play-pause">Play</button>
-        </div>
-        <div id="timer">
-            <div class="left-slot slot">-</div>
-            <div class="bar">
-                <div id="time-cursor"></div>
-            </div>
-            <div class="right-slot slot">-</div>
-        </div>
+    <div class="card" id="main">
+      <div class="card-header">MotorCortex - Textillate Plugin</div>
+      <div class="card-body">
+          <div id="clip"></div>
+          <div id= "controls">
+
+                <div id="timer-buttons">
+                    <button id="play-pause">Play</button>
+                </div>
+                <div id="timer">
+                    <div class="left-slot slot">-</div>
+                    <div class="bar">
+                        <div id="time-cursor"></div>
+                    </div>
+                    <div class="right-slot slot">-</div>
+                </div>
+          </div>
+      </div>
     </div>
-    <script type="text/javascript" src="./bundle.js"></script>
+    
+    <script src="./bundle.js"></script>
 </body>
 </html>
