@@ -22,7 +22,10 @@ const config = {
       display: table;
       position: absolute;
       height: 100%;
-      width: 100%;
+      width: 80%;
+      background-color:#292929;
+      margin-left:10%;
+      border:2px solid black;
     }
   `,
   html: `<div class="container">
@@ -30,8 +33,8 @@ const config = {
   </div>`,
   host: document.getElementById("clip"),
   containerParams: {
-    width: "400px",
-    height: "400px"
+    width: "100%",
+    height: "100%"
   }
 };
 
@@ -41,37 +44,70 @@ const clip = new MotorCortex.Clip(null, config);
 // Add clip to timer
 new MotorCortex.Timer({
   Incident: clip,
-  width: 290, // timer width must be .bar width minus #time-cursor width
+  width: document.getElementsByClassName("bar")[0].offsetWidth, // timer width must be .bar width minus #time-cursor width
   cursorWidth: 10
 });
 
 // Add Group to Clip
 
-document.getElementById("animate").addEventListener("click", function() {
+document.getElementById("apply").addEventListener("click", function() {
+  // get the iframe
   const iframe = document.getElementById("clip").firstChild.contentDocument;
+
+  // reset the text of the iframe
   iframe.getElementsByClassName(
     "element"
-  )[0].innerHTML = iframe
-    .getElementsByClassName("element")[0]
-    .getAttribute("aria-label");
-  const animate = new Textillate.Textillate(
+  )[0].innerHTML = document.getElementById("Text").value;
+
+  // create in animate
+  const animateIn = new Textillate.Textillate(
     {
-      type: document.getElementById("animation-type").value,
-      splitType: document.getElementById("split-type").value
+      type: document.getElementById("animation-type-in").value,
+      splitType: document.getElementById("split-type-in").value
     },
-    { duration: 3000, selector: ".element" }
+    {
+      duration: document.getElementById("duration-in").value,
+      selector: ".element"
+    }
   );
-  clip.removeIncident(clip.incidents[0].id);
-  clip.addIncident(animate, 0);
+
+  // create in animate
+  const animateOut = new Textillate.Textillate(
+    {
+      type: document.getElementById("animation-type-out").value,
+      splitType: document.getElementById("split-type-out").value
+    },
+    {
+      duration: document.getElementById("duration-out").value,
+      selector: ".element"
+    }
+  );
+
+  if (clip.incidents[0]) {
+    clip.removeIncident(clip.incidents[0].id);
+  }
+  if (clip.incidents[1]) {
+    clip.removeIncident(clip.incidents[1].id);
+  }
+
+  clip.addIncident(animateIn, 0);
+  // reset the text of the iframe
+  iframe.getElementsByClassName(
+    "element"
+  )[0].innerHTML = document.getElementById("Text").value;
+  clip.flashDOM();
+
+  clip.addIncident(animateOut, document.getElementById("duration-out").value);
   clip.flashDOM();
 });
-// Create an Animate effect
-const animate = new Textillate.Textillate(
-  {
-    type: document.getElementById("animation-type").value,
-    splitType: document.getElementById("split-type").value
-  },
-  { duration: 3000, selector: ".element" }
-);
 
-clip.addIncident(animate, 0);
+function eventFire(el, etype) {
+  if (el.fireEvent) {
+    el.fireEvent("on" + etype);
+  } else {
+    const evObj = document.createEvent("Events");
+    evObj.initEvent(etype, true, false);
+    el.dispatchEvent(evObj);
+  }
+}
+eventFire(document.getElementById("apply"), "click");
