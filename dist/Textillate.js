@@ -119,22 +119,23 @@ const Textillate = (function(_MC$Group) {
         const type = this.configurations.type;
 
         const splitRegex = type === "char" ? undefined : /(\s+)/;
-
         const isInEffect = this.isInEffect(this.attrs.type);
         const isOutEffect = this.isOutEffect(this.attrs.type);
 
         for (const i in this.elements) {
-          charming(this.elements[i], { splitRegex: splitRegex });
+          if (!this.elements[i].getAttribute("aria-label")) {
+            charming(this.elements[i], { splitRegex: splitRegex });
+          }
           const childDivs = this.elements[i].getElementsByTagName("span");
 
-          for (let q = 1; q <= childDivs.length; q++) {
-            childDivs[q - 1].style.display = "inline-block";
+          for (let q = 0; q < childDivs.length; q++) {
+            childDivs[q].style.display = "inline-block";
 
-            isInEffect ? (childDivs[q - 1].style.opacity = 0) : null;
+            isInEffect ? (childDivs[q].style.opacity = 0) : null;
 
-            isOutEffect ? (childDivs[q - 1].style.opacity = 1) : null;
+            isOutEffect ? (childDivs[q].style.opacity = 1) : null;
 
-            childDivs[q - 1].innerHTML = childDivs[q - 1].innerHTML.replace(
+            childDivs[q].innerHTML = childDivs[q].innerHTML.replace(
               " ",
               "&nbsp;"
             );
@@ -143,14 +144,49 @@ const Textillate = (function(_MC$Group) {
               { type: this.attrs.type },
               {
                 duration: this.props.duration / childDivs.length,
-                selector: ".char" + q
+                selector: ".char" + (q + 1)
               }
             );
+
             this.addIncident(
               animate,
               (this.props.duration / childDivs.length) * q
             );
           }
+
+          // this.elements[i].innerHTML = this.elements[i].getAttribute("aria-label");
+
+          // create a programmatic incident to make the element as it was before charming
+          // const restateElementStart = new MC.ProgrammaticIncident({
+          //   command: {
+          //     forwards: () => {
+          //       console.log("Start forwards")
+          //       // split text with charming
+          //       charming(this.elements[i], { splitRegex });
+          //     },
+          //     backwards: () => {
+          //       console.log("Start backwards")
+          //       // reset element text
+          //       this.elements[i].innerHTML = this.elements[i].getAttribute("aria-label");
+          //     }
+          //   }
+          // });
+
+          // const restateElementEnd = new MC.ProgrammaticIncident({
+          //   command: {
+          //     forwards: () =>{
+          //       console.log("End forwards")
+          //       // reset element text
+          //       this.elements[i].innerHTML = this.elements[i].getAttribute("aria-label");
+          //     },
+          //     backwards: ()=>{
+          //       console.log("End backwards")
+          //       charming(this.elements[i], { splitRegex });
+          //     }
+          //   }
+          // });
+          // this.addIncident(restateElementStart,1)
+          // this.addIncident(restateElementEnd,this.props.duration)
         }
       }
     },
