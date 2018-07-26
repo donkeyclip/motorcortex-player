@@ -136,9 +136,32 @@
     width: 50%;
   }
 
+  input {
+    width: calc(100% - 3px) !important;
+    display: block;
+  }
+  #duration-in{
+    float:left;
+    margin-left:0;
+  }
+
+  #duration-out{
+    float:right;
+    margin-right:0;
+  }
+
+  #animation-type-in{
+    float:left;
+    margin-left:0;
+  }
+
+  #animation-out-order{
+    float:right;
+    margin-right:0;
+  }
+
   textarea {
-    float: right;
-    width: calc(100% - 3px);
+    width: 100%;
     background-color: #686767;
     color:#c1bfbf;
     border-style: none;
@@ -150,6 +173,13 @@
     width: 50%;
   }
 
+  #split-type {
+    height: 30px;
+    color:#c1bfbf;
+    width:100%;
+    background-color: #686767;
+    margin-bottom: 10px;
+  }
   .apply-btn{
     width: 100px;
     margin: 50px auto 0;
@@ -302,12 +332,7 @@
               <option selected>sync</option>
               <option selected>suffle</option>
             </select>
-            <div class="label">Split Type</div>
-            <div class="label">Duration(ms)</div>
-            <select class="btn" id="split-type-in">
-              <option value="char" selected>character</option>
-              <option value="word">word</option>
-            </select>
+            <div>Duration(ms)</div>
             <input type="number" class="btn" id="duration-in" name="quantity" min="1" value="5000">
           </div>
           <div class="animation-box">
@@ -418,22 +443,23 @@
                 <option value="rollOut">rollOut</option>
               </optgroup>
             </select>
-            <select class="btn" id="animation-in-order">
+            <select class="btn" id="animation-out-order">
               <option selected>sequence</option>
               <option selected>reverse</option>
               <option selected>sync</option>
               <option selected>suffle</option>
             </select>
-            <div class="label">Split Type</div>
-            <div class="label">Duration(ms)</div>
-            <select class="btn" id="split-type-out">
-              <option value="char" selected>character</option>
-              <option value="word">word</option>
-            </select>
+            <div>Duration(ms)</div>            
             <input type="number" class="btn" id="duration-out" name="quantity" min="1" value="5000">
           </div>
+          <div>Split-type</div>
+          <select id="split-type">
+              <option value="char" selected>character</option>
+              <option value="word">word</option>
+          </select>
           <div>Text</div>
           <textarea id="Text" cols="54" rows="1">MotorCortex Textillate-Plugin</textarea>
+
           <button class="apply-btn" id="apply">Apply</button>
           <div>
           </div>

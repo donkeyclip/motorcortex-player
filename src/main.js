@@ -1,5 +1,6 @@
-const MC = require("@kissmybutton/motorcortex");
+// const MC = require("@kissmybutton/motorcortex");
 const Textillate = require("./Textillate");
+const Channel = require("./Channel");
 
 module.exports = {
   npm_name: "@kissmybutton/motorcortex-textillate",
@@ -8,5 +9,5 @@ module.exports = {
       exportable: Textillate
     }
   ],
-  channel: MC.Channel
+  channel: Channel
 };

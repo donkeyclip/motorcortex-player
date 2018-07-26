@@ -52,21 +52,16 @@ new MotorCortex.Timer({
 
 document.getElementById("apply").addEventListener("click", function() {
   // get the iframe
-  const iframe = document.getElementById("clip").firstChild.contentDocument;
-
-  // reset the text of the iframe
-  iframe.getElementsByClassName(
-    "element"
-  )[0].innerHTML = document.getElementById("Text").value;
+  // const iframe = document.getElementById("clip").firstChild.contentDocument;
 
   // create in animate
   const animateIn = new Textillate.Textillate(
     {
       type: document.getElementById("animation-type-in").value,
-      splitType: document.getElementById("split-type-in").value
+      splitType: document.getElementById("split-type").value
     },
     {
-      duration: document.getElementById("duration-in").value,
+      duration: document.getElementById("duration-in").value - 0,
       selector: ".element"
     }
   );
@@ -75,30 +70,25 @@ document.getElementById("apply").addEventListener("click", function() {
   const animateOut = new Textillate.Textillate(
     {
       type: document.getElementById("animation-type-out").value,
-      splitType: document.getElementById("split-type-out").value
+      splitType: document.getElementById("split-type").value
     },
     {
-      duration: document.getElementById("duration-out").value,
+      duration: document.getElementById("duration-out").value - 0,
       selector: ".element"
     }
   );
 
-  if (clip.incidents[0]) {
-    clip.removeIncident(clip.incidents[0].id);
-  }
-  if (clip.incidents[1]) {
+  if (clip.incidents.length > 0) {
     clip.removeIncident(clip.incidents[1].id);
+    clip.removeIncident(clip.incidents[0].id);
   }
 
   clip.addIncident(animateIn, 0);
-  // reset the text of the iframe
-  iframe.getElementsByClassName(
-    "element"
-  )[0].innerHTML = document.getElementById("Text").value;
-  clip.flashDOM();
-
-  clip.addIncident(animateOut, document.getElementById("duration-out").value);
-  clip.flashDOM();
+  clip.addIncident(
+    animateOut,
+    document.getElementById("duration-in").value - 0
+  );
+  // clip.flashDOM();
 });
 
 function eventFire(el, etype) {
