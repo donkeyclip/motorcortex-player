@@ -1,10 +1,8 @@
-const MotorCortex = require("../node_modules/@kissmybutton/motorcortex");
-const TextillateDefinition = require("../src/main");
+const MotorCortex = require("./node_modules/@kissmybutton/motorcortex");
+const TestPluginDefinition = require("./testPlugin/main");
+const Player = require("../src/Player");
 
-// console.log(TextillateDefinition);
-
-// Load Anime plugin
-const Textillate = MotorCortex.loadPlugin(TextillateDefinition);
+const TestPlugin = MotorCortex.loadPlugin(TestPluginDefinition);
 
 // Configure clip
 const config = {
@@ -40,64 +38,21 @@ const config = {
 
 // Create clip
 const clip = new MotorCortex.Clip(null, config);
+const animation_1 = new TestPlugin.TestIncident(
+  {
+    animatedAttrs: {
+      left: 800,
+      opacity: 0
+    }
+  },
+  {
+    id: "animation_1",
+    selector: "#one",
+    duration: 10000
+  }
+);
+
+clip.addIncident(animation_1, 0);
 
 // Add clip to timer
-new MotorCortex.Timer({
-  Incident: clip,
-  width: document.getElementsByClassName("bar")[0].offsetWidth, // timer width must be .bar width minus #time-cursor width
-  cursorWidth: 10
-});
-
-// Add Group to Clip
-
-document.getElementById("apply").addEventListener("click", function() {
-  // get the iframe
-  // const iframe = document.getElementById("clip").firstChild.contentDocument;
-
-  // create in animate
-  const animateIn = new Textillate.Textillate(
-    {
-      type: document.getElementById("animation-type-in").value,
-      splitType: document.getElementById("split-type").value
-    },
-    {
-      duration: document.getElementById("duration-in").value - 0,
-      selector: ".element"
-    }
-  );
-
-  // create in animate
-  const animateOut = new Textillate.Textillate(
-    {
-      type: document.getElementById("animation-type-out").value,
-      splitType: document.getElementById("split-type").value
-    },
-    {
-      duration: document.getElementById("duration-out").value - 0,
-      selector: ".element"
-    }
-  );
-
-  if (clip.incidents.length > 0) {
-    clip.removeIncident(clip.incidents[1].id);
-    clip.removeIncident(clip.incidents[0].id);
-  }
-
-  clip.addIncident(animateIn, 0);
-  clip.addIncident(
-    animateOut,
-    document.getElementById("duration-in").value - 0
-  );
-  // clip.flashDOM();
-});
-
-function eventFire(el, etype) {
-  if (el.fireEvent) {
-    el.fireEvent("on" + etype);
-  } else {
-    const evObj = document.createEvent("Events");
-    evObj.initEvent(etype, true, false);
-    el.dispatchEvent(evObj);
-  }
-}
-eventFire(document.getElementById("apply"), "click");
+new Player({ clip });

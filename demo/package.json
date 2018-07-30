@@ -1,7 +1,7 @@
 {
-  "name": "motorcortex-textillate-demo",
+  "name": "motorcortex-player-demo",
   "version": "1.0.0",
-  "description": "Textillate library for MotorCortex",
+  "description": "Player library for MotorCortex",
   "main": "./index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --hot --disableHostCheck",
@@ -13,11 +13,11 @@
     "threejs"
   ],
   "peerDependencies": {
-    "@kissmybutton/motorcortex": "1.10.8-rc.3",
+    "@kissmybutton/motorcortex": "^1.10.7",
     "babel-core": "^6.26.3"
   },
   "devDependencies": {
-    "@kissmybutton/motorcortex": "1.10.8-rc.3",
+    "@kissmybutton/motorcortex": "^1.10.7",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.4",
     "babel-preset-es2015-node5": "^1.2.0",
@@ -35,8 +35,6 @@
   "author": "KissMyButton.gr",
   "license": "MIT",
   "dependencies": {
-    "@kissmybutton/motorcortex-animate": "^1.3.5",
-    "@kissmybutton/motorcortex-textillate": "0.0.1",
     "babel-core": "^6.26.3",
     "exports-loader": "^0.7.0",
     "imports-loader": "^0.8.0",
