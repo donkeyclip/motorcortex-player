@@ -1,5 +1,8 @@
 const MC = require("@kissmybutton/motorcortex");
 const helper = new MC.Helper();
+const TimeCapsule = require("../node_modules/@kissmybutton/motorcortex/src/_coreUtils/TimeCapsule");
+const timeCapsule = new TimeCapsule();
+let journey = null;
 /**
  * @classdesc
  * Timer's purpose is to provide an interface through which any TimedIncident (such as a Scene or a Clip)
@@ -9,160 +12,178 @@ const helper = new MC.Helper();
 class Player {
   constructor(options) {
     this.id = options.id || helper.getAnId(); // timer id
-    this.status; // play - pause - transitioning
-    this.cursor; // the cursor element
-    this.totalBar; // the total time bar ( main bar )
-    this.loopBar; // the loop bar ( child of main bar )
-    this.runningBar; // the running bar ( child of loop bar)
-    this.statusButton; // play - pause - transistioning button element
-    this.currentTime = 0; // current time in millisecond
-    this.totalTime = 0; // total time in milliseconds
     this.clip = options.clip; // host to apply the timer
-    // this.subscribeToTimer();
-    // this.subscribeToEvents();
-    // this.afterRender();
-    this.previousTimestamp = 0;
-    this.cursorWidth = options.cursorWidth || 10;
 
+    this.playBtnSVG = `
+      <svg width="100%" height="100%" viewBox="0 0 36 36" >
+          <path id="play-icon"  data-state="paused"  d="M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28" />
+      </svg>
+    `;
+
+    this.pauseBtnSVG = `
+      <svg width="100%" height="100%" viewBox="0 0 36 36" >
+          <path id="pause-icon" data-state="playing" d="M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26" />
+      </svg>
+    `;
+
+    this.replayBtnSVG = `
+      <svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+        <g><g transform="translate(0.000000,511.000000) scale(0.100000,-0.100000)">
+            <path d="M5356.3,4203.8c-1247.8-153.1-2324.2-811.3-3000.7-1839.7c-379.4-578.2-596.5-1209-660.5-1933.4l-27.4-294.8H883.9c-431.9,0-783.9-6.9-783.9-18.3c0-9.2,477.6-493.7,1062.7-1078.7l1062.7-1062.7L3288.1-961.1C3873.1-376,4350.8,108.5,4350.8,117.6c0,11.4-356.5,18.3-790.7,18.3h-793l18.3,189.7C2831,876.3,2991,1338,3288.1,1779.1C4122.3,3026.9,5706,3472.5,7065.8,2841.8C7639.4,2578.9,8197,2035,8487.3,1461.4C8581,1274,8709,896.9,8754.7,666.1c48-246.8,54.8-811.3,9.1-1055.8C8567.3-1491.3,7788-2394,6720.7-2750.5c-315.4-107.4-541.6-139.4-941.6-139.4c-287.9,0-415.9,11.4-598.8,50.3c-523.3,112-973.6,335.9-1371.2,681c-75.4,68.6-148.5,123.4-160,123.4c-9.1,0-187.4-169.1-393.1-374.8c-434.2-434.2-420.5-363.4-105.1-628.5c852.4-710.7,1972.3-1055.8,3046.4-937c1627.2,176,2977.8,1257,3489.8,2790.4c457.1,1368.9,169.1,2843-777,3969.7C8322.7,3484,7417.8,4000.4,6503.6,4160.4C6197.4,4213,5619.2,4235.8,5356.3,4203.8z"/>
+            <path d="M4990.7,124.5c0-1503.8,4.6-1794,32-1778c16,9.1,505.1,413.6,1085.6,895.8C7113.8,78.8,7161.8,122.2,7122.9,161c-80,75.4-2109.4,1757.5-2120.8,1757.5C4995.3,1918.5,4990.7,1111.8,4990.7,124.5z"/>
+        </g></g>
+      </svg>
+    `;
     // set clip position to relative
     this.clip.props.host.style.position = "relative";
 
     // create the timer controls main div
-    const mcPlayer = document.createElement("div");
-    mcPlayer.id = "mc-player";
-    mcPlayer.style.width = "100%";
-    mcPlayer.style.height = "100%";
-    // mcPlayer.style.backgroundColor = "red";
-    // mcPlayer.style.opacity = 0.5;
-    mcPlayer.style.position = "absolute";
-    mcPlayer.style.desplay = "block";
-    mcPlayer.style.top = "0px";
-    mcPlayer.style.left = "0px";
+    this.mcPlayer = document.createElement("div");
+    this.mcPlayer.id = "mc-player";
 
     // create the timer controls div
-    const controls = document.createElement("div");
-    controls.id = "mc-player-controls";
-    controls.style.position = "absolute";
-    controls.style.left = "0px";
-    controls.style.bottom = "0px";
-    // controls.style.backgroundColor = "white";
-    // controls.style.opacity = 0.5;
-    controls.style.width = "100%";
-    controls.style.height = "40px";
+    this.controls = document.createElement("div");
+    this.controls.id = "mc-player-controls";
 
-    // create the totalbar, running bar and loop bar
-    const totalBar = document.createElement("div");
-    totalBar.id = "mc-player-totalbar";
-    totalBar.style.width = "calc(100% - 20px)";
-    totalBar.style.height = "5px";
-    totalBar.style.marginLeft = "10px";
-    totalBar.style.marginRight = "10px";
-    totalBar.style.position = "absolute";
-    totalBar.style.top = "0px";
-    totalBar.style.left = "0px";
+    // create the totalbar
+    this.totalBar = document.createElement("div");
+    this.totalBar.id = "mc-player-totalbar";
 
-    totalBar.style.backgroundColor = "blue";
-    // totalBar.style.opacity = 0.5;
+    // create the loopbar
+    this.loopBar = document.createElement("div");
+    this.loopBar.id = "mc-player-loopbar";
 
-    const loopBar = document.createElement("div");
-    loopBar.id = "mc-player-loopBar";
-    loopBar.style.position = "absolute";
-    loopBar.style.top = "0px";
-    loopBar.style.left = "0px";
-    loopBar.style.right = "0px";
+    // create the runningbar
+    this.runningBar = document.createElement("div");
+    this.runningBar.id = "mc-player-runningbar";
 
-    loopBar.style.backgroundColor = "grey";
-    // loopBar.style.opacity = 0.5;
+    // create the bar cursor
+    this.cursor = document.createElement("div");
+    this.cursor.id = "mc-player-cursor";
 
-    const runningBar = document.createElement("div");
-    runningBar.id = "mc-player-runningbar";
-    runningBar.style.width = "0px";
-    runningBar.style.height = "5px";
-    runningBar.style.position = "relative";
-
-    runningBar.style.backgroundColor = "red";
-
-    const cursor = document.createElement("div");
-    cursor.id = "mc-player-cursor";
-    cursor.style.position = "absolute";
-    // cursor.style.width = "16px";
-    // cursor.style.height = "16px";
-    cursor.style.borderRadius = "10px";
-    cursor.style.backgroundColor = "red";
-
-    runningBar.appendChild(cursor);
-    // runningBar.style.opacity = 0.5;
-
-    // status button
-    const statusButton = document.createElement("div");
-    statusButton.id = "mc-player-status-btn";
-    statusButton.style.width = "45px";
-    statusButton.style.height = "35px";
-    statusButton.style.position = "absolute";
-    statusButton.style.left = "0px";
-    statusButton.style.bottom = "0px";
-    statusButton.classList.add("play");
-    // statusButton.style.backgroundColor = "black";
-    // statusButton.style.opacity = 0.5;
-
+    // create the status button ( play, pause, transitioning )
+    this.statusButton = document.createElement("div");
+    this.statusButton.id = "mc-player-status-btn";
+    this.statusButton.innerHTML = this.playBtnSVG;
     // time display
-    const timeDisplay = document.createElement("div");
-    timeDisplay.id = "mc-player-time-display";
-    timeDisplay.style.width = "auto";
-    timeDisplay.style.height = "35px";
-    timeDisplay.style.lineHeight = "25px";
-    timeDisplay.style.padding = "5px";
-    timeDisplay.style.position = "absolute";
-    timeDisplay.style.left = "45px";
-    timeDisplay.style.bottom = "0px";
-    // timeDisplay.style.backgroundColor = "orange";
-    // timeDisplay.style.opacity = 0.5;
-    timeDisplay.style.color = "black";
+    this.timeDisplay = document.createElement("div");
+    this.timeDisplay.id = "mc-player-time-display";
+    this.currentTime = document.createElement("span");
+    this.currentTime.innerHTML = 0;
+    this.timeSeperator = document.createElement("span");
+    this.timeSeperator.innerHTML = "/";
+    this.totalTime = document.createElement("span");
+    this.totalTime.innerHTML = this.clip.duration;
 
-    const currentTime = document.createElement("span");
-    currentTime.innerHTML = "0";
-    const timeSeperator = document.createElement("span");
-    timeSeperator.innerHTML = "/";
-    const totalTime = document.createElement("span");
-    totalTime.innerHTML = this.clip.duration;
+    this.previousTimestamp = 0;
 
-    loopBar.appendChild(runningBar);
-    totalBar.appendChild(loopBar);
+    // append elements to each other
+    this.runningBar.appendChild(this.cursor);
+    this.loopBar.appendChild(this.runningBar);
+    this.totalBar.appendChild(this.loopBar);
 
-    timeDisplay.appendChild(currentTime);
-    timeDisplay.appendChild(timeSeperator);
-    timeDisplay.appendChild(totalTime);
+    this.timeDisplay.appendChild(this.currentTime);
+    this.timeDisplay.appendChild(this.timeSeperator);
+    this.timeDisplay.appendChild(this.totalTime);
 
-    controls.appendChild(totalBar);
-    controls.appendChild(statusButton);
-    controls.appendChild(timeDisplay);
+    this.controls.appendChild(this.totalBar);
+    this.controls.appendChild(this.statusButton);
+    this.controls.appendChild(this.timeDisplay);
 
-    mcPlayer.appendChild(controls);
-    this.clip.props.host.appendChild(mcPlayer);
+    this.mcPlayer.appendChild(this.controls);
+    this.clip.props.host.appendChild(this.mcPlayer);
 
     // style of player to head
     const css = `
-    #mc-player-loopBar:hover{
+    #mc-player {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0px;
+      left:0px;
+    }
+
+    #mc-player-controls {
+     box-shadow: inset 0px -20px 40px 5px white;
+     position: absolute;
+     bottom: -40px;
+     left: 0px;
+     width: 100%;
+     height: 40px;
+    }
+
+    #mc-player-totalbar {
+      width: calc(100% - 20px);
+      height: 5px;
+      margin: 0px 10px 0px 10px;
+      background-color: #505056;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+
+    #mc-player-loopbar{
+      position: absolute;
+      height:100%;
+      top: 0px;
+      left:0px;
+      right: 0px;
+      background-color: #808086;
+    }
+
+    #mc-player-runningbar {
+      position: relative;
+      width: 0px;
+      height:100%;
+      background-color: red;
+    }
+
+    #mc-player-cursor {
+      right: 0px;
+      top:  0px;
+      width: 0px;
+      height: 0px;
+      position: absolute;
+      background-color: red;
+      border-radius: 10px;
+      z-index: 1;
+    }
+
+    #mc-player-time-display {
+      width: auto;
+      height: 35px;
+      line-height: 30px;
+      padding: 5px;
+      position: absolute;
+      left: 45px;
+      bottom: 0px;
+      color: black;
+    }
+
+    #mc-player-status-btn{
+      opacity:0.8;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      width: 40px;
+      height: 25px;
+      position: absolute;
+      left: 0px;
+      bottom: 0px;
+      margin: 10px 5px 5px 5px;
+    }
+
+    #mc-player-loopbar:hover{
       cursor:pointer;
     }
     #mc-player-status-btn:hover{
       cursor:pointer;
     }
 
-    #mc-player-status-btn{
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-    }
     #mc-player-status-btn.play{
-      background-image: url(https://png.icons8.com/metro/1600/play.png); 
     }
 
     #mc-player-status-btn.pause{
-      background-image: url(http://www.free-icons-download.net/images/pause-button-icon-75379.png); 
-    }
-
-    #mc-player-controls {
-     box-shadow: inset 0px -20px 40px 5px white;
     }
 
     #mc-player-controls:hover #mc-player-cursor {
@@ -185,36 +206,126 @@ class Player {
       transition: all 0.3s ease;
     }
 
-    #mc-player-cursor {
-      right:0px;
-      top: 0px;
-      width:0px;
-      height:0px;
+    #mc-player-loopbar:active #mc-player-cursor{
+      right:-8px;
+      top: -5px;
+      width:16px;
+      height:16px;
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      transition: all 0.3s ease;
+    }
+
+    #mc-player-status-btn:hover {
+     opacity:1;
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      transition: all 0.3s ease;
     }
     `;
 
     const style = document.createElement("style");
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
+    style.styleSheet
+      ? (style.styleSheet.cssText = css)
+      : style.appendChild(document.createTextNode(css));
 
-    document
-      .getElementById("mc-player-status-btn")
-      .addEventListener("click", function(/*e*/) {
-        if (this.className.includes("play")) {
-          this.classList.remove("play");
-          this.classList.add("pause");
-        } else {
-          this.classList.remove("pause");
-          this.classList.add("play");
-        }
-      });
-
+    // append player style to document
     document.getElementsByTagName("head")[0].appendChild(style);
 
-    const move = e => {
+    this.subscribeToTimer();
+    this.subscribeToEvents();
+    this.addEventListeners();
+    this.previousTimestamp = 0;
+  }
+
+  millisecondChange(millisecond) {
+    this.runningBar.style.width =
+      (millisecond / this.clip.duration) * this.loopBar.offsetWidth + "px";
+    this.currentTime.innerHTML = millisecond;
+  }
+
+  eventBroadcast(eventName, meta) {
+    if (eventName === "state-change") {
+      if (meta.newState === "waiting") {
+        this.statusButton.innerHTML = this.playBtnSVG;
+      } else if (meta.newState === "playing") {
+        this.statusButton.innerHTML = this.pauseBtnSVG;
+      } else if (meta.newState === "completed") {
+        this.currentTime.innerHTML = this.clip.duration;
+        this.statusButton.innerHTML = this.replayBtnSVG;
+      } else if (meta.newState === "transitional") {
+        this.statusButton.innerHTML = this.playBtnSVG;
+      } else if (meta.newState === "idle") {
+        this.statusButton.innerHTML = this.playBtnSVG;
+      }
+    } else if (eventName === "attribute-rejection") {
+      helper.log(
+        "Attributes",
+        meta.attributes,
+        "have been rejected from animation with id " + meta.animationID
+      );
+    } else if (eventName === "animation-rejection") {
+      helper.log(
+        "Animation " +
+          meta.animationID +
+          " has been rejected as all attributes of it overlap on specific elements because of existing animations"
+      );
+    } else if (eventName === "duration-change") {
+      this.millisecondChange(
+        this.clip.runTimeInfo.currentMillisecond,
+        this.clip.state
+      );
+    }
+  }
+
+  subscribeToEvents() {
+    // helper.error('Timer is subscirbing to the clips events');
+    this.clip.subscribeToEvents(this.id, this.eventBroadcast.bind(this));
+  }
+
+  subscribeToTimer() {
+    // helper.log('Timer is subscirbing to the clips timer', 'notice');
+    this.clip.subscribe(this.id, this.millisecondChange.bind(this));
+  }
+
+  handleDragStart() {
+    journey = timeCapsule.startJourney(this.clip);
+  }
+
+  handleDrag(positionX) {
+    const millisecond = Math.round(
+      (this.clip.duration * positionX) / this.totalBar.offsetWidth
+    );
+    this.currentTime.innerHTML = millisecond;
+    this.runningBar.style.width = positionX + "px";
+    journey.station(millisecond);
+  }
+
+  handleDragEnd() {
+    journey.destination();
+  }
+
+  addEventListeners() {
+    this.statusButton.onclick = e => {
+      e.preventDefault();
+      if (this.clip.state === "playing") {
+        this.clip.wait();
+      } else if (this.clip.state === "waiting") {
+        this.clip.resume();
+      } else if (this.clip.state === "idle") {
+        this.clip.play();
+      } else if (this.clip.state === "completed") {
+        journey = timeCapsule.startJourney(this.clip);
+        journey.station(0);
+        journey.destination();
+        this.clip.play();
+      }
+    };
+    this.statusButton.ondblclick = e => {
+      e.preventDefault();
+    };
+    const onCursorMove = e => {
+      e.preventDefault();
       const viewportOffset = this.totalBar.getBoundingClientRect();
       let positionX = e.clientX - viewportOffset.left;
       if (positionX < 0) {
@@ -223,143 +334,25 @@ class Player {
         positionX = this.totalBar.offsetWidth;
       }
 
-      this.handleDrag(e, null, positionX);
+      this.handleDrag(positionX);
     };
-    /* events fired on the draggable target */
-    loopBar.addEventListener(
-      "mousedown",
-      e => {
-        move(e);
-        document.addEventListener("mousemove", move, true);
-      },
-      true
-    );
 
-    document.addEventListener("mouseup", (/*e*/) => {
-      document.removeEventListener("mousemove", move, true);
-    });
+    const onMouseUp = e => {
+      e.preventDefault();
+      document.removeEventListener("mouseup", onMouseUp, true);
+      document.removeEventListener("mousemove", onCursorMove, true);
+      this.handleDragEnd();
+    };
+    const onMouseDown = e => {
+      e.preventDefault();
+      this.handleDragStart();
+      onCursorMove(e);
+      document.addEventListener("mouseup", onMouseUp, true);
+      document.addEventListener("mousemove", onCursorMove, true);
+    };
 
-    this.id = options.id || helper.getAnId(); // timer id
-    this.status; // play - pause - transitioning
-    this.cursor = cursor; // the cursor element
-    this.totalBar = totalBar; // the total time bar ( main bar )
-    this.loopBar = loopBar; // the loop bar ( child of main bar )
-    this.runningBar = runningBar; // the running bar ( child of loop bar)
-    this.statusButton = statusButton; // play - pause - transistioning button element
-    this.currentTime = currentTime; // current time in millisecond
-    this.totalTime = totalTime; // total time in milliseconds
-    this.clip = options.clip; // host to apply the timer
-    // this.subscribeToTimer();
-    // this.subscribeToEvents();
-    // this.afterRender();
-    this.previousTimestamp = 0;
-    this.cursorWidth = options.cursorWidth || 10;
+    this.loopBar.addEventListener("mousedown", onMouseDown, true);
   }
-
-  // millisecondChange(millisecond, state) {
-  //   // helper.log(millisecond);
-  //   this.cursor.style.left = `calc(${(millisecond * 100) /
-  //     this.clip.duration}% - ${this.cursorWidth}px)`;
-  //   this.leftSlot.innerHTML = millisecond;
-  //   this.rightSlot.innerHTML = this.clip.duration - millisecond;
-  // }
-
-  // eventBroadcast(eventName, meta) {
-  //   if (eventName === "state-change") {
-  //     if (meta.newState === "waiting") {
-  //       this.playButton.innerHTML = "Resume";
-  //     } else if (meta.newState === "playing") {
-  //       this.playButton.innerHTML = "Pause";
-  //     } else if (meta.newState === "completed") {
-  //       this.leftSlot.innerHTML = this.clip.duration;
-  //       this.rightSlot.innerHTML = 0;
-  //       this.playButton.innerHTML = "completed";
-  //       helper.log(this.clip);
-  //     } else if (meta.newState === "transitional") {
-  //       this.playButton.innerHTML = "transitioning";
-  //     } else if (meta.newState === "idle") {
-  //       this.playButton.innerHTML = "Play";
-  //     }
-  //   } else if (eventName === "attribute-rejection") {
-  //     helper.log(
-  //       "Attributes",
-  //       meta.attributes,
-  //       "have been rejected from animation with id " + meta.animationID
-  //     );
-  //   } else if (eventName === "animation-rejection") {
-  //     helper.log(
-  //       "Animation " +
-  //         meta.animationID +
-  //         " has been rejected as all attributes of it overlap on specific elements because of existing animations"
-  //     );
-  //   } else if (eventName === "duration-change") {
-  //     this.millisecondChange(
-  //       this.clip.runTimeInfo.currentMillisecond,
-  //       this.clip.state
-  //     );
-  //   }
-  // }
-
-  // subscribeToEvents() {
-  //   // helper.error('Timer is subscirbing to the clips events');
-  //   this.clip.subscribeToEvents(this.id, this.eventBroadcast.bind(this));
-  // }
-
-  // subscribeToTimer() {
-  //   // helper.log('Timer is subscirbing to the clips timer', 'notice');
-  //   this.clip.subscribe(this.id, this.millisecondChange.bind(this));
-  // }
-
-  // handleDragStart(event, pointer) {
-  //   // helper.log('drag is starting', 'warning')
-  //   journey = timeCapsule.startJourney(this.clip);
-  // }
-
-  handleDrag(event, pointer, positionX) {
-    const millisecond = Math.round(
-      (this.clip.duration * positionX) / this.totalBar.offsetWidth
-    );
-    this.currentTime.innerHTML = millisecond;
-    this.runningBar.style.width = positionX + "px";
-    // journey.station(millisecond);
-  }
-
-  // handleDragEnd(event, pointer) {
-  //   //  Velocity.defaults.speed=1;
-  //   // this.previousTimestamp is the target millisecond of the drag
-
-  //   journey.destination();
-
-  //   helper.log(this.clip.exportState());
-  // }
-
-  // afterRender() {
-  //   const that = this;
-
-  //   this.playButton.onclick = e => {
-  //     if (that.clip.state === "playing") {
-  //       that.clip.wait();
-  //     } else if (that.clip.state === "waiting") {
-  //       that.clip.resume();
-  //     } else if (that.clip.state === "idle") {
-  //       that.clip.play();
-  //     }
-  //   };
-
-  //   const elem = document.querySelector("#time-cursor");
-  //   const draggie = new Draggabilly(elem, {
-  //     axis: "x",
-  //     containment: ".bar"
-  //   });
-
-  //   draggie.on("dragStart", this.handleDragStart.bind(this));
-  //   draggie.on("dragMove", (event, pointer) => {
-  //     that.handleDrag(event, pointer, draggie.position);
-  //   });
-  //   draggie.on("dragEnd", this.handleDragEnd.bind(this));
-  // }
-
-  // render(container) {}
 }
 
 module.exports = Player;
