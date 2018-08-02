@@ -1,0 +1,17 @@
+"use strict";
+
+module.exports = function(config) {
+  return (
+    '\n  <div id="mc-player-controls">\n    <div id="mc-player-totalbar">\n      <div id="mc-player-loopbar">\n        <div id="mc-player-helperbar"></div>\n        <div id="mc-player-runningbar">\n          <div id="mc-player-cursor"></div>\n        </div>\n      </div>\n    </div>\n    <div id="mc-player-status-btn">\n      ' +
+    config.svg.playSVG +
+    '\n      <span id="mc-player-indicator"></span>\n    </div>\n    <div id="mc-player-time-display">\n      <span id="mc-player-time-current"></span>\n      <span id="mc-player-time-separator"></span>\n      <span id="mc-player-time-total"></span>\n    </div>\n    <div id="mc-player-settings-btn">' +
+    config.svg.settingsSVG +
+    '</div>\n    <div id="mc-player-full-screen-btn">' +
+    config.svg.fullScreenSVG +
+    '</div>\n  </div>\n  <div id="mc-player-settings-panel">\n    <ul id="mc-player-main-settings">\n      <li id="mc-player-settings-indicator">\n        <label>Show Indicator</label>\n        <label class="switch settings-switch">\n          <input id="mc-player-show-indicator-checkbox" type="checkbox">\n          <span class="slider round"></span>\n        </label>\n      </li>\n      <li id="mc-player-settings-speed-show">\n      \t<label>Speed</label>\n     \t  <div class="mc-player-speed-btn">' +
+    config.svg.arrowRightSVG +
+    '</div>\n        <span id="mc-player-speed-current"></span>\n      </li>\n    </ul>\n    <ul id="mc-player-speed-settings">\n    \t<li id="mc-player-settings-speed-hide">\n    \t\t<div class="mc-player-speed-btn">' +
+    config.svg.arrowLeftSVG +
+    '</div>\n      \t<label id=mc-player-speed-runtime>Speed</label>\n    \t</li>\n    \t<li>\n        <div id="mc-player-speed-value-helperbar"></div>\n    \t\t<div id="mc-player-speed-value-bar">\n    \t\t\t<div class="mc-player-speed-value-step" id="mc-player-speed-cursor">\n          \t<div></div>\n        \t</div>\n\t        <div class="mc-player-speed-value-step"></div>\n\t        <div class="mc-player-speed-value-step"></div>\n\t        <div class="mc-player-speed-value-step"></div>\n\t        <div class="mc-player-speed-value-step"></div>\n\t        <div class="mc-player-speed-value-step"></div>\n\t        <div class="mc-player-speed-value-step"></div>\n\t        <div class="mc-player-speed-value-step"></div>\n\t        <div class="mc-player-speed-value-step"></div>\n\t        <div class="mc-player-speed-value-step"></div>\n    \t\t</div>\n    \t\t<div id="mc-player-speed-value">\n    \t\t\t<div class="mc-player-speed-value" data-speed-value="4.0" data-zone="8">4</div>\n\t        <div class="mc-player-speed-value" data-speed-value="2.0" data-zone="7">2</div>\n\t        <div class="mc-player-speed-value" data-speed-value="1.0" data-zone="6">Normal</div>\n\t        <div class="mc-player-speed-value" data-speed-value="0.5" data-zone="5">0.5</div>\n\t        <div class="mc-player-speed-value" data-speed-value="0.0" data-zone="4">0</div>\n\t        <div class="mc-player-speed-value" data-speed-value="-0.5" data-zone="3">-0.5</div>\n\t        <div class="mc-player-speed-value" data-speed-value="-1.0" data-zone="2">-1</div>\n\t        <div class="mc-player-speed-value" data-speed-value="-2.0" data-zone="1">-2</div>\n\t        <div class="mc-player-speed-value" data-speed-value="-4.0" data-zone="0">-4</div>\n    \t\t</div>\n    \t</li>\n    </ul>\n  </div>\n'
+  );
+};
