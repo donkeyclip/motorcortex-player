@@ -106,6 +106,53 @@ class Player {
       </svg> 
     `;
 
+    this.fullScreenSVG = `
+<svg width="100%" height="100%" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 298.667 298.667" style="enable-background:new 0 0 298.667 298.667;" xml:space="preserve">
+<g>
+  <g>
+    <g>
+      <polygon points="42.667,192 0,192 0,298.667 106.667,298.667 106.667,256 42.667,256"/>
+      <polygon points="0,106.667 42.667,106.667 42.667,42.667 106.667,42.667 106.667,0 0,0"/>
+      <polygon points="192,0 192,42.667 256,42.667 256,106.667 298.667,106.667 298.667,0"/>
+      <polygon points="256,256 192,256 192,298.667 298.667,298.667 298.667,192 256,192"/>
+    </g>
+  </g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+</svg>
+
+    `;
+
     // set clip position to relative
     this.clip.props.host.style.position = "relative";
 
@@ -153,6 +200,10 @@ class Player {
     this.timeSeperator.innerHTML = "/";
     this.totalTime = document.createElement("span");
     this.totalTime.innerHTML = this.clip.duration;
+
+    this.fullScreenButton = document.createElement("div");
+    this.fullScreenButton.id = "mc-player-full-screen-btn";
+    this.fullScreenButton.innerHTML = this.fullScreenSVG;
 
     this.settingsButton = document.createElement("div");
     this.settingsButton.id = "mc-player-settings-btn";
@@ -256,6 +307,7 @@ class Player {
     this.controls.appendChild(this.statusButton);
     this.controls.appendChild(this.timeDisplay);
     this.controls.appendChild(this.settingsButton);
+    this.controls.appendChild(this.fullScreenButton);
 
     this.mcPlayer.appendChild(this.controls);
     this.mcPlayer.appendChild(this.settingsMainPanel);
@@ -355,10 +407,22 @@ class Player {
         opacity:0.8;
         background-repeat: no-repeat;
         background-size: 100% 100%;
-        width: 40px;
+        width: 15px;
         height: 15px;
         position: absolute;
-        right: 0px;
+        right: 30px;
+        bottom: 5px;
+        margin: 10px 5px 5px 5px;
+      }
+
+      #mc-player-full-screen-btn{
+        opacity:0.8;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        right: 5px;
         bottom: 5px;
         margin: 10px 5px 5px 5px;
       }
@@ -453,6 +517,7 @@ class Player {
       }
 
       #mc-player-settings-panel.mc-player-settings-speed-panel {
+        overflow: hidden;
         width: 80px;
         height: 195px;
         -webkit-transition: all 0.3s ease;
@@ -603,9 +668,6 @@ class Player {
         cursor:pointer;
       }
 
-      #mc-player-settings-btn:hover{
-        cursor:pointer;
-      }
 
       #mc-player-controls:hover #mc-player-cursor {
         right:-8px;
@@ -652,6 +714,15 @@ class Player {
       }
 
        #mc-player-settings-btn:hover {
+        cursor:pointer;
+       opacity:1;
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        transition: all 0.3s ease;
+      }
+
+      #mc-player-full-screen-btn:hover {
+        cursor:pointer;
        opacity:1;
         -webkit-transition: all 0.3s ease;
         -moz-transition: all 0.3s ease;
@@ -812,9 +883,9 @@ class Player {
     };
 
     const onCursorMove = e => {
-      e.preventDefault();
+      const clientX = e.clientX || e.touches[0].clientX;
       const viewportOffset = this.totalBar.getBoundingClientRect();
-      let positionX = e.clientX - viewportOffset.left;
+      let positionX = clientX - viewportOffset.left;
       if (positionX < 0) {
         positionX = 0;
       } else if (positionX > this.totalBar.offsetWidth) {
@@ -826,25 +897,29 @@ class Player {
 
     const onMouseUp = e => {
       e.preventDefault();
-      document.removeEventListener("mouseup", onMouseUp, true);
-      document.removeEventListener("mousemove", onCursorMove, true);
-      document.removeEventListener("touchmove", onCursorMove, true);
+      document.removeEventListener("mouseup", onMouseUp, false);
+      document.removeEventListener("touchend", onMouseUp, false);
+      document.removeEventListener("mousemove", onCursorMove, false);
+      document.removeEventListener("touchmove", onCursorMove, false);
       this.handleDragEnd();
     };
     const onMouseDown = e => {
       e.preventDefault();
       this.handleDragStart();
       onCursorMove(e);
-      document.addEventListener("mouseup", onMouseUp, true);
-      document.addEventListener("mousemove", onCursorMove, true);
-      document.addEventListener("touchmove", onCursorMove, true);
+      document.addEventListener("mouseup", onMouseUp, false);
+      document.addEventListener("touchend", onMouseUp, false);
+      document.addEventListener("mousemove", onCursorMove, false);
+      document.addEventListener("touchmove", onCursorMove, false);
     };
 
-    this.loopBar.addEventListener("mousedown", onMouseDown, true);
+    this.loopBar.addEventListener("mousedown", onMouseDown, false);
+    this.loopBar.addEventListener("touchstart", onMouseDown, false);
+
     const onCursorMoveSpeedBar = e => {
-      e.preventDefault();
       const viewportOffset = this.speedBar.getBoundingClientRect();
-      let positionY = e.clientY - viewportOffset.top;
+      const clientY = e.clientY || e.touches[0].clientY;
+      let positionY = clientY - viewportOffset.top;
       positionY -= 8;
       if (positionY < 0) {
         positionY = 0;
@@ -865,9 +940,10 @@ class Player {
 
     const onMouseUpSpeedBar = e => {
       e.preventDefault();
-      document.removeEventListener("mouseup", onMouseUpSpeedBar, true);
-      document.removeEventListener("mousemove", onCursorMoveSpeedBar, true);
-      document.removeEventListener("touchmove", onCursorMoveSpeedBar, true);
+      document.removeEventListener("mouseup", onMouseUpSpeedBar, false);
+      document.removeEventListener("touchend", onMouseUpSpeedBar, false);
+      document.removeEventListener("mousemove", onCursorMoveSpeedBar, false);
+      document.removeEventListener("touchmove", onCursorMoveSpeedBar, false);
       document.getElementById("mc-player-speed-runtime").innerHTML = "Speed";
       let speedDisplay;
       this.clip.speed == 1
@@ -879,12 +955,24 @@ class Player {
     const onMouseDownSpeedBar = e => {
       e.preventDefault();
       onCursorMoveSpeedBar(e);
-      document.addEventListener("mouseup", onMouseUpSpeedBar, true);
-      document.addEventListener("mousemove", onCursorMoveSpeedBar, true);
-      document.addEventListener("touchmove", onCursorMoveSpeedBar, true);
+      document.addEventListener("mouseup", onMouseUpSpeedBar, false);
+      document.addEventListener("touchend", onMouseUpSpeedBar, false);
+      document.addEventListener("mousemove", onCursorMoveSpeedBar, false);
+      document.addEventListener("touchmove", onCursorMoveSpeedBar, false);
     };
 
-    this.speedBar.addEventListener("mousedown", onMouseDownSpeedBar, true);
+    this.speedBar.addEventListener("mousedown", onMouseDownSpeedBar, false);
+    this.speedBar.addEventListener("touchstart", onMouseDownSpeedBar, false);
+
+    this.fullScreenButton.addEventListener("click", () => {
+      const elFullScreen = this.clip.props.host.className.includes(
+        "full-screen"
+      );
+      elFullScreen
+        ? this.exitFullscreen()
+        : this.launchIntoFullscreen(this.clip.props.host);
+      this.clip.props.host.classList.toggle("full-screen");
+    });
 
     document.querySelector("body").addEventListener("click", e => {
       if (e.target.className === "mc-player-speed-value") {
@@ -906,7 +994,7 @@ class Player {
   calculateSpeed(step, arrayOfValues, currentPercentage) {
     const botLimitIndex = Math.floor(currentPercentage / step);
     if (botLimitIndex === arrayOfValues.length - 1) {
-      return arrayOfValues[botLimitIndex].toFixed(1) + "0";
+      return arrayOfValues[botLimitIndex].toFixed(1);
     }
     const limitZonePercentage = (currentPercentage / step) % 1;
     const limitZoneLength = Math.abs(
@@ -916,6 +1004,27 @@ class Player {
     const realZoneSpeed = limitZonePercentage * limitZoneLength;
     const realSpeed = (realZoneSpeed + arrayOfValues[botLimitIndex]).toFixed(1);
     return realSpeed;
+  }
+
+  launchIntoFullscreen(element) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  }
+  exitFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
   }
 }
 
