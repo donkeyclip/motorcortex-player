@@ -61,6 +61,16 @@ module.exports = theme => `
   background-color: ${theme["loopbar-color"]};
 }
 
+.mc-player-loop-boundaries {
+  transform:translate(-50%,-37%);
+  position:absolute;
+  width:18px;
+  background-color:${theme["loopbar-color"]};
+  height:18px;
+  border-radius:10px;
+  z-index:40;
+}
+
 #mc-player-helperbar {
   position: absolute;
   height: 20px;
@@ -78,6 +88,7 @@ module.exports = theme => `
 }
 
 #mc-player-cursor {
+  transform:translate(50%,-36%);
   right: 0px;
   top: 0px;
   width: 0px;
@@ -85,7 +96,7 @@ module.exports = theme => `
   position: absolute;
   background-color: ${theme["cursor-color"]};
   border-radius: 10px;
-  z-index: 1;
+  z-index: 5;
 }
 
 #mc-player-time-display {
@@ -115,6 +126,18 @@ module.exports = theme => `
   margin: 10px 5px 5px 5px;
   text-align: center;
   z-index:3;
+}
+
+#mc-player-loop-btn {
+  opacity: ${theme["button-opacity"]};
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  right: 55px;
+  bottom: 5px;
+  margin: 10px 5px 5px 5px;
 }
 
 #mc-player-settings-btn {
@@ -380,7 +403,7 @@ input:checked+.slider:before {
 
 .m-fadeIn {
   visibility: visible;
-  opacity: 0.8;
+  opacity: 1;
   transition: visibility 0s linear 0s, opacity 300ms;
 }
 
@@ -403,8 +426,6 @@ input:checked+.slider:before {
 
 
 #mc-player-controls:hover #mc-player-cursor {
-  right: -8px;
-  top: -5px;
   width: 16px;
   height: 16px;
   -webkit-transition: all 0.3s ease;
@@ -413,8 +434,6 @@ input:checked+.slider:before {
 }
 
 #mc-player-cursor:active {
-  right: -8px;
-  top: -5px;
   width: 16px;
   height: 16px;
   -webkit-transition: all 0.3s ease;
@@ -423,8 +442,7 @@ input:checked+.slider:before {
 }
 
 #mc-player-loopbar:active #mc-player-cursor {
-  right: -8px;
-  top: -5px;
+
   width: 16px;
   height: 16px;
   -webkit-transition: all 0.3s ease;
@@ -446,6 +464,13 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
+#mc-player-loop-btn:hover {
+  cursor: pointer;
+  opacity: 1;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
 #mc-player-settings-btn:hover {
   cursor: pointer;
   opacity: 1;
