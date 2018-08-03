@@ -18,7 +18,7 @@ class Player {
     this.clip = options.clip; // host to apply the timer
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.loopLastPositionXPxls = 0;
-    this.loopLastPositionXPercentage;
+    this.loopLastPositionXPercentage = 0;
     this.loopMillisecondStart = 0;
     this.theme = "transparent on-top";
     if (!this.theme.includes("on-top")) {
@@ -103,12 +103,22 @@ class Player {
 
   millisecondChange(millisecond) {
     const duration = this.clip.duration;
+
     const loopBarLeftPercentage =
       this.loopBar.style.left.replace("%", "") / 100;
+
+    const loopBarWidth = this.loopBar.offsetWidth;
+
     const localMillisecond = millisecond - duration * loopBarLeftPercentage;
-    const millisecondDelta = Math.abs(millisecond - localMillisecond);
-    const localDuration = duration - millisecondDelta;
-    // console.log(localMillisecond, localDuration)
+    // const millisecondDelta = Math.abs(millisecond - localMillisecond);
+
+    const localDuration = (duration / this.totalBar.offsetWidth) * loopBarWidth;
+    // const localDuration =  - millisecondDelta;
+
+    // console.log(localMillisecond, localDuration);
+    if (localMillisecond / localDuration > 1) {
+      this.clip.stop();
+    }
     this.runningBar.style.width =
       (localMillisecond / localDuration) * 100 + "%";
 
@@ -376,29 +386,42 @@ class Player {
       this.loopBarEnd.classList.toggle("m-fadeIn");
     };
 
-    const onCursorMoveLoop = e => {
+    const onCursorMoveLoopStart = e => {
       const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
       const viewportOffset = this.totalBar.getBoundingClientRect();
-      let positionX = Math.floor(clientX - viewportOffset.left);
+      let positionX = Math.round(clientX - viewportOffset.left);
       if (positionX < 0) {
         positionX = 0;
       } else if (positionX > this.totalBar.offsetWidth) {
         positionX = this.totalBar.offsetWidth;
       }
-
+      // console.log("lastposotion",this.loopLastPositionXPxls)
       const loopBarDeltaX = positionX - this.loopLastPositionXPxls || 0;
       const runningBarWidthInPxls = this.runningBar.offsetWidth - loopBarDeltaX;
 
       this.runningBar.style.width = runningBarWidthInPxls + "px";
       // console.log(this.runningBar.offsetWidth, loopBarDeltaX, this.loopLastPositionXPxls)
       this.loopBar.style.left = positionX + "px";
-
+      // console.log(
+      //   this.loopBar.style.width.replace("px",""),
+      //   loopBarDeltaX,
+      // )
+      this.loopBar.style.width =
+        this.loopBar.style.width.replace("px", "") - loopBarDeltaX + "px";
+      // console.log("move",this.loopBar.style.width)
       this.loopLastPositionXPxls = positionX;
     };
 
-    const onMouseUpLoop = e => {
+    const onMouseUpLoopStart = e => {
       this.loopLastPositionXPercentage =
-        this.loopLastPositionXPxls / this.loopBarOffsetWidth;
+        this.loopLastPositionXPxls / this.loopBar.offsetWidth;
+
+      // console.log(
+      //   "mouseUp",
+      //   this.loopLastPositionXPxls,
+      //   this.loopLastPositionXPercentage,
+      //   this.loopLastPositionXPercentage * this.loopBar.offsetWidth
+      // );
       e.preventDefault();
       this.loopMillisecondStart =
         (this.clip.duration * this.loopBar.style.left.replace("%", "")) / 100;
@@ -409,36 +432,123 @@ class Player {
           this.totalBar.offsetWidth) *
           100 +
         "%";
+
+      this.loopBar.style.width =
+        (this.loopBar.style.width.replace("px", "") /
+          this.totalBar.offsetWidth) *
+          100 +
+        "%";
+
       this.runningBar.style.width = runningBarWidthPercentage;
-      // console.log(this.loopMillisecondStart);
-      document.removeEventListener("mouseup", onMouseUpLoop, false);
-      document.removeEventListener("touchend", onMouseUpLoop, false);
-      document.removeEventListener("mousemove", onCursorMoveLoop, false);
-      document.removeEventListener("touchmove", onCursorMoveLoop, false);
+      document.removeEventListener("mouseup", onMouseUpLoopStart, false);
+      document.removeEventListener("touchend", onMouseUpLoopStart, false);
+      document.removeEventListener("mousemove", onCursorMoveLoopStart, false);
+      document.removeEventListener("touchmove", onCursorMoveLoopStart, false);
       this.loopBar.addEventListener("mousedown", onMouseDown, false);
       this.loopBar.addEventListener("touchstart", onMouseDown, false);
     };
-    const onMouseDownLoop = e => {
+    const onMouseDownLoopStart = e => {
+      // console.log(
+      //   "mousedownstart",
+      //   this.loopLastPositionXPxls,
+      //   this.loopLastPositionXPercentage,
+      //   this.loopLastPositionXPercentage * this.loopBar.offsetWidth
+      // );
+      this.loopBar.style.width = this.loopBar.offsetWidth + "px";
       if (
-        this.loopBarPositionXPxls -
-          this.loopBarPositionXPercentage * this.loopBar.offsetWidth >
-        1
+        this.loopLastPositionXPxls -
+          this.loopLastPositionXPercentage * this.loopBar.offsetWidth >
+          1 ||
+        this.loopLastPositionXPercentage * this.loopBar.offsetWidth -
+          this.loopLastPositionXPxls >
+          1
       ) {
-        this.loopBarPositionXPxls =
-          this.loopBarPositionXPercentage * this.loopBar.offsetWidth;
+        this.loopLastPositionXPxls =
+          this.loopLastPositionXPercentage * this.loopBar.offsetWidth;
       }
       this.loopBar.removeEventListener("mousedown", onMouseDown, false);
       this.loopBar.removeEventListener("touchstart", onMouseDown, false);
       e.preventDefault();
-      onCursorMoveLoop(e);
-      document.addEventListener("mouseup", onMouseUpLoop, false);
-      document.addEventListener("touchend", onMouseUpLoop, false);
-      document.addEventListener("mousemove", onCursorMoveLoop, false);
-      document.addEventListener("touchmove", onCursorMoveLoop, false);
+      onCursorMoveLoopStart(e);
+      document.addEventListener("mouseup", onMouseUpLoopStart, false);
+      document.addEventListener("touchend", onMouseUpLoopStart, false);
+      document.addEventListener("mousemove", onCursorMoveLoopStart, false);
+      document.addEventListener("touchmove", onCursorMoveLoopStart, false);
     };
 
-    this.loopBarStart.addEventListener("mousedown", onMouseDownLoop, false);
-    this.loopBarStart.addEventListener("touchstart", onMouseDownLoop, false);
+    this.loopBarStart.addEventListener(
+      "mousedown",
+      onMouseDownLoopStart,
+      false
+    );
+    this.loopBarStart.addEventListener(
+      "touchstart",
+      onMouseDownLoopStart,
+      false
+    );
+
+    const onCursorMoveLoopEnd = e => {
+      const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
+      const viewportOffset = this.totalBar.getBoundingClientRect();
+      let positionX = Math.round(clientX - viewportOffset.left);
+      if (positionX < 0) {
+        positionX = 0;
+      } else if (positionX > this.totalBar.offsetWidth) {
+        positionX = this.totalBar.offsetWidth;
+      }
+
+      if (this.loopLastPositionXPxls - positionX < 0) {
+        this.loopBar.style.width =
+          Math.abs(this.loopLastPositionXPxls - positionX) + "px";
+      } else {
+        this.loopBar.style.left = positionX + "px";
+        this.loopLastPositionXPxls = positionX;
+      }
+      // console.log(this.loopLastPositionXPxls);
+    };
+
+    const onMouseUpLoopEnd = () => {
+      this.loopBar.style.width =
+        (this.loopBar.style.width.replace("px", "") /
+          this.totalBar.offsetWidth) *
+          100 +
+        "%";
+      this.loopLastPositionXPercentage =
+        this.loopLastPositionXPxls / this.loopBar.offsetWidth;
+
+      // console.log(
+      //   "mouseUp End",
+      //   this.loopLastPositionXPxls,
+      //   this.loopLastPositionXPercentage,
+      //   this.loopLastPositionXPercentage * this.loopBar.offsetWidth
+      // );
+      document.removeEventListener("mouseup", onMouseUpLoopEnd, false);
+      document.removeEventListener("touchend", onMouseUpLoopEnd, false);
+      document.removeEventListener("mousemove", onCursorMoveLoopEnd, false);
+      document.removeEventListener("touchmove", onCursorMoveLoopEnd, false);
+      this.loopBar.addEventListener("mousedown", onMouseDown, false);
+      this.loopBar.addEventListener("touchstart", onMouseDown, false);
+    };
+
+    const onMouseDownLoopEnd = e => {
+      // console.log(
+      //   "mouseDown End",
+      //   this.loopLastPositionXPxls,
+      //   this.loopLastPositionXPercentage,
+      //   this.loopLastPositionXPercentage * this.loopBar.offsetWidth
+      // );
+      this.loopBar.removeEventListener("mousedown", onMouseDown, false);
+      this.loopBar.removeEventListener("touchstart", onMouseDown, false);
+      e.preventDefault();
+      onCursorMoveLoopEnd(e);
+      document.addEventListener("mouseup", onMouseUpLoopEnd, false);
+      document.addEventListener("touchend", onMouseUpLoopEnd, false);
+      document.addEventListener("mousemove", onCursorMoveLoopEnd, false);
+      document.addEventListener("touchmove", onCursorMoveLoopEnd, false);
+    };
+
+    this.loopBarEnd.addEventListener("mousedown", onMouseDownLoopEnd, false);
+    this.loopBarEnd.addEventListener("touchstart", onMouseDownLoopEnd, false);
 
     document.querySelector("body").addEventListener("click", e => {
       if (e.target.className === "mc-player-speed-value") {

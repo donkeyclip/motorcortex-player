@@ -47,7 +47,7 @@ module.exports = theme => `
   height: 5px;
   margin: 0px 10px 0px 10px;
   background-color: #505056;
-  position: absolute;
+  position: relative;
   top: 0px;
   left: 0px;
 }
@@ -55,9 +55,9 @@ module.exports = theme => `
 #mc-player-loopbar {
   position: absolute;
   height: 100%;
+  width: 100%;
   top: 0px;
   left: 0px;
-  right: 0px;
   background-color: ${theme["loopbar-color"]};
 }
 
