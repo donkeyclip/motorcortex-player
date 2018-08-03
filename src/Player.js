@@ -20,6 +20,7 @@ class Player {
     this.loopLastPositionXPxls = 0;
     this.loopLastPositionXPercentage = 0;
     this.loopMillisecondStart = 0;
+    this.loopJourney = false;
     this.theme = "transparent on-top";
     if (!this.theme.includes("on-top")) {
       this.theme += " position-default";
@@ -113,9 +114,7 @@ class Player {
     // const millisecondDelta = Math.abs(millisecond - localMillisecond);
 
     const localDuration = (duration / this.totalBar.offsetWidth) * loopBarWidth;
-    // const localDuration =  - millisecondDelta;
 
-    // console.log(localMillisecond, localDuration);
     if (localMillisecond / localDuration > 1) {
       this.clip.stop();
     }
@@ -182,36 +181,25 @@ class Player {
   }
 
   handleDrag(loopBarPositionX) {
-    // console.log(totalBarPositionX)
     const duration = this.clip.duration;
+    let loopBarPercentageLeft;
+    if (this.loopBar.style.left.includes("px")) {
+      loopBarPercentageLeft =
+        this.loopBar.style.left.replace("px", "") / this.totalBar.offsetWidth;
+    } else {
+      loopBarPercentageLeft = this.loopBar.style.left.replace("%", "") / 100;
+    }
 
-    const loopBarPercentageLeft =
-      this.loopBar.style.left.replace("%", "") / 100;
-
-    // const runningBarPercentageWidth =
-    //   this.runningBar.style.width.replace("%", "") / 100;
-
-    // console.log(loopBarPositionX, this.totalBar.offsetWidth, loopBarPercentageLeft)
     const totalBarPositionX =
       loopBarPositionX + this.totalBar.offsetWidth * loopBarPercentageLeft;
 
-    // console.log(totalBarPositionX)
     const millisecond = Math.round(
       (duration * totalBarPositionX) / this.totalBar.offsetWidth
     );
 
-    // console.log(this.totalBar.offsetWidth, loopBarPercentageLeft)
-
-    // const runningBarWidth = this.totalBar.offsetWidth * loopBarPercentageLeft
-
-    // const realMillisecond = millisecond1 * this.clip.duration / this.totalBar.offsetWidth;
-
-    // const loopBarRunTime = offsetWidth / this.totalBar.offsetWidth;
-    // console.log("m/c",millisecond / this.clip.duration, "l",loopBarPercentageLeft)
     this.currentTime.innerHTML = millisecond;
     this.runningBar.style.width =
       (loopBarPositionX / this.loopBar.offsetWidth) * 100 + "%";
-    // console.log("width", this.runningBar.style.width)
     journey.station(millisecond);
   }
 
@@ -229,6 +217,7 @@ class Player {
       } else if (this.clip.state === "idle") {
         this.clip.play();
       } else if (this.clip.state === "completed") {
+        // this.clip.stop()
         journey = timeCapsule.startJourney(this.clip);
         journey.station(0);
         journey.destination();
@@ -395,33 +384,38 @@ class Player {
       } else if (positionX > this.totalBar.offsetWidth) {
         positionX = this.totalBar.offsetWidth;
       }
-      // console.log("lastposotion",this.loopLastPositionXPxls)
+
       const loopBarDeltaX = positionX - this.loopLastPositionXPxls || 0;
       const runningBarWidthInPxls = this.runningBar.offsetWidth - loopBarDeltaX;
 
       this.runningBar.style.width = runningBarWidthInPxls + "px";
-      // console.log(this.runningBar.offsetWidth, loopBarDeltaX, this.loopLastPositionXPxls)
       this.loopBar.style.left = positionX + "px";
-      // console.log(
-      //   this.loopBar.style.width.replace("px",""),
-      //   loopBarDeltaX,
-      // )
+
+      if (
+        this.loopJourney === false &&
+        positionX >=
+          this.runningBar.offsetWidth +
+            this.loopBar.style.left.replace("px", "") -
+            0
+      ) {
+        this.loopJourney = true;
+      }
+
       this.loopBar.style.width =
         this.loopBar.style.width.replace("px", "") - loopBarDeltaX + "px";
-      // console.log("move",this.loopBar.style.width)
       this.loopLastPositionXPxls = positionX;
     };
 
     const onMouseUpLoopStart = e => {
+      if (this.loopJourney) {
+        this.handleDragStart();
+        this.handleDrag(this.runningBar.offsetWidth);
+        this.handleDragEnd();
+        this.loopJourney = false;
+      }
       this.loopLastPositionXPercentage =
         this.loopLastPositionXPxls / this.loopBar.offsetWidth;
 
-      // console.log(
-      //   "mouseUp",
-      //   this.loopLastPositionXPxls,
-      //   this.loopLastPositionXPercentage,
-      //   this.loopLastPositionXPercentage * this.loopBar.offsetWidth
-      // );
       e.preventDefault();
       this.loopMillisecondStart =
         (this.clip.duration * this.loopBar.style.left.replace("%", "")) / 100;
@@ -448,12 +442,6 @@ class Player {
       this.loopBar.addEventListener("touchstart", onMouseDown, false);
     };
     const onMouseDownLoopStart = e => {
-      // console.log(
-      //   "mousedownstart",
-      //   this.loopLastPositionXPxls,
-      //   this.loopLastPositionXPercentage,
-      //   this.loopLastPositionXPercentage * this.loopBar.offsetWidth
-      // );
       this.loopBar.style.width = this.loopBar.offsetWidth + "px";
       if (
         this.loopLastPositionXPxls -
@@ -497,6 +485,24 @@ class Player {
         positionX = this.totalBar.offsetWidth;
       }
 
+      if (
+        this.loopJourney === false &&
+        positionX <=
+          this.runningBar.offsetWidth +
+            this.loopBar.style.left.replace("px", "") -
+            0
+      ) {
+        this.loopJourney = true;
+      }
+
+      if (
+        this.runningBar.offsetWidth +
+          Number(this.loopBar.style.left.replace("px", "")) >
+        positionX
+      ) {
+        this.runningBar.style.width =
+          positionX - Number(this.loopBar.style.left.replace("px", "")) + "px";
+      }
       if (this.loopLastPositionXPxls - positionX < 0) {
         this.loopBar.style.width =
           Math.abs(this.loopLastPositionXPxls - positionX) + "px";
@@ -504,10 +510,16 @@ class Player {
         this.loopBar.style.left = positionX + "px";
         this.loopLastPositionXPxls = positionX;
       }
-      // console.log(this.loopLastPositionXPxls);
     };
 
     const onMouseUpLoopEnd = () => {
+      this.runningBar.style.width =
+        (this.runningBar.offsetWidth / this.loopBar.offsetWidth) * 100 + "%";
+      this.loopBar.style.left =
+        (this.loopBar.style.left.replace("px", "") /
+          this.totalBar.offsetWidth) *
+          100 +
+        "%";
       this.loopBar.style.width =
         (this.loopBar.style.width.replace("px", "") /
           this.totalBar.offsetWidth) *
@@ -516,12 +528,12 @@ class Player {
       this.loopLastPositionXPercentage =
         this.loopLastPositionXPxls / this.loopBar.offsetWidth;
 
-      // console.log(
-      //   "mouseUp End",
-      //   this.loopLastPositionXPxls,
-      //   this.loopLastPositionXPercentage,
-      //   this.loopLastPositionXPercentage * this.loopBar.offsetWidth
-      // );
+      if (this.loopJourney) {
+        this.handleDragStart();
+        this.handleDrag(this.runningBar.offsetWidth);
+        this.handleDragEnd();
+        this.loopJourney = false;
+      }
       document.removeEventListener("mouseup", onMouseUpLoopEnd, false);
       document.removeEventListener("touchend", onMouseUpLoopEnd, false);
       document.removeEventListener("mousemove", onCursorMoveLoopEnd, false);
@@ -531,12 +543,14 @@ class Player {
     };
 
     const onMouseDownLoopEnd = e => {
-      // console.log(
-      //   "mouseDown End",
-      //   this.loopLastPositionXPxls,
-      //   this.loopLastPositionXPercentage,
-      //   this.loopLastPositionXPercentage * this.loopBar.offsetWidth
-      // );
+      this.runningBar.style.width = this.runningBar.offsetWidth + "px";
+
+      this.loopBar.style.left =
+        (this.loopBar.style.left.replace("%", "") / 100) *
+          this.totalBar.offsetWidth +
+        "px";
+
+      this.loopBar.style.width = this.loopBar.offsetWidth + "px";
       this.loopBar.removeEventListener("mousedown", onMouseDown, false);
       this.loopBar.removeEventListener("touchstart", onMouseDown, false);
       e.preventDefault();
