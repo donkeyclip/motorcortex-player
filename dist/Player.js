@@ -26,6 +26,7 @@ var Player = function () {
     this.id = options.id || helper.getAnId(); // timer id
     this.clip = options.clip; // host to apply the timer
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
+    this.requestingLoop = false;
     this.loopLastPositionXPxls = 0;
     this.loopLastPositionXPercentage = 0;
     this.loopMillisecondStart = 0;
@@ -119,8 +120,24 @@ var Player = function () {
 
       var localDuration = duration / this.totalBar.offsetWidth * loopBarWidth;
 
+      // if(
+      //   this.loopBarStart.className.includes("m-fadeIn") &&
+      //   localMillisecond / localDuration > 1 &&
+      //   !this.requestingLoop
+      // ) {
+      //   this.clip.stop();
+      //   this.requestingLoop = true;
+      //   journey = timeCapsule.startJourney(this.clip);
+      //   journey.station(0);
+      //   journey.destination();
+      // }
       if (localMillisecond / localDuration > 1) {
         this.clip.stop();
+
+        // journey = timeCapsule.startJourney(this.clip);
+        // journey.station(0);
+        // journey.destination();
+        // console.log(this.clip)
       }
       this.runningBar.style.width = localMillisecond / localDuration * 100 + "%";
 
@@ -364,15 +381,20 @@ var Player = function () {
         var loopBarDeltaX = positionX - _this.loopLastPositionXPxls || 0;
         var runningBarWidthInPxls = _this.runningBar.offsetWidth - loopBarDeltaX;
 
-        _this.runningBar.style.width = runningBarWidthInPxls + "px";
         _this.loopBar.style.left = positionX + "px";
+
+        if (_this.loopBar.style.width.replace("px", "") - loopBarDeltaX + positionX > _this.totalBar.offsetWidth) {
+          _this.loopBar.style.width = "0px";
+          _this.runningBar.style.width = "0px";
+        } else {
+          _this.loopBar.style.width = _this.loopBar.style.width.replace("px", "") - loopBarDeltaX + "px";
+          _this.runningBar.style.width = runningBarWidthInPxls + "px";
+        }
+        _this.loopLastPositionXPxls = positionX;
 
         if (_this.loopJourney === false && positionX >= _this.runningBar.offsetWidth + _this.loopBar.style.left.replace("px", "") - 0) {
           _this.loopJourney = true;
         }
-
-        _this.loopBar.style.width = _this.loopBar.style.width.replace("px", "") - loopBarDeltaX + "px";
-        _this.loopLastPositionXPxls = positionX;
       };
 
       var onMouseUpLoopStart = function onMouseUpLoopStart(e) {
@@ -382,11 +404,13 @@ var Player = function () {
           _this.handleDragEnd();
           _this.loopJourney = false;
         }
+
         _this.loopLastPositionXPercentage = _this.loopLastPositionXPxls / _this.loopBar.offsetWidth;
 
         e.preventDefault();
         _this.loopMillisecondStart = _this.clip.duration * _this.loopBar.style.left.replace("%", "") / 100;
         var runningBarWidthPercentage = _this.runningBar.offsetWidth / _this.loopBar.offsetWidth * 100 + "%";
+
         _this.loopBar.style.left = _this.loopBar.style.left.replace("px", "") / _this.totalBar.offsetWidth * 100 + "%";
 
         _this.loopBar.style.width = _this.loopBar.style.width.replace("px", "") / _this.totalBar.offsetWidth * 100 + "%";
@@ -399,6 +423,7 @@ var Player = function () {
         _this.loopBar.addEventListener("mousedown", onMouseDown, false);
         _this.loopBar.addEventListener("touchstart", onMouseDown, false);
       };
+
       var onMouseDownLoopStart = function onMouseDownLoopStart(e) {
         _this.loopBar.style.width = _this.loopBar.offsetWidth + "px";
         if (_this.loopLastPositionXPxls - _this.loopLastPositionXPercentage * _this.loopBar.offsetWidth > 1 || _this.loopLastPositionXPercentage * _this.loopBar.offsetWidth - _this.loopLastPositionXPxls > 1) {
@@ -446,6 +471,7 @@ var Player = function () {
         _this.runningBar.style.width = _this.runningBar.offsetWidth / _this.loopBar.offsetWidth * 100 + "%";
         _this.loopBar.style.left = _this.loopBar.style.left.replace("px", "") / _this.totalBar.offsetWidth * 100 + "%";
         _this.loopBar.style.width = _this.loopBar.style.width.replace("px", "") / _this.totalBar.offsetWidth * 100 + "%";
+
         _this.loopLastPositionXPercentage = _this.loopLastPositionXPxls / _this.loopBar.offsetWidth;
 
         if (_this.loopJourney) {
@@ -466,6 +492,10 @@ var Player = function () {
         _this.runningBar.style.width = _this.runningBar.offsetWidth + "px";
 
         _this.loopBar.style.left = _this.loopBar.style.left.replace("%", "") / 100 * _this.totalBar.offsetWidth + "px";
+
+        if (_this.loopLastPositionXPxls - _this.loopLastPositionXPercentage * _this.loopBar.offsetWidth > 1 || _this.loopLastPositionXPercentage * _this.loopBar.offsetWidth - _this.loopLastPositionXPxls > 1) {
+          _this.loopLastPositionXPxls = _this.loopLastPositionXPercentage * _this.loopBar.offsetWidth;
+        }
 
         _this.loopBar.style.width = _this.loopBar.offsetWidth + "px";
         _this.loopBar.removeEventListener("mousedown", onMouseDown, false);
