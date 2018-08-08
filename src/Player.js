@@ -17,6 +17,7 @@ class Player {
     this.id = options.id || helper.getAnId(); // timer id
     this.clip = options.clip; // host to apply the timer
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
+    this.requestingLoop = false;
     this.loopLastPositionXPxls = 0;
     this.loopLastPositionXPercentage = 0;
     this.loopMillisecondStart = 0;
@@ -115,8 +116,24 @@ class Player {
 
     const localDuration = (duration / this.totalBar.offsetWidth) * loopBarWidth;
 
+    // if(
+    //   this.loopBarStart.className.includes("m-fadeIn") &&
+    //   localMillisecond / localDuration > 1 &&
+    //   !this.requestingLoop
+    // ) {
+    //   this.clip.stop();
+    //   this.requestingLoop = true;
+    //   journey = timeCapsule.startJourney(this.clip);
+    //   journey.station(0);
+    //   journey.destination();
+    // }
     if (localMillisecond / localDuration > 1) {
       this.clip.stop();
+
+      // journey = timeCapsule.startJourney(this.clip);
+      // journey.station(0);
+      // journey.destination();
+      // console.log(this.clip)
     }
     this.runningBar.style.width =
       (localMillisecond / localDuration) * 100 + "%";
@@ -388,8 +405,20 @@ class Player {
       const loopBarDeltaX = positionX - this.loopLastPositionXPxls || 0;
       const runningBarWidthInPxls = this.runningBar.offsetWidth - loopBarDeltaX;
 
-      this.runningBar.style.width = runningBarWidthInPxls + "px";
       this.loopBar.style.left = positionX + "px";
+
+      if (
+        this.loopBar.style.width.replace("px", "") - loopBarDeltaX + positionX >
+        this.totalBar.offsetWidth
+      ) {
+        this.loopBar.style.width = "0px";
+        this.runningBar.style.width = "0px";
+      } else {
+        this.loopBar.style.width =
+          this.loopBar.style.width.replace("px", "") - loopBarDeltaX + "px";
+        this.runningBar.style.width = runningBarWidthInPxls + "px";
+      }
+      this.loopLastPositionXPxls = positionX;
 
       if (
         this.loopJourney === false &&
@@ -400,10 +429,6 @@ class Player {
       ) {
         this.loopJourney = true;
       }
-
-      this.loopBar.style.width =
-        this.loopBar.style.width.replace("px", "") - loopBarDeltaX + "px";
-      this.loopLastPositionXPxls = positionX;
     };
 
     const onMouseUpLoopStart = e => {
@@ -413,6 +438,7 @@ class Player {
         this.handleDragEnd();
         this.loopJourney = false;
       }
+
       this.loopLastPositionXPercentage =
         this.loopLastPositionXPxls / this.loopBar.offsetWidth;
 
@@ -421,6 +447,7 @@ class Player {
         (this.clip.duration * this.loopBar.style.left.replace("%", "")) / 100;
       const runningBarWidthPercentage =
         (this.runningBar.offsetWidth / this.loopBar.offsetWidth) * 100 + "%";
+
       this.loopBar.style.left =
         (this.loopBar.style.left.replace("px", "") /
           this.totalBar.offsetWidth) *
@@ -441,6 +468,7 @@ class Player {
       this.loopBar.addEventListener("mousedown", onMouseDown, false);
       this.loopBar.addEventListener("touchstart", onMouseDown, false);
     };
+
     const onMouseDownLoopStart = e => {
       this.loopBar.style.width = this.loopBar.offsetWidth + "px";
       if (
@@ -525,6 +553,7 @@ class Player {
           this.totalBar.offsetWidth) *
           100 +
         "%";
+
       this.loopLastPositionXPercentage =
         this.loopLastPositionXPxls / this.loopBar.offsetWidth;
 
@@ -549,6 +578,18 @@ class Player {
         (this.loopBar.style.left.replace("%", "") / 100) *
           this.totalBar.offsetWidth +
         "px";
+
+      if (
+        this.loopLastPositionXPxls -
+          this.loopLastPositionXPercentage * this.loopBar.offsetWidth >
+          1 ||
+        this.loopLastPositionXPercentage * this.loopBar.offsetWidth -
+          this.loopLastPositionXPxls >
+          1
+      ) {
+        this.loopLastPositionXPxls =
+          this.loopLastPositionXPercentage * this.loopBar.offsetWidth;
+      }
 
       this.loopBar.style.width = this.loopBar.offsetWidth + "px";
       this.loopBar.removeEventListener("mousedown", onMouseDown, false);
