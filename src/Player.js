@@ -22,6 +22,9 @@ class Player {
     this.loopLastPositionXPercentage = 0;
     this.loopMillisecondStart = 0;
     this.loopJourney = false;
+    this.needsUpdate = true;
+    this.loopStartMillisecond = 0;
+    this.loopEndMillisecond = this.clip.duration;
     this.theme = "transparent on-top";
     if (!this.theme.includes("on-top")) {
       this.theme += " position-default";
@@ -104,6 +107,9 @@ class Player {
   }
 
   millisecondChange(millisecond) {
+    if (!this.needsUpdate) {
+      return;
+    }
     const duration = this.clip.duration;
 
     const loopBarLeftPercentage =
@@ -128,13 +134,18 @@ class Player {
     //   journey.destination();
     // }
     if (localMillisecond / localDuration > 1) {
+      this.needsUpdate = false;
       this.clip.stop();
 
       // journey = timeCapsule.startJourney(this.clip);
       // journey.station(0);
       // journey.destination();
+      // this.clip.play();
       // console.log(this.clip)
+      // console.log("i am here");
+      this.needsUpdate = true;
     }
+
     this.runningBar.style.width =
       (localMillisecond / localDuration) * 100 + "%";
 
@@ -177,7 +188,7 @@ class Player {
           meta.animationID +
           " has been rejected as all attributes of it overlap on specific elements because of existing animations"
       );
-    } else if (eventName === "duration-change") {
+    } else if (eventName === "duration-change" && this.needsUpdate) {
       this.millisecondChange(
         this.clip.runTimeInfo.currentMillisecond,
         this.clip.state
@@ -454,6 +465,10 @@ class Player {
           100 +
         "%";
 
+      this.loopStartMillisecond = Math.round(
+        (this.clip.duration * this.loopBar.style.left.replace("%", "")) / 100
+      );
+
       this.loopBar.style.width =
         (this.loopBar.style.width.replace("px", "") /
           this.totalBar.offsetWidth) *
@@ -556,6 +571,13 @@ class Player {
 
       this.loopLastPositionXPercentage =
         this.loopLastPositionXPxls / this.loopBar.offsetWidth;
+
+      this.loopEndMillisecond = Math.round(
+        (this.clip.duration *
+          (Number(this.loopBar.style.left.replace("%", "")) +
+            Number(this.loopBar.style.width.replace("%", "")))) /
+          100
+      );
 
       if (this.loopJourney) {
         this.handleDragStart();
