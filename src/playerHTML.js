@@ -2,8 +2,12 @@ module.exports = config => `
   <div id="mc-player-controls">
     <div id="mc-player-totalbar">
       <div id="mc-player-loopbar">
-        <div class="mc-player-loop-boundaries" id="mc-player-loopbar-start"></div>
-        <div class="mc-player-loop-boundaries" id="mc-player-loopbar-end"></div>
+        <div class="mc-player-loop-boundaries" id="mc-player-loopbar-start">
+          <div id="mc-player-loopbar-start-time" class="mc-player-loopbar-time"></div>
+        </div>
+        <div class="mc-player-loop-boundaries" id="mc-player-loopbar-end">
+          <div id="mc-player-loopbar-end-time" class="mc-player-loopbar-time"></div>
+        </div>
         <div id="mc-player-helperbar"></div>
         <div id="mc-player-runningbar">
           <div id="mc-player-cursor"></div>

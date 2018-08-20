@@ -1,4 +1,8 @@
 module.exports = theme => `
+#mc-player{
+  box-sizing:border-box;
+  overflow:hidden;
+}
 .full-screen #mc-player-controls {
   position:fixed;
   left:0px;
@@ -13,6 +17,11 @@ module.exports = theme => `
 .svg {
   fill: ${theme["svg-color"]};
   stroke: ${theme["svg-color"]};
+}
+
+.svg-selected svg{
+  fill: ${theme["svg-selected-color"]};
+  stroke: ${theme["svg-selected-color"]};
 }
 
 #mc-player {
@@ -59,6 +68,22 @@ module.exports = theme => `
   top: 0px;
   left: 0px;
   background-color: ${theme["loopbar-color"]};
+}
+
+.mc-player-loopbar-time {
+  width:40px;
+  height:12px;
+  background-color:${theme["background-color"]};
+  line-height:12px;
+  font-size:12px;
+}
+
+#mc-player-loopbar-start-time {
+  transform:translate(-10px, -10px);
+}
+
+#mc-player-loopbar-end-time {
+  transform:translate(-10px, 20px);
 }
 
 .mc-player-loop-boundaries {
