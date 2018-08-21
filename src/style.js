@@ -1,4 +1,11 @@
 module.exports = theme => `
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+body {
+  font-weight: 400;
+  line-height: 1.5;
+}
 #mc-player{
   box-sizing:border-box;
   overflow:hidden;
