@@ -474,6 +474,33 @@ class Player {
       }
       this.loopLastPositionXPxls = positionX;
 
+      // const checkRightLimit =
+      //   parseFloat(this.loopBar.style.left) +
+      //   this.loopBar.offsetWidth -
+      //   parseFloat(elid("mc-player-loopbar-end-time").style.right);
+
+      const loopTimeWidth =
+        parseFloat(elid("mc-player-loopbar-start-time").style.left) +
+        elid("mc-player-loopbar-start-time").offsetWidth +
+        elid("mc-player-loopbar-end-time").offsetWidth -
+        parseFloat(elid("mc-player-loopbar-end-time").style.right);
+
+      const loopTimePosition = loopTimeWidth - this.loopBar.offsetWidth;
+
+      if (
+        this.loopBar.offsetWidth <
+        elid("mc-player-loopbar-start-time").offsetWidth +
+          elid("mc-player-loopbar-end-time").offsetWidth
+      ) {
+        elid("mc-player-loopbar-start-time").style.left =
+          "-" + loopTimePosition / 2 + "px";
+        elid("mc-player-loopbar-end-time").style.right =
+          "-" + loopTimePosition / 2 + "px";
+      } else {
+        elid("mc-player-loopbar-start-time").style.left = "0px";
+        elid("mc-player-loopbar-end-time").style.right = "0px";
+      }
+
       if (
         this.loopJourney === false &&
         positionX >=
@@ -651,6 +678,28 @@ class Player {
             parseFloat(this.loopBar.style.width))) /
           this.totalBar.offsetWidth
       );
+
+      const loopTimeWidth =
+        parseFloat(elid("mc-player-loopbar-start-time").style.left) +
+        elid("mc-player-loopbar-start-time").offsetWidth +
+        elid("mc-player-loopbar-end-time").offsetWidth -
+        parseFloat(elid("mc-player-loopbar-end-time").style.right);
+
+      const loopTimePosition = loopTimeWidth - this.loopBar.offsetWidth;
+
+      if (
+        this.loopBar.offsetWidth <
+        elid("mc-player-loopbar-start-time").offsetWidth +
+          elid("mc-player-loopbar-end-time").offsetWidth
+      ) {
+        elid("mc-player-loopbar-start-time").style.left =
+          "-" + loopTimePosition / 2 + "px";
+        elid("mc-player-loopbar-end-time").style.right =
+          "-" + loopTimePosition / 2 + "px";
+      } else {
+        elid("mc-player-loopbar-start-time").style.left = "0px";
+        elid("mc-player-loopbar-end-time").style.right = "0px";
+      }
 
       elid("mc-player-loopbar-end-time").innerHTML = this.loopEndMillisecond;
       elid(

@@ -71,19 +71,22 @@ module.exports = theme => `
 }
 
 .mc-player-loopbar-time {
-  width:40px;
+  width:auto;
+  position:absolute;
   height:12px;
   background-color:${theme["background-color"]};
-  line-height:12px;
-  font-size:12px;
+  line-height:10px;
+  font-size:10px;
 }
 
 #mc-player-loopbar-start-time {
-  transform:translate(-10px, -10px);
+  left:0px;
+  top:-12px;
 }
 
 #mc-player-loopbar-end-time {
-  transform:translate(-10px, 20px);
+  right:0px;
+  top:-12px;
 }
 
 .mc-player-loop-boundaries {
@@ -108,6 +111,7 @@ module.exports = theme => `
 #mc-player-runningbar {
   position: relative;
   width: 0px;
+  max-width:100%;
   height: 100%;
   background-color: ${theme["runningbar-color"]};
 }
