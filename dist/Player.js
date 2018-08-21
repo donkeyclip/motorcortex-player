@@ -83,6 +83,7 @@ var Player = function () {
     this.loopBarEnd.style.left = "100%";
     this.loopBarStart.classList.add("m-fadeOut");
     this.loopBarEnd.classList.add("m-fadeOut");
+    elid("mc-player-loop-time").classList.add("m-fadeOut");
 
     this.setSpeed();
     this.setTheme();
@@ -397,7 +398,23 @@ var Player = function () {
         _this2.loopBarEnd.classList.toggle("m-fadeOut");
         _this2.loopBarStart.classList.toggle("m-fadeIn");
         _this2.loopBarEnd.classList.toggle("m-fadeIn");
+        elid("mc-player-loop-time").classList.toggle("m-fadeOut");
+        elid("mc-player-loop-time").classList.toggle("m-fadeIn");
+
+        elid("mc-player-loopbar-end-time").innerHTML = _this2.loopEndMillisecond;
+        elid("mc-player-loopbar-start-time").innerHTML = _this2.loopStartMillisecond;
         _this2.needsUpdate = true;
+
+        if (elid("mc-player-loop-time").className.includes("m-fadeOut")) {
+          console.log("sadf");
+          _this2.loopBar.style.left = "0px";
+          _this2.loopBar.style.width = "100%";
+          _this2.loopStartMillisecond = 0;
+          _this2.loopEndMillisecond = _this2.clip.duration;
+          _this2.loopLastPositionXPxls = 0;
+          _this2.loopLastPositionXPercentage = 0;
+          _this2.runningBar.style.width = _this2.clip.runTimeInfo.currentMillisecond / _this2.clip.duration * 100 + "%";
+        }
       };
 
       elid("mc-player-controls").onmouseover = function () {
@@ -655,7 +672,7 @@ var Player = function () {
       var realSpeed = (realZoneSpeed + arrayOfValues[botLimitIndex]).toFixed(1);
 
       if (realSpeed == 0) {
-        return '0.0';
+        return "0.0";
       }
       return realSpeed;
     }
@@ -691,7 +708,7 @@ var Player = function () {
       if (!this.theme.includes("on-top")) {
         this.theme += " position-default";
         // replace multiple spaces with one space
-        this.theme.replace(/\s\s+/g, ' ');
+        this.theme.replace(/\s\s+/g, " ");
       }
 
       var theme = {};

@@ -3,10 +3,8 @@ module.exports = config => `
     <div id="mc-player-totalbar">
       <div id="mc-player-loopbar">
         <div class="mc-player-loop-boundaries" id="mc-player-loopbar-start">
-          <div id="mc-player-loopbar-start-time" class="mc-player-loopbar-time"></div>
         </div>
         <div class="mc-player-loop-boundaries" id="mc-player-loopbar-end">
-          <div id="mc-player-loopbar-end-time" class="mc-player-loopbar-time"></div>
         </div>
         <div id="mc-player-helperbar"></div>
         <div id="mc-player-runningbar">
@@ -22,6 +20,11 @@ module.exports = config => `
       <span id="mc-player-time-current"></span>
       <span id="mc-player-time-separator"></span>
       <span id="mc-player-time-total"></span>
+    </div>
+    <div id="mc-player-loop-time">
+      <span id="mc-player-loopbar-start-time" class="mc-player-loopbar-time"></span>
+      <span>:</span>
+      <span id="mc-player-loopbar-end-time" class="mc-player-loopbar-time"></span>
     </div>
     <div id="mc-player-loop-btn">${config.svg.loopSVG}</div>
     <div id="mc-player-settings-btn">${config.svg.settingsSVG}</div>

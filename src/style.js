@@ -70,25 +70,6 @@ module.exports = theme => `
   background-color: ${theme["loopbar-color"]};
 }
 
-.mc-player-loopbar-time {
-  width:auto;
-  position:absolute;
-  height:12px;
-  background-color:${theme["background-color"]};
-  line-height:10px;
-  font-size:10px;
-}
-
-#mc-player-loopbar-start-time {
-  left:0px;
-  top:-12px;
-}
-
-#mc-player-loopbar-end-time {
-  right:0px;
-  top:-12px;
-}
-
 .mc-player-loop-boundaries {
   transform:translate(-50%,-37%);
   position:absolute;
@@ -155,6 +136,21 @@ module.exports = theme => `
   margin: 10px 5px 5px 5px;
   text-align: center;
   z-index:3;
+}
+
+
+.mc-player-loopbar-time {
+  width:auto;
+  height:12px;
+  background-color:${theme["background-color"]};
+  line-height:10px;
+  font-size:10px;
+}
+
+#mc-player-loop-time { 
+  position:absolute;
+  right:85px;
+  bottom:7px;
 }
 
 #mc-player-loop-btn {

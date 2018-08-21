@@ -76,6 +76,7 @@ class Player {
     this.loopBarEnd.style.left = "100%";
     this.loopBarStart.classList.add("m-fadeOut");
     this.loopBarEnd.classList.add("m-fadeOut");
+    elid("mc-player-loop-time").classList.add("m-fadeOut");
 
     this.setSpeed();
     this.setTheme();
@@ -423,7 +424,27 @@ class Player {
       this.loopBarEnd.classList.toggle("m-fadeOut");
       this.loopBarStart.classList.toggle("m-fadeIn");
       this.loopBarEnd.classList.toggle("m-fadeIn");
+      elid("mc-player-loop-time").classList.toggle("m-fadeOut");
+      elid("mc-player-loop-time").classList.toggle("m-fadeIn");
+
+      elid("mc-player-loopbar-end-time").innerHTML = this.loopEndMillisecond;
+      elid(
+        "mc-player-loopbar-start-time"
+      ).innerHTML = this.loopStartMillisecond;
       this.needsUpdate = true;
+
+      if (elid("mc-player-loop-time").className.includes("m-fadeOut")) {
+        this.loopBar.style.left = "0px";
+        this.loopBar.style.width = "100%";
+        this.loopStartMillisecond = 0;
+        this.loopEndMillisecond = this.clip.duration;
+        this.loopLastPositionXPxls = 0;
+        this.loopLastPositionXPercentage = 0;
+        this.runningBar.style.width =
+          (this.clip.runTimeInfo.currentMillisecond / this.clip.duration) *
+            100 +
+          "%";
+      }
     };
 
     elid("mc-player-controls").onmouseover = () => {
@@ -473,33 +494,6 @@ class Player {
         this.runningBar.style.width = runningBarWidthInPxls + "px";
       }
       this.loopLastPositionXPxls = positionX;
-
-      // const checkRightLimit =
-      //   parseFloat(this.loopBar.style.left) +
-      //   this.loopBar.offsetWidth -
-      //   parseFloat(elid("mc-player-loopbar-end-time").style.right);
-
-      const loopTimeWidth =
-        parseFloat(elid("mc-player-loopbar-start-time").style.left) +
-        elid("mc-player-loopbar-start-time").offsetWidth +
-        elid("mc-player-loopbar-end-time").offsetWidth -
-        parseFloat(elid("mc-player-loopbar-end-time").style.right);
-
-      const loopTimePosition = loopTimeWidth - this.loopBar.offsetWidth;
-
-      if (
-        this.loopBar.offsetWidth <
-        elid("mc-player-loopbar-start-time").offsetWidth +
-          elid("mc-player-loopbar-end-time").offsetWidth
-      ) {
-        elid("mc-player-loopbar-start-time").style.left =
-          "-" + loopTimePosition / 2 + "px";
-        elid("mc-player-loopbar-end-time").style.right =
-          "-" + loopTimePosition / 2 + "px";
-      } else {
-        elid("mc-player-loopbar-start-time").style.left = "0px";
-        elid("mc-player-loopbar-end-time").style.right = "0px";
-      }
 
       if (
         this.loopJourney === false &&
@@ -678,28 +672,6 @@ class Player {
             parseFloat(this.loopBar.style.width))) /
           this.totalBar.offsetWidth
       );
-
-      const loopTimeWidth =
-        parseFloat(elid("mc-player-loopbar-start-time").style.left) +
-        elid("mc-player-loopbar-start-time").offsetWidth +
-        elid("mc-player-loopbar-end-time").offsetWidth -
-        parseFloat(elid("mc-player-loopbar-end-time").style.right);
-
-      const loopTimePosition = loopTimeWidth - this.loopBar.offsetWidth;
-
-      if (
-        this.loopBar.offsetWidth <
-        elid("mc-player-loopbar-start-time").offsetWidth +
-          elid("mc-player-loopbar-end-time").offsetWidth
-      ) {
-        elid("mc-player-loopbar-start-time").style.left =
-          "-" + loopTimePosition / 2 + "px";
-        elid("mc-player-loopbar-end-time").style.right =
-          "-" + loopTimePosition / 2 + "px";
-      } else {
-        elid("mc-player-loopbar-start-time").style.left = "0px";
-        elid("mc-player-loopbar-end-time").style.right = "0px";
-      }
 
       elid("mc-player-loopbar-end-time").innerHTML = this.loopEndMillisecond;
       elid(
