@@ -406,7 +406,6 @@ var Player = function () {
         _this2.needsUpdate = true;
 
         if (elid("mc-player-loop-time").className.includes("m-fadeOut")) {
-          console.log("sadf");
           _this2.loopBar.style.left = "0px";
           _this2.loopBar.style.width = "100%";
           _this2.loopStartMillisecond = 0;
