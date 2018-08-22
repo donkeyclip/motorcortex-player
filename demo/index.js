@@ -55,4 +55,4 @@ const animation_1 = new TestPlugin.TestIncident(
 clip.addIncident(animation_1, 0);
 
 // Add clip to timer
-new Player({ clip });
+new Player({ clip, theme: "darkGold on-top" });

@@ -27,7 +27,7 @@ var Player = function () {
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
     this.loopLastPositionXPxls = 0;
-    this.playAfterLoopResize = false;
+    this.playAfterResize = false;
     this.loopLastPositionXPercentage = 0;
     this.journey = null;
     this.loopJourney = false;
@@ -114,20 +114,48 @@ var Player = function () {
       if (millisecond >= this.loopEndMillisecond && this.loopButton.className.includes("svg-selected")) {
         this.needsUpdate = false;
         setTimeout(function () {
-          _this.journey = timeCapsule.startJourney(_this.clip);
-          _this.journey.station(_this.loopStartMillisecond + 1);
-          _this.journey.destination();
-          _this.clip.resume();
+          if (_this.clip.state === "idle") {
+            _this.clip.stop();
+            _this.journey = timeCapsule.startJourney(_this.clip);
+            _this.journey.station(_this.loopStartMillisecond + 1);
+            _this.journey.destination();
+            _this.clip.play();
+          } else if (_this.clip.state === "completed") {
+            _this.clip.stop();
+            _this.journey = timeCapsule.startJourney(_this.clip);
+            _this.journey.station(_this.loopStartMillisecond + 1);
+            _this.journey.destination();
+            _this.clip.play();
+          } else {
+            _this.journey = timeCapsule.startJourney(_this.clip);
+            _this.journey.station(_this.loopStartMillisecond + 1);
+            _this.journey.destination();
+            _this.clip.resume();
+          }
           _this.needsUpdate = true;
         }, 0);
         return 1;
       } else if (millisecond <= this.loopStartMillisecond && this.loopButton.className.includes("svg-selected")) {
         this.needsUpdate = false;
         setTimeout(function () {
-          _this.journey = timeCapsule.startJourney(_this.clip);
-          _this.journey.station(_this.loopEndMillisecond - 1);
-          _this.journey.destination();
-          _this.clip.resume();
+          if (_this.clip.state === "idle") {
+            _this.clip.stop();
+            _this.journey = timeCapsule.startJourney(_this.clip);
+            _this.journey.station(_this.loopEndMillisecond - 1);
+            _this.journey.destination();
+            _this.clip.play();
+          } else if (_this.clip.state === "completed") {
+            _this.clip.stop();
+            _this.journey = timeCapsule.startJourney(_this.clip);
+            _this.journey.station(_this.loopEndMillisecond - 1);
+            _this.journey.destination();
+            _this.clip.play();
+          } else {
+            _this.journey = timeCapsule.startJourney(_this.clip);
+            _this.journey.station(_this.loopEndMillisecond - 1);
+            _this.journey.destination();
+            _this.clip.resume();
+          }
           _this.needsUpdate = true;
         }, 0);
         return 1;
@@ -137,7 +165,6 @@ var Player = function () {
           _this.journey = timeCapsule.startJourney(_this.clip);
           _this.journey.station(_this.loopEndMillisecond);
           _this.journey.destination();
-          _this.clip.wait();
         }, 0);
         this.runningBar.style.width = "100%";
         this.currentTime.innerHTML = this.loopEndMillisecond;
@@ -148,9 +175,8 @@ var Player = function () {
           _this.journey = timeCapsule.startJourney(_this.clip);
           _this.journey.station(_this.loopStartMillisecond);
           _this.journey.destination();
-          _this.clip.wait();
         }, 0);
-        this.runningBar.style.width = "100%";
+        this.runningBar.style.width = "0%";
         this.currentTime.innerHTML = this.loopStartMillisecond;
         return 1;
       }
@@ -212,6 +238,9 @@ var Player = function () {
   }, {
     key: "handleDrag",
     value: function handleDrag(loopBarPositionX) {
+      if (!isFinite(loopBarPositionX)) {
+        loopBarPositionX = 0;
+      }
       var duration = this.clip.duration;
 
       var loopBarPercentageLeft = void 0;
@@ -253,13 +282,33 @@ var Player = function () {
         } else if (_this2.clip.state === "waiting") {
           _this2.clip.resume();
         } else if (_this2.clip.state === "idle") {
-          _this2.clip.play();
+          if (_this2.clip.speed >= 0) {
+            _this2.clip.play();
+            _this2.needsUpdate = true;
+          } else {
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_this2.loopEndMillisecond - 1);
+            _this2.journey.destination();
+            _this2.clip.play();
+            _this2.needsUpdate = true;
+          }
         } else if (_this2.clip.state === "completed") {
-          // this.clip.stop()
-          _this2.journey = timeCapsule.startJourney(_this2.clip);
-          _this2.journey.station(0);
-          _this2.journey.destination();
-          _this2.clip.play();
+          if (_this2.clip.speed >= 0) {
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(0);
+            _this2.journey.destination();
+            _this2.clip.play();
+            _this2.needsUpdate = true;
+          } else {
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_this2.loopEndMillisecond - 1);
+            _this2.journey.destination();
+            _this2.clip.play();
+            _this2.needsUpdate = true;
+          }
         }
       };
 
@@ -285,10 +334,24 @@ var Player = function () {
 
       this.settingsButton.onclick = function (e) {
         e.preventDefault();
-        _this2.settingsPanel.classList.toggle("m-fadeOut");
-        _this2.settingsPanel.classList.toggle("m-fadeIn");
-      };
 
+        var showHideSettings = function showHideSettings(e) {
+          if (_this2.settingsPanel.contains(e.target)) {
+            return true;
+          }
+          _this2.settingsPanel.classList.toggle("m-fadeOut");
+          _this2.settingsPanel.classList.toggle("m-fadeIn");
+          if (_this2.settingsPanel.className.includes("m-fadeOut")) {
+            removeListener("click", showHideSettings, false);
+          }
+        };
+
+        if (_this2.settingsPanel.className.includes("m-fadeOut")) {
+          addListener("click", showHideSettings, false);
+        } else {
+          removeListener("click", showHideSettings, false);
+        }
+      };
       this.settingsSpeedButtonShow.onclick = this.settingsSpeedButtonHide.onclick = function (e) {
         e.preventDefault();
         _this2.settingsPanel.classList.toggle("mc-player-settings-speed-panel");
@@ -323,9 +386,32 @@ var Player = function () {
         removeListener("mousemove", onCursorMove, false);
         removeListener("touchmove", onCursorMove, false);
         _this2.handleDragEnd();
+        if (_this2.playAfterResize) {
+          if (_this2.clip.state === "idle" && !_this2.loopButton.className.includes("svg-selected")) {
+            _this2.clip.play();
+          } else if (_this2.clip.state === "completed" && !_this2.loopButton.className.includes("svg-selected")) {
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_this2.loopEndMillisecond - 1);
+            _this2.journey.destination();
+            _this2.clip.play();
+          } else if ((_this2.clip.state === "completed" || _this2.clip.state === "idle") && _this2.loopButton.className.includes("svg-selected")) {
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.clip.speed >= 0 ? _this2.journey.station(_this2.loopStartMillisecond + 1) : _this2.journey.station(_this2.loopEndMillisecond - 1);
+            _this2.journey.destination();
+            _this2.clip.play();
+          } else {
+            _this2.clip.resume();
+          }
+          _this2.playAfterResize = false;
+        }
       };
       var onMouseDown = function onMouseDown(e) {
         e.preventDefault();
+        if (_this2.clip.state === "playing") {
+          _this2.playAfterResize = true;
+        }
         _this2.handleDragStart();
         onCursorMove(e);
         addListener("mouseup", onMouseUp, false);
@@ -503,9 +589,37 @@ var Player = function () {
           passive: true
         }, false);
 
-        if (_this2.playAfterLoopResize) {
-          _this2.clip.resume();
-          _this2.playAfterLoopResize = false;
+        if (_this2.playAfterResize) {
+          if (_this2.clip.state === "idle") {
+            var loopms = void 0;
+            if (_this2.clip.speed >= 0) {
+              loopms = _this2.loopStartMillisecond + 1;
+            } else {
+              loopms = _this2.loopEndMillisecond - 1;
+            }
+            _this2.needsUpdate = true;
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(loopms);
+            _this2.journey.destination();
+            _this2.clip.play();
+          } else if (_this2.clip.state === "completed") {
+            var _loopms = void 0;
+            if (_this2.clip.speed >= 0) {
+              _loopms = _this2.loopStartMillisecond + 1;
+            } else {
+              _loopms = _this2.loopEndMillisecond - 1;
+            }
+            _this2.needsUpdate = true;
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_loopms);
+            _this2.journey.destination();
+            _this2.clip.play();
+          } else {
+            _this2.clip.resume();
+          }
+          _this2.playAfterResize = false;
         }
       };
 
@@ -515,7 +629,7 @@ var Player = function () {
 
         if (_this2.clip.state === "playing") {
           _this2.clip.wait();
-          _this2.playAfterLoopResize = true;
+          _this2.playAfterResize = true;
         }
         _this2.loopBar.style.width = _this2.loopBar.offsetWidth + "px";
 
@@ -601,9 +715,37 @@ var Player = function () {
           passive: true
         }, false);
 
-        if (_this2.playAfterLoopResize) {
-          _this2.clip.resume();
-          _this2.playAfterLoopResize = false;
+        if (_this2.playAfterResize) {
+          if (_this2.clip.state === "idle") {
+            var loopms = void 0;
+            if (_this2.clip.speed >= 0) {
+              loopms = _this2.loopStartMillisecond + 1;
+            } else {
+              loopms = _this2.loopEndMillisecond - 1;
+            }
+            _this2.needsUpdate = true;
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(loopms);
+            _this2.journey.destination();
+            _this2.clip.play();
+          } else if (_this2.clip.state === "completed") {
+            var _loopms2 = void 0;
+            if (_this2.clip.speed >= 0) {
+              _loopms2 = _this2.loopStartMillisecond + 1;
+            } else {
+              _loopms2 = _this2.loopEndMillisecond - 1;
+            }
+            _this2.needsUpdate = true;
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_loopms2);
+            _this2.journey.destination();
+            _this2.clip.play();
+          } else {
+            _this2.clip.resume();
+          }
+          _this2.playAfterResize = false;
         }
       };
 
@@ -612,7 +754,7 @@ var Player = function () {
 
         if (_this2.clip.state === "playing") {
           _this2.clip.wait();
-          _this2.playAfterLoopResize = true;
+          _this2.playAfterResize = true;
         }
         e.preventDefault();
         _this2.runningBar.style.width = _this2.runningBar.offsetWidth + "px";
@@ -704,16 +846,18 @@ var Player = function () {
   }, {
     key: "setTheme",
     value: function setTheme() {
-      if (!this.theme.includes("on-top")) {
+      // replace multiple spaces with one space
+      this.theme.replace(/\s\s+/g, " ");
+      this.theme.trim();
+
+      if (!this.theme.includes("on-top") && !this.theme.includes("position-default")) {
         this.theme += " position-default";
-        // replace multiple spaces with one space
-        this.theme.replace(/\s\s+/g, " ");
       }
 
       var theme = {};
       for (var i in this.theme.split(" ")) {
         var confTheme = confThemes(this.theme.split(" ")[i]);
-        for (var q in confTheme) {
+        for (var q in confTheme || {}) {
           theme[q] = confTheme[q];
         }
       }

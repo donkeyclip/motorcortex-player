@@ -18,7 +18,7 @@ class Player {
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
     this.loopLastPositionXPxls = 0;
-    this.playAfterLoopResize = false;
+    this.playAfterResize = false;
     this.loopLastPositionXPercentage = 0;
     this.journey = null;
     this.loopJourney = false;
@@ -107,10 +107,24 @@ class Player {
     ) {
       this.needsUpdate = false;
       setTimeout(() => {
-        this.journey = timeCapsule.startJourney(this.clip);
-        this.journey.station(this.loopStartMillisecond + 1);
-        this.journey.destination();
-        this.clip.resume();
+        if (this.clip.state === "idle") {
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(this.loopStartMillisecond + 1);
+          this.journey.destination();
+          this.clip.play();
+        } else if (this.clip.state === "completed") {
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(this.loopStartMillisecond + 1);
+          this.journey.destination();
+          this.clip.play();
+        } else {
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(this.loopStartMillisecond + 1);
+          this.journey.destination();
+          this.clip.resume();
+        }
         this.needsUpdate = true;
       }, 0);
       return 1;
@@ -120,10 +134,24 @@ class Player {
     ) {
       this.needsUpdate = false;
       setTimeout(() => {
-        this.journey = timeCapsule.startJourney(this.clip);
-        this.journey.station(this.loopEndMillisecond - 1);
-        this.journey.destination();
-        this.clip.resume();
+        if (this.clip.state === "idle") {
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.destination();
+          this.clip.play();
+        } else if (this.clip.state === "completed") {
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.destination();
+          this.clip.play();
+        } else {
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.destination();
+          this.clip.resume();
+        }
         this.needsUpdate = true;
       }, 0);
       return 1;
@@ -133,7 +161,6 @@ class Player {
         this.journey = timeCapsule.startJourney(this.clip);
         this.journey.station(this.loopEndMillisecond);
         this.journey.destination();
-        this.clip.wait();
       }, 0);
       this.runningBar.style.width = "100%";
       this.currentTime.innerHTML = this.loopEndMillisecond;
@@ -144,9 +171,8 @@ class Player {
         this.journey = timeCapsule.startJourney(this.clip);
         this.journey.station(this.loopStartMillisecond);
         this.journey.destination();
-        this.clip.wait();
       }, 0);
-      this.runningBar.style.width = "100%";
+      this.runningBar.style.width = "0%";
       this.currentTime.innerHTML = this.loopStartMillisecond;
       return 1;
     }
@@ -215,6 +241,9 @@ class Player {
   }
 
   handleDrag(loopBarPositionX) {
+    if (!isFinite(loopBarPositionX)) {
+      loopBarPositionX = 0;
+    }
     const duration = this.clip.duration;
 
     let loopBarPercentageLeft;
@@ -257,13 +286,33 @@ class Player {
       } else if (this.clip.state === "waiting") {
         this.clip.resume();
       } else if (this.clip.state === "idle") {
-        this.clip.play();
+        if (this.clip.speed >= 0) {
+          this.clip.play();
+          this.needsUpdate = true;
+        } else {
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.destination();
+          this.clip.play();
+          this.needsUpdate = true;
+        }
       } else if (this.clip.state === "completed") {
-        // this.clip.stop()
-        this.journey = timeCapsule.startJourney(this.clip);
-        this.journey.station(0);
-        this.journey.destination();
-        this.clip.play();
+        if (this.clip.speed >= 0) {
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(0);
+          this.journey.destination();
+          this.clip.play();
+          this.needsUpdate = true;
+        } else {
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.destination();
+          this.clip.play();
+          this.needsUpdate = true;
+        }
       }
     };
 
@@ -289,10 +338,24 @@ class Player {
 
     this.settingsButton.onclick = e => {
       e.preventDefault();
-      this.settingsPanel.classList.toggle("m-fadeOut");
-      this.settingsPanel.classList.toggle("m-fadeIn");
-    };
 
+      const showHideSettings = e => {
+        if (this.settingsPanel.contains(e.target)) {
+          return true;
+        }
+        this.settingsPanel.classList.toggle("m-fadeOut");
+        this.settingsPanel.classList.toggle("m-fadeIn");
+        if (this.settingsPanel.className.includes("m-fadeOut")) {
+          removeListener("click", showHideSettings, false);
+        }
+      };
+
+      if (this.settingsPanel.className.includes("m-fadeOut")) {
+        addListener("click", showHideSettings, false);
+      } else {
+        removeListener("click", showHideSettings, false);
+      }
+    };
     this.settingsSpeedButtonShow.onclick = this.settingsSpeedButtonHide.onclick = e => {
       e.preventDefault();
       this.settingsPanel.classList.toggle("mc-player-settings-speed-panel");
@@ -329,9 +392,43 @@ class Player {
       removeListener("mousemove", onCursorMove, false);
       removeListener("touchmove", onCursorMove, false);
       this.handleDragEnd();
+      if (this.playAfterResize) {
+        if (
+          this.clip.state === "idle" &&
+          !this.loopButton.className.includes("svg-selected")
+        ) {
+          this.clip.play();
+        } else if (
+          this.clip.state === "completed" &&
+          !this.loopButton.className.includes("svg-selected")
+        ) {
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.destination();
+          this.clip.play();
+        } else if (
+          (this.clip.state === "completed" || this.clip.state === "idle") &&
+          this.loopButton.className.includes("svg-selected")
+        ) {
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.clip.speed >= 0
+            ? this.journey.station(this.loopStartMillisecond + 1)
+            : this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.destination();
+          this.clip.play();
+        } else {
+          this.clip.resume();
+        }
+        this.playAfterResize = false;
+      }
     };
     const onMouseDown = e => {
       e.preventDefault();
+      if (this.clip.state === "playing") {
+        this.playAfterResize = true;
+      }
       this.handleDragStart();
       onCursorMove(e);
       addListener("mouseup", onMouseUp, false);
@@ -572,9 +669,37 @@ class Player {
         false
       );
 
-      if (this.playAfterLoopResize) {
-        this.clip.resume();
-        this.playAfterLoopResize = false;
+      if (this.playAfterResize) {
+        if (this.clip.state === "idle") {
+          let loopms;
+          if (this.clip.speed >= 0) {
+            loopms = this.loopStartMillisecond + 1;
+          } else {
+            loopms = this.loopEndMillisecond - 1;
+          }
+          this.needsUpdate = true;
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(loopms);
+          this.journey.destination();
+          this.clip.play();
+        } else if (this.clip.state === "completed") {
+          let loopms;
+          if (this.clip.speed >= 0) {
+            loopms = this.loopStartMillisecond + 1;
+          } else {
+            loopms = this.loopEndMillisecond - 1;
+          }
+          this.needsUpdate = true;
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(loopms);
+          this.journey.destination();
+          this.clip.play();
+        } else {
+          this.clip.resume();
+        }
+        this.playAfterResize = false;
       }
     };
 
@@ -584,7 +709,7 @@ class Player {
 
       if (this.clip.state === "playing") {
         this.clip.wait();
-        this.playAfterLoopResize = true;
+        this.playAfterResize = true;
       }
       this.loopBar.style.width = this.loopBar.offsetWidth + "px";
 
@@ -729,9 +854,37 @@ class Player {
         false
       );
 
-      if (this.playAfterLoopResize) {
-        this.clip.resume();
-        this.playAfterLoopResize = false;
+      if (this.playAfterResize) {
+        if (this.clip.state === "idle") {
+          let loopms;
+          if (this.clip.speed >= 0) {
+            loopms = this.loopStartMillisecond + 1;
+          } else {
+            loopms = this.loopEndMillisecond - 1;
+          }
+          this.needsUpdate = true;
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(loopms);
+          this.journey.destination();
+          this.clip.play();
+        } else if (this.clip.state === "completed") {
+          let loopms;
+          if (this.clip.speed >= 0) {
+            loopms = this.loopStartMillisecond + 1;
+          } else {
+            loopms = this.loopEndMillisecond - 1;
+          }
+          this.needsUpdate = true;
+          this.clip.stop();
+          this.journey = timeCapsule.startJourney(this.clip);
+          this.journey.station(loopms);
+          this.journey.destination();
+          this.clip.play();
+        } else {
+          this.clip.resume();
+        }
+        this.playAfterResize = false;
       }
     };
 
@@ -740,7 +893,7 @@ class Player {
 
       if (this.clip.state === "playing") {
         this.clip.wait();
-        this.playAfterLoopResize = true;
+        this.playAfterResize = true;
       }
       e.preventDefault();
       this.runningBar.style.width = this.runningBar.offsetWidth + "px";
@@ -847,16 +1000,21 @@ class Player {
   }
 
   setTheme() {
-    if (!this.theme.includes("on-top")) {
+    // replace multiple spaces with one space
+    this.theme.replace(/\s\s+/g, " ");
+    this.theme.trim();
+
+    if (
+      !this.theme.includes("on-top") &&
+      !this.theme.includes("position-default")
+    ) {
       this.theme += " position-default";
-      // replace multiple spaces with one space
-      this.theme.replace(/\s\s+/g, " ");
     }
 
     const theme = {};
     for (const i in this.theme.split(" ")) {
       const confTheme = confThemes(this.theme.split(" ")[i]);
-      for (const q in confTheme) {
+      for (const q in confTheme || {}) {
         theme[q] = confTheme[q];
       }
     }

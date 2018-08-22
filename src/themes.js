@@ -13,6 +13,7 @@ const themes = {
     "slider-off-color": "#ccc",
     "slider-on-color": "red",
     "settings-border": "1px solid rgba(255,255,255,0.2)",
+    "controls-border": "none",
     "svg-selected-color": "red"
   },
   dark: {
@@ -28,9 +29,8 @@ const themes = {
     "hover-color": "rgba(90, 90, 90, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "red",
-    "controls-bottom": "-40px",
-    "settings-panel-bottom": "5px",
     "settings-border": "1px solid rgba(255,255,255,0.2)",
+    "controls-border": "none",
     "svg-selected-color": "red"
   },
   whiteGold: {
@@ -46,9 +46,8 @@ const themes = {
     "hover-color": "rgba(200, 200, 200, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "#a17f1a",
-    "controls-bottom": "-40px",
-    "settings-panel-bottom": "5px",
     "settings-border": "1px solid rgba(255,255,255,0.2)",
+    "controls-border": "none",
     "svg-selected-color": "red"
   },
   darkGold: {
@@ -64,9 +63,8 @@ const themes = {
     "hover-color": "rgba(90, 90, 90, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "#a17f1a",
-    "controls-bottom": "-40px",
-    "settings-panel-bottom": "5px",
     "settings-border": "1px solid rgba(255,255,255,0.2)",
+    "controls-border": "none",
     "svg-selected-color": "red"
   },
   transparent: {
@@ -88,11 +86,13 @@ const themes = {
   },
   "on-top": {
     "controls-bottom": "0px",
-    "settings-panel-bottom": "45px"
+    "settings-panel-bottom": "45px",
+    "controls-position": "0px"
   },
   "position-default": {
     "controls-bottom": "-40px",
-    "settings-panel-bottom": "5px"
+    "settings-panel-bottom": "5px",
+    "controls-position": "40px"
   }
 };
 

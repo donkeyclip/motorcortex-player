@@ -1,15 +1,5 @@
 module.exports = theme => `
-*, ::after, ::before {
-    box-sizing: border-box;
-}
-body {
-  font-weight: 400;
-  line-height: 1.5;
-}
-#mc-player{
-  box-sizing:border-box;
-  overflow:hidden;
-}
+
 .full-screen #mc-player-controls {
   position:fixed;
   left:0px;
@@ -31,18 +21,33 @@ body {
   stroke: ${theme["svg-selected-color"]};
 }
 
-#mc-player {
+#mc-player,
+#mc-player ::before,
+#mc-player ::after,
+#mc-player div,
+#mc-player p,
+#mc-player span,
+#mc-player ul,
+#mc-player li {
+  font-weight: 400;
+  line-height: 1.5;
   color: ${theme["color"]};
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0px;
-  left: 0px;
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  box-sizing:border-box;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+#mc-player {
+  overflow:hidden;
+  height: calc(100% + ${theme["controls-position"]});
+  width:100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  
 }
 
 #mc-player-settings-speed-hide {
