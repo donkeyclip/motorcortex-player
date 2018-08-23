@@ -1,6 +1,9 @@
 module.exports = config => `
   <div id="mc-player-controls">
     <div id="mc-player-totalbar">
+      <div id="mc-player-hover-display">
+        <div id="mc-player-hover-millisecond"></div>
+      </div>
       <div id="mc-player-loopbar">
         <div class="mc-player-loop-boundaries" id="mc-player-loopbar-start">
         </div>

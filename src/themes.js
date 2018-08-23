@@ -12,7 +12,7 @@ const themes = {
     "hover-color": "rgba(200, 200, 200, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "red",
-    "settings-border": "1px solid rgba(255,255,255,0.2)",
+    border: "1px solid rgba(255,255,255,0.2)",
     "controls-border": "none",
     "svg-selected-color": "red"
   },
@@ -29,7 +29,7 @@ const themes = {
     "hover-color": "rgba(90, 90, 90, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "red",
-    "settings-border": "1px solid rgba(255,255,255,0.2)",
+    border: "1px solid rgba(255,255,255,0.2)",
     "controls-border": "none",
     "svg-selected-color": "red"
   },
@@ -46,7 +46,7 @@ const themes = {
     "hover-color": "rgba(200, 200, 200, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "#a17f1a",
-    "settings-border": "1px solid rgba(255,255,255,0.2)",
+    border: "1px solid rgba(255,255,255,0.2)",
     "controls-border": "none",
     "svg-selected-color": "red"
   },
@@ -63,7 +63,7 @@ const themes = {
     "hover-color": "rgba(90, 90, 90, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "#a17f1a",
-    "settings-border": "1px solid rgba(255,255,255,0.2)",
+    border: "1px solid rgba(255,255,255,0.2)",
     "controls-border": "none",
     "svg-selected-color": "red"
   },
@@ -80,7 +80,7 @@ const themes = {
     "hover-color": "rgba(200, 200, 200, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "red",
-    "settings-border": "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.1)",
     "controls-border": "1px solid rgba(255,255,255,0.1)",
     "svg-selected-color": "red"
   },

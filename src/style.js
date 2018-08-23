@@ -20,6 +20,30 @@ module.exports = theme => `
   fill: ${theme["svg-selected-color"]};
   stroke: ${theme["svg-selected-color"]};
 }
+#mc-player-hover-display{
+    border: ${theme["border"]};
+    width: 100px;
+    display: flex;
+    height: 60px;
+    background-color:${theme["background-color"]};
+    position: absolute;
+    bottom: 14px;
+    left: 0px;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+#mc-player-hover-millisecond {
+  background-color: ${theme["background-color"]};
+  padding:3px;
+  height:18px;
+  margin:0px;
+  line-height:12px;
+  font-size:10px;
+  text-align: center;
+  min-width:20px;
+  max-width:100px;
+}
 
 #mc-player,
 #mc-player ::before,
@@ -214,7 +238,7 @@ module.exports = theme => `
   position: absolute;
   background-color: ${theme["background-color"]};
   bottom: ${theme["settings-panel-bottom"]};
-  border: ${theme["settings-border"]};
+  border: ${theme["border"]};
   right: 5px;
   width: 164px;
   height: 72px;
@@ -461,25 +485,8 @@ input:checked+.slider:before {
   cursor: pointer;
 }
 
-
-#mc-player-controls:hover #mc-player-cursor {
-  width: 16px;
-  height: 16px;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
-
-#mc-player-cursor:active {
-  width: 16px;
-  height: 16px;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
-
-#mc-player-loopbar:active #mc-player-cursor {
-
+#mc-player-controls:active #mc-player-cursor,
+#mc-player-controls:hover #mc-player-cursor  {
   width: 16px;
   height: 16px;
   -webkit-transition: all 0.3s ease;
