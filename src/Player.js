@@ -15,7 +15,7 @@ class Player {
   constructor(options) {
     this.id = options.id || helper.getAnId(); // timer id
     this.clip = options.clip; // host to apply the timer
-    this.hoverClip = this.clip.exportState({ unprocessed: true });
+
     // this.hoverClip.props.host = elid()
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
@@ -87,6 +87,7 @@ class Player {
     this.subscribeToTimer();
     this.subscribeToEvents();
     this.addEventListeners();
+    this.createHoverDisplay();
   }
 
   millisecondChange(millisecond) {
@@ -1028,10 +1029,14 @@ class Player {
             elid("mc-player-hover-display").offsetWidth;
         }
 
-        elid("mc-player-hover-display").style.left = left + "px";
-        elid("mc-player-hover-millisecond").innerHTML = Math.round(
+        const ms = Math.round(
           (positionX / this.totalBar.offsetWidth) * this.clip.duration
         );
+        this.journey = timeCapsule.startJourney(this.hoverClip);
+        this.journey.station(ms);
+        this.journey.destination();
+        elid("mc-player-hover-millisecond").innerHTML = ms;
+        elid("mc-player-hover-display").style.left = left + "px";
       };
     }
 
@@ -1159,6 +1164,17 @@ class Player {
     const positionY = (targetZone * step - 1) * -1 * 128.5;
 
     elid("mc-player-speed-cursor").style.top = positionY + "px";
+  }
+
+  createHoverDisplay() {
+    const definition = this.clip.exportState({ unprocessed: true });
+    definition.props.host = elid("mc-player-hover-display");
+    this.hoverClip = MC.ClipFromDefinition(definition);
+    this.hoverClip.props.host.getElementsByTagName("iframe")[0].style.position =
+      "absolute";
+    this.hoverClip.props.host.getElementsByTagName(
+      "iframe"
+    )[0].style.zIndex = 1;
   }
 }
 

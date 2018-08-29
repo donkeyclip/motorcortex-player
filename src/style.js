@@ -43,6 +43,7 @@ module.exports = theme => `
   text-align: center;
   min-width:20px;
   max-width:100px;
+  z-index:2;
 }
 
 #mc-player,
