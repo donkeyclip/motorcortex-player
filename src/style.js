@@ -1,5 +1,13 @@
 module.exports = theme => `
-
+.background {
+  background-color: black;
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0px;
+  left:0px;
+  z-index:-2000;
+}
 .full-screen #mc-player-controls {
   position:fixed;
   left:0px;
@@ -21,11 +29,11 @@ module.exports = theme => `
   stroke: ${theme["svg-selected-color"]};
 }
 #mc-player-hover-display{
-    border: ${theme["border"]};
-    width: 100px;
+    border: ${theme["preview-border"]};
+    max-width:300px;
     display: flex;
-    height: 60px;
-    background-color:${theme["background-color"]};
+    height: ;
+    background-color: whitesmoke;
     position: absolute;
     bottom: 14px;
     left: 0px;
@@ -34,7 +42,7 @@ module.exports = theme => `
 }
 
 #mc-player-hover-millisecond {
-  background-color: ${theme["background-color"]};
+  background-color: ${theme["hms-background-color"]};
   padding:3px;
   height:18px;
   margin:0px;
@@ -45,7 +53,6 @@ module.exports = theme => `
   max-width:100px;
   z-index:2;
 }
-
 #mc-player,
 #mc-player ::before,
 #mc-player ::after,
@@ -55,7 +62,7 @@ module.exports = theme => `
 #mc-player ul,
 #mc-player li {
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.9 !important;
   color: ${theme["color"]};
   font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   box-sizing:border-box;
@@ -66,6 +73,8 @@ module.exports = theme => `
   user-select: none;
 }
 #mc-player {
+  line-height: 1.9;
+  font-size: 12px;
   overflow:hidden;
   height: calc(100% + ${theme["controls-position"]});
   width:100%;
@@ -78,6 +87,37 @@ module.exports = theme => `
 #mc-player-settings-speed-hide {
   text-align:right;
 }
+
+.grad {
+  background-image: linear-gradient(
+    rgba(100,100,100,00.01),
+    rgba(100,100,100,00.02),
+    rgba(100,100,100,00.03),
+    rgba(100,100,100,0.04),
+    rgba(100,100,100,0.05),
+    rgba(0,0,0,0.06),
+    rgba(0,0,0,0.07),
+    rgba(0,0,0,0.08),
+    rgba(0,0,0,0.09),
+    rgba(0,0,0,0.1),
+    rgba(0,0,0,0.2),
+    rgba(0,0,0,0.3),
+    rgba(0,0,0,0.4),
+    rgba(0,0,0,0.4),
+    rgba(0,0,0,0.5),
+    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.7),
+    rgba(0,0,0,0.8),
+    rgba(0,0,0,0.9),
+    rgba(0,0,0,1)
+  );
+  position:absolute;
+  width:100%;
+  height:${theme["grad-height"]};
+  left:0px;
+  bottom:0px;
+}
+
 #mc-player-controls {
   background-color: ${theme["background-color"]};
   border: ${theme["controls-border"]};
@@ -153,7 +193,6 @@ module.exports = theme => `
   height: 34px;
   position: absolute;
   left: 45px;
-  bottom: 0px;
 }
 
 #mc-player-time-display span {
@@ -187,7 +226,7 @@ module.exports = theme => `
 #mc-player-loop-time { 
   position:absolute;
   right:85px;
-  bottom:7px;
+  bottom:5px;
 }
 
 #mc-player-loop-btn {
@@ -237,12 +276,12 @@ module.exports = theme => `
 #mc-player-settings-panel {
   box-sizing: border-box;
   position: absolute;
-  background-color: ${theme["background-color"]};
+  background-color: ${theme["settings-background-color"]};
   bottom: ${theme["settings-panel-bottom"]};
   border: ${theme["border"]};
   right: 5px;
   width: 164px;
-  height: 72px;
+  height: 78px;
   padding: 5px;
   margin: 0px;
   -webkit-transition: all 0.3s ease;
@@ -322,9 +361,9 @@ module.exports = theme => `
 }
 
 #mc-player-indicator {
-  font-size: 10px;
+  font-size: 10px !important;
   position: relative;
-  bottom: 14px;
+  bottom: 15px;
   color: ${theme["color"]};
 }
 

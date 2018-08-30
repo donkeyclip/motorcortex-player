@@ -1,6 +1,7 @@
 const MC = require("@kissmybutton/motorcortex");
 const helper = new MC.Helper();
 const timeCapsule = new MC.TimeCapsule();
+const hoverTimeCapsule = new MC.TimeCapsule();
 const confThemes = require("./themes");
 const confStyle = require("./style");
 const svg = require("./svg");
@@ -15,14 +16,15 @@ class Player {
   constructor(options) {
     this.id = options.id || helper.getAnId(); // timer id
     this.clip = options.clip; // host to apply the timer
-
-    // this.hoverClip.props.host = elid()
+    this.clipClass = options.clipClass;
+    // this.previewClip.props.host = elid()
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
     this.loopLastPositionXPxls = 0;
     this.playAfterResize = false;
     this.loopLastPositionXPercentage = 0;
     this.journey = null;
+    this.hoverJourney = null;
     this.loopJourney = false;
     this.needsUpdate = true;
     this.loopStartMillisecond = 0;
@@ -31,6 +33,10 @@ class Player {
 
     // set clip position to relative
     this.clip.props.host.style.position = "relative";
+    const clip = this.clip.props.host.getElementsByTagName("iframe")[0];
+    clip.style.margin = "0 auto";
+    clip.style.display = "block";
+    clip.style.backgroundColor = "white";
 
     // create the timer controls main div
     this.mcPlayer = elcreate("div");
@@ -959,6 +965,12 @@ class Player {
       const loopBarMouseInOut = () => {
         elid("mc-player-hover-display").classList.toggle("m-fadeOut");
         elid("mc-player-hover-display").classList.toggle("m-fadeIn");
+
+        if (elid("mc-player-hover-display").className.includes("m-fadeIn")) {
+          this.hoverJourney = hoverTimeCapsule.startJourney(this.previewClip);
+        } else {
+          this.hoverJourney.destination();
+        }
         this.loopBar.onmousemove = loopBarMouseMove;
       };
       const loopBarAddListeners = () => {
@@ -1032,9 +1044,9 @@ class Player {
         const ms = Math.round(
           (positionX / this.totalBar.offsetWidth) * this.clip.duration
         );
-        this.journey = timeCapsule.startJourney(this.hoverClip);
-        this.journey.station(ms);
-        this.journey.destination();
+
+        this.hoverJourney.station(ms);
+
         elid("mc-player-hover-millisecond").innerHTML = ms;
         elid("mc-player-hover-display").style.left = left + "px";
       };
@@ -1167,14 +1179,51 @@ class Player {
   }
 
   createHoverDisplay() {
+    const clip = this.clip.props.host.getElementsByTagName("iframe")[0];
+
     const definition = this.clip.exportState({ unprocessed: true });
+
     definition.props.host = elid("mc-player-hover-display");
-    this.hoverClip = MC.ClipFromDefinition(definition);
-    this.hoverClip.props.host.getElementsByTagName("iframe")[0].style.position =
-      "absolute";
-    this.hoverClip.props.host.getElementsByTagName(
+
+    this.previewClip = MC.ClipFromDefinition(definition /*,this.clipClass*/);
+
+    const previewClip = this.previewClip.props.host.getElementsByTagName(
       "iframe"
-    )[0].style.zIndex = 1;
+    )[0];
+
+    previewClip.style.position = "absolute";
+
+    previewClip.style.zIndex = 1;
+
+    const clipWidth = clip.offsetWidth;
+
+    const clipHeight = clip.offsetHeight;
+
+    const previewRatio = 0.253125;
+
+    let previewWidth = Math.round(clipWidth * previewRatio);
+
+    // max width is 300
+    if (
+      previewWidth > parseFloat(elid("mc-player-hover-display").style.maxWidth)
+    ) {
+      previewWidth = parseFloat(elid("mc-player-hover-display").style.maxWidth);
+    }
+
+    elid("mc-player-hover-display").style.width = previewWidth + "px";
+
+    const previewHeight = Math.round(
+      (clipWidth / clipHeight) * elid("mc-player-hover-display").offsetWidth
+    );
+
+    elid("mc-player-hover-display").style.height = previewHeight + "px";
+
+    const scaleY = previewHeight / clip.offsetHeight;
+    const scaleX = previewWidth / clip.offsetWidth;
+    previewClip.style.transform = `scale(${scaleX},${scaleY})`;
+
+    previewClip.style.top =
+      -(scaleY * clip.offsetHeight) - previewHeight / 2 + "px";
   }
 }
 

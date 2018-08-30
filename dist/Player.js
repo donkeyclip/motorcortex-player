@@ -7,6 +7,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var MC = require("@kissmybutton/motorcortex");
 var helper = new MC.Helper();
 var timeCapsule = new MC.TimeCapsule();
+var hoverTimeCapsule = new MC.TimeCapsule();
 var confThemes = require("./themes");
 var confStyle = require("./style");
 var svg = require("./svg");
@@ -24,14 +25,15 @@ var Player = function () {
 
     this.id = options.id || helper.getAnId(); // timer id
     this.clip = options.clip; // host to apply the timer
-
-    // this.hoverClip.props.host = elid()
+    this.clipClass = options.clipClass;
+    // this.previewClip.props.host = elid()
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
     this.loopLastPositionXPxls = 0;
     this.playAfterResize = false;
     this.loopLastPositionXPercentage = 0;
     this.journey = null;
+    this.hoverJourney = null;
     this.loopJourney = false;
     this.needsUpdate = true;
     this.loopStartMillisecond = 0;
@@ -40,6 +42,10 @@ var Player = function () {
 
     // set clip position to relative
     this.clip.props.host.style.position = "relative";
+    var clip = this.clip.props.host.getElementsByTagName("iframe")[0];
+    clip.style.margin = "0 auto";
+    clip.style.display = "block";
+    clip.style.backgroundColor = "white";
 
     // create the timer controls main div
     this.mcPlayer = elcreate("div");
@@ -799,6 +805,15 @@ var Player = function () {
         var loopBarMouseInOut = function loopBarMouseInOut() {
           elid("mc-player-hover-display").classList.toggle("m-fadeOut");
           elid("mc-player-hover-display").classList.toggle("m-fadeIn");
+
+          if (elid("mc-player-hover-display").className.includes("m-fadeIn")) {
+            console.log("started");
+            _this2.hoverJourney = hoverTimeCapsule.startJourney(_this2.previewClip);
+          } else {
+            console.log("ended");
+            console.log(_this2.previewClip);
+            _this2.hoverJourney.destination();
+          }
           _this2.loopBar.onmousemove = _loopBarMouseMove;
         };
         var loopBarAddListeners = function loopBarAddListeners() {
@@ -856,9 +871,11 @@ var Player = function () {
           }
 
           var ms = Math.round(positionX / _this2.totalBar.offsetWidth * _this2.clip.duration);
-          _this2.journey = timeCapsule.startJourney(_this2.hoverClip);
-          _this2.journey.station(ms);
-          _this2.journey.destination();
+
+          console.log("mousemove", ms);
+
+          _this2.hoverJourney.station(ms);
+
           elid("mc-player-hover-millisecond").innerHTML = ms;
           elid("mc-player-hover-display").style.left = left + "px";
         };
@@ -980,11 +997,47 @@ var Player = function () {
   }, {
     key: "createHoverDisplay",
     value: function createHoverDisplay() {
+
+      var clip = this.clip.props.host.getElementsByTagName("iframe")[0];
+
       var definition = this.clip.exportState({ unprocessed: true });
+
       definition.props.host = elid("mc-player-hover-display");
-      this.hoverClip = MC.ClipFromDefinition(definition);
-      this.hoverClip.props.host.getElementsByTagName('iframe')[0].style.position = "absolute";
-      this.hoverClip.props.host.getElementsByTagName('iframe')[0].style.zIndex = 1;
+
+      this.previewClip = MC.ClipFromDefinition(definition /*,this.clipClass*/);
+
+      var previewClip = this.previewClip.props.host.getElementsByTagName("iframe")[0];
+
+      previewClip.style.position = "absolute";
+
+      previewClip.style.zIndex = 1;
+
+      var clipWidth = clip.offsetWidth;
+
+      var clipHeight = clip.offsetHeight;
+
+      var previewRatio = 0.253125;
+
+      var previewWidth = Math.round(clipWidth * previewRatio);
+
+      // max width is 300
+      if (previewWidth > parseFloat(elid("mc-player-hover-display").style.maxWidth)) {
+        previewWidth = parseFloat(elid("mc-player-hover-display").style.maxWidth);
+      }
+
+      elid("mc-player-hover-display").style.width = previewWidth + "px";
+
+      var previewHeight = Math.round(clip.offsetHeight / clip.offsetWidth * elid("mc-player-hover-display").offsetWidth);
+
+      elid("mc-player-hover-display").style.height = previewHeight + "px";
+
+      var scaleY = previewHeight / clip.offsetHeight;
+      var scaleX = previewWidth / clip.offsetWidth;
+      previewClip.style.transform = "scale(" + scaleX + "," + scaleY + ")";
+
+      previewClip.style.top = -(scaleY * clip.offsetHeight) - previewHeight / 2 + "px";
+
+      console.log(previewWidth, previewHeight, clipWidth, clipHeight);
     }
   }]);
 

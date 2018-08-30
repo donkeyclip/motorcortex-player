@@ -1,4 +1,6 @@
 module.exports = config => `
+  <div class="grad"></div>
+  <div class="background"></div>
   <div id="mc-player-controls">
     <div id="mc-player-totalbar">
       <div id="mc-player-hover-display">
