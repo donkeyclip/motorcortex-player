@@ -27,6 +27,7 @@ var Player = function () {
     this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
     options.preview = options.preview || false;
+    this.options = options;
     // this.previewClip.props.host = elid()
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
@@ -83,7 +84,7 @@ var Player = function () {
     this.settingsSpeedPanel.style.display = "none";
     this.settingsPanel.classList.add("m-fadeOut");
     this.indicator.style.visibility = "hidden";
-    this.indicator.innerHTML = "Idle";
+    this.indicator.innerHTML = this.clip.state;
 
     this.settingsSpeedPanel.getElementsByTagName("li")[1].classList.add("no-hover");
 
@@ -803,7 +804,7 @@ var Player = function () {
       }, false);
 
       // only on desctop devices
-      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && this.options.preview) {
         var loopBarMouseInOut = function loopBarMouseInOut() {
           elid("mc-player-hover-display").classList.toggle("m-fadeOut");
           elid("mc-player-hover-display").classList.toggle("m-fadeIn");
