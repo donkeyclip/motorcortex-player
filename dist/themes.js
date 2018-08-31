@@ -17,7 +17,7 @@ var themes = {
     "hover-color": "rgba(200, 200, 200, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "red",
-    "preview-border": "2px solid rgba(0,0,0,1)",
+    "preview-border": "1px solid rgba(0,0,0,1)",
     border: "1px solid rgba(255,255,255,0.2)",
     "controls-border": "none",
     "svg-selected-color": "red"
@@ -38,7 +38,7 @@ var themes = {
     "hover-color": "rgba(90, 90, 90, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "red",
-    "preview-border": "2px solid rgba(0,0,0,1)",
+    "preview-border": "1px solid rgba(0,0,0,1)",
     border: "1px solid rgba(255,255,255,0.2)",
     "controls-border": "none",
     "svg-selected-color": "red"
@@ -59,7 +59,7 @@ var themes = {
     "hover-color": "rgba(200, 200, 200, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "#a17f1a",
-    "preview-border": "2px solid rgba(0,0,0,1)",
+    "preview-border": "1px solid rgba(0,0,0,1)",
     border: "1px solid rgba(255,255,255,0.2)",
     "controls-border": "none",
     "svg-selected-color": "red"
@@ -80,7 +80,7 @@ var themes = {
     "hover-color": "rgba(90, 90, 90, 0.5)",
     "slider-off-color": "#ccc",
     "slider-on-color": "#a17f1a",
-    "preview-border": "2px solid rgba(0,0,0,1)",
+    "preview-border": "1px solid rgba(0,0,0,1)",
     border: "1px solid rgba(255,255,255,0.2)",
     "controls-border": "none",
     "svg-selected-color": "red"
@@ -89,7 +89,7 @@ var themes = {
     "background-color": "transparent",
     "settings-background-color": "rgba(0,0,0,0.5)",
     "hms-background-color": "rgba(0,0,0,0.5)",
-    "preview-border": "2px solid rgba(0,0,0,1)",
+    "preview-border": "1px solid rgba(0,0,0,1)",
     color: "white",
     "grad-height": "60px",
     "svg-color": "white",

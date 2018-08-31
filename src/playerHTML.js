@@ -37,6 +37,13 @@ module.exports = config => `
   </div>
   <div id="mc-player-settings-panel">
     <ul id="mc-player-main-settings">
+      <li id="mc-player-settings-preview">
+        <label>Show Preview</label>
+        <label class="switch settings-switch">
+          <input id="mc-player-show-preview-checkbox" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+      </li>
       <li id="mc-player-settings-indicator">
         <label>Show Indicator</label>
         <label class="switch settings-switch">

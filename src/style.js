@@ -32,8 +32,8 @@ module.exports = theme => `
     border: ${theme["preview-border"]};
     max-width:300px;
     display: flex;
-    height: ;
-    background-color: whitesmoke;
+    overflow:hidden;
+    background-color: black;
     position: absolute;
     bottom: 14px;
     left: 0px;
@@ -281,7 +281,7 @@ module.exports = theme => `
   border: ${theme["border"]};
   right: 5px;
   width: 164px;
-  height: 78px;
+  height: 111px;
   padding: 5px;
   margin: 0px;
   -webkit-transition: all 0.3s ease;

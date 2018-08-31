@@ -21,6 +21,8 @@ var playerHTML = require("./playerHTML");
 
 var Player = function () {
   function Player(options) {
+    var _this = this;
+
     _classCallCheck(this, Player);
 
     this.id = options.id || helper.getAnId(); // timer id
@@ -104,12 +106,16 @@ var Player = function () {
     if (options.preview) {
       this.createHoverDisplay();
     }
+
+    this.mcPlayer.addEventListener("resize", function () {
+      _this.setPreviewDimentions();
+    });
   }
 
   _createClass(Player, [{
     key: "millisecondChange",
     value: function millisecondChange(millisecond) {
-      var _this = this;
+      var _this2 = this;
 
       if (!this.needsUpdate) {
         this.clip.wait();
@@ -128,57 +134,57 @@ var Player = function () {
       if (millisecond >= this.loopEndMillisecond && this.loopButton.className.includes("svg-selected")) {
         this.needsUpdate = false;
         setTimeout(function () {
-          if (_this.clip.state === "idle") {
-            _this.clip.stop();
-            _this.journey = timeCapsule.startJourney(_this.clip);
-            _this.journey.station(_this.loopStartMillisecond + 1);
-            _this.journey.destination();
-            _this.clip.play();
-          } else if (_this.clip.state === "completed") {
-            _this.clip.stop();
-            _this.journey = timeCapsule.startJourney(_this.clip);
-            _this.journey.station(_this.loopStartMillisecond + 1);
-            _this.journey.destination();
-            _this.clip.play();
+          if (_this2.clip.state === "idle") {
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_this2.loopStartMillisecond + 1);
+            _this2.journey.destination();
+            _this2.clip.play();
+          } else if (_this2.clip.state === "completed") {
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_this2.loopStartMillisecond + 1);
+            _this2.journey.destination();
+            _this2.clip.play();
           } else {
-            _this.journey = timeCapsule.startJourney(_this.clip);
-            _this.journey.station(_this.loopStartMillisecond + 1);
-            _this.journey.destination();
-            _this.clip.resume();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_this2.loopStartMillisecond + 1);
+            _this2.journey.destination();
+            _this2.clip.resume();
           }
-          _this.needsUpdate = true;
+          _this2.needsUpdate = true;
         }, 0);
         return 1;
       } else if (millisecond <= this.loopStartMillisecond && this.loopButton.className.includes("svg-selected")) {
         this.needsUpdate = false;
         setTimeout(function () {
-          if (_this.clip.state === "idle") {
-            _this.clip.stop();
-            _this.journey = timeCapsule.startJourney(_this.clip);
-            _this.journey.station(_this.loopEndMillisecond - 1);
-            _this.journey.destination();
-            _this.clip.play();
-          } else if (_this.clip.state === "completed") {
-            _this.clip.stop();
-            _this.journey = timeCapsule.startJourney(_this.clip);
-            _this.journey.station(_this.loopEndMillisecond - 1);
-            _this.journey.destination();
-            _this.clip.play();
+          if (_this2.clip.state === "idle") {
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_this2.loopEndMillisecond - 1);
+            _this2.journey.destination();
+            _this2.clip.play();
+          } else if (_this2.clip.state === "completed") {
+            _this2.clip.stop();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_this2.loopEndMillisecond - 1);
+            _this2.journey.destination();
+            _this2.clip.play();
           } else {
-            _this.journey = timeCapsule.startJourney(_this.clip);
-            _this.journey.station(_this.loopEndMillisecond - 1);
-            _this.journey.destination();
-            _this.clip.resume();
+            _this2.journey = timeCapsule.startJourney(_this2.clip);
+            _this2.journey.station(_this2.loopEndMillisecond - 1);
+            _this2.journey.destination();
+            _this2.clip.resume();
           }
-          _this.needsUpdate = true;
+          _this2.needsUpdate = true;
         }, 0);
         return 1;
       } else if (millisecond >= this.loopEndMillisecond) {
         this.needsUpdate = false;
         setTimeout(function () {
-          _this.journey = timeCapsule.startJourney(_this.clip);
-          _this.journey.station(_this.loopEndMillisecond);
-          _this.journey.destination();
+          _this2.journey = timeCapsule.startJourney(_this2.clip);
+          _this2.journey.station(_this2.loopEndMillisecond);
+          _this2.journey.destination();
         }, 0);
         this.runningBar.style.width = "100%";
         this.currentTime.innerHTML = this.loopEndMillisecond;
@@ -186,9 +192,9 @@ var Player = function () {
       } else if (millisecond <= this.loopStartMillisecond) {
         this.needsUpdate = false;
         setTimeout(function () {
-          _this.journey = timeCapsule.startJourney(_this.clip);
-          _this.journey.station(_this.loopStartMillisecond);
-          _this.journey.destination();
+          _this2.journey = timeCapsule.startJourney(_this2.clip);
+          _this2.journey.station(_this2.loopStartMillisecond);
+          _this2.journey.destination();
         }, 0);
         this.runningBar.style.width = "0%";
         this.currentTime.innerHTML = this.loopStartMillisecond;
@@ -224,6 +230,8 @@ var Player = function () {
           this.statusButton.innerHTML = svg.playSVG;
           this.statusButton.appendChild(this.indicator);
           this.indicator.innerHTML = "Idle";
+        } else {
+          this.indicator.innerHTML = meta.newSTate;
         }
       } else if (eventName === "attribute-rejection") {
         helper.log("Attributes", meta.attributes, "have been rejected from animation with id " + meta.animationID);
@@ -283,7 +291,7 @@ var Player = function () {
   }, {
     key: "addEventListeners",
     value: function addEventListeners() {
-      var _this2 = this;
+      var _this3 = this;
 
       /* 
       * Play - pause - replay interactions
@@ -291,37 +299,37 @@ var Player = function () {
 
       this.statusButton.onclick = function (e) {
         e.preventDefault();
-        if (_this2.clip.state === "playing") {
-          _this2.clip.wait();
-        } else if (_this2.clip.state === "waiting") {
-          _this2.clip.resume();
-        } else if (_this2.clip.state === "idle") {
-          if (_this2.clip.speed >= 0) {
-            _this2.clip.play();
-            _this2.needsUpdate = true;
+        if (_this3.clip.state === "playing") {
+          _this3.clip.wait();
+        } else if (_this3.clip.state === "waiting") {
+          _this3.clip.resume();
+        } else if (_this3.clip.state === "idle") {
+          if (_this3.clip.speed >= 0) {
+            _this3.clip.play();
+            _this3.needsUpdate = true;
           } else {
-            _this2.clip.stop();
-            _this2.journey = timeCapsule.startJourney(_this2.clip);
-            _this2.journey.station(_this2.loopEndMillisecond - 1);
-            _this2.journey.destination();
-            _this2.clip.play();
-            _this2.needsUpdate = true;
+            _this3.clip.stop();
+            _this3.journey = timeCapsule.startJourney(_this3.clip);
+            _this3.journey.station(_this3.loopEndMillisecond - 1);
+            _this3.journey.destination();
+            _this3.clip.play();
+            _this3.needsUpdate = true;
           }
-        } else if (_this2.clip.state === "completed") {
-          if (_this2.clip.speed >= 0) {
-            _this2.clip.stop();
-            _this2.journey = timeCapsule.startJourney(_this2.clip);
-            _this2.journey.station(0);
-            _this2.journey.destination();
-            _this2.clip.play();
-            _this2.needsUpdate = true;
+        } else if (_this3.clip.state === "completed") {
+          if (_this3.clip.speed >= 0) {
+            _this3.clip.stop();
+            _this3.journey = timeCapsule.startJourney(_this3.clip);
+            _this3.journey.station(0);
+            _this3.journey.destination();
+            _this3.clip.play();
+            _this3.needsUpdate = true;
           } else {
-            _this2.clip.stop();
-            _this2.journey = timeCapsule.startJourney(_this2.clip);
-            _this2.journey.station(_this2.loopEndMillisecond - 1);
-            _this2.journey.destination();
-            _this2.clip.play();
-            _this2.needsUpdate = true;
+            _this3.clip.stop();
+            _this3.journey = timeCapsule.startJourney(_this3.clip);
+            _this3.journey.station(_this3.loopEndMillisecond - 1);
+            _this3.journey.destination();
+            _this3.clip.play();
+            _this3.needsUpdate = true;
           }
         }
       };
@@ -331,18 +339,18 @@ var Player = function () {
         var checkbox = elid("mc-player-show-indicator-checkbox");
         if (checkbox.checked) {
           checkbox.checked = false;
-          _this2.indicator.style.visibility = "hidden";
-          _this2.statusButton.style.margin = "10px 5px 5px 5px";
-          _this2.statusButton.style.height = "25px";
-          _this2.statusButton.style.width = "45px";
-          _this2.timeDisplay.style.left = "50px";
+          _this3.indicator.style.visibility = "hidden";
+          _this3.statusButton.style.margin = "10px 5px 5px 5px";
+          _this3.statusButton.style.height = "25px";
+          _this3.statusButton.style.width = "45px";
+          _this3.timeDisplay.style.left = "50px";
         } else {
           checkbox.checked = true;
-          _this2.indicator.style.visibility = "visible";
-          _this2.statusButton.style.margin = "10px 5px 12px 5px";
-          _this2.statusButton.style.width = "55px";
-          _this2.timeDisplay.style.left = "60px";
-          _this2.statusButton.style.height = "18px";
+          _this3.indicator.style.visibility = "visible";
+          _this3.statusButton.style.margin = "10px 5px 12px 5px";
+          _this3.statusButton.style.width = "55px";
+          _this3.timeDisplay.style.left = "60px";
+          _this3.statusButton.style.height = "18px";
         }
       };
 
@@ -350,17 +358,17 @@ var Player = function () {
         e.preventDefault();
 
         var showHideSettings = function showHideSettings(e) {
-          if (_this2.settingsPanel.contains(e.target)) {
+          if (_this3.settingsPanel.contains(e.target)) {
             return true;
           }
-          _this2.settingsPanel.classList.toggle("m-fadeOut");
-          _this2.settingsPanel.classList.toggle("m-fadeIn");
-          if (_this2.settingsPanel.className.includes("m-fadeOut")) {
+          _this3.settingsPanel.classList.toggle("m-fadeOut");
+          _this3.settingsPanel.classList.toggle("m-fadeIn");
+          if (_this3.settingsPanel.className.includes("m-fadeOut")) {
             removeListener("click", showHideSettings, false);
           }
         };
 
-        if (_this2.settingsPanel.className.includes("m-fadeOut")) {
+        if (_this3.settingsPanel.className.includes("m-fadeOut")) {
           addListener("click", showHideSettings, false);
         } else {
           removeListener("click", showHideSettings, false);
@@ -368,30 +376,30 @@ var Player = function () {
       };
       this.settingsSpeedButtonShow.onclick = this.settingsSpeedButtonHide.onclick = function (e) {
         e.preventDefault();
-        _this2.settingsPanel.classList.toggle("mc-player-settings-speed-panel");
-        var includesClass = _this2.settingsPanel.className.includes("mc-player-settings-speed-panel");
+        _this3.settingsPanel.classList.toggle("mc-player-settings-speed-panel");
+        var includesClass = _this3.settingsPanel.className.includes("mc-player-settings-speed-panel");
         if (includesClass) {
-          _this2.settingsMainPanel.style.display = "none";
-          _this2.settingsSpeedPanel.style.display = "block";
+          _this3.settingsMainPanel.style.display = "none";
+          _this3.settingsSpeedPanel.style.display = "block";
         } else {
-          _this2.settingsSpeedPanel.style.display = "none";
-          _this2.settingsMainPanel.style.display = "block";
+          _this3.settingsSpeedPanel.style.display = "none";
+          _this3.settingsMainPanel.style.display = "block";
         }
       };
 
       var onCursorMove = function onCursorMove(e) {
         e.preventDefault();
         var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-        var viewportOffset = _this2.loopBar.getBoundingClientRect();
+        var viewportOffset = _this3.loopBar.getBoundingClientRect();
         var positionX = clientX - viewportOffset.left;
         if (positionX < 0) {
           positionX = 0;
-        } else if (_this2.loopBar.offsetWidth === _this2.totalBar.offsetWidth && positionX >= _this2.loopBar.offsetWidth) {
-          positionX = _this2.totalBar.offsetWidth;
-        } else if (positionX >= _this2.loopBar.offsetWidth) {
-          positionX = parseFloat(_this2.loopBar.style.width) / 100 * _this2.totalBar.offsetWidth;
+        } else if (_this3.loopBar.offsetWidth === _this3.totalBar.offsetWidth && positionX >= _this3.loopBar.offsetWidth) {
+          positionX = _this3.totalBar.offsetWidth;
+        } else if (positionX >= _this3.loopBar.offsetWidth) {
+          positionX = parseFloat(_this3.loopBar.style.width) / 100 * _this3.totalBar.offsetWidth;
         }
-        _this2.handleDrag(positionX);
+        _this3.handleDrag(positionX);
       };
 
       var onMouseUp = function onMouseUp(e) {
@@ -400,34 +408,34 @@ var Player = function () {
         removeListener("touchend", onMouseUp, false);
         removeListener("mousemove", onCursorMove, false);
         removeListener("touchmove", onCursorMove, false);
-        _this2.handleDragEnd();
-        if (_this2.playAfterResize) {
-          if (_this2.clip.state === "idle" && !_this2.loopButton.className.includes("svg-selected")) {
-            _this2.clip.play();
-          } else if (_this2.clip.state === "completed" && !_this2.loopButton.className.includes("svg-selected")) {
-            _this2.clip.stop();
-            _this2.journey = timeCapsule.startJourney(_this2.clip);
-            _this2.journey.station(_this2.loopEndMillisecond - 1);
-            _this2.journey.destination();
-            _this2.clip.play();
-          } else if ((_this2.clip.state === "completed" || _this2.clip.state === "idle") && _this2.loopButton.className.includes("svg-selected")) {
-            _this2.clip.stop();
-            _this2.journey = timeCapsule.startJourney(_this2.clip);
-            _this2.clip.speed >= 0 ? _this2.journey.station(_this2.loopStartMillisecond + 1) : _this2.journey.station(_this2.loopEndMillisecond - 1);
-            _this2.journey.destination();
-            _this2.clip.play();
+        _this3.handleDragEnd();
+        if (_this3.playAfterResize) {
+          if (_this3.clip.state === "idle" && !_this3.loopButton.className.includes("svg-selected")) {
+            _this3.clip.play();
+          } else if (_this3.clip.state === "completed" && !_this3.loopButton.className.includes("svg-selected")) {
+            _this3.clip.stop();
+            _this3.journey = timeCapsule.startJourney(_this3.clip);
+            _this3.journey.station(_this3.loopEndMillisecond - 1);
+            _this3.journey.destination();
+            _this3.clip.play();
+          } else if ((_this3.clip.state === "completed" || _this3.clip.state === "idle") && _this3.loopButton.className.includes("svg-selected")) {
+            _this3.clip.stop();
+            _this3.journey = timeCapsule.startJourney(_this3.clip);
+            _this3.clip.speed >= 0 ? _this3.journey.station(_this3.loopStartMillisecond + 1) : _this3.journey.station(_this3.loopEndMillisecond - 1);
+            _this3.journey.destination();
+            _this3.clip.play();
           } else {
-            _this2.clip.resume();
+            _this3.clip.resume();
           }
-          _this2.playAfterResize = false;
+          _this3.playAfterResize = false;
         }
       };
       var onMouseDown = function onMouseDown(e) {
         e.preventDefault();
-        if (_this2.clip.state === "playing") {
-          _this2.playAfterResize = true;
+        if (_this3.clip.state === "playing") {
+          _this3.playAfterResize = true;
         }
-        _this2.handleDragStart();
+        _this3.handleDragStart();
         onCursorMove(e);
         addListener("mouseup", onMouseUp, false);
         addListener("touchend", onMouseUp, false);
@@ -442,23 +450,23 @@ var Player = function () {
 
       var onCursorMoveSpeedBar = function onCursorMoveSpeedBar(e) {
         e.preventDefault();
-        var viewportOffset = _this2.speedBar.getBoundingClientRect();
+        var viewportOffset = _this3.speedBar.getBoundingClientRect();
         var clientY = e.clientY || ((e.touches || [])[0] || {}).clientY;
         var positionY = clientY - viewportOffset.top;
         positionY -= 8;
         if (positionY < 0) {
           positionY = 0;
-        } else if (positionY > _this2.speedBar.offsetHeight - 15.5) {
-          positionY = _this2.speedBar.offsetHeight - 15.5;
+        } else if (positionY > _this3.speedBar.offsetHeight - 15.5) {
+          positionY = _this3.speedBar.offsetHeight - 15.5;
         }
 
         // show speed
         var percentage = (positionY / 128.5 - 1) * -1;
         var step = 1 / 8;
-        var speed = _this2.calculateSpeed(step, _this2.speedValues, percentage);
+        var speed = _this3.calculateSpeed(step, _this3.speedValues, percentage);
         elid("mc-player-speed-runtime").innerHTML = speed + "0";
         elid("mc-player-speed-cursor").style.top = positionY + "px";
-        _this2.clip.executionSpeed = speed;
+        _this3.clip.executionSpeed = speed;
       };
 
       var onMouseUpSpeedBar = function onMouseUpSpeedBar(e) {
@@ -469,9 +477,9 @@ var Player = function () {
         removeListener("touchmove", onCursorMoveSpeedBar, false);
         elid("mc-player-speed-runtime").innerHTML = "Speed";
         var speedDisplay = void 0;
-        _this2.clip.speed == 1 ? speedDisplay = "Normal" : speedDisplay = _this2.clip.speed;
+        _this3.clip.speed == 1 ? speedDisplay = "Normal" : speedDisplay = _this3.clip.speed;
 
-        _this2.speedCurrent.innerHTML = speedDisplay;
+        _this3.speedCurrent.innerHTML = speedDisplay;
       };
       var onMouseDownSpeedBar = function onMouseDownSpeedBar(e) {
         e.preventDefault();
@@ -488,178 +496,178 @@ var Player = function () {
       }, false);
 
       this.fullScreenButton.addEventListener("click", function () {
-        var elFullScreen = _this2.clip.props.host.className.includes("full-screen");
-        elFullScreen ? _this2.exitFullscreen() : _this2.launchIntoFullscreen(_this2.clip.props.host);
-        _this2.clip.props.host.classList.toggle("full-screen");
+        var elFullScreen = _this3.clip.props.host.className.includes("full-screen");
+        elFullScreen ? _this3.exitFullscreen() : _this3.launchIntoFullscreen(_this3.clip.props.host);
+        _this3.clip.props.host.classList.toggle("full-screen");
       });
 
       this.loopButton.onclick = function () {
-        _this2.loopButton.classList.toggle("svg-selected");
-        _this2.loopBarStart.classList.toggle("m-fadeOut");
-        _this2.loopBarEnd.classList.toggle("m-fadeOut");
-        _this2.loopBarStart.classList.toggle("m-fadeIn");
-        _this2.loopBarEnd.classList.toggle("m-fadeIn");
+        _this3.loopButton.classList.toggle("svg-selected");
+        _this3.loopBarStart.classList.toggle("m-fadeOut");
+        _this3.loopBarEnd.classList.toggle("m-fadeOut");
+        _this3.loopBarStart.classList.toggle("m-fadeIn");
+        _this3.loopBarEnd.classList.toggle("m-fadeIn");
         elid("mc-player-loop-time").classList.toggle("m-fadeOut");
         elid("mc-player-loop-time").classList.toggle("m-fadeIn");
 
-        elid("mc-player-loopbar-end-time").innerHTML = _this2.loopEndMillisecond;
-        elid("mc-player-loopbar-start-time").innerHTML = _this2.loopStartMillisecond;
-        _this2.needsUpdate = true;
+        elid("mc-player-loopbar-end-time").innerHTML = _this3.loopEndMillisecond;
+        elid("mc-player-loopbar-start-time").innerHTML = _this3.loopStartMillisecond;
+        _this3.needsUpdate = true;
 
         if (elid("mc-player-loop-time").className.includes("m-fadeOut")) {
-          _this2.loopBar.style.left = "0px";
-          _this2.loopBar.style.width = "100%";
-          _this2.loopStartMillisecond = 0;
-          _this2.loopEndMillisecond = _this2.clip.duration;
-          _this2.loopLastPositionXPxls = 0;
-          _this2.loopLastPositionXPercentage = 0;
-          _this2.runningBar.style.width = _this2.clip.runTimeInfo.currentMillisecond / _this2.clip.duration * 100 + "%";
+          _this3.loopBar.style.left = "0px";
+          _this3.loopBar.style.width = "100%";
+          _this3.loopStartMillisecond = 0;
+          _this3.loopEndMillisecond = _this3.clip.duration;
+          _this3.loopLastPositionXPxls = 0;
+          _this3.loopLastPositionXPercentage = 0;
+          _this3.runningBar.style.width = _this3.clip.runTimeInfo.currentMillisecond / _this3.clip.duration * 100 + "%";
         }
       };
 
       elid("mc-player-controls").onmouseover = function () {
-        if (!_this2.loopButton.className.includes("svg-selected")) {
+        if (!_this3.loopButton.className.includes("svg-selected")) {
           return;
         }
-        _this2.loopBarStart.classList.remove("m-fadeOut");
-        _this2.loopBarEnd.classList.remove("m-fadeOut");
-        _this2.loopBarStart.classList.add("m-fadeIn");
-        _this2.loopBarEnd.classList.add("m-fadeIn");
+        _this3.loopBarStart.classList.remove("m-fadeOut");
+        _this3.loopBarEnd.classList.remove("m-fadeOut");
+        _this3.loopBarStart.classList.add("m-fadeIn");
+        _this3.loopBarEnd.classList.add("m-fadeIn");
       };
       elid("mc-player-controls").onmouseout = function () {
-        if (!_this2.loopButton.className.includes("svg-selected")) {
+        if (!_this3.loopButton.className.includes("svg-selected")) {
           return;
         }
-        _this2.loopBarStart.classList.add("m-fadeOut");
-        _this2.loopBarEnd.classList.add("m-fadeOut");
-        _this2.loopBarStart.classList.remove("m-fadeIn");
-        _this2.loopBarEnd.classList.remove("m-fadeIn");
+        _this3.loopBarStart.classList.add("m-fadeOut");
+        _this3.loopBarEnd.classList.add("m-fadeOut");
+        _this3.loopBarStart.classList.remove("m-fadeIn");
+        _this3.loopBarEnd.classList.remove("m-fadeIn");
       };
 
       var onCursorMoveLoopStart = function onCursorMoveLoopStart(e) {
         e.preventDefault();
         var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-        var viewportOffset = _this2.totalBar.getBoundingClientRect();
+        var viewportOffset = _this3.totalBar.getBoundingClientRect();
         var positionX = clientX - viewportOffset.left;
         if (positionX < 0) {
           positionX = 0;
-        } else if (positionX > _this2.totalBar.offsetWidth) {
-          positionX = _this2.totalBar.offsetWidth;
+        } else if (positionX > _this3.totalBar.offsetWidth) {
+          positionX = _this3.totalBar.offsetWidth;
         }
 
-        var loopBarDeltaX = positionX - _this2.loopLastPositionXPxls || 0;
-        var runningBarWidthInPxls = _this2.runningBar.offsetWidth - loopBarDeltaX;
+        var loopBarDeltaX = positionX - _this3.loopLastPositionXPxls || 0;
+        var runningBarWidthInPxls = _this3.runningBar.offsetWidth - loopBarDeltaX;
 
-        _this2.loopBar.style.left = positionX + "px";
+        _this3.loopBar.style.left = positionX + "px";
 
-        if (parseFloat(_this2.loopBar.style.width) - loopBarDeltaX + positionX > _this2.totalBar.offsetWidth) {
-          _this2.loopBar.style.width = "0px";
-          _this2.runningBar.style.width = "0px";
+        if (parseFloat(_this3.loopBar.style.width) - loopBarDeltaX + positionX > _this3.totalBar.offsetWidth) {
+          _this3.loopBar.style.width = "0px";
+          _this3.runningBar.style.width = "0px";
         } else {
-          _this2.loopBar.style.width = parseFloat(_this2.loopBar.style.width) - loopBarDeltaX + "px";
-          _this2.runningBar.style.width = runningBarWidthInPxls + "px";
+          _this3.loopBar.style.width = parseFloat(_this3.loopBar.style.width) - loopBarDeltaX + "px";
+          _this3.runningBar.style.width = runningBarWidthInPxls + "px";
         }
 
-        _this2.loopLastPositionXPxls = positionX;
+        _this3.loopLastPositionXPxls = positionX;
 
-        _this2.loopStartMillisecond = Math.round(_this2.clip.duration * parseFloat(_this2.loopBar.style.left) / _this2.totalBar.offsetWidth);
+        _this3.loopStartMillisecond = Math.round(_this3.clip.duration * parseFloat(_this3.loopBar.style.left) / _this3.totalBar.offsetWidth);
 
-        var newLoopEndMillisecond = Math.round(_this2.clip.duration * ((parseFloat(_this2.loopBar.style.left) || 0) + parseFloat(_this2.loopBar.style.width)) / _this2.totalBar.offsetWidth);
+        var newLoopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / _this3.totalBar.offsetWidth);
 
-        if (_this2.loopEndMillisecond < newLoopEndMillisecond) {
-          _this2.loopEndMillisecond = Math.round(_this2.clip.duration * ((parseFloat(_this2.loopBar.style.left) || 0) + parseFloat(_this2.loopBar.style.width)) / _this2.totalBar.offsetWidth);
-          _this2.loopJourney = true;
+        if (_this3.loopEndMillisecond < newLoopEndMillisecond) {
+          _this3.loopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / _this3.totalBar.offsetWidth);
+          _this3.loopJourney = true;
         }
 
-        elid("mc-player-loopbar-end-time").innerHTML = _this2.loopEndMillisecond;
-        elid("mc-player-loopbar-start-time").innerHTML = _this2.loopStartMillisecond;
+        elid("mc-player-loopbar-end-time").innerHTML = _this3.loopEndMillisecond;
+        elid("mc-player-loopbar-start-time").innerHTML = _this3.loopStartMillisecond;
       };
 
       var onMouseUpLoopStart = function onMouseUpLoopStart(e) {
-        _this2.resizeLoop = false;
+        _this3.resizeLoop = false;
 
         e.preventDefault();
-        if (_this2.loopJourney) {
-          _this2.handleDragStart();
-          _this2.handleDrag(_this2.runningBar.offsetWidth);
-          _this2.handleDragEnd();
-          _this2.loopJourney = false;
+        if (_this3.loopJourney) {
+          _this3.handleDragStart();
+          _this3.handleDrag(_this3.runningBar.offsetWidth);
+          _this3.handleDragEnd();
+          _this3.loopJourney = false;
         }
 
-        _this2.loopLastPositionXPercentage = _this2.loopLastPositionXPxls / _this2.loopBar.offsetWidth;
+        _this3.loopLastPositionXPercentage = _this3.loopLastPositionXPxls / _this3.loopBar.offsetWidth;
 
-        var runningBarWidthPercentage = _this2.runningBar.offsetWidth / _this2.loopBar.offsetWidth * 100 + "%";
+        var runningBarWidthPercentage = _this3.runningBar.offsetWidth / _this3.loopBar.offsetWidth * 100 + "%";
 
-        _this2.loopBar.style.left = parseFloat(_this2.loopBar.style.left) / _this2.totalBar.offsetWidth * 100 + "%";
+        _this3.loopBar.style.left = parseFloat(_this3.loopBar.style.left) / _this3.totalBar.offsetWidth * 100 + "%";
 
-        _this2.loopBar.style.width = parseFloat(_this2.loopBar.style.width) / _this2.totalBar.offsetWidth * 100 + "%";
+        _this3.loopBar.style.width = parseFloat(_this3.loopBar.style.width) / _this3.totalBar.offsetWidth * 100 + "%";
 
-        _this2.loopStartMillisecond = Math.round(_this2.clip.duration * parseFloat(_this2.loopBar.style.left) / 100);
+        _this3.loopStartMillisecond = Math.round(_this3.clip.duration * parseFloat(_this3.loopBar.style.left) / 100);
 
-        _this2.loopEndMillisecond = Math.round(_this2.clip.duration * ((parseFloat(_this2.loopBar.style.left) || 0) + parseFloat(_this2.loopBar.style.width)) / 100);
+        _this3.loopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / 100);
 
-        _this2.runningBar.style.width = runningBarWidthPercentage;
+        _this3.runningBar.style.width = runningBarWidthPercentage;
         removeListener("mouseup", onMouseUpLoopStart, false);
         removeListener("touchend", onMouseUpLoopStart, false);
         removeListener("mousemove", onCursorMoveLoopStart, false);
         removeListener("touchmove", onCursorMoveLoopStart, false);
-        _this2.loopBar.addEventListener("mousedown", onMouseDown, false);
-        _this2.loopBar.addEventListener("touchstart", onMouseDown, {
+        _this3.loopBar.addEventListener("mousedown", onMouseDown, false);
+        _this3.loopBar.addEventListener("touchstart", onMouseDown, {
           passive: true
         }, false);
 
-        if (_this2.playAfterResize) {
-          if (_this2.clip.state === "idle") {
+        if (_this3.playAfterResize) {
+          if (_this3.clip.state === "idle") {
             var loopms = void 0;
-            if (_this2.clip.speed >= 0) {
-              loopms = _this2.loopStartMillisecond + 1;
+            if (_this3.clip.speed >= 0) {
+              loopms = _this3.loopStartMillisecond + 1;
             } else {
-              loopms = _this2.loopEndMillisecond - 1;
+              loopms = _this3.loopEndMillisecond - 1;
             }
-            _this2.needsUpdate = true;
-            _this2.clip.stop();
-            _this2.journey = timeCapsule.startJourney(_this2.clip);
-            _this2.journey.station(loopms);
-            _this2.journey.destination();
-            _this2.clip.play();
-          } else if (_this2.clip.state === "completed") {
+            _this3.needsUpdate = true;
+            _this3.clip.stop();
+            _this3.journey = timeCapsule.startJourney(_this3.clip);
+            _this3.journey.station(loopms);
+            _this3.journey.destination();
+            _this3.clip.play();
+          } else if (_this3.clip.state === "completed") {
             var _loopms = void 0;
-            if (_this2.clip.speed >= 0) {
-              _loopms = _this2.loopStartMillisecond + 1;
+            if (_this3.clip.speed >= 0) {
+              _loopms = _this3.loopStartMillisecond + 1;
             } else {
-              _loopms = _this2.loopEndMillisecond - 1;
+              _loopms = _this3.loopEndMillisecond - 1;
             }
-            _this2.needsUpdate = true;
-            _this2.clip.stop();
-            _this2.journey = timeCapsule.startJourney(_this2.clip);
-            _this2.journey.station(_loopms);
-            _this2.journey.destination();
-            _this2.clip.play();
+            _this3.needsUpdate = true;
+            _this3.clip.stop();
+            _this3.journey = timeCapsule.startJourney(_this3.clip);
+            _this3.journey.station(_loopms);
+            _this3.journey.destination();
+            _this3.clip.play();
           } else {
-            _this2.clip.resume();
+            _this3.clip.resume();
           }
-          _this2.playAfterResize = false;
+          _this3.playAfterResize = false;
         }
       };
 
       var onMouseDownLoopStart = function onMouseDownLoopStart(e) {
-        _this2.resizeLoop = true;
+        _this3.resizeLoop = true;
 
         e.preventDefault();
-        _this2.needsUpdate = true;
+        _this3.needsUpdate = true;
 
-        if (_this2.clip.state === "playing") {
-          _this2.clip.wait();
-          _this2.playAfterResize = true;
+        if (_this3.clip.state === "playing") {
+          _this3.clip.wait();
+          _this3.playAfterResize = true;
         }
-        _this2.loopBar.style.width = _this2.loopBar.offsetWidth + "px";
+        _this3.loopBar.style.width = _this3.loopBar.offsetWidth + "px";
 
-        if (_this2.loopLastPositionXPxls - _this2.loopLastPositionXPercentage * _this2.loopBar.offsetWidth > 1 || _this2.loopLastPositionXPercentage * _this2.loopBar.offsetWidth - _this2.loopLastPositionXPxls > 1) {
-          _this2.loopLastPositionXPxls = _this2.loopLastPositionXPercentage * _this2.loopBar.offsetWidth;
+        if (_this3.loopLastPositionXPxls - _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth > 1 || _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth - _this3.loopLastPositionXPxls > 1) {
+          _this3.loopLastPositionXPxls = _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth;
         }
 
-        _this2.loopBar.removeEventListener("mousedown", onMouseDown, false);
-        _this2.loopBar.removeEventListener("touchstart", onMouseDown, false);
+        _this3.loopBar.removeEventListener("mousedown", onMouseDown, false);
+        _this3.loopBar.removeEventListener("touchstart", onMouseDown, false);
         onCursorMoveLoopStart(e);
         addListener("mouseup", onMouseUpLoopStart, false);
         addListener("touchend", onMouseUpLoopStart, false);
@@ -676,121 +684,121 @@ var Player = function () {
         e.preventDefault();
 
         var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-        var viewportOffset = _this2.totalBar.getBoundingClientRect();
+        var viewportOffset = _this3.totalBar.getBoundingClientRect();
         var positionX = clientX - viewportOffset.left;
         if (positionX < 0) {
           positionX = 0;
-        } else if (positionX > _this2.totalBar.offsetWidth) {
-          positionX = _this2.totalBar.offsetWidth;
+        } else if (positionX > _this3.totalBar.offsetWidth) {
+          positionX = _this3.totalBar.offsetWidth;
         }
 
-        if (_this2.runningBar.offsetWidth + (parseFloat(_this2.loopBar.style.left) || 0) > positionX) {
-          _this2.runningBar.style.width = positionX - parseFloat(_this2.loopBar.style.left) + "px";
+        if (_this3.runningBar.offsetWidth + (parseFloat(_this3.loopBar.style.left) || 0) > positionX) {
+          _this3.runningBar.style.width = positionX - parseFloat(_this3.loopBar.style.left) + "px";
         }
 
-        if (_this2.loopLastPositionXPxls - positionX < 0) {
-          _this2.loopBar.style.width = Math.abs(_this2.loopLastPositionXPxls - positionX) + "px";
+        if (_this3.loopLastPositionXPxls - positionX < 0) {
+          _this3.loopBar.style.width = Math.abs(_this3.loopLastPositionXPxls - positionX) + "px";
         } else {
-          _this2.loopBar.style.left = positionX + "px";
-          _this2.loopLastPositionXPxls = positionX;
+          _this3.loopBar.style.left = positionX + "px";
+          _this3.loopLastPositionXPxls = positionX;
         }
 
-        var newLoopStartMillisecond = Math.round(_this2.clip.duration * parseFloat(_this2.loopBar.style.left) / _this2.totalBar.offsetWidth);
-        if (_this2.loopStartMillisecond > newLoopStartMillisecond) {
-          _this2.loopStartMillisecond = newLoopStartMillisecond;
-          _this2.loopJourney = true;
+        var newLoopStartMillisecond = Math.round(_this3.clip.duration * parseFloat(_this3.loopBar.style.left) / _this3.totalBar.offsetWidth);
+        if (_this3.loopStartMillisecond > newLoopStartMillisecond) {
+          _this3.loopStartMillisecond = newLoopStartMillisecond;
+          _this3.loopJourney = true;
         }
 
-        _this2.loopEndMillisecond = Math.round(_this2.clip.duration * ((parseFloat(_this2.loopBar.style.left) || 0) + parseFloat(_this2.loopBar.style.width)) / _this2.totalBar.offsetWidth);
+        _this3.loopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / _this3.totalBar.offsetWidth);
 
-        elid("mc-player-loopbar-end-time").innerHTML = _this2.loopEndMillisecond;
-        elid("mc-player-loopbar-start-time").innerHTML = _this2.loopStartMillisecond;
+        elid("mc-player-loopbar-end-time").innerHTML = _this3.loopEndMillisecond;
+        elid("mc-player-loopbar-start-time").innerHTML = _this3.loopStartMillisecond;
       };
 
       var onMouseUpLoopEnd = function onMouseUpLoopEnd(e) {
-        _this2.resizeLoop = false;
+        _this3.resizeLoop = false;
         e.preventDefault();
-        _this2.runningBar.style.width = _this2.runningBar.offsetWidth / _this2.loopBar.offsetWidth * 100 + "%";
+        _this3.runningBar.style.width = _this3.runningBar.offsetWidth / _this3.loopBar.offsetWidth * 100 + "%";
 
-        _this2.loopBar.style.left = (parseFloat(_this2.loopBar.style.left) || 0) / _this2.totalBar.offsetWidth * 100 + "%";
+        _this3.loopBar.style.left = (parseFloat(_this3.loopBar.style.left) || 0) / _this3.totalBar.offsetWidth * 100 + "%";
 
-        _this2.loopBar.style.width = parseFloat(_this2.loopBar.style.width) / _this2.totalBar.offsetWidth * 100 + "%";
+        _this3.loopBar.style.width = parseFloat(_this3.loopBar.style.width) / _this3.totalBar.offsetWidth * 100 + "%";
 
-        _this2.loopLastPositionXPercentage = _this2.loopLastPositionXPxls / _this2.loopBar.offsetWidth;
+        _this3.loopLastPositionXPercentage = _this3.loopLastPositionXPxls / _this3.loopBar.offsetWidth;
 
-        _this2.loopStartMillisecond = Math.round(_this2.clip.duration * parseFloat(_this2.loopBar.style.left) / 100);
+        _this3.loopStartMillisecond = Math.round(_this3.clip.duration * parseFloat(_this3.loopBar.style.left) / 100);
 
-        _this2.loopEndMillisecond = Math.round(_this2.clip.duration * ((parseFloat(_this2.loopBar.style.left) || 0) + parseFloat(_this2.loopBar.style.width)) / 100);
+        _this3.loopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / 100);
 
-        if (_this2.loopJourney) {
-          _this2.handleDragStart();
-          _this2.handleDrag(_this2.runningBar.offsetWidth);
-          _this2.handleDragEnd();
-          _this2.loopJourney = false;
+        if (_this3.loopJourney) {
+          _this3.handleDragStart();
+          _this3.handleDrag(_this3.runningBar.offsetWidth);
+          _this3.handleDragEnd();
+          _this3.loopJourney = false;
         }
         removeListener("mouseup", onMouseUpLoopEnd, false);
         removeListener("touchend", onMouseUpLoopEnd, false);
         removeListener("mousemove", onCursorMoveLoopEnd, false);
         removeListener("touchmove", onCursorMoveLoopEnd, false);
-        _this2.loopBar.addEventListener("mousedown", onMouseDown, false);
-        _this2.loopBar.addEventListener("touchstart", onMouseDown, {
+        _this3.loopBar.addEventListener("mousedown", onMouseDown, false);
+        _this3.loopBar.addEventListener("touchstart", onMouseDown, {
           passive: true
         }, false);
 
-        if (_this2.playAfterResize) {
-          if (_this2.clip.state === "idle") {
+        if (_this3.playAfterResize) {
+          if (_this3.clip.state === "idle") {
             var loopms = void 0;
-            if (_this2.clip.speed >= 0) {
-              loopms = _this2.loopStartMillisecond + 1;
+            if (_this3.clip.speed >= 0) {
+              loopms = _this3.loopStartMillisecond + 1;
             } else {
-              loopms = _this2.loopEndMillisecond - 1;
+              loopms = _this3.loopEndMillisecond - 1;
             }
-            _this2.needsUpdate = true;
-            _this2.clip.stop();
-            _this2.journey = timeCapsule.startJourney(_this2.clip);
-            _this2.journey.station(loopms);
-            _this2.journey.destination();
-            _this2.clip.play();
-          } else if (_this2.clip.state === "completed") {
+            _this3.needsUpdate = true;
+            _this3.clip.stop();
+            _this3.journey = timeCapsule.startJourney(_this3.clip);
+            _this3.journey.station(loopms);
+            _this3.journey.destination();
+            _this3.clip.play();
+          } else if (_this3.clip.state === "completed") {
             var _loopms2 = void 0;
-            if (_this2.clip.speed >= 0) {
-              _loopms2 = _this2.loopStartMillisecond + 1;
+            if (_this3.clip.speed >= 0) {
+              _loopms2 = _this3.loopStartMillisecond + 1;
             } else {
-              _loopms2 = _this2.loopEndMillisecond - 1;
+              _loopms2 = _this3.loopEndMillisecond - 1;
             }
-            _this2.needsUpdate = true;
-            _this2.clip.stop();
-            _this2.journey = timeCapsule.startJourney(_this2.clip);
-            _this2.journey.station(_loopms2);
-            _this2.journey.destination();
-            _this2.clip.play();
+            _this3.needsUpdate = true;
+            _this3.clip.stop();
+            _this3.journey = timeCapsule.startJourney(_this3.clip);
+            _this3.journey.station(_loopms2);
+            _this3.journey.destination();
+            _this3.clip.play();
           } else {
-            _this2.clip.resume();
+            _this3.clip.resume();
           }
-          _this2.playAfterResize = false;
+          _this3.playAfterResize = false;
         }
       };
 
       var onMouseDownLoopEnd = function onMouseDownLoopEnd(e) {
-        _this2.resizeLoop = true;
-        _this2.needsUpdate = true;
+        _this3.resizeLoop = true;
+        _this3.needsUpdate = true;
 
-        if (_this2.clip.state === "playing") {
-          _this2.clip.wait();
-          _this2.playAfterResize = true;
+        if (_this3.clip.state === "playing") {
+          _this3.clip.wait();
+          _this3.playAfterResize = true;
         }
         e.preventDefault();
-        _this2.runningBar.style.width = _this2.runningBar.offsetWidth + "px";
+        _this3.runningBar.style.width = _this3.runningBar.offsetWidth + "px";
 
-        _this2.loopBar.style.left = (parseFloat(_this2.loopBar.style.left) || 0) / 100 * _this2.totalBar.offsetWidth + "px";
+        _this3.loopBar.style.left = (parseFloat(_this3.loopBar.style.left) || 0) / 100 * _this3.totalBar.offsetWidth + "px";
 
-        if (_this2.loopLastPositionXPxls - _this2.loopLastPositionXPercentage * _this2.loopBar.offsetWidth > 1 || _this2.loopLastPositionXPercentage * _this2.loopBar.offsetWidth - _this2.loopLastPositionXPxls > 1) {
-          _this2.loopLastPositionXPxls = _this2.loopLastPositionXPercentage * _this2.loopBar.offsetWidth;
+        if (_this3.loopLastPositionXPxls - _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth > 1 || _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth - _this3.loopLastPositionXPxls > 1) {
+          _this3.loopLastPositionXPxls = _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth;
         }
 
-        _this2.loopBar.style.width = _this2.loopBar.offsetWidth + "px";
-        _this2.loopBar.removeEventListener("mousedown", onMouseDown, false);
-        _this2.loopBar.removeEventListener("touchstart", onMouseDown, false);
+        _this3.loopBar.style.width = _this3.loopBar.offsetWidth + "px";
+        _this3.loopBar.removeEventListener("mousedown", onMouseDown, false);
+        _this3.loopBar.removeEventListener("touchstart", onMouseDown, false);
         onCursorMoveLoopEnd(e);
         addListener("mouseup", onMouseUpLoopEnd, false);
         addListener("touchend", onMouseUpLoopEnd, false);
@@ -810,16 +818,16 @@ var Player = function () {
           elid("mc-player-hover-display").classList.toggle("m-fadeIn");
 
           if (elid("mc-player-hover-display").className.includes("m-fadeIn")) {
-            _this2.hoverJourney = hoverTimeCapsule.startJourney(_this2.previewClip);
+            _this3.hoverJourney = hoverTimeCapsule.startJourney(_this3.previewClip);
           } else {
-            _this2.hoverJourney.destination();
+            _this3.hoverJourney.destination();
           }
-          _this2.loopBar.onmousemove = _loopBarMouseMove;
+          _this3.loopBar.onmousemove = _loopBarMouseMove;
         };
         var loopBarAddListeners = function loopBarAddListeners() {
           loopBarMouseInOut();
-          _this2.loopBar.onmouseover = _this2.loopBar.onmouseout = loopBarMouseInOut;
-          _this2.loopBar.onmousemove = _loopBarMouseMove;
+          _this3.loopBar.onmouseover = _this3.loopBar.onmouseout = loopBarMouseInOut;
+          _this3.loopBar.onmousemove = _loopBarMouseMove;
           removeListener("mouseup", loopBarAddListeners, false);
           removeListener("touchend", loopBarAddListeners, false);
           removeListener("mousemove", _loopBarMouseMove, false);
@@ -829,8 +837,8 @@ var Player = function () {
         this.loopBar.onmouseover = this.loopBar.onmouseout = loopBarMouseInOut;
 
         this.loopBar.onmousedown = function () {
-          _this2.loopBar.onmouseover = _this2.loopBar.onmouseout = null;
-          _this2.loopBar.onmousemove = null;
+          _this3.loopBar.onmouseover = _this3.loopBar.onmouseout = null;
+          _this3.loopBar.onmousemove = null;
           addListener("mouseup", loopBarAddListeners, false);
           addListener("touchend", loopBarAddListeners, false);
           addListener("mousemove", _loopBarMouseMove, false);
@@ -841,22 +849,22 @@ var Player = function () {
           removeListener("touchend", loopBarAddListeners, false);
           removeListener("mousemove", _loopBarMouseMove, false);
           removeListener("touchmove", _loopBarMouseMove, false);
-          _this2.loopBar.onmouseover = _this2.loopBar.onmouseout = loopBarMouseInOut;
-          _this2.loopBar.onmousemove = _loopBarMouseMove;
+          _this3.loopBar.onmouseover = _this3.loopBar.onmouseout = loopBarMouseInOut;
+          _this3.loopBar.onmousemove = _loopBarMouseMove;
         };
 
         var _loopBarMouseMove = function _loopBarMouseMove(e) {
           var clientX = e.clientX;
-          var viewportOffset = _this2.loopBar.getBoundingClientRect();
-          if (clientX - viewportOffset.left + _this2.loopLastPositionXPxls > _this2.loopLastPositionXPxls + _this2.loopBar.offsetWidth && !_this2.resizeLoop) {
-            elid("mc-player-hover-millisecond").innerHTML = _this2.loopEndMillisecond;
+          var viewportOffset = _this3.loopBar.getBoundingClientRect();
+          if (clientX - viewportOffset.left + _this3.loopLastPositionXPxls > _this3.loopLastPositionXPxls + _this3.loopBar.offsetWidth && !_this3.resizeLoop) {
+            elid("mc-player-hover-millisecond").innerHTML = _this3.loopEndMillisecond;
             return;
-          } else if (clientX - viewportOffset.left < 0 && !_this2.resizeLoop) {
-            elid("mc-player-hover-millisecond").innerHTML = _this2.loopStartMillisecond;
+          } else if (clientX - viewportOffset.left < 0 && !_this3.resizeLoop) {
+            elid("mc-player-hover-millisecond").innerHTML = _this3.loopStartMillisecond;
             return;
           }
 
-          var positionX = clientX - viewportOffset.left + _this2.loopLastPositionXPxls;
+          var positionX = clientX - viewportOffset.left + _this3.loopLastPositionXPxls;
 
           if (positionX < 0) {
             positionX = 0;
@@ -866,13 +874,13 @@ var Player = function () {
 
           if (left < 0) {
             left = 0;
-          } else if (left + elid("mc-player-hover-display").offsetWidth > _this2.totalBar.offsetWidth) {
-            left = _this2.totalBar.offsetWidth - elid("mc-player-hover-display").offsetWidth;
+          } else if (left + elid("mc-player-hover-display").offsetWidth > _this3.totalBar.offsetWidth) {
+            left = _this3.totalBar.offsetWidth - elid("mc-player-hover-display").offsetWidth;
           }
 
-          var ms = Math.round(positionX / _this2.totalBar.offsetWidth * _this2.clip.duration);
+          var ms = Math.round(positionX / _this3.totalBar.offsetWidth * _this3.clip.duration);
 
-          _this2.hoverJourney.station(ms);
+          _this3.hoverJourney.station(ms);
 
           elid("mc-player-hover-millisecond").innerHTML = ms;
           elid("mc-player-hover-display").style.left = left + "px";
@@ -882,11 +890,11 @@ var Player = function () {
       el("body")[0].addEventListener("click", function (e) {
         if (e.target.className === "mc-player-speed-value") {
           var speedDisplay = e.target.dataset.speedValue - 0;
-          _this2.clip.executionSpeed = e.target.dataset.speedValue;
-          _this2.clip.speed == 1 ? speedDisplay = "Normal" : speedDisplay = _this2.clip.speed;
-          _this2.speedCurrent.innerHTML = speedDisplay;
+          _this3.clip.executionSpeed = e.target.dataset.speedValue;
+          _this3.clip.speed == 1 ? speedDisplay = "Normal" : speedDisplay = _this3.clip.speed;
+          _this3.speedCurrent.innerHTML = speedDisplay;
 
-          var step = 1 / (_this2.speedValues.length - 1);
+          var step = 1 / (_this3.speedValues.length - 1);
 
           var positionY = (e.target.dataset.zone * step - 1) * -1 * 128.5;
 
@@ -919,6 +927,8 @@ var Player = function () {
   }, {
     key: "launchIntoFullscreen",
     value: function launchIntoFullscreen(element) {
+      this.setPreviewDimentions();
+
       this.mcPlayer.classList.toggle("full-screen");
       if (element.requestFullscreen) {
         element.requestFullscreen();
@@ -933,6 +943,7 @@ var Player = function () {
   }, {
     key: "exitFullscreen",
     value: function exitFullscreen() {
+      this.setPreviewDimentions();
       this.mcPlayer.classList.toggle("full-screen");
       if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -972,16 +983,16 @@ var Player = function () {
   }, {
     key: "setSpeed",
     value: function setSpeed() {
-      var _this3 = this;
+      var _this4 = this;
 
       var currentSpeed = void 0;
       this.clip.speed == 1 ? currentSpeed = "Normal" : currentSpeed = this.clip.speed;
       this.speedCurrent.innerHTML = currentSpeed;
 
       var targetZone = function () {
-        for (var i = 0; i < _this3.speedValues.length - 1; i++) {
-          if (_this3.speedValues[i] <= _this3.clip.speed && _this3.speedValues[i + 1] > _this3.clip.speed) {
-            return i + Math.abs((_this3.clip.speed - _this3.speedValues[i]) / (_this3.speedValues[i] - _this3.speedValues[i + 1]));
+        for (var i = 0; i < _this4.speedValues.length - 1; i++) {
+          if (_this4.speedValues[i] <= _this4.clip.speed && _this4.speedValues[i + 1] > _this4.clip.speed) {
+            return i + Math.abs((_this4.clip.speed - _this4.speedValues[i]) / (_this4.speedValues[i] - _this4.speedValues[i + 1]));
           }
         }
       }();
@@ -1001,21 +1012,26 @@ var Player = function () {
 
       definition.props.host = elid("mc-player-hover-display");
       this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
-      // console.log("asdfsadfdsafsad", this.clip, this.previewClip);
 
       var previewClip = this.previewClip.props.host.getElementsByTagName("iframe")[0];
 
       previewClip.style.position = "absolute";
 
       previewClip.style.zIndex = 1;
+      this.setPreviewDimentions();
+    }
+  }, {
+    key: "setPreviewDimentions",
+    value: function setPreviewDimentions() {
+      var previewClip = this.previewClip.props.host.getElementsByTagName("iframe")[0];
 
       var clipWidth = clip.offsetWidth;
 
       var clipHeight = clip.offsetHeight;
 
-      var previewRatio = 0.253125;
+      var previewRatio = 0.25;
 
-      var previewWidth = Math.round(clipWidth * previewRatio);
+      var previewWidth = clipWidth * previewRatio;
 
       // max width is 300
       if (previewWidth > parseFloat(elid("mc-player-hover-display").style.maxWidth)) {
@@ -1024,7 +1040,7 @@ var Player = function () {
 
       elid("mc-player-hover-display").style.width = previewWidth + "px";
 
-      var previewHeight = Math.round(clipHeight / clipWidth * previewWidth);
+      var previewHeight = clipHeight / clipWidth * previewWidth;
 
       elid("mc-player-hover-display").style.height = previewHeight + "px";
 
@@ -1033,14 +1049,15 @@ var Player = function () {
 
       previewClip.style.transform = "scale(" + scaleX + "," + scaleY + ")";
       previewClip.style.transformOrigin = "center bottom";
+      previewClip.style.boxSizing = "border-box";
 
       // check if width of iframe is percentage
       if (this.clip.props.containerParams.width.includes("%")) {
-        previewClip.style.width = 100 + 100 * previewRatio + parseFloat(this.clip.props.containerParams.width) / previewRatio + "%";
+        previewClip.style.width = previewWidth / previewRatio - 2 / previewRatio + "px";
       }
 
       if (this.clip.props.containerParams.height.includes("%")) {
-        previewClip.style.height = 100 + 100 * previewRatio + parseFloat(this.clip.props.containerParams.height) / previewRatio + "%";
+        previewClip.style.height = previewHeight / previewRatio - 2 / previewRatio + "px";
       }
     }
   }]);
