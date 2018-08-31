@@ -68,6 +68,7 @@ var Player = function () {
     this.totalTime = elid("mc-player-time-total");
     this.statusButton = elid("mc-player-status-btn");
     this.settingsShowIndicator = elid("mc-player-settings-indicator");
+    this.settingsShowPreview = elid("mc-player-settings-preview");
     this.settingsButton = elid("mc-player-settings-btn");
     this.loopButton = elid("mc-player-loop-btn");
     this.settingsSpeedButtonShow = elid("mc-player-settings-speed-show");
@@ -104,6 +105,7 @@ var Player = function () {
     this.subscribeToEvents();
     this.addEventListeners();
     if (options.preview) {
+      elid("mc-player-show-preview-checkbox").checked = options.preview;
       this.createHoverDisplay();
     }
 
@@ -351,6 +353,22 @@ var Player = function () {
           _this3.statusButton.style.width = "55px";
           _this3.timeDisplay.style.left = "60px";
           _this3.statusButton.style.height = "18px";
+        }
+      };
+
+      this.settingsShowPreview.onclick = function (e) {
+        e.preventDefault();
+        var checkbox = elid("mc-player-show-preview-checkbox");
+        if (checkbox.checked) {
+          checkbox.checked = false;
+          elid("mc-player-hover-display").style.visibility = "hidden";
+          elid("mc-player-hover-display").style.display = "none";
+          _this3.options.preview = false;
+        } else {
+          checkbox.checked = true;
+          elid("mc-player-hover-display").style.visibility = "visible";
+          elid("mc-player-hover-display").style.display = "flex";
+          _this3.options.preview = true;
         }
       };
 
@@ -814,6 +832,9 @@ var Player = function () {
       // only on desctop devices
       if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && this.options.preview) {
         var loopBarMouseInOut = function loopBarMouseInOut() {
+          if (!_this3.options.preview) {
+            return;
+          }
           elid("mc-player-hover-display").classList.toggle("m-fadeOut");
           elid("mc-player-hover-display").classList.toggle("m-fadeIn");
 
@@ -825,6 +846,9 @@ var Player = function () {
           _this3.loopBar.onmousemove = _loopBarMouseMove;
         };
         var loopBarAddListeners = function loopBarAddListeners() {
+          if (!_this3.options.preview) {
+            return;
+          }
           loopBarMouseInOut();
           _this3.loopBar.onmouseover = _this3.loopBar.onmouseout = loopBarMouseInOut;
           _this3.loopBar.onmousemove = _loopBarMouseMove;
@@ -837,6 +861,9 @@ var Player = function () {
         this.loopBar.onmouseover = this.loopBar.onmouseout = loopBarMouseInOut;
 
         this.loopBar.onmousedown = function () {
+          if (!_this3.options.preview) {
+            return;
+          }
           _this3.loopBar.onmouseover = _this3.loopBar.onmouseout = null;
           _this3.loopBar.onmousemove = null;
           addListener("mouseup", loopBarAddListeners, false);
@@ -845,6 +872,9 @@ var Player = function () {
           addListener("touchmove", _loopBarMouseMove, false);
         };
         this.loopBar.onmouseup = function () {
+          if (!_this3.options.preview) {
+            return;
+          }
           removeListener("mouseup", loopBarAddListeners, false);
           removeListener("touchend", loopBarAddListeners, false);
           removeListener("mousemove", _loopBarMouseMove, false);
@@ -879,8 +909,9 @@ var Player = function () {
           }
 
           var ms = Math.round(positionX / _this3.totalBar.offsetWidth * _this3.clip.duration);
-
-          _this3.hoverJourney.station(ms);
+          if (_this3.options.preview) {
+            _this3.hoverJourney.station(ms);
+          }
 
           elid("mc-player-hover-millisecond").innerHTML = ms;
           elid("mc-player-hover-display").style.left = left + "px";
@@ -1006,8 +1037,6 @@ var Player = function () {
   }, {
     key: "createHoverDisplay",
     value: function createHoverDisplay() {
-      var clip = this.clip.props.host.getElementsByTagName("iframe")[0];
-
       var definition = this.clip.exportState({ unprocessed: true });
 
       definition.props.host = elid("mc-player-hover-display");
@@ -1023,6 +1052,7 @@ var Player = function () {
   }, {
     key: "setPreviewDimentions",
     value: function setPreviewDimentions() {
+      var clip = this.clip.props.host.getElementsByTagName("iframe")[0];
       var previewClip = this.previewClip.props.host.getElementsByTagName("iframe")[0];
 
       var clipWidth = clip.offsetWidth;
@@ -1053,11 +1083,19 @@ var Player = function () {
 
       // check if width of iframe is percentage
       if (this.clip.props.containerParams.width.includes("%")) {
-        previewClip.style.width = previewWidth / previewRatio - 2 / previewRatio + "px";
+        if (previewWidth / previewRatio - 2 / previewRatio > parseFloat(elid("mc-player-hover-display").style.maxWidth)) {
+          previewClip.style.width = "298px";
+        } else {
+          previewClip.style.width = previewWidth / previewRatio - 2 / previewRatio + "px";
+        }
       }
 
       if (this.clip.props.containerParams.height.includes("%")) {
-        previewClip.style.height = previewHeight / previewRatio - 2 / previewRatio + "px";
+        if (previewWidth / previewRatio - 2 / previewRatio > parseFloat(elid("mc-player-hover-display").style.maxWidth)) {
+          previewClip.style.height = clipHeight / clipWidth * 300 - 2 + "px";
+        } else {
+          previewClip.style.height = previewHeight / previewRatio - 2 / previewRatio + "px";
+        }
       }
     }
   }]);
