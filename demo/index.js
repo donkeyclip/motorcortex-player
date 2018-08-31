@@ -7,6 +7,9 @@ const TestPlugin = MotorCortex.loadPlugin(TestPluginDefinition);
 // Configure clip
 const config = {
   css: `
+    body{
+      background-color:black;
+    }
     #one {
       font-size:40px;
       display: table-cell;
@@ -31,7 +34,7 @@ const config = {
   </div>`,
   host: document.getElementById("clip"),
   containerParams: {
-    width: "100%",
+    width: "70%",
     height: "100%"
   }
 };
@@ -55,4 +58,4 @@ const animation_1 = new TestPlugin.TestIncident(
 clip.addIncident(animation_1, 0);
 
 // Add clip to timer
-new Player({ clip, theme: "darkGold on-top" });
+new Player({ clip, theme: "transparent on-top" });

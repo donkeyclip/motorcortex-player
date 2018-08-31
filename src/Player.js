@@ -17,6 +17,7 @@ class Player {
     this.id = options.id || helper.getAnId(); // timer id
     this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
+    options.preview = options.preview || false;
     // this.previewClip.props.host = elid()
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
@@ -36,7 +37,6 @@ class Player {
     const clip = this.clip.props.host.getElementsByTagName("iframe")[0];
     clip.style.margin = "0 auto";
     clip.style.display = "block";
-    clip.style.backgroundColor = "white";
 
     // create the timer controls main div
     this.mcPlayer = elcreate("div");
@@ -93,7 +93,9 @@ class Player {
     this.subscribeToTimer();
     this.subscribeToEvents();
     this.addEventListeners();
-    this.createHoverDisplay();
+    if (options.preview) {
+      this.createHoverDisplay();
+    }
   }
 
   millisecondChange(millisecond) {
@@ -1184,8 +1186,8 @@ class Player {
     const definition = this.clip.exportState({ unprocessed: true });
 
     definition.props.host = elid("mc-player-hover-display");
-
-    this.previewClip = MC.ClipFromDefinition(definition /*,this.clipClass*/);
+    this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
+    // console.log("asdfsadfdsafsad", this.clip, this.previewClip);
 
     const previewClip = this.previewClip.props.host.getElementsByTagName(
       "iframe"
@@ -1212,18 +1214,32 @@ class Player {
 
     elid("mc-player-hover-display").style.width = previewWidth + "px";
 
-    const previewHeight = Math.round(
-      (clipWidth / clipHeight) * elid("mc-player-hover-display").offsetWidth
-    );
+    const previewHeight = Math.round((clipHeight / clipWidth) * previewWidth);
 
     elid("mc-player-hover-display").style.height = previewHeight + "px";
 
-    const scaleY = previewHeight / clip.offsetHeight;
-    const scaleX = previewWidth / clip.offsetWidth;
-    previewClip.style.transform = `scale(${scaleX},${scaleY})`;
+    const scaleY = previewHeight / clipHeight;
+    const scaleX = previewWidth / clipWidth;
 
-    previewClip.style.top =
-      -(scaleY * clip.offsetHeight) - previewHeight / 2 + "px";
+    previewClip.style.transform = `scale(${scaleX},${scaleY})`;
+    previewClip.style.transformOrigin = "center bottom";
+
+    // check if width of iframe is percentage
+    if (this.clip.props.containerParams.width.includes("%")) {
+      previewClip.style.width =
+        100 +
+        100 * previewRatio +
+        parseFloat(this.clip.props.containerParams.width) / previewRatio +
+        "%";
+    }
+
+    if (this.clip.props.containerParams.height.includes("%")) {
+      previewClip.style.height =
+        100 +
+        100 * previewRatio +
+        parseFloat(this.clip.props.containerParams.height) / previewRatio +
+        "%";
+    }
   }
 }
 

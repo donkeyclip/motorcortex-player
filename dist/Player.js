@@ -26,6 +26,7 @@ var Player = function () {
     this.id = options.id || helper.getAnId(); // timer id
     this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
+    options.preview = options.preview || false;
     // this.previewClip.props.host = elid()
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
@@ -45,7 +46,6 @@ var Player = function () {
     var clip = this.clip.props.host.getElementsByTagName("iframe")[0];
     clip.style.margin = "0 auto";
     clip.style.display = "block";
-    clip.style.backgroundColor = "white";
 
     // create the timer controls main div
     this.mcPlayer = elcreate("div");
@@ -100,7 +100,9 @@ var Player = function () {
     this.subscribeToTimer();
     this.subscribeToEvents();
     this.addEventListeners();
-    this.createHoverDisplay();
+    if (options.preview) {
+      this.createHoverDisplay();
+    }
   }
 
   _createClass(Player, [{
@@ -807,11 +809,8 @@ var Player = function () {
           elid("mc-player-hover-display").classList.toggle("m-fadeIn");
 
           if (elid("mc-player-hover-display").className.includes("m-fadeIn")) {
-            console.log("started");
             _this2.hoverJourney = hoverTimeCapsule.startJourney(_this2.previewClip);
           } else {
-            console.log("ended");
-            console.log(_this2.previewClip);
             _this2.hoverJourney.destination();
           }
           _this2.loopBar.onmousemove = _loopBarMouseMove;
@@ -871,8 +870,6 @@ var Player = function () {
           }
 
           var ms = Math.round(positionX / _this2.totalBar.offsetWidth * _this2.clip.duration);
-
-          console.log("mousemove", ms);
 
           _this2.hoverJourney.station(ms);
 
@@ -997,14 +994,13 @@ var Player = function () {
   }, {
     key: "createHoverDisplay",
     value: function createHoverDisplay() {
-
       var clip = this.clip.props.host.getElementsByTagName("iframe")[0];
 
       var definition = this.clip.exportState({ unprocessed: true });
 
       definition.props.host = elid("mc-player-hover-display");
-
-      this.previewClip = MC.ClipFromDefinition(definition /*,this.clipClass*/);
+      this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
+      // console.log("asdfsadfdsafsad", this.clip, this.previewClip);
 
       var previewClip = this.previewClip.props.host.getElementsByTagName("iframe")[0];
 
@@ -1027,17 +1023,24 @@ var Player = function () {
 
       elid("mc-player-hover-display").style.width = previewWidth + "px";
 
-      var previewHeight = Math.round(clip.offsetHeight / clip.offsetWidth * elid("mc-player-hover-display").offsetWidth);
+      var previewHeight = Math.round(clipHeight / clipWidth * previewWidth);
 
       elid("mc-player-hover-display").style.height = previewHeight + "px";
 
-      var scaleY = previewHeight / clip.offsetHeight;
-      var scaleX = previewWidth / clip.offsetWidth;
+      var scaleY = previewHeight / clipHeight;
+      var scaleX = previewWidth / clipWidth;
+
       previewClip.style.transform = "scale(" + scaleX + "," + scaleY + ")";
+      previewClip.style.transformOrigin = "center bottom";
 
-      previewClip.style.top = -(scaleY * clip.offsetHeight) - previewHeight / 2 + "px";
+      // check if width of iframe is percentage
+      if (this.clip.props.containerParams.width.includes("%")) {
+        previewClip.style.width = 100 + 100 * previewRatio + parseFloat(this.clip.props.containerParams.width) / previewRatio + "%";
+      }
 
-      console.log(previewWidth, previewHeight, clipWidth, clipHeight);
+      if (this.clip.props.containerParams.height.includes("%")) {
+        previewClip.style.height = 100 + 100 * previewRatio + parseFloat(this.clip.props.containerParams.height) / previewRatio + "%";
+      }
     }
   }]);
 
