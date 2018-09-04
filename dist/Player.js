@@ -30,7 +30,7 @@ var Player = function () {
     this.clipClass = options.clipClass;
     options.preview = options.preview || false;
     this.options = options;
-    // this.previewClip.props.host = elid()
+    this.previewClip = null;
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
     this.loopLastPositionXPxls = 0;
@@ -104,13 +104,16 @@ var Player = function () {
     this.subscribeToTimer();
     this.subscribeToEvents();
     this.addEventListeners();
-    if (options.preview) {
-      elid("mc-player-show-preview-checkbox").checked = options.preview;
+
+    if (this.options.preview) {
+      elid("mc-player-show-preview-checkbox").checked = this.options.preview;
       this.createHoverDisplay();
     }
 
-    this.mcPlayer.addEventListener("resize", function () {
-      _this.setPreviewDimentions();
+    window.addEventListener("resize", function () {
+      if (_this.options.preview) {
+        _this.setPreviewDimentions();
+      }
     });
   }
 
@@ -365,6 +368,9 @@ var Player = function () {
           elid("mc-player-hover-display").style.display = "none";
           _this3.options.preview = false;
         } else {
+          if (!_this3.previewClip) {
+            _this3.createHoverDisplay();
+          }
           checkbox.checked = true;
           elid("mc-player-hover-display").style.visibility = "visible";
           elid("mc-player-hover-display").style.display = "flex";
@@ -830,7 +836,7 @@ var Player = function () {
       }, false);
 
       // only on desctop devices
-      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && this.options.preview) {
+      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         var loopBarMouseInOut = function loopBarMouseInOut() {
           if (!_this3.options.preview) {
             return;
@@ -845,6 +851,7 @@ var Player = function () {
           }
           _this3.loopBar.onmousemove = _loopBarMouseMove;
         };
+
         var loopBarAddListeners = function loopBarAddListeners() {
           if (!_this3.options.preview) {
             return;
@@ -958,7 +965,9 @@ var Player = function () {
   }, {
     key: "launchIntoFullscreen",
     value: function launchIntoFullscreen(element) {
-      this.setPreviewDimentions();
+      if (this.options.preview) {
+        this.setPreviewDimentions();
+      }
 
       this.mcPlayer.classList.toggle("full-screen");
       if (element.requestFullscreen) {
@@ -974,7 +983,9 @@ var Player = function () {
   }, {
     key: "exitFullscreen",
     value: function exitFullscreen() {
-      this.setPreviewDimentions();
+      if (this.options.preview) {
+        this.setPreviewDimentions();
+      }
       this.mcPlayer.classList.toggle("full-screen");
       if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -1041,12 +1052,12 @@ var Player = function () {
 
       definition.props.host = elid("mc-player-hover-display");
       this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
-
       var previewClip = this.previewClip.props.host.getElementsByTagName("iframe")[0];
 
       previewClip.style.position = "absolute";
 
       previewClip.style.zIndex = 1;
+      this.setPreviewDimentions();
       this.setPreviewDimentions();
     }
   }, {

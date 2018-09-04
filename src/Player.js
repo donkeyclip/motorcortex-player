@@ -19,7 +19,7 @@ class Player {
     this.clipClass = options.clipClass;
     options.preview = options.preview || false;
     this.options = options;
-    // this.previewClip.props.host = elid()
+    this.previewClip = null;
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     this.requestingLoop = false;
     this.loopLastPositionXPxls = 0;
@@ -95,13 +95,16 @@ class Player {
     this.subscribeToTimer();
     this.subscribeToEvents();
     this.addEventListeners();
-    if (options.preview) {
-      elid("mc-player-show-preview-checkbox").checked = options.preview;
+
+    if (this.options.preview) {
+      elid("mc-player-show-preview-checkbox").checked = this.options.preview;
       this.createHoverDisplay();
     }
 
-    this.mcPlayer.addEventListener("resize", () => {
-      this.setPreviewDimentions();
+    window.addEventListener("resize", () => {
+      if (this.options.preview) {
+        this.setPreviewDimentions();
+      }
     });
   }
 
@@ -367,6 +370,9 @@ class Player {
         elid("mc-player-hover-display").style.display = "none";
         this.options.preview = false;
       } else {
+        if (!this.previewClip) {
+          this.createHoverDisplay();
+        }
         checkbox.checked = true;
         elid("mc-player-hover-display").style.visibility = "visible";
         elid("mc-player-hover-display").style.display = "flex";
@@ -987,8 +993,7 @@ class Player {
     if (
       !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
-      ) &&
-      this.options.preview
+      )
     ) {
       const loopBarMouseInOut = () => {
         if (!this.options.preview) {
@@ -1004,6 +1009,7 @@ class Player {
         }
         this.loopBar.onmousemove = loopBarMouseMove;
       };
+
       const loopBarAddListeners = () => {
         if (!this.options.preview) {
           return;
@@ -1134,7 +1140,9 @@ class Player {
   }
 
   launchIntoFullscreen(element) {
-    this.setPreviewDimentions();
+    if (this.options.preview) {
+      this.setPreviewDimentions();
+    }
 
     this.mcPlayer.classList.toggle("full-screen");
     if (element.requestFullscreen) {
@@ -1149,7 +1157,9 @@ class Player {
   }
 
   exitFullscreen() {
-    this.setPreviewDimentions();
+    if (this.options.preview) {
+      this.setPreviewDimentions();
+    }
     this.mcPlayer.classList.toggle("full-screen");
     if (document.exitFullscreen) {
       document.exitFullscreen();
@@ -1227,7 +1237,6 @@ class Player {
 
     definition.props.host = elid("mc-player-hover-display");
     this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
-
     const previewClip = this.previewClip.props.host.getElementsByTagName(
       "iframe"
     )[0];
@@ -1235,6 +1244,7 @@ class Player {
     previewClip.style.position = "absolute";
 
     previewClip.style.zIndex = 1;
+    this.setPreviewDimentions();
     this.setPreviewDimentions();
   }
 
