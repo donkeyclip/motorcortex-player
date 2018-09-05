@@ -95,6 +95,27 @@ var Player = function () {
     this.loopBarEnd.style.left = "100%";
     this.loopBarStart.classList.add("m-fadeOut");
     this.loopBarEnd.classList.add("m-fadeOut");
+    this.loopStartTime = elid("mc-player-loopbar-start-time");
+    this.loopEndTime = elid("mc-player-loopbar-end-time");
+
+    this.editableLoopStartTime = document.createElement("input");
+    this.editableLoopStartTime.type = "text";
+    this.editableLoopStartTime.size = elid("mc-player-time-total").innerHTML.length + 1;
+    this.editableLoopStartTime.maxLength = elid("mc-player-time-total").innerHTML.length;
+    this.editableLoopStartTime.style.height = elid("mc-player-time-total").offsetHeight;
+    this.editableLoopStartTime.value = elid("mc-player-loopbar-start-time").innerHTML;
+    this.editableLoopStartTime.pattern = "d*";
+    this.editableLoopStartTime.style.fontSize = "8px";
+
+    this.editableLoopEndTime = document.createElement("input");
+    this.editableLoopEndTime.type = "text";
+    this.editableLoopEndTime.size = elid("mc-player-time-total").innerHTML.length + 1;
+    this.editableLoopEndTime.maxLength = elid("mc-player-time-total").innerHTML.length;
+    this.editableLoopEndTime.style.height = elid("mc-player-time-total").offsetHeight;
+    this.editableLoopEndTime.value = elid("mc-player-loopbar-start-time").innerHTML;
+    this.editableLoopEndTime.pattern = "d*";
+    this.editableLoopEndTime.style.fontSize = "8px";
+
     elid("mc-player-loop-time").classList.add("m-fadeOut");
 
     elid("mc-player-hover-display").classList.add("m-fadeOut");
@@ -129,13 +150,14 @@ var Player = function () {
       var duration = this.clip.duration;
 
       // zero value if style.left is null
-      var loopBarLeftPercentage = parseFloat(this.loopBar.style.left) / 100 || 0;
+      var loopBarLeft = this.loopBar.offsetLeft / this.totalBar.offsetWidth;
 
       var loopBarWidth = this.loopBar.offsetWidth;
 
-      var localMillisecond = millisecond - duration * loopBarLeftPercentage;
+      var localMillisecond = millisecond - duration * loopBarLeft;
 
       var localDuration = duration / this.totalBar.offsetWidth * loopBarWidth;
+
       if (millisecond >= this.loopEndMillisecond && this.loopButton.className.includes("svg-selected")) {
         this.needsUpdate = false;
         setTimeout(function () {
@@ -270,15 +292,7 @@ var Player = function () {
       }
       var duration = this.clip.duration;
 
-      var loopBarPercentageLeft = void 0;
-
-      if (this.loopBar.style.left.includes("px")) {
-        loopBarPercentageLeft = parseFloat(this.loopBar.style.left) / this.totalBar.offsetWidth || 0;
-      } else {
-        loopBarPercentageLeft = parseFloat(this.loopBar.style.left) / 100 || 0;
-      }
-
-      var totalBarPositionX = loopBarPositionX + this.totalBar.offsetWidth * loopBarPercentageLeft;
+      var totalBarPositionX = loopBarPositionX + this.loopBar.offsetLeft;
 
       var millisecond = Math.round(duration * totalBarPositionX / this.totalBar.offsetWidth);
 
@@ -301,6 +315,67 @@ var Player = function () {
       /* 
       * Play - pause - replay interactions
       */
+
+      var editableLoopStartTime = function editableLoopStartTime() {
+        _this3.editableLoopStartTime.value = _this3.loopStartTime.innerHTML;
+        _this3.loopStartTime.replaceWith(_this3.editableLoopStartTime);
+        _this3.editableLoopStartTime.focus();
+      };
+
+      var editableLoopEndTime = function editableLoopEndTime() {
+        _this3.editableLoopEndTime.value = _this3.loopEndTime.innerHTML;
+        _this3.loopEndTime.replaceWith(_this3.editableLoopEndTime);
+        _this3.editableLoopEndTime.focus();
+      };
+
+      this.editableLoopEndTime.onkeydown = this.editableLoopStartTime.onkeydown = function (e) {
+        e.preventDefault();
+        if (e.keyCode === 8) {
+          e.target.value = e.target.value.toString().substring(0, e.target.value.toString().length - 1);
+        }
+
+        if (e.keyCode === 13) {
+          e.target.blur();
+        }
+
+        var newValue = parseFloat((e.target.value || 0).toString() + e.key);
+
+        if (newValue > _this3.clip.duration) {
+          return;
+        }
+        e.target.value = newValue;
+
+        if (e.target === _this3.editableLoopStartTime) {
+          var viewportOffset = _this3.totalBar.getBoundingClientRect();
+          var event = {
+            preventDefault: function preventDefault() {},
+            clientX: _this3.totalBar.offsetWidth / _this3.clip.duration * e.target.value + viewportOffset.left
+          };
+          onMouseDownLoopStart(event);
+          onCursorMoveLoopStart(event);
+          onMouseUpLoopStart(event);
+        } else if (e.target === _this3.editableLoopEndTime) {
+          var _viewportOffset = _this3.totalBar.getBoundingClientRect();
+          var _event = {
+            preventDefault: function preventDefault() {},
+            clientX: _this3.totalBar.offsetWidth / _this3.clip.duration * e.target.value + _viewportOffset.left
+          };
+          onMouseDownLoopEnd(_event);
+          onCursorMoveLoopEnd(_event);
+          onMouseUpLoopEnd(_event);
+        }
+      };
+
+      this.loopStartTime.onclick = editableLoopStartTime;
+      this.loopEndTime.onclick = editableLoopEndTime;
+
+      this.editableLoopStartTime.onfocusout = function () {
+        _this3.editableLoopStartTime.replaceWith(_this3.loopStartTime);
+      };
+
+      this.editableLoopEndTime.onfocusout = function () {
+        _this3.editableLoopEndTime.replaceWith(_this3.loopEndTime);
+      };
 
       this.statusButton.onclick = function (e) {
         e.preventDefault();
@@ -416,12 +491,11 @@ var Player = function () {
         var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
         var viewportOffset = _this3.loopBar.getBoundingClientRect();
         var positionX = clientX - viewportOffset.left;
+
         if (positionX < 0) {
           positionX = 0;
-        } else if (_this3.loopBar.offsetWidth === _this3.totalBar.offsetWidth && positionX >= _this3.loopBar.offsetWidth) {
-          positionX = _this3.totalBar.offsetWidth;
-        } else if (positionX >= _this3.loopBar.offsetWidth) {
-          positionX = parseFloat(_this3.loopBar.style.width) / 100 * _this3.totalBar.offsetWidth;
+        } else if (positionX > _this3.loopBar.offsetWidth) {
+          positionX = _this3.loopBar.offsetWidth;
         }
         _this3.handleDrag(positionX);
       };
@@ -433,6 +507,7 @@ var Player = function () {
         removeListener("mousemove", onCursorMove, false);
         removeListener("touchmove", onCursorMove, false);
         _this3.handleDragEnd();
+
         if (_this3.playAfterResize) {
           if (_this3.clip.state === "idle" && !_this3.loopButton.className.includes("svg-selected")) {
             _this3.clip.play();
@@ -454,6 +529,7 @@ var Player = function () {
           _this3.playAfterResize = false;
         }
       };
+
       var onMouseDown = function onMouseDown(e) {
         e.preventDefault();
         if (_this3.clip.state === "playing") {
@@ -477,6 +553,7 @@ var Player = function () {
         var viewportOffset = _this3.speedBar.getBoundingClientRect();
         var clientY = e.clientY || ((e.touches || [])[0] || {}).clientY;
         var positionY = clientY - viewportOffset.top;
+
         positionY -= 8;
         if (positionY < 0) {
           positionY = 0;
@@ -534,12 +611,12 @@ var Player = function () {
         elid("mc-player-loop-time").classList.toggle("m-fadeOut");
         elid("mc-player-loop-time").classList.toggle("m-fadeIn");
 
-        elid("mc-player-loopbar-end-time").innerHTML = _this3.loopEndMillisecond;
-        elid("mc-player-loopbar-start-time").innerHTML = _this3.loopStartMillisecond;
+        _this3.loopEndTime.innerHTML = _this3.loopEndMillisecond;
+        _this3.loopStartTime.innerHTML = _this3.loopStartMillisecond;
         _this3.needsUpdate = true;
 
         if (elid("mc-player-loop-time").className.includes("m-fadeOut")) {
-          _this3.loopBar.style.left = "0px";
+          _this3.loopBar.style.left = "0%";
           _this3.loopBar.style.width = "100%";
           _this3.loopStartMillisecond = 0;
           _this3.loopEndMillisecond = _this3.clip.duration;
@@ -558,6 +635,7 @@ var Player = function () {
         _this3.loopBarStart.classList.add("m-fadeIn");
         _this3.loopBarEnd.classList.add("m-fadeIn");
       };
+
       elid("mc-player-controls").onmouseout = function () {
         if (!_this3.loopButton.className.includes("svg-selected")) {
           return;
@@ -573,6 +651,8 @@ var Player = function () {
         var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
         var viewportOffset = _this3.totalBar.getBoundingClientRect();
         var positionX = clientX - viewportOffset.left;
+
+        var endPosition = _this3.loopBar.offsetWidth + _this3.loopBar.offsetLeft;
         if (positionX < 0) {
           positionX = 0;
         } else if (positionX > _this3.totalBar.offsetWidth) {
@@ -584,27 +664,27 @@ var Player = function () {
 
         _this3.loopBar.style.left = positionX + "px";
 
-        if (parseFloat(_this3.loopBar.style.width) - loopBarDeltaX + positionX > _this3.totalBar.offsetWidth) {
-          _this3.loopBar.style.width = "0px";
-          _this3.runningBar.style.width = "0px";
-        } else {
-          _this3.loopBar.style.width = parseFloat(_this3.loopBar.style.width) - loopBarDeltaX + "px";
-          _this3.runningBar.style.width = runningBarWidthInPxls + "px";
-        }
+        var diff = endPosition - _this3.loopBar.offsetLeft;
+        _this3.loopBar.style.width = diff + "px";
+
+        _this3.runningBar.style.width = runningBarWidthInPxls + "px";
 
         _this3.loopLastPositionXPxls = positionX;
 
-        _this3.loopStartMillisecond = Math.round(_this3.clip.duration * parseFloat(_this3.loopBar.style.left) / _this3.totalBar.offsetWidth);
+        _this3.loopStartMillisecond = Math.round(_this3.clip.duration * _this3.loopBar.offsetLeft / _this3.totalBar.offsetWidth);
 
-        var newLoopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / _this3.totalBar.offsetWidth);
-
-        if (_this3.loopEndMillisecond < newLoopEndMillisecond) {
-          _this3.loopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / _this3.totalBar.offsetWidth);
-          _this3.loopJourney = true;
+        if (_this3.loopEndMillisecond < _this3.loopStartMillisecond) {
+          _this3.loopEndMillisecond = _this3.loopStartMillisecond;
+          _this3.loopBar.style.width = "0px";
+          _this3.runningBar.style.width = "0px";
         }
 
-        elid("mc-player-loopbar-end-time").innerHTML = _this3.loopEndMillisecond;
-        elid("mc-player-loopbar-start-time").innerHTML = _this3.loopStartMillisecond;
+        _this3.loopEndTime.innerHTML = _this3.loopEndMillisecond;
+        _this3.loopStartTime.innerHTML = _this3.loopStartMillisecond;
+
+        if (_this3.loopStartMillisecond > _this3.clip.runTimeInfo.currentMillisecond) {
+          _this3.loopJourney = true;
+        }
       };
 
       var onMouseUpLoopStart = function onMouseUpLoopStart(e) {
@@ -618,19 +698,13 @@ var Player = function () {
           _this3.loopJourney = false;
         }
 
-        _this3.loopLastPositionXPercentage = _this3.loopLastPositionXPxls / _this3.loopBar.offsetWidth;
+        _this3.loopBar.style.left = _this3.loopBar.offsetLeft / _this3.totalBar.offsetWidth * 100 + "%";
 
-        var runningBarWidthPercentage = _this3.runningBar.offsetWidth / _this3.loopBar.offsetWidth * 100 + "%";
+        _this3.loopBar.style.width = _this3.loopBar.offsetWidth / _this3.totalBar.offsetWidth * 100 + "%";
 
-        _this3.loopBar.style.left = parseFloat(_this3.loopBar.style.left) / _this3.totalBar.offsetWidth * 100 + "%";
+        _this3.loopStartMillisecond = Math.round(_this3.clip.duration * _this3.loopBar.offsetLeft / _this3.totalBar.offsetWidth);
 
-        _this3.loopBar.style.width = parseFloat(_this3.loopBar.style.width) / _this3.totalBar.offsetWidth * 100 + "%";
-
-        _this3.loopStartMillisecond = Math.round(_this3.clip.duration * parseFloat(_this3.loopBar.style.left) / 100);
-
-        _this3.loopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / 100);
-
-        _this3.runningBar.style.width = runningBarWidthPercentage;
+        _this3.runningBar.style.width = _this3.runningBar.offsetWidth / _this3.loopBar.offsetWidth * 100 + "%";
         removeListener("mouseup", onMouseUpLoopStart, false);
         removeListener("touchend", onMouseUpLoopStart, false);
         removeListener("mousemove", onCursorMoveLoopStart, false);
@@ -684,11 +758,6 @@ var Player = function () {
           _this3.clip.wait();
           _this3.playAfterResize = true;
         }
-        _this3.loopBar.style.width = _this3.loopBar.offsetWidth + "px";
-
-        if (_this3.loopLastPositionXPxls - _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth > 1 || _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth - _this3.loopLastPositionXPxls > 1) {
-          _this3.loopLastPositionXPxls = _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth;
-        }
 
         _this3.loopBar.removeEventListener("mousedown", onMouseDown, false);
         _this3.loopBar.removeEventListener("touchstart", onMouseDown, false);
@@ -706,18 +775,18 @@ var Player = function () {
 
       var onCursorMoveLoopEnd = function onCursorMoveLoopEnd(e) {
         e.preventDefault();
-
         var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
         var viewportOffset = _this3.totalBar.getBoundingClientRect();
         var positionX = clientX - viewportOffset.left;
+
         if (positionX < 0) {
           positionX = 0;
         } else if (positionX > _this3.totalBar.offsetWidth) {
           positionX = _this3.totalBar.offsetWidth;
         }
 
-        if (_this3.runningBar.offsetWidth + (parseFloat(_this3.loopBar.style.left) || 0) > positionX) {
-          _this3.runningBar.style.width = positionX - parseFloat(_this3.loopBar.style.left) + "px";
+        if (_this3.runningBar.offsetWidth + _this3.loopBar.offsetLeft > positionX) {
+          _this3.runningBar.style.width = positionX - _this3.loopBar.offsetLeft + "px";
         }
 
         if (_this3.loopLastPositionXPxls - positionX < 0) {
@@ -727,16 +796,13 @@ var Player = function () {
           _this3.loopLastPositionXPxls = positionX;
         }
 
-        var newLoopStartMillisecond = Math.round(_this3.clip.duration * parseFloat(_this3.loopBar.style.left) / _this3.totalBar.offsetWidth);
-        if (_this3.loopStartMillisecond > newLoopStartMillisecond) {
-          _this3.loopStartMillisecond = newLoopStartMillisecond;
+        _this3.loopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / _this3.totalBar.offsetWidth);
+        if (_this3.loopStartMillisecond > _this3.loopEndMillisecond) {
+          _this3.loopStartMillisecond = _this3.loopEndMillisecond;
           _this3.loopJourney = true;
         }
-
-        _this3.loopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / _this3.totalBar.offsetWidth);
-
-        elid("mc-player-loopbar-end-time").innerHTML = _this3.loopEndMillisecond;
-        elid("mc-player-loopbar-start-time").innerHTML = _this3.loopStartMillisecond;
+        _this3.loopEndTime.innerHTML = _this3.loopEndMillisecond;
+        _this3.loopStartTime.innerHTML = _this3.loopStartMillisecond;
       };
 
       var onMouseUpLoopEnd = function onMouseUpLoopEnd(e) {
@@ -744,15 +810,11 @@ var Player = function () {
         e.preventDefault();
         _this3.runningBar.style.width = _this3.runningBar.offsetWidth / _this3.loopBar.offsetWidth * 100 + "%";
 
-        _this3.loopBar.style.left = (parseFloat(_this3.loopBar.style.left) || 0) / _this3.totalBar.offsetWidth * 100 + "%";
+        _this3.loopBar.style.left = _this3.loopBar.offsetLeft / _this3.totalBar.offsetWidth * 100 + "%";
 
-        _this3.loopBar.style.width = parseFloat(_this3.loopBar.style.width) / _this3.totalBar.offsetWidth * 100 + "%";
+        _this3.loopBar.style.width = _this3.loopBar.offsetWidth / _this3.totalBar.offsetWidth * 100 + "%";
 
-        _this3.loopLastPositionXPercentage = _this3.loopLastPositionXPxls / _this3.loopBar.offsetWidth;
-
-        _this3.loopStartMillisecond = Math.round(_this3.clip.duration * parseFloat(_this3.loopBar.style.left) / 100);
-
-        _this3.loopEndMillisecond = Math.round(_this3.clip.duration * ((parseFloat(_this3.loopBar.style.left) || 0) + parseFloat(_this3.loopBar.style.width)) / 100);
+        _this3.loopStartMillisecond = Math.round(_this3.clip.duration * _this3.loopBar.offsetLeft / 100);
 
         if (_this3.loopJourney) {
           _this3.handleDragStart();
@@ -814,11 +876,7 @@ var Player = function () {
         e.preventDefault();
         _this3.runningBar.style.width = _this3.runningBar.offsetWidth + "px";
 
-        _this3.loopBar.style.left = (parseFloat(_this3.loopBar.style.left) || 0) / 100 * _this3.totalBar.offsetWidth + "px";
-
-        if (_this3.loopLastPositionXPxls - _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth > 1 || _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth - _this3.loopLastPositionXPxls > 1) {
-          _this3.loopLastPositionXPxls = _this3.loopLastPositionXPercentage * _this3.loopBar.offsetWidth;
-        }
+        _this3.loopBar.style.left = _this3.loopBar.offsetLeft + "px";
 
         _this3.loopBar.style.width = _this3.loopBar.offsetWidth + "px";
         _this3.loopBar.removeEventListener("mousedown", onMouseDown, false);

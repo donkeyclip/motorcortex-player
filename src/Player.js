@@ -86,6 +86,41 @@ class Player {
     this.loopBarEnd.style.left = "100%";
     this.loopBarStart.classList.add("m-fadeOut");
     this.loopBarEnd.classList.add("m-fadeOut");
+    this.loopStartTime = elid("mc-player-loopbar-start-time");
+    this.loopEndTime = elid("mc-player-loopbar-end-time");
+
+    this.editableLoopStartTime = document.createElement("input");
+    this.editableLoopStartTime.type = "text";
+    this.editableLoopStartTime.size =
+      elid("mc-player-time-total").innerHTML.length + 1;
+    this.editableLoopStartTime.maxLength = elid(
+      "mc-player-time-total"
+    ).innerHTML.length;
+    this.editableLoopStartTime.style.height = elid(
+      "mc-player-time-total"
+    ).offsetHeight;
+    this.editableLoopStartTime.value = elid(
+      "mc-player-loopbar-start-time"
+    ).innerHTML;
+    this.editableLoopStartTime.pattern = "d*";
+    this.editableLoopStartTime.style.fontSize = "8px";
+
+    this.editableLoopEndTime = document.createElement("input");
+    this.editableLoopEndTime.type = "text";
+    this.editableLoopEndTime.size =
+      elid("mc-player-time-total").innerHTML.length + 1;
+    this.editableLoopEndTime.maxLength = elid(
+      "mc-player-time-total"
+    ).innerHTML.length;
+    this.editableLoopEndTime.style.height = elid(
+      "mc-player-time-total"
+    ).offsetHeight;
+    this.editableLoopEndTime.value = elid(
+      "mc-player-loopbar-start-time"
+    ).innerHTML;
+    this.editableLoopEndTime.pattern = "d*";
+    this.editableLoopEndTime.style.fontSize = "8px";
+
     elid("mc-player-loop-time").classList.add("m-fadeOut");
 
     elid("mc-player-hover-display").classList.add("m-fadeOut");
@@ -116,14 +151,14 @@ class Player {
     const duration = this.clip.duration;
 
     // zero value if style.left is null
-    const loopBarLeftPercentage =
-      parseFloat(this.loopBar.style.left) / 100 || 0;
+    const loopBarLeft = this.loopBar.offsetLeft / this.totalBar.offsetWidth;
 
     const loopBarWidth = this.loopBar.offsetWidth;
 
-    const localMillisecond = millisecond - duration * loopBarLeftPercentage;
+    const localMillisecond = millisecond - duration * loopBarLeft;
 
     const localDuration = (duration / this.totalBar.offsetWidth) * loopBarWidth;
+
     if (
       millisecond >= this.loopEndMillisecond &&
       this.loopButton.className.includes("svg-selected")
@@ -271,17 +306,7 @@ class Player {
     }
     const duration = this.clip.duration;
 
-    let loopBarPercentageLeft;
-
-    if (this.loopBar.style.left.includes("px")) {
-      loopBarPercentageLeft =
-        parseFloat(this.loopBar.style.left) / this.totalBar.offsetWidth || 0;
-    } else {
-      loopBarPercentageLeft = parseFloat(this.loopBar.style.left) / 100 || 0;
-    }
-
-    const totalBarPositionX =
-      loopBarPositionX + this.totalBar.offsetWidth * loopBarPercentageLeft;
+    const totalBarPositionX = loopBarPositionX + this.loopBar.offsetLeft;
 
     const millisecond = Math.round(
       (duration * totalBarPositionX) / this.totalBar.offsetWidth
@@ -303,6 +328,73 @@ class Player {
     /* 
     * Play - pause - replay interactions
     */
+
+    const editableLoopStartTime = () => {
+      this.editableLoopStartTime.value = this.loopStartTime.innerHTML;
+      this.loopStartTime.replaceWith(this.editableLoopStartTime);
+      this.editableLoopStartTime.focus();
+    };
+
+    const editableLoopEndTime = () => {
+      this.editableLoopEndTime.value = this.loopEndTime.innerHTML;
+      this.loopEndTime.replaceWith(this.editableLoopEndTime);
+      this.editableLoopEndTime.focus();
+    };
+
+    this.editableLoopEndTime.onkeydown = this.editableLoopStartTime.onkeydown = e => {
+      e.preventDefault();
+      if (e.keyCode === 8) {
+        e.target.value = e.target.value
+          .toString()
+          .substring(0, e.target.value.toString().length - 1);
+      }
+
+      if (e.keyCode === 13) {
+        e.target.blur();
+      }
+
+      const newValue = parseFloat((e.target.value || 0).toString() + e.key);
+
+      if (newValue > this.clip.duration) {
+        return;
+      }
+      e.target.value = newValue;
+
+      if (e.target === this.editableLoopStartTime) {
+        const viewportOffset = this.totalBar.getBoundingClientRect();
+        const event = {
+          preventDefault: () => {},
+          clientX:
+            (this.totalBar.offsetWidth / this.clip.duration) * e.target.value +
+            viewportOffset.left
+        };
+        onMouseDownLoopStart(event);
+        onCursorMoveLoopStart(event);
+        onMouseUpLoopStart(event);
+      } else if (e.target === this.editableLoopEndTime) {
+        const viewportOffset = this.totalBar.getBoundingClientRect();
+        const event = {
+          preventDefault: () => {},
+          clientX:
+            (this.totalBar.offsetWidth / this.clip.duration) * e.target.value +
+            viewportOffset.left
+        };
+        onMouseDownLoopEnd(event);
+        onCursorMoveLoopEnd(event);
+        onMouseUpLoopEnd(event);
+      }
+    };
+
+    this.loopStartTime.onclick = editableLoopStartTime;
+    this.loopEndTime.onclick = editableLoopEndTime;
+
+    this.editableLoopStartTime.onfocusout = () => {
+      this.editableLoopStartTime.replaceWith(this.loopStartTime);
+    };
+
+    this.editableLoopEndTime.onfocusout = () => {
+      this.editableLoopEndTime.replaceWith(this.loopEndTime);
+    };
 
     this.statusButton.onclick = e => {
       e.preventDefault();
@@ -420,17 +512,11 @@ class Player {
       const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
       const viewportOffset = this.loopBar.getBoundingClientRect();
       let positionX = clientX - viewportOffset.left;
+
       if (positionX < 0) {
         positionX = 0;
-      } else if (
-        this.loopBar.offsetWidth === this.totalBar.offsetWidth &&
-        positionX >= this.loopBar.offsetWidth
-      ) {
-        positionX = this.totalBar.offsetWidth;
-      } else if (positionX >= this.loopBar.offsetWidth) {
-        positionX =
-          (parseFloat(this.loopBar.style.width) / 100) *
-          this.totalBar.offsetWidth;
+      } else if (positionX > this.loopBar.offsetWidth) {
+        positionX = this.loopBar.offsetWidth;
       }
       this.handleDrag(positionX);
     };
@@ -442,6 +528,7 @@ class Player {
       removeListener("mousemove", onCursorMove, false);
       removeListener("touchmove", onCursorMove, false);
       this.handleDragEnd();
+
       if (this.playAfterResize) {
         if (
           this.clip.state === "idle" &&
@@ -474,6 +561,7 @@ class Player {
         this.playAfterResize = false;
       }
     };
+
     const onMouseDown = e => {
       e.preventDefault();
       if (this.clip.state === "playing") {
@@ -502,6 +590,7 @@ class Player {
       const viewportOffset = this.speedBar.getBoundingClientRect();
       const clientY = e.clientY || ((e.touches || [])[0] || {}).clientY;
       let positionY = clientY - viewportOffset.top;
+
       positionY -= 8;
       if (positionY < 0) {
         positionY = 0;
@@ -574,14 +663,12 @@ class Player {
       elid("mc-player-loop-time").classList.toggle("m-fadeOut");
       elid("mc-player-loop-time").classList.toggle("m-fadeIn");
 
-      elid("mc-player-loopbar-end-time").innerHTML = this.loopEndMillisecond;
-      elid(
-        "mc-player-loopbar-start-time"
-      ).innerHTML = this.loopStartMillisecond;
+      this.loopEndTime.innerHTML = this.loopEndMillisecond;
+      this.loopStartTime.innerHTML = this.loopStartMillisecond;
       this.needsUpdate = true;
 
       if (elid("mc-player-loop-time").className.includes("m-fadeOut")) {
-        this.loopBar.style.left = "0px";
+        this.loopBar.style.left = "0%";
         this.loopBar.style.width = "100%";
         this.loopStartMillisecond = 0;
         this.loopEndMillisecond = this.clip.duration;
@@ -603,6 +690,7 @@ class Player {
       this.loopBarStart.classList.add("m-fadeIn");
       this.loopBarEnd.classList.add("m-fadeIn");
     };
+
     elid("mc-player-controls").onmouseout = () => {
       if (!this.loopButton.className.includes("svg-selected")) {
         return;
@@ -618,6 +706,8 @@ class Player {
       const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
       const viewportOffset = this.totalBar.getBoundingClientRect();
       let positionX = clientX - viewportOffset.left;
+
+      const endPosition = this.loopBar.offsetWidth + this.loopBar.offsetLeft;
       if (positionX < 0) {
         positionX = 0;
       } else if (positionX > this.totalBar.offsetWidth) {
@@ -629,46 +719,32 @@ class Player {
 
       this.loopBar.style.left = positionX + "px";
 
-      if (
-        parseFloat(this.loopBar.style.width) - loopBarDeltaX + positionX >
-        this.totalBar.offsetWidth
-      ) {
-        this.loopBar.style.width = "0px";
-        this.runningBar.style.width = "0px";
-      } else {
-        this.loopBar.style.width =
-          parseFloat(this.loopBar.style.width) - loopBarDeltaX + "px";
-        this.runningBar.style.width = runningBarWidthInPxls + "px";
-      }
+      const diff = endPosition - this.loopBar.offsetLeft;
+      this.loopBar.style.width = diff + "px";
+
+      this.runningBar.style.width = runningBarWidthInPxls + "px";
 
       this.loopLastPositionXPxls = positionX;
 
       this.loopStartMillisecond = Math.round(
-        (this.clip.duration * parseFloat(this.loopBar.style.left)) /
+        (this.clip.duration * this.loopBar.offsetLeft) /
           this.totalBar.offsetWidth
       );
 
-      const newLoopEndMillisecond = Math.round(
-        (this.clip.duration *
-          ((parseFloat(this.loopBar.style.left) || 0) +
-            parseFloat(this.loopBar.style.width))) /
-          this.totalBar.offsetWidth
-      );
-
-      if (this.loopEndMillisecond < newLoopEndMillisecond) {
-        this.loopEndMillisecond = Math.round(
-          (this.clip.duration *
-            ((parseFloat(this.loopBar.style.left) || 0) +
-              parseFloat(this.loopBar.style.width))) /
-            this.totalBar.offsetWidth
-        );
-        this.loopJourney = true;
+      if (this.loopEndMillisecond < this.loopStartMillisecond) {
+        this.loopEndMillisecond = this.loopStartMillisecond;
+        this.loopBar.style.width = "0px";
+        this.runningBar.style.width = "0px";
       }
 
-      elid("mc-player-loopbar-end-time").innerHTML = this.loopEndMillisecond;
-      elid(
-        "mc-player-loopbar-start-time"
-      ).innerHTML = this.loopStartMillisecond;
+      this.loopEndTime.innerHTML = this.loopEndMillisecond;
+      this.loopStartTime.innerHTML = this.loopStartMillisecond;
+
+      if (
+        this.loopStartMillisecond > this.clip.runTimeInfo.currentMillisecond
+      ) {
+        this.loopJourney = true;
+      }
     };
 
     const onMouseUpLoopStart = e => {
@@ -682,34 +758,19 @@ class Player {
         this.loopJourney = false;
       }
 
-      this.loopLastPositionXPercentage =
-        this.loopLastPositionXPxls / this.loopBar.offsetWidth;
-
-      const runningBarWidthPercentage =
-        (this.runningBar.offsetWidth / this.loopBar.offsetWidth) * 100 + "%";
-
       this.loopBar.style.left =
-        (parseFloat(this.loopBar.style.left) / this.totalBar.offsetWidth) *
-          100 +
-        "%";
+        (this.loopBar.offsetLeft / this.totalBar.offsetWidth) * 100 + "%";
 
       this.loopBar.style.width =
-        (parseFloat(this.loopBar.style.width) / this.totalBar.offsetWidth) *
-          100 +
-        "%";
+        (this.loopBar.offsetWidth / this.totalBar.offsetWidth) * 100 + "%";
 
       this.loopStartMillisecond = Math.round(
-        (this.clip.duration * parseFloat(this.loopBar.style.left)) / 100
+        (this.clip.duration * this.loopBar.offsetLeft) /
+          this.totalBar.offsetWidth
       );
 
-      this.loopEndMillisecond = Math.round(
-        (this.clip.duration *
-          ((parseFloat(this.loopBar.style.left) || 0) +
-            parseFloat(this.loopBar.style.width))) /
-          100
-      );
-
-      this.runningBar.style.width = runningBarWidthPercentage;
+      this.runningBar.style.width =
+        (this.runningBar.offsetWidth / this.loopBar.offsetWidth) * 100 + "%";
       removeListener("mouseup", onMouseUpLoopStart, false);
       removeListener("touchend", onMouseUpLoopStart, false);
       removeListener("mousemove", onCursorMoveLoopStart, false);
@@ -768,19 +829,6 @@ class Player {
         this.clip.wait();
         this.playAfterResize = true;
       }
-      this.loopBar.style.width = this.loopBar.offsetWidth + "px";
-
-      if (
-        this.loopLastPositionXPxls -
-          this.loopLastPositionXPercentage * this.loopBar.offsetWidth >
-          1 ||
-        this.loopLastPositionXPercentage * this.loopBar.offsetWidth -
-          this.loopLastPositionXPxls >
-          1
-      ) {
-        this.loopLastPositionXPxls =
-          this.loopLastPositionXPercentage * this.loopBar.offsetWidth;
-      }
 
       this.loopBar.removeEventListener("mousedown", onMouseDown, false);
       this.loopBar.removeEventListener("touchstart", onMouseDown, false);
@@ -807,23 +855,19 @@ class Player {
 
     const onCursorMoveLoopEnd = e => {
       e.preventDefault();
-
       const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
       const viewportOffset = this.totalBar.getBoundingClientRect();
       let positionX = clientX - viewportOffset.left;
+
       if (positionX < 0) {
         positionX = 0;
       } else if (positionX > this.totalBar.offsetWidth) {
         positionX = this.totalBar.offsetWidth;
       }
 
-      if (
-        this.runningBar.offsetWidth +
-          (parseFloat(this.loopBar.style.left) || 0) >
-        positionX
-      ) {
+      if (this.runningBar.offsetWidth + this.loopBar.offsetLeft > positionX) {
         this.runningBar.style.width =
-          positionX - parseFloat(this.loopBar.style.left) + "px";
+          positionX - this.loopBar.offsetLeft + "px";
       }
 
       if (this.loopLastPositionXPxls - positionX < 0) {
@@ -834,26 +878,18 @@ class Player {
         this.loopLastPositionXPxls = positionX;
       }
 
-      const newLoopStartMillisecond = Math.round(
-        (this.clip.duration * parseFloat(this.loopBar.style.left)) /
-          this.totalBar.offsetWidth
-      );
-      if (this.loopStartMillisecond > newLoopStartMillisecond) {
-        this.loopStartMillisecond = newLoopStartMillisecond;
-        this.loopJourney = true;
-      }
-
       this.loopEndMillisecond = Math.round(
         (this.clip.duration *
           ((parseFloat(this.loopBar.style.left) || 0) +
             parseFloat(this.loopBar.style.width))) /
           this.totalBar.offsetWidth
       );
-
-      elid("mc-player-loopbar-end-time").innerHTML = this.loopEndMillisecond;
-      elid(
-        "mc-player-loopbar-start-time"
-      ).innerHTML = this.loopStartMillisecond;
+      if (this.loopStartMillisecond > this.loopEndMillisecond) {
+        this.loopStartMillisecond = this.loopEndMillisecond;
+        this.loopJourney = true;
+      }
+      this.loopEndTime.innerHTML = this.loopEndMillisecond;
+      this.loopStartTime.innerHTML = this.loopStartMillisecond;
     };
 
     const onMouseUpLoopEnd = e => {
@@ -863,28 +899,13 @@ class Player {
         (this.runningBar.offsetWidth / this.loopBar.offsetWidth) * 100 + "%";
 
       this.loopBar.style.left =
-        ((parseFloat(this.loopBar.style.left) || 0) /
-          this.totalBar.offsetWidth) *
-          100 +
-        "%";
+        (this.loopBar.offsetLeft / this.totalBar.offsetWidth) * 100 + "%";
 
       this.loopBar.style.width =
-        (parseFloat(this.loopBar.style.width) / this.totalBar.offsetWidth) *
-          100 +
-        "%";
-
-      this.loopLastPositionXPercentage =
-        this.loopLastPositionXPxls / this.loopBar.offsetWidth;
+        (this.loopBar.offsetWidth / this.totalBar.offsetWidth) * 100 + "%";
 
       this.loopStartMillisecond = Math.round(
-        (this.clip.duration * parseFloat(this.loopBar.style.left)) / 100
-      );
-
-      this.loopEndMillisecond = Math.round(
-        (this.clip.duration *
-          ((parseFloat(this.loopBar.style.left) || 0) +
-            parseFloat(this.loopBar.style.width))) /
-          100
+        (this.clip.duration * this.loopBar.offsetLeft) / 100
       );
 
       if (this.loopJourney) {
@@ -952,22 +973,7 @@ class Player {
       e.preventDefault();
       this.runningBar.style.width = this.runningBar.offsetWidth + "px";
 
-      this.loopBar.style.left =
-        ((parseFloat(this.loopBar.style.left) || 0) / 100) *
-          this.totalBar.offsetWidth +
-        "px";
-
-      if (
-        this.loopLastPositionXPxls -
-          this.loopLastPositionXPercentage * this.loopBar.offsetWidth >
-          1 ||
-        this.loopLastPositionXPercentage * this.loopBar.offsetWidth -
-          this.loopLastPositionXPxls >
-          1
-      ) {
-        this.loopLastPositionXPxls =
-          this.loopLastPositionXPercentage * this.loopBar.offsetWidth;
-      }
+      this.loopBar.style.left = this.loopBar.offsetLeft + "px";
 
       this.loopBar.style.width = this.loopBar.offsetWidth + "px";
       this.loopBar.removeEventListener("mousedown", onMouseDown, false);
