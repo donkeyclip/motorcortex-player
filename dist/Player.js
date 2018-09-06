@@ -29,6 +29,7 @@ var Player = function () {
     this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
     options.preview = options.preview || false;
+    options.showVolume = options.showVolume || false;
     this.options = options;
     this.previewClip = null;
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
@@ -43,7 +44,10 @@ var Player = function () {
     this.loopStartMillisecond = 0;
     this.loopEndMillisecond = this.clip.duration;
     this.theme = options.theme || "transparent on-top";
+    this.volume = 1;
+    this.previusVolume = 1;
 
+    this.volumeMute = false;
     // set clip position to relative
     this.clip.props.host.style.position = "relative";
     var clip = this.clip.props.host.getElementsByTagName("iframe")[0];
@@ -69,6 +73,7 @@ var Player = function () {
     this.statusButton = elid("mc-player-status-btn");
     this.settingsShowIndicator = elid("mc-player-settings-indicator");
     this.settingsShowPreview = elid("mc-player-settings-preview");
+    this.settingsShowVolume = elid("mc-player-settings-volume");
     this.settingsButton = elid("mc-player-settings-btn");
     this.loopButton = elid("mc-player-loop-btn");
     this.settingsSpeedButtonShow = elid("mc-player-settings-speed-show");
@@ -81,8 +86,16 @@ var Player = function () {
     this.loopBarStart = elid("mc-player-loopbar-start");
     this.loopBarEnd = elid("mc-player-loopbar-end");
 
-    this.volumeBar = elid("mc-player-volumebar-helper");
+    this.volumeControl = elid("mc-player-volume");
+    // this.volumeControl.classList.add("mc-player-volume-width-transition");
+    // this.timeDisplay.classList.add("mc-player-time-width-transition");
+
+    this.volumeBtn = elid("mc-player-volume-btn");
+    this.volumeBar = elid("mc-player-volumebar");
+    this.volumeBarHelper = elid("mc-player-volumebar-helper");
     this.volumeBarActive = elid("mc-player-volumebar-active");
+    this.volumeBarActive.style.width = this.volume * 100 + "%";
+    this.volumeCursor = elid("mc-player-volume-cursor");
 
     this.currentTime.innerHTML = 0;
     this.totalTime.innerHTML = this.clip.duration;
@@ -132,6 +145,20 @@ var Player = function () {
     if (this.options.preview) {
       elid("mc-player-show-preview-checkbox").checked = this.options.preview;
       this.createHoverDisplay();
+    }
+
+    elid("mc-player-show-volume-checkbox").checked = this.options.showVolume;
+
+    if (!this.options.showVolume) {
+      this.timeDisplay.style.left = "45px";
+      this.volumeControl.style.visibility = "hidden";
+    } else {
+      this.timeDisplay.style.left = "";
+      this.volumeControl.classList.toggle("mc-player-volume-width-transition");
+      this.volumeBar.classList.toggle("mc-player-volume-width-transition");
+      this.volumeBarHelper.classList.toggle("mc-player-volume-width-transition");
+      this.timeDisplay.classList.toggle("mc-player-time-width-transition");
+      this.volumeControl.style.visibility = "visible";
     }
 
     window.addEventListener("resize", function () {
@@ -238,7 +265,11 @@ var Player = function () {
   }, {
     key: "eventBroadcast",
     value: function eventBroadcast(eventName, meta) {
-      if (eventName === "state-change") {
+      // console.log(eventName);
+      if (eventName === "duration-change") {
+        this.totalTime.innerHTML = this.clip.duration;
+        this.loopEndMillisecond = this.clip.duration;
+      } else if (eventName === "state-change") {
         if (meta.newState === "waiting") {
           this.statusButton.innerHTML = svg.playSVG;
           this.statusButton.appendChild(this.indicator);
@@ -315,24 +346,57 @@ var Player = function () {
     value: function addEventListeners() {
       var _this3 = this;
 
+      this.volumeBtn.onclick = function () {
+        if (_this3.volumeMute) {
+          _this3.volumeBarActive.style.width = _this3.previusVolume * 100 + "%";
+          _this3.clip.setVolume(_this3.previusVolume);
+          _this3.volumeMute = false;
+          var SVG = document.createElement("span");
+          SVG.innerHTML = svg.volumeSVG;
+          _this3.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+        } else {
+          _this3.volumeMute = true;
+          _this3.volumeBarActive.style.width = "0%";
+          _this3.clip.setVolume(0);
+          var _SVG = document.createElement("span");
+          _SVG.innerHTML = svg.volumeMuteSVG;
+          _this3.volumeBtn.getElementsByTagName("svg")[0].replaceWith(_SVG);
+        }
+      };
+
       var onCursorMoveVolumeBar = function onCursorMoveVolumeBar(e) {
         e.preventDefault();
         var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-        var viewportOffset = _this3.volumeBar.getBoundingClientRect();
+        var viewportOffset = _this3.volumeBarHelper.getBoundingClientRect();
         var positionX = clientX - viewportOffset.left;
 
         if (positionX < 0) {
           positionX = 0;
-        } else if (positionX > _this3.volumeBar.offsetWidth) {
-          positionX = _this3.volumeBar.offsetWidth;
+        } else if (positionX > _this3.volumeBarHelper.offsetWidth) {
+          positionX = _this3.volumeBarHelper.offsetWidth;
         }
-        var volume = Number((positionX / _this3.volumeBar.offsetWidth).toFixed(2));
-        _this3.volumeBarActive.style.width = volume * 100 + "%";
-        _this3.clip.setVolume(volume);
+        _this3.volume = Number((positionX / _this3.volumeBarHelper.offsetWidth).toFixed(2));
+        _this3.volumeBarActive.style.width = _this3.volume * 100 + "%";
+        _this3.clip.setVolume(_this3.volume);
+
+        if (_this3.volume > 0) {
+          _this3.volumeMute = false;
+          var SVG = document.createElement("span");
+          SVG.innerHTML = svg.volumeSVG;
+          _this3.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+        } else if (_this3.volume === 0) {
+          _this3.volumeMute = true;
+          var _SVG2 = document.createElement("span");
+          _SVG2.innerHTML = svg.volumeMuteSVG;
+          _this3.volumeBtn.getElementsByTagName("svg")[0].replaceWith(_SVG2);
+        }
       };
 
       var onMouseUpVolumeBar = function onMouseUpVolumeBar(e) {
         e.preventDefault();
+        if (_this3.volume > 0) {
+          _this3.previusVolume = _this3.volume;
+        }
         removeListener("mouseup", onMouseUpVolumeBar, false);
         removeListener("touchend", onMouseUpVolumeBar, false);
         removeListener("mousemove", onCursorMoveVolumeBar, false);
@@ -348,8 +412,12 @@ var Player = function () {
         addListener("touchmove", onCursorMoveVolumeBar, false);
       };
 
-      this.volumeBar.addEventListener("mousedown", onMouseDownVolumeBar, false);
-      this.volumeBar.addEventListener("touchstart", onMouseDownVolumeBar, {
+      this.volumeBarHelper.addEventListener("mousedown", onMouseDownVolumeBar, false);
+      this.volumeCursor.addEventListener("mousedown", onMouseDownVolumeBar, false);
+      this.volumeBarHelper.addEventListener("touchstart", onMouseDownVolumeBar, {
+        passive: true
+      }, false);
+      this.volumeCursor.addEventListener("touchstart", onMouseDownVolumeBar, {
         passive: true
       }, false);
       /* 
@@ -460,17 +528,34 @@ var Player = function () {
         if (checkbox.checked) {
           checkbox.checked = false;
           _this3.indicator.style.visibility = "hidden";
-          _this3.statusButton.style.margin = "10px 5px 5px 5px";
+          _this3.statusButton.style.width = "40px";
           _this3.statusButton.style.height = "25px";
-          _this3.statusButton.style.width = "45px";
-          _this3.timeDisplay.style.left = "50px";
+          _this3.statusButton.style.bottom = "0px";
         } else {
           checkbox.checked = true;
           _this3.indicator.style.visibility = "visible";
-          _this3.statusButton.style.margin = "10px 5px 12px 5px";
-          _this3.statusButton.style.width = "55px";
-          _this3.timeDisplay.style.left = "60px";
-          _this3.statusButton.style.height = "18px";
+          _this3.statusButton.style.width = "35px";
+          _this3.statusButton.style.height = "20px";
+          _this3.statusButton.style.bottom = "5px";
+        }
+      };
+
+      this.settingsShowVolume.onclick = function (e) {
+        e.preventDefault();
+        _this3.volumeControl.classList.toggle("mc-player-volume-width-transition");
+        _this3.volumeBar.classList.toggle("mc-player-volume-width-transition");
+        _this3.volumeBarHelper.classList.toggle("mc-player-volume-width-transition");
+        _this3.timeDisplay.classList.toggle("mc-player-time-width-transition");
+
+        var checkbox = elid("mc-player-show-volume-checkbox");
+        if (checkbox.checked) {
+          checkbox.checked = false;
+          _this3.volumeControl.style.visibility = "hidden";
+          _this3.timeDisplay.style.left = "45px";
+        } else {
+          checkbox.checked = true;
+          _this3.volumeControl.style.visibility = "visible";
+          _this3.timeDisplay.style.left = "";
         }
       };
 

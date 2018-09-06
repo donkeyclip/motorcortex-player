@@ -58,4 +58,9 @@ const animation_1 = new TestPlugin.TestIncident(
 clip.addIncident(animation_1, 0);
 
 // Add clip to timer
-new Player({ clip, theme: "transparent on-top", preview: true });
+new Player({
+  clip,
+  theme: "transparent on-top",
+  preview: true,
+  showVolume: true
+});

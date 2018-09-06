@@ -215,6 +215,7 @@ module.exports = theme => `
   width: 40px;
   height: 25px;
   position: absolute;
+  overflow:visible;
   left: 0px;
   bottom: 0px;
   margin: 10px 5px 5px 5px;
@@ -222,18 +223,20 @@ module.exports = theme => `
   z-index:3;
 }
 
-#mc-player-volume-btn {
+#mc-player-volume {
   opacity: ${theme["button-opacity"]};
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  width: 20px;
-  height: 15px;
   position: absolute;
   left: 45px;
   bottom: 5px;
   margin: 10px 5px 5px 5px;
   text-align: center;
   z-index:3;
+}
+#mc-player-volume-btn {
+  width: 20px;
+  height: 15px;
 }
 
 #mc-player-volumebar {
@@ -259,7 +262,7 @@ module.exports = theme => `
 
 #mc-player-volumebar-active {
   position: relative;
-  width: 50%;
+  width: 0%;
   height: 100%;
   background-color: ${theme["color"]};
   position:relative;
@@ -345,7 +348,7 @@ module.exports = theme => `
   border: ${theme["border"]};
   right: 5px;
   width: 164px;
-  height: 111px;
+  height: 143px;
   padding: 5px;
   margin: 0px;
   -webkit-transition: all 0.3s ease;
@@ -381,8 +384,10 @@ module.exports = theme => `
 
 #mc-player-volumebar:hover,
 #mc-player-volumebar-helper:hover,
+#mc-player-volume-btn:hover,
 #mc-player-volumebar:active,
-#mc-player-volumebar-helper:active {
+#mc-player-volumebar-helper:active,
+#mc-player-volume-btn:active {
   cursor:pointer;
 }
 
@@ -432,10 +437,11 @@ module.exports = theme => `
 }
 
 #mc-player-indicator {
-  font-size: 10px !important;
+  font-size: 8px !important;
   position: relative;
   bottom: 15px;
   color: ${theme["color"]};
+  white-space: nowrap;
 }
 
 #mc-player-settings-panel.mc-player-settings-speed-panel {
@@ -614,10 +620,8 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#mc-player-left-controls:active #mc-player-volumebar,
-#mc-player-left-controls:hover #mc-player-volumebar,
-#mc-player-left-controls:active #mc-player-volumebar-helper,
-#mc-player-left-controls:hover #mc-player-volumebar-helper
+#mc-player-left-controls:active .mc-player-volume-width-transition,
+#mc-player-left-controls:hover .mc-player-volume-width-transition
  {
   width: 50px;
   -webkit-transition: all 0.3s ease;
@@ -625,8 +629,8 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#mc-player-left-controls:active #mc-player-time-display,
-#mc-player-left-controls:hover #mc-player-time-display {
+#mc-player-left-controls:active .mc-player-time-width-transition,
+#mc-player-left-controls:hover .mc-player-time-width-transition {
   left: 140px;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;

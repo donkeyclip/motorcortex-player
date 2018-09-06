@@ -22,8 +22,10 @@ module.exports = config => `
         ${config.svg.playSVG}
         <span id="mc-player-indicator"></span>
       </div>
-      <div id="mc-player-volume-btn">
-        ${config.svg.volumeSVG}
+      <div id="mc-player-volume">
+        <div id="mc-player-volume-btn">
+          ${config.svg.volumeSVG}
+        </div>
         <div id="mc-player-volumebar-helper"></div>
         <div id="mc-player-volumebar">
             <div id="mc-player-volumebar-active">
@@ -59,6 +61,13 @@ module.exports = config => `
         <label>Show Indicator</label>
         <label class="switch settings-switch">
           <input id="mc-player-show-indicator-checkbox" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+      </li>
+      <li id="mc-player-settings-volume">
+        <label>Show Volume</label>
+        <label class="switch settings-switch">
+          <input id="mc-player-show-volume-checkbox" type="checkbox">
           <span class="slider round"></span>
         </label>
       </li>

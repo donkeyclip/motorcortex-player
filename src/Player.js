@@ -18,6 +18,7 @@ class Player {
     this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
     options.preview = options.preview || false;
+    options.showVolume = options.showVolume || false;
     this.options = options;
     this.previewClip = null;
     this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
@@ -32,7 +33,10 @@ class Player {
     this.loopStartMillisecond = 0;
     this.loopEndMillisecond = this.clip.duration;
     this.theme = options.theme || "transparent on-top";
+    this.volume = 1;
+    this.previusVolume = 1;
 
+    this.volumeMute = false;
     // set clip position to relative
     this.clip.props.host.style.position = "relative";
     const clip = this.clip.props.host.getElementsByTagName("iframe")[0];
@@ -58,6 +62,7 @@ class Player {
     this.statusButton = elid("mc-player-status-btn");
     this.settingsShowIndicator = elid("mc-player-settings-indicator");
     this.settingsShowPreview = elid("mc-player-settings-preview");
+    this.settingsShowVolume = elid("mc-player-settings-volume");
     this.settingsButton = elid("mc-player-settings-btn");
     this.loopButton = elid("mc-player-loop-btn");
     this.settingsSpeedButtonShow = elid("mc-player-settings-speed-show");
@@ -70,8 +75,16 @@ class Player {
     this.loopBarStart = elid("mc-player-loopbar-start");
     this.loopBarEnd = elid("mc-player-loopbar-end");
 
-    this.volumeBar = elid("mc-player-volumebar-helper");
+    this.volumeControl = elid("mc-player-volume");
+    // this.volumeControl.classList.add("mc-player-volume-width-transition");
+    // this.timeDisplay.classList.add("mc-player-time-width-transition");
+
+    this.volumeBtn = elid("mc-player-volume-btn");
+    this.volumeBar = elid("mc-player-volumebar");
+    this.volumeBarHelper = elid("mc-player-volumebar-helper");
     this.volumeBarActive = elid("mc-player-volumebar-active");
+    this.volumeBarActive.style.width = this.volume * 100 + "%";
+    this.volumeCursor = elid("mc-player-volume-cursor");
 
     this.currentTime.innerHTML = 0;
     this.totalTime.innerHTML = this.clip.duration;
@@ -137,6 +150,22 @@ class Player {
     if (this.options.preview) {
       elid("mc-player-show-preview-checkbox").checked = this.options.preview;
       this.createHoverDisplay();
+    }
+
+    elid("mc-player-show-volume-checkbox").checked = this.options.showVolume;
+
+    if (!this.options.showVolume) {
+      this.timeDisplay.style.left = "45px";
+      this.volumeControl.style.visibility = "hidden";
+    } else {
+      this.timeDisplay.style.left = "";
+      this.volumeControl.classList.toggle("mc-player-volume-width-transition");
+      this.volumeBar.classList.toggle("mc-player-volume-width-transition");
+      this.volumeBarHelper.classList.toggle(
+        "mc-player-volume-width-transition"
+      );
+      this.timeDisplay.classList.toggle("mc-player-time-width-transition");
+      this.volumeControl.style.visibility = "visible";
     }
 
     window.addEventListener("resize", () => {
@@ -245,7 +274,11 @@ class Player {
   }
 
   eventBroadcast(eventName, meta) {
-    if (eventName === "state-change") {
+    // console.log(eventName);
+    if (eventName === "duration-change") {
+      this.totalTime.innerHTML = this.clip.duration;
+      this.loopEndMillisecond = this.clip.duration;
+    } else if (eventName === "state-change") {
       if (meta.newState === "waiting") {
         this.statusButton.innerHTML = svg.playSVG;
         this.statusButton.appendChild(this.indicator);
@@ -328,26 +361,59 @@ class Player {
   }
 
   addEventListeners() {
+    this.volumeBtn.onclick = () => {
+      if (this.volumeMute) {
+        this.volumeBarActive.style.width = this.previusVolume * 100 + "%";
+        this.clip.setVolume(this.previusVolume);
+        this.volumeMute = false;
+        const SVG = document.createElement("span");
+        SVG.innerHTML = svg.volumeSVG;
+        this.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      } else {
+        this.volumeMute = true;
+        this.volumeBarActive.style.width = "0%";
+        this.clip.setVolume(0);
+        const SVG = document.createElement("span");
+        SVG.innerHTML = svg.volumeMuteSVG;
+        this.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      }
+    };
+
     const onCursorMoveVolumeBar = e => {
       e.preventDefault();
       const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-      const viewportOffset = this.volumeBar.getBoundingClientRect();
+      const viewportOffset = this.volumeBarHelper.getBoundingClientRect();
       let positionX = clientX - viewportOffset.left;
 
       if (positionX < 0) {
         positionX = 0;
-      } else if (positionX > this.volumeBar.offsetWidth) {
-        positionX = this.volumeBar.offsetWidth;
+      } else if (positionX > this.volumeBarHelper.offsetWidth) {
+        positionX = this.volumeBarHelper.offsetWidth;
       }
-      const volume = Number(
-        (positionX / this.volumeBar.offsetWidth).toFixed(2)
+      this.volume = Number(
+        (positionX / this.volumeBarHelper.offsetWidth).toFixed(2)
       );
-      this.volumeBarActive.style.width = volume * 100 + "%";
-      this.clip.setVolume(volume);
+      this.volumeBarActive.style.width = this.volume * 100 + "%";
+      this.clip.setVolume(this.volume);
+
+      if (this.volume > 0) {
+        this.volumeMute = false;
+        const SVG = document.createElement("span");
+        SVG.innerHTML = svg.volumeSVG;
+        this.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      } else if (this.volume === 0) {
+        this.volumeMute = true;
+        const SVG = document.createElement("span");
+        SVG.innerHTML = svg.volumeMuteSVG;
+        this.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      }
     };
 
     const onMouseUpVolumeBar = e => {
       e.preventDefault();
+      if (this.volume > 0) {
+        this.previusVolume = this.volume;
+      }
       removeListener("mouseup", onMouseUpVolumeBar, false);
       removeListener("touchend", onMouseUpVolumeBar, false);
       removeListener("mousemove", onCursorMoveVolumeBar, false);
@@ -363,8 +429,25 @@ class Player {
       addListener("touchmove", onCursorMoveVolumeBar, false);
     };
 
-    this.volumeBar.addEventListener("mousedown", onMouseDownVolumeBar, false);
-    this.volumeBar.addEventListener(
+    this.volumeBarHelper.addEventListener(
+      "mousedown",
+      onMouseDownVolumeBar,
+      false
+    );
+    this.volumeCursor.addEventListener(
+      "mousedown",
+      onMouseDownVolumeBar,
+      false
+    );
+    this.volumeBarHelper.addEventListener(
+      "touchstart",
+      onMouseDownVolumeBar,
+      {
+        passive: true
+      },
+      false
+    );
+    this.volumeCursor.addEventListener(
       "touchstart",
       onMouseDownVolumeBar,
       {
@@ -486,17 +569,36 @@ class Player {
       if (checkbox.checked) {
         checkbox.checked = false;
         this.indicator.style.visibility = "hidden";
-        this.statusButton.style.margin = "10px 5px 5px 5px";
+        this.statusButton.style.width = "40px";
         this.statusButton.style.height = "25px";
-        this.statusButton.style.width = "45px";
-        this.timeDisplay.style.left = "50px";
+        this.statusButton.style.bottom = "0px";
       } else {
         checkbox.checked = true;
         this.indicator.style.visibility = "visible";
-        this.statusButton.style.margin = "10px 5px 12px 5px";
-        this.statusButton.style.width = "55px";
-        this.timeDisplay.style.left = "60px";
-        this.statusButton.style.height = "18px";
+        this.statusButton.style.width = "35px";
+        this.statusButton.style.height = "20px";
+        this.statusButton.style.bottom = "5px";
+      }
+    };
+
+    this.settingsShowVolume.onclick = e => {
+      e.preventDefault();
+      this.volumeControl.classList.toggle("mc-player-volume-width-transition");
+      this.volumeBar.classList.toggle("mc-player-volume-width-transition");
+      this.volumeBarHelper.classList.toggle(
+        "mc-player-volume-width-transition"
+      );
+      this.timeDisplay.classList.toggle("mc-player-time-width-transition");
+
+      const checkbox = elid("mc-player-show-volume-checkbox");
+      if (checkbox.checked) {
+        checkbox.checked = false;
+        this.volumeControl.style.visibility = "hidden";
+        this.timeDisplay.style.left = "45px";
+      } else {
+        checkbox.checked = true;
+        this.volumeControl.style.visibility = "visible";
+        this.timeDisplay.style.left = "";
       }
     };
 
