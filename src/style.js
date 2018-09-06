@@ -186,13 +186,21 @@ module.exports = theme => `
   z-index: 5;
 }
 
+#mc-player-left-controls {
+  display:inline-block;
+  width:200px;
+  height:35px;
+}
 #mc-player-time-display {
   display: table;
   text-align: center;
   width: auto;
   height: 34px;
   position: absolute;
-  left: 45px;
+  left: 90px;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  transition: all 0.1s ease;
 }
 
 #mc-player-time-display span {
@@ -214,6 +222,62 @@ module.exports = theme => `
   z-index:3;
 }
 
+#mc-player-volume-btn {
+  opacity: ${theme["button-opacity"]};
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 20px;
+  height: 15px;
+  position: absolute;
+  left: 45px;
+  bottom: 5px;
+  margin: 10px 5px 5px 5px;
+  text-align: center;
+  z-index:3;
+}
+
+#mc-player-volumebar {
+  width: 0px;
+  height: 3px;
+  background-color: ${theme["loopbar-color"]};
+  position:absolute;
+  left:25px;
+  bottom:6px;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+
+#mc-player-volumebar-helper {
+  position: absolute;
+  width: 0px;
+  height: 15px;
+  left:25px;
+  bottom:0px;
+  z-index:10;
+}
+
+#mc-player-volumebar-active {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  background-color: ${theme["color"]};
+  position:relative;
+  left:0px;
+  bottom:0px;
+}
+
+#mc-player-volume-cursor {
+  transform:translate(50%,-36%);
+  right: 0px;
+  top: 0px;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  background-color: ${theme["color"]};
+  border-radius: 10px;
+  z-index: 5;
+}
 
 .mc-player-loopbar-time {
   width:auto;
@@ -313,6 +377,13 @@ module.exports = theme => `
 #mc-player-speed-value-bar:hover,
 #mc-player-speed-value-helperbar {
   cursor: pointer;
+}
+
+#mc-player-volumebar:hover,
+#mc-player-volumebar-helper:hover,
+#mc-player-volumebar:active,
+#mc-player-volumebar-helper:active {
+  cursor:pointer;
 }
 
 #mc-player-speed-cursor {
@@ -529,6 +600,34 @@ input:checked+.slider:before {
 #mc-player-controls:hover #mc-player-cursor  {
   width: 16px;
   height: 16px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#mc-player-left-controls:active #mc-player-volume-cursor,
+#mc-player-left-controls:hover #mc-player-volume-cursor {
+  width: 12px;
+  height: 12px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#mc-player-left-controls:active #mc-player-volumebar,
+#mc-player-left-controls:hover #mc-player-volumebar,
+#mc-player-left-controls:active #mc-player-volumebar-helper,
+#mc-player-left-controls:hover #mc-player-volumebar-helper
+ {
+  width: 50px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#mc-player-left-controls:active #mc-player-time-display,
+#mc-player-left-controls:hover #mc-player-time-display {
+  left: 140px;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;

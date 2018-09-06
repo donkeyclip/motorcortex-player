@@ -17,14 +17,25 @@ module.exports = config => `
         </div>
       </div>
     </div>
-    <div id="mc-player-status-btn">
-      ${config.svg.playSVG}
-      <span id="mc-player-indicator"></span>
-    </div>
-    <div id="mc-player-time-display">
-      <span id="mc-player-time-current"></span>
-      <span id="mc-player-time-separator"></span>
-      <span id="mc-player-time-total"></span>
+    <div id="mc-player-left-controls">
+      <div id="mc-player-status-btn">
+        ${config.svg.playSVG}
+        <span id="mc-player-indicator"></span>
+      </div>
+      <div id="mc-player-volume-btn">
+        ${config.svg.volumeSVG}
+        <div id="mc-player-volumebar-helper"></div>
+        <div id="mc-player-volumebar">
+            <div id="mc-player-volumebar-active">
+              <div id="mc-player-volume-cursor"></div>
+            </div>
+        </div>
+      </div>
+      <div id="mc-player-time-display">
+        <span id="mc-player-time-current"></span>
+        <span id="mc-player-time-separator"></span>
+        <span id="mc-player-time-total"></span>
+      </div>
     </div>
     <div id="mc-player-loop-time">
       <span id="mc-player-loopbar-start-time" class="mc-player-loopbar-time"></span>

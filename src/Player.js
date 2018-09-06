@@ -70,6 +70,9 @@ class Player {
     this.loopBarStart = elid("mc-player-loopbar-start");
     this.loopBarEnd = elid("mc-player-loopbar-end");
 
+    this.volumeBar = elid("mc-player-volumebar-helper");
+    this.volumeBarActive = elid("mc-player-volumebar-active");
+
     this.currentTime.innerHTML = 0;
     this.totalTime.innerHTML = this.clip.duration;
     this.timeSeparator.innerHTML = "/";
@@ -325,6 +328,50 @@ class Player {
   }
 
   addEventListeners() {
+    const onCursorMoveVolumeBar = e => {
+      e.preventDefault();
+      const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
+      const viewportOffset = this.volumeBar.getBoundingClientRect();
+      let positionX = clientX - viewportOffset.left;
+
+      if (positionX < 0) {
+        positionX = 0;
+      } else if (positionX > this.volumeBar.offsetWidth) {
+        positionX = this.volumeBar.offsetWidth;
+      }
+      const volume = Number(
+        (positionX / this.volumeBar.offsetWidth).toFixed(2)
+      );
+      this.volumeBarActive.style.width = volume * 100 + "%";
+      this.clip.setVolume(volume);
+    };
+
+    const onMouseUpVolumeBar = e => {
+      e.preventDefault();
+      removeListener("mouseup", onMouseUpVolumeBar, false);
+      removeListener("touchend", onMouseUpVolumeBar, false);
+      removeListener("mousemove", onCursorMoveVolumeBar, false);
+      removeListener("touchmove", onCursorMoveVolumeBar, false);
+    };
+
+    const onMouseDownVolumeBar = e => {
+      e.preventDefault();
+      onCursorMoveVolumeBar(e);
+      addListener("mouseup", onMouseUpVolumeBar, false);
+      addListener("touchend", onMouseUpVolumeBar, false);
+      addListener("mousemove", onCursorMoveVolumeBar, false);
+      addListener("touchmove", onCursorMoveVolumeBar, false);
+    };
+
+    this.volumeBar.addEventListener("mousedown", onMouseDownVolumeBar, false);
+    this.volumeBar.addEventListener(
+      "touchstart",
+      onMouseDownVolumeBar,
+      {
+        passive: true
+      },
+      false
+    );
     /* 
     * Play - pause - replay interactions
     */

@@ -81,6 +81,9 @@ var Player = function () {
     this.loopBarStart = elid("mc-player-loopbar-start");
     this.loopBarEnd = elid("mc-player-loopbar-end");
 
+    this.volumeBar = elid("mc-player-volumebar-helper");
+    this.volumeBarActive = elid("mc-player-volumebar-active");
+
     this.currentTime.innerHTML = 0;
     this.totalTime.innerHTML = this.clip.duration;
     this.timeSeparator.innerHTML = "/";
@@ -312,6 +315,43 @@ var Player = function () {
     value: function addEventListeners() {
       var _this3 = this;
 
+      var onCursorMoveVolumeBar = function onCursorMoveVolumeBar(e) {
+        e.preventDefault();
+        var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
+        var viewportOffset = _this3.volumeBar.getBoundingClientRect();
+        var positionX = clientX - viewportOffset.left;
+
+        if (positionX < 0) {
+          positionX = 0;
+        } else if (positionX > _this3.volumeBar.offsetWidth) {
+          positionX = _this3.volumeBar.offsetWidth;
+        }
+        var volume = Number((positionX / _this3.volumeBar.offsetWidth).toFixed(2));
+        _this3.volumeBarActive.style.width = volume * 100 + "%";
+        _this3.clip.setVolume(volume);
+      };
+
+      var onMouseUpVolumeBar = function onMouseUpVolumeBar(e) {
+        e.preventDefault();
+        removeListener("mouseup", onMouseUpVolumeBar, false);
+        removeListener("touchend", onMouseUpVolumeBar, false);
+        removeListener("mousemove", onCursorMoveVolumeBar, false);
+        removeListener("touchmove", onCursorMoveVolumeBar, false);
+      };
+
+      var onMouseDownVolumeBar = function onMouseDownVolumeBar(e) {
+        e.preventDefault();
+        onCursorMoveVolumeBar(e);
+        addListener("mouseup", onMouseUpVolumeBar, false);
+        addListener("touchend", onMouseUpVolumeBar, false);
+        addListener("mousemove", onCursorMoveVolumeBar, false);
+        addListener("touchmove", onCursorMoveVolumeBar, false);
+      };
+
+      this.volumeBar.addEventListener("mousedown", onMouseDownVolumeBar, false);
+      this.volumeBar.addEventListener("touchstart", onMouseDownVolumeBar, {
+        passive: true
+      }, false);
       /* 
       * Play - pause - replay interactions
       */
