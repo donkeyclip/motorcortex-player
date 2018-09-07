@@ -1,4 +1,4 @@
-module.exports = theme => `
+module.exports = (theme, name) => `
 .background {
   background-color: black;
   width:100%;
@@ -8,13 +8,13 @@ module.exports = theme => `
   left:0px;
   z-index:-2000;
 }
-.full-screen #mc-player-controls {
+.full-screen #${name}-controls {
   position:fixed;
   left:0px;
   bottom:0px;
 }
 
-.full-screen #mc-player-settings-panel {
+.full-screen #${name}-settings-panel {
   position:fixed;
   bottom: 45px;
 }
@@ -28,7 +28,7 @@ module.exports = theme => `
   fill: ${theme["svg-selected-color"]};
   stroke: ${theme["svg-selected-color"]};
 }
-#mc-player-hover-display{
+#${name}-hover-display{
     border: ${theme["preview-border"]};
     max-width:300px;
     display: flex;
@@ -41,7 +41,7 @@ module.exports = theme => `
     justify-content: center;
 }
 
-#mc-player-hover-millisecond {
+#${name}-hover-millisecond {
   background-color: ${theme["hms-background-color"]};
   padding:3px;
   height:18px;
@@ -53,14 +53,14 @@ module.exports = theme => `
   max-width:100px;
   z-index:2;
 }
-#mc-player,
-#mc-player ::before,
-#mc-player ::after,
-#mc-player div,
-#mc-player p,
-#mc-player span,
-#mc-player ul,
-#mc-player li {
+#${name},
+#${name} ::before,
+#${name} ::after,
+#${name} div,
+#${name} p,
+#${name} span,
+#${name} ul,
+#${name} li {
   font-weight: 400;
   line-height: 1.9 !important;
   color: ${theme["color"]};
@@ -72,7 +72,7 @@ module.exports = theme => `
   -ms-user-select: none;
   user-select: none;
 }
-#mc-player {
+#${name} {
   line-height: 1.9;
   font-size: 12px;
   overflow:hidden;
@@ -84,7 +84,7 @@ module.exports = theme => `
   
 }
 
-#mc-player-settings-speed-hide {
+#${name}-settings-speed-hide {
   text-align:right;
 }
 
@@ -118,7 +118,7 @@ module.exports = theme => `
   bottom:0px;
 }
 
-#mc-player-controls {
+#${name}-controls {
   background-color: ${theme["background-color"]};
   border: ${theme["controls-border"]};
   position: absolute;
@@ -128,7 +128,7 @@ module.exports = theme => `
   height: 40px;
 }
 
-#mc-player-totalbar {
+#${name}-totalbar {
   width: calc(100% - 20px);
   height: 5px;
   margin: 0px 10px 0px 10px;
@@ -138,7 +138,7 @@ module.exports = theme => `
   left: 0px;
 }
 
-#mc-player-loopbar {
+#${name}-loopbar {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -147,7 +147,7 @@ module.exports = theme => `
   background-color: ${theme["loopbar-color"]};
 }
 
-.mc-player-loop-boundaries {
+.${name}-loop-boundaries {
   transform:translate(-50%,-37%);
   position:absolute;
   width:18px;
@@ -157,7 +157,7 @@ module.exports = theme => `
   z-index:40;
 }
 
-#mc-player-helperbar {
+#${name}-helperbar {
   position: absolute;
   height: 20px;
   top: -7px;
@@ -166,7 +166,7 @@ module.exports = theme => `
   z-index:2;
 }
 
-#mc-player-runningbar {
+#${name}-runningbar {
   position: relative;
   width: 0px;
   max-width:100%;
@@ -174,7 +174,7 @@ module.exports = theme => `
   background-color: ${theme["runningbar-color"]};
 }
 
-#mc-player-cursor {
+#${name}-cursor {
   transform:translate(50%,-36%);
   right: 0px;
   top: 0px;
@@ -186,12 +186,12 @@ module.exports = theme => `
   z-index: 5;
 }
 
-#mc-player-left-controls {
+#${name}-left-controls {
   display:inline-block;
   width:200px;
   height:35px;
 }
-#mc-player-time-display {
+#${name}-time-display {
   display: table;
   text-align: center;
   width: auto;
@@ -203,12 +203,12 @@ module.exports = theme => `
   transition: all 0.1s ease;
 }
 
-#mc-player-time-display span {
+#${name}-time-display span {
   display: table-cell;
   vertical-align: middle;
 }
 
-#mc-player-status-btn {
+#${name}-status-btn {
   opacity: ${theme["button-opacity"]};
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -223,7 +223,7 @@ module.exports = theme => `
   z-index:3;
 }
 
-#mc-player-volume {
+#${name}-volume {
   opacity: ${theme["button-opacity"]};
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -234,12 +234,12 @@ module.exports = theme => `
   text-align: center;
   z-index:3;
 }
-#mc-player-volume-btn {
+#${name}-volume-btn {
   width: 20px;
   height: 15px;
 }
 
-#mc-player-volumebar {
+#${name}-volumebar {
   width: 0px;
   height: 3px;
   background-color: ${theme["loopbar-color"]};
@@ -251,7 +251,7 @@ module.exports = theme => `
   transition: all 0.1s ease;
 }
 
-#mc-player-volumebar-helper {
+#${name}-volumebar-helper {
   position: absolute;
   width: 0px;
   height: 15px;
@@ -260,7 +260,7 @@ module.exports = theme => `
   z-index:10;
 }
 
-#mc-player-volumebar-active {
+#${name}-volumebar-active {
   position: relative;
   width: 0%;
   height: 100%;
@@ -270,7 +270,7 @@ module.exports = theme => `
   bottom:0px;
 }
 
-#mc-player-volume-cursor {
+#${name}-volume-cursor {
   transform:translate(50%,-36%);
   right: 0px;
   top: 0px;
@@ -282,7 +282,7 @@ module.exports = theme => `
   z-index: 5;
 }
 
-.mc-player-loopbar-time {
+.${name}-loopbar-time {
   width:auto;
   height:12px;
   background-color:${theme["background-color"]};
@@ -290,13 +290,13 @@ module.exports = theme => `
   font-size:10px;
 }
 
-#mc-player-loop-time { 
+#${name}-loop-time { 
   position:absolute;
   right:85px;
   bottom:5px;
 }
 
-#mc-player-loop-btn {
+#${name}-loop-btn {
   opacity: ${theme["button-opacity"]};
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -308,7 +308,7 @@ module.exports = theme => `
   margin: 10px 5px 5px 5px;
 }
 
-#mc-player-settings-btn {
+#${name}-settings-btn {
   opacity: ${theme["button-opacity"]};
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -320,7 +320,7 @@ module.exports = theme => `
   margin: 10px 5px 5px 5px;
 }
 
-#mc-player-full-screen-btn {
+#${name}-full-screen-btn {
   opacity: ${theme["button-opacity"]};
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -332,7 +332,7 @@ module.exports = theme => `
   margin: 10px 5px 5px 5px;
 }
 
-.mc-player-speed-btn {
+.${name}-speed-btn {
   position: relative;
   opacity: ${theme["button-opacity"]};
   width: 10px;
@@ -340,7 +340,7 @@ module.exports = theme => `
   display: inline-block;
 }
 
-#mc-player-settings-panel {
+#${name}-settings-panel {
   box-sizing: border-box;
   position: absolute;
   background-color: ${theme["settings-background-color"]};
@@ -356,7 +356,7 @@ module.exports = theme => `
   transition: all 0.3s ease;
 }
 
-#mc-player-speed-value-bar {
+#${name}-speed-value-bar {
   position: relative;
   width: 5px;
   background-color: ${theme["speedbar-color"]};
@@ -367,7 +367,7 @@ module.exports = theme => `
   margin-right:15px;
 }
 
-#mc-player-speed-value-helperbar {
+#${name}-speed-value-helperbar {
   position: absolute;
   width: 25px;
   height: 144px;
@@ -377,28 +377,28 @@ module.exports = theme => `
 }
 
 
-#mc-player-speed-value-bar:hover,
-#mc-player-speed-value-helperbar {
+#${name}-speed-value-bar:hover,
+#${name}-speed-value-helperbar {
   cursor: pointer;
 }
 
-#mc-player-volumebar:hover,
-#mc-player-volumebar-helper:hover,
-#mc-player-volume-btn:hover,
-#mc-player-volumebar:active,
-#mc-player-volumebar-helper:active,
-#mc-player-volume-btn:active {
+#${name}-volumebar:hover,
+#${name}-volumebar-helper:hover,
+#${name}-volume-btn:hover,
+#${name}-volumebar:active,
+#${name}-volumebar-helper:active,
+#${name}-volume-btn:active {
   cursor:pointer;
 }
 
-#mc-player-speed-cursor {
+#${name}-speed-cursor {
   position: absolute;
   background-color: ${theme["speedbar-cursor-color"]};
   top: 0px;
   left: 0px;
 }
 
-#mc-player-speed-cursor div {
+#${name}-speed-cursor div {
   position: absolute;
   background-color: ${theme["speedbar-cursor-color"]};
   left: -2.5px;
@@ -408,11 +408,11 @@ module.exports = theme => `
   border-radius: 5px;
 }
 
-#mc-player-speed-cursor:hover {
+#${name}-speed-cursor:hover {
   cursor: pointer;
 }
 
-.mc-player-speed-value-step {
+.${name}-speed-value-step {
   width: 15px;
   background-color: ${theme["speedbar-color"]};
   display: inline-block;
@@ -423,20 +423,20 @@ module.exports = theme => `
   float: left;
 }
 
-#mc-player-speed-value {
+#${name}-speed-value {
   display: inline-block;
   box-sizing: border-box;
   height: 144px;
   text-align: left;
 }
 
-.mc-player-speed-value {
+.${name}-speed-value {
   box-sizing: border-box;
   height: 16px;
   font-size: 12px;
 }
 
-#mc-player-indicator {
+#${name}-indicator {
   font-size: 8px !important;
   position: relative;
   bottom: 15px;
@@ -444,7 +444,7 @@ module.exports = theme => `
   white-space: nowrap;
 }
 
-#mc-player-settings-panel.mc-player-settings-speed-panel {
+#${name}-settings-panel.${name}-settings-speed-panel {
   overflow: hidden;
   width: 80px;
   height: 195px;
@@ -453,45 +453,45 @@ module.exports = theme => `
   transition: all 0.3s ease;
 }
 
-#mc-player-settings-panel.mc-player-settings-speed-panel .mc-player-speed-btn {
+#${name}-settings-panel.${name}-settings-speed-panel .${name}-speed-btn {
   float: left;
 }
 
-.mc-player-settings-speed-panel ul:first-child {
+.${name}-settings-speed-panel ul:first-child {
   text-align: right;
 }
 
-#mc-player-speed-current {
+#${name}-speed-current {
   float: right;
   padding-right: 10px
 }
 
-#mc-player-settings-panel .mc-player-speed-btn {
+#${name}-settings-panel .${name}-speed-btn {
   float: right;
 }
 
-#mc-player-settings-panel ul {
+#${name}-settings-panel ul {
   width: 100%;
   margin: 0px;
   padding: 0px;
   overflow: hidden;
 }
 
-#mc-player-settings-panel.mc-player-settings-speed-panel ul li {
+#${name}-settings-panel.${name}-settings-speed-panel ul li {
   min-width: 70px;
 }
 
-#mc-player-settings-panel ul li.no-hover:hover {
+#${name}-settings-panel ul li.no-hover:hover {
   background-color: transparent;
   cursor: default;
 }
 
-div.mc-player-speed-value:hover {
+div.${name}-speed-value:hover {
   background-color: ${theme["hover-color"]};
   cursor: pointer;
 }
 
-#mc-player-settings-panel ul li {
+#${name}-settings-panel ul li {
   position: relative;
   width: 100%;
   min-width: 154px;
@@ -500,7 +500,7 @@ div.mc-player-speed-value:hover {
   padding: 5px;
 }
 
-#mc-player-settings-panel ul li label {
+#${name}-settings-panel ul li label {
   margin: 0px;
 }
 
@@ -585,25 +585,25 @@ input:checked+.slider:before {
   transition: visibility 0s linear 0s, opacity 300ms;
 }
 
-#mc-player-settings-panel ul li:hover {
+#${name}-settings-panel ul li:hover {
   background-color: ${theme["hover-color"]};
   cursor: pointer;
 }
 
-#mc-player-settings-panel ul li label:hover {
+#${name}-settings-panel ul li label:hover {
   cursor: pointer;
 }
 
-#mc-player-loopbar:hover {
+#${name}-loopbar:hover {
   cursor: pointer;
 }
 
-#mc-player-status-btn:hover {
+#${name}-status-btn:hover {
   cursor: pointer;
 }
 
-#mc-player-controls:active #mc-player-cursor,
-#mc-player-controls:hover #mc-player-cursor  {
+#${name}-controls:active #${name}-cursor,
+#${name}-controls:hover #${name}-cursor  {
   width: 16px;
   height: 16px;
   -webkit-transition: all 0.3s ease;
@@ -611,8 +611,8 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#mc-player-left-controls:active #mc-player-volume-cursor,
-#mc-player-left-controls:hover #mc-player-volume-cursor {
+#${name}-left-controls:active #${name}-volume-cursor,
+#${name}-left-controls:hover #${name}-volume-cursor {
   width: 12px;
   height: 12px;
   -webkit-transition: all 0.3s ease;
@@ -620,8 +620,8 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#mc-player-left-controls:active .mc-player-volume-width-transition,
-#mc-player-left-controls:hover .mc-player-volume-width-transition
+#${name}-left-controls:active .${name}-volume-width-transition,
+#${name}-left-controls:hover .${name}-volume-width-transition
  {
   width: 50px;
   -webkit-transition: all 0.3s ease;
@@ -629,36 +629,36 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#mc-player-left-controls:active .mc-player-time-width-transition,
-#mc-player-left-controls:hover .mc-player-time-width-transition {
+#${name}-left-controls:active .${name}-time-width-transition,
+#${name}-left-controls:hover .${name}-time-width-transition {
   left: 140px;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
 
-#mc-player-settings-speed:hover .mc-player-speed-btn {
+#${name}-settings-speed:hover .${name}-speed-btn {
   opacity: 1;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
 
-#mc-player-status-btn:hover {
+#${name}-status-btn:hover {
   opacity: 1;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
 
-#mc-player-loop-btn:hover {
+#${name}-loop-btn:hover {
   cursor: pointer;
   opacity: 1;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-#mc-player-settings-btn:hover {
+#${name}-settings-btn:hover {
   cursor: pointer;
   opacity: 1;
   -webkit-transition: all 0.3s ease;
@@ -666,7 +666,7 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#mc-player-full-screen-btn:hover {
+#${name}-full-screen-btn:hover {
   cursor: pointer;
   opacity: 1;
   -webkit-transition: all 0.3s ease;

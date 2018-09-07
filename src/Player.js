@@ -1,146 +1,79 @@
-const MC = require("@kissmybutton/motorcortex");
-const helper = new MC.Helper();
+const MC = require(`@kissmybutton/motorcortex`);
+
+const mch = new MC.Helper();
 const timeCapsule = new MC.TimeCapsule();
 const hoverTimeCapsule = new MC.TimeCapsule();
-const confThemes = require("./themes");
-const confStyle = require("./style");
-const svg = require("./svg");
-const playerHTML = require("./playerHTML");
+
+const {
+  el,
+  elid,
+  eltag,
+  elcreate,
+  addListener,
+  removeListener
+} = require(`./helpers`);
+const svg = require("./html/svg");
+const config = require(`./config`);
+const confStyle = require(`./html/style`);
+const confThemes = require(`./html/themes`);
+const setElements = require(`./html/setElements`);
+
 /**
  * @classdesc
- * Timer's purpose is to provide an interface through which any TimedIncident (such as a Scene or a Clip)
- * can both privide info regarding their timing state but also provide an interface for interacting /
- * altering the timing of it
+ * Timer's purpose is to provide an interface through which any TimedIncident
+ * (such as a Scene or a Clip) can both privide info regarding their timing
+ * state but also provide an interface for interacting/altering the timing of it
  */
+
 class Player {
   constructor(options) {
-    this.id = options.id || helper.getAnId(); // timer id
-    this.clip = options.clip; // host to apply the timer
-    this.clipClass = options.clipClass;
+    // set defaults
+    options.id = options.id || mch.getAnId();
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
-    this.options = options;
-    this.previewClip = null;
-    this.speedValues = [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
-    this.requestingLoop = false;
-    this.loopLastPositionXPxls = 0;
-    this.playAfterResize = false;
-    this.loopLastPositionXPercentage = 0;
-    this.journey = null;
-    this.hoverJourney = null;
-    this.loopJourney = false;
-    this.needsUpdate = true;
-    this.loopStartMillisecond = 0;
-    this.loopEndMillisecond = this.clip.duration;
-    this.theme = options.theme || "transparent on-top";
-    this.volume = 1;
-    this.previusVolume = 1;
+    options.theme = options.theme || `transparent on-top`;
+    options.speedValues = options.speedValues || [
+      -4,
+      -2,
+      -1,
+      -0.5,
+      0,
+      0.5,
+      1,
+      2,
+      4
+    ];
 
-    this.volumeMute = false;
-    // set clip position to relative
-    this.clip.props.host.style.position = "relative";
-    const clip = this.clip.props.host.getElementsByTagName("iframe")[0];
-    clip.style.margin = "0 auto";
-    clip.style.display = "block";
+    config.playerName = options.id;
+
+    this.options = options;
+
+    this.id = this.options.id;
+    this.name = config.name;
+
+    this.previewClip = null;
+    this.clip = options.clip; // host to apply the timer
+    this.clipClass = options.clipClass;
+    this.journey = null;
+    this.previewJourney = null;
+
+    this.settings = {
+      volume: 1,
+      previousVolume: 1,
+      volumeMute: false,
+      needsUpdate: true,
+      loopJourney: false,
+      loopActivated: false,
+      requestingLoop: false,
+      playAfterResize: false,
+      loopStartMillisecond: 0,
+      loopLastPositionXPxls: 0,
+      loopLastPositionXPercentage: 0,
+      loopEndMillisecond: this.clip.duration
+    };
 
     // create the timer controls main div
-    this.mcPlayer = elcreate("div");
-    this.mcPlayer.id = "mc-player";
-    this.mcPlayer.innerHTML = playerHTML({ svg });
-    elid(this.clip.props.host.id).appendChild(this.mcPlayer);
-
-    this.totalBar = elid("mc-player-totalbar");
-    this.loopBar = elid("mc-player-loopbar");
-    this.runningBar = elid("mc-player-runningbar");
-    this.speedBar = elid("mc-player-speed-value-bar");
-    this.speedBarHelper = elid("mc-player-speed-value-helperbar");
-    this.indicator = elid("mc-player-indicator");
-    this.currentTime = elid("mc-player-time-current");
-    this.timeSeparator = elid("mc-player-time-separator");
-    this.timeDisplay = elid("mc-player-time-display");
-    this.totalTime = elid("mc-player-time-total");
-    this.statusButton = elid("mc-player-status-btn");
-    this.settingsShowIndicator = elid("mc-player-settings-indicator");
-    this.settingsShowPreview = elid("mc-player-settings-preview");
-    this.settingsShowVolume = elid("mc-player-settings-volume");
-    this.settingsButton = elid("mc-player-settings-btn");
-    this.loopButton = elid("mc-player-loop-btn");
-    this.settingsSpeedButtonShow = elid("mc-player-settings-speed-show");
-    this.settingsSpeedButtonHide = elid("mc-player-settings-speed-hide");
-    this.fullScreenButton = elid("mc-player-full-screen-btn");
-    this.settingsPanel = elid("mc-player-settings-panel");
-    this.settingsMainPanel = elid("mc-player-main-settings");
-    this.settingsSpeedPanel = elid("mc-player-speed-settings");
-    this.speedCurrent = elid("mc-player-speed-current");
-    this.loopBarStart = elid("mc-player-loopbar-start");
-    this.loopBarEnd = elid("mc-player-loopbar-end");
-
-    this.volumeControl = elid("mc-player-volume");
-    // this.volumeControl.classList.add("mc-player-volume-width-transition");
-    // this.timeDisplay.classList.add("mc-player-time-width-transition");
-
-    this.volumeBtn = elid("mc-player-volume-btn");
-    this.volumeBar = elid("mc-player-volumebar");
-    this.volumeBarHelper = elid("mc-player-volumebar-helper");
-    this.volumeBarActive = elid("mc-player-volumebar-active");
-    this.volumeBarActive.style.width = this.volume * 100 + "%";
-    this.volumeCursor = elid("mc-player-volume-cursor");
-
-    this.currentTime.innerHTML = 0;
-    this.totalTime.innerHTML = this.clip.duration;
-    this.timeSeparator.innerHTML = "/";
-    this.settingsSpeedPanel.style.display = "none";
-    this.settingsPanel.classList.add("m-fadeOut");
-    this.indicator.style.visibility = "hidden";
-    this.indicator.innerHTML = this.clip.state;
-
-    this.settingsSpeedPanel
-      .getElementsByTagName("li")[1]
-      .classList.add("no-hover");
-
-    this.loopBarStart.style.left = "0%";
-    this.loopBarEnd.style.left = "100%";
-    this.loopBarStart.classList.add("m-fadeOut");
-    this.loopBarEnd.classList.add("m-fadeOut");
-    this.loopStartTime = elid("mc-player-loopbar-start-time");
-    this.loopEndTime = elid("mc-player-loopbar-end-time");
-
-    this.editableLoopStartTime = document.createElement("input");
-    this.editableLoopStartTime.type = "text";
-    this.editableLoopStartTime.size =
-      elid("mc-player-time-total").innerHTML.length + 1;
-    this.editableLoopStartTime.maxLength = elid(
-      "mc-player-time-total"
-    ).innerHTML.length;
-    this.editableLoopStartTime.style.height = elid(
-      "mc-player-time-total"
-    ).offsetHeight;
-    this.editableLoopStartTime.value = elid(
-      "mc-player-loopbar-start-time"
-    ).innerHTML;
-    this.editableLoopStartTime.pattern = "d*";
-    this.editableLoopStartTime.style.fontSize = "8px";
-
-    this.editableLoopEndTime = document.createElement("input");
-    this.editableLoopEndTime.type = "text";
-    this.editableLoopEndTime.size =
-      elid("mc-player-time-total").innerHTML.length + 1;
-    this.editableLoopEndTime.maxLength = elid(
-      "mc-player-time-total"
-    ).innerHTML.length;
-    this.editableLoopEndTime.style.height = elid(
-      "mc-player-time-total"
-    ).offsetHeight;
-    this.editableLoopEndTime.value = elid(
-      "mc-player-loopbar-start-time"
-    ).innerHTML;
-    this.editableLoopEndTime.pattern = "d*";
-    this.editableLoopEndTime.style.fontSize = "8px";
-
-    elid("mc-player-loop-time").classList.add("m-fadeOut");
-
-    elid("mc-player-hover-display").classList.add("m-fadeOut");
-
+    this.elements = setElements(this.clip, this.name, this.options);
     this.setSpeed();
     this.setTheme();
     this.subscribeToTimer();
@@ -148,174 +81,127 @@ class Player {
     this.addEventListeners();
 
     if (this.options.preview) {
-      elid("mc-player-show-preview-checkbox").checked = this.options.preview;
-      this.createHoverDisplay();
+      this.createPreviewDisplay();
     }
 
-    elid("mc-player-show-volume-checkbox").checked = this.options.showVolume;
-
-    if (!this.options.showVolume) {
-      this.timeDisplay.style.left = "45px";
-      this.volumeControl.style.visibility = "hidden";
-    } else {
-      this.timeDisplay.style.left = "";
-      this.volumeControl.classList.toggle("mc-player-volume-width-transition");
-      this.volumeBar.classList.toggle("mc-player-volume-width-transition");
-      this.volumeBarHelper.classList.toggle(
-        "mc-player-volume-width-transition"
-      );
-      this.timeDisplay.classList.toggle("mc-player-time-width-transition");
-      this.volumeControl.style.visibility = "visible";
-    }
-
-    window.addEventListener("resize", () => {
+    window.addEventListener(`resize`, () => {
       if (this.options.preview) {
         this.setPreviewDimentions();
       }
     });
   }
 
+  createJourney(clip, millisecond) {
+    setTimeout(() => {
+      this.journey = timeCapsule.startJourney(clip);
+      this.journey.station(millisecond);
+      this.journey.destination();
+    }, 0);
+  }
+
   millisecondChange(millisecond) {
-    if (!this.needsUpdate) {
+    if (!this.settings.needsUpdate) {
       this.clip.wait();
       return 1;
     }
+
+    const { clip } = this;
+
+    const {
+      loopActivated,
+      loopEndMillisecond,
+      loopStartMillisecond
+    } = this.settings;
+
     const duration = this.clip.duration;
 
-    // zero value if style.left is null
-    const loopBarLeft = this.loopBar.offsetLeft / this.totalBar.offsetWidth;
+    const { totalBar, loopBar } = this.elements;
 
-    const loopBarWidth = this.loopBar.offsetWidth;
-
+    const loopBarWidth = loopBar.offsetWidth;
+    const loopBarLeft = loopBar.offsetLeft / totalBar.offsetWidth;
     const localMillisecond = millisecond - duration * loopBarLeft;
+    const localDuration = (duration / totalBar.offsetWidth) * loopBarWidth;
 
-    const localDuration = (duration / this.totalBar.offsetWidth) * loopBarWidth;
-
-    if (
-      millisecond >= this.loopEndMillisecond &&
-      this.loopButton.className.includes("svg-selected")
-    ) {
-      this.needsUpdate = false;
-      setTimeout(() => {
-        if (this.clip.state === "idle") {
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.loopStartMillisecond + 1);
-          this.journey.destination();
-          this.clip.play();
-        } else if (this.clip.state === "completed") {
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.loopStartMillisecond + 1);
-          this.journey.destination();
-          this.clip.play();
-        } else {
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.loopStartMillisecond + 1);
-          this.journey.destination();
-          this.clip.resume();
-        }
-        this.needsUpdate = true;
-      }, 0);
+    if (millisecond >= loopEndMillisecond && loopActivated) {
+      if (clip.state === `idle` || clip.state === `completed`) {
+        clip.stop();
+        this.createJourney(clip, loopStartMillisecond + 1);
+        clip.play();
+      } else {
+        this.createJourney(clip, loopStartMillisecond + 1);
+        this.clip.resume();
+      }
       return 1;
-    } else if (
-      millisecond <= this.loopStartMillisecond &&
-      this.loopButton.className.includes("svg-selected")
-    ) {
-      this.needsUpdate = false;
-      setTimeout(() => {
-        if (this.clip.state === "idle") {
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.loopEndMillisecond - 1);
-          this.journey.destination();
-          this.clip.play();
-        } else if (this.clip.state === "completed") {
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.loopEndMillisecond - 1);
-          this.journey.destination();
-          this.clip.play();
-        } else {
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.loopEndMillisecond - 1);
-          this.journey.destination();
-          this.clip.resume();
-        }
-        this.needsUpdate = true;
-      }, 0);
+    } else if (millisecond <= loopStartMillisecond && loopActivated) {
+      if (clip.state === `idle` || clip.state === `completed`) {
+        this.clip.stop();
+        this.createJourney(clip, loopEndMillisecond - 1);
+        this.clip.play();
+      } else {
+        this.createJourney(clip, loopEndMillisecond - 1);
+        this.clip.resume();
+      }
       return 1;
-    } else if (millisecond >= this.loopEndMillisecond) {
-      this.needsUpdate = false;
-      setTimeout(() => {
-        this.journey = timeCapsule.startJourney(this.clip);
-        this.journey.station(this.loopEndMillisecond);
-        this.journey.destination();
-      }, 0);
-      this.runningBar.style.width = "100%";
-      this.currentTime.innerHTML = this.loopEndMillisecond;
+    } else if (millisecond > loopEndMillisecond) {
+      this.settings.needsUpdate = false;
+      this.createJourney(clip, loopEndMillisecond);
+      this.elements.runningBar.style.width = `100%`;
+      this.elements.currentTime.innerHTML = loopEndMillisecond;
       return 1;
-    } else if (millisecond <= this.loopStartMillisecond) {
-      this.needsUpdate = false;
-      setTimeout(() => {
-        this.journey = timeCapsule.startJourney(this.clip);
-        this.journey.station(this.loopStartMillisecond);
-        this.journey.destination();
-      }, 0);
-      this.runningBar.style.width = "0%";
-      this.currentTime.innerHTML = this.loopStartMillisecond;
+    } else if (millisecond < loopStartMillisecond) {
+      this.settings.needsUpdate = false;
+      this.createJourney(clip, loopStartMillisecond);
+      this.elements.runningBar.style.width = `0%`;
+      this.elements.currentTime.innerHTML = loopStartMillisecond;
       return 1;
     }
 
-    this.runningBar.style.width =
-      (localMillisecond / localDuration) * 100 + "%";
+    this.elements.runningBar.style.width =
+      (localMillisecond / localDuration) * 100 + `%`;
 
-    this.currentTime.innerHTML = millisecond;
+    this.elements.currentTime.innerHTML = millisecond;
   }
 
   eventBroadcast(eventName, meta) {
-    // console.log(eventName);
-    if (eventName === "duration-change") {
-      this.totalTime.innerHTML = this.clip.duration;
-      this.loopEndMillisecond = this.clip.duration;
-    } else if (eventName === "state-change") {
-      if (meta.newState === "waiting") {
-        this.statusButton.innerHTML = svg.playSVG;
-        this.statusButton.appendChild(this.indicator);
-        this.indicator.innerHTML = "Waiting";
-      } else if (meta.newState === "playing") {
-        this.statusButton.innerHTML = svg.pauseSVG;
-        this.statusButton.appendChild(this.indicator);
-        this.indicator.innerHTML = "Playing";
-      } else if (meta.newState === "completed") {
-        this.currentTime.innerHTML = this.clip.duration;
-        this.statusButton.innerHTML = svg.replaySVG;
-        this.statusButton.appendChild(this.indicator);
-        this.indicator.innerHTML = "Completed";
-      } else if (meta.newState === "transitional") {
-        this.statusButton.innerHTML = svg.playSVG;
-        this.statusButton.appendChild(this.indicator);
-        this.indicator.innerHTML = "Transitional";
-      } else if (meta.newState === "idle") {
-        this.statusButton.innerHTML = svg.playSVG;
-        this.statusButton.appendChild(this.indicator);
-        this.indicator.innerHTML = "Idle";
+    if (eventName === `state-change`) {
+      if (meta.newState === `waiting`) {
+        this.elements.statusButton.innerHTML = svg.playSVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Waiting`;
+      } else if (meta.newState === `playing`) {
+        this.elements.statusButton.innerHTML = svg.pauseSVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Playing`;
+      } else if (meta.newState === `completed`) {
+        this.elements.currentTime.innerHTML = this.clip.duration;
+        this.elements.statusButton.innerHTML = svg.replaySVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Completed`;
+      } else if (meta.newState === `transitional`) {
+        this.elements.statusButton.innerHTML = svg.playSVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Transitional`;
+      } else if (meta.newState === `idle`) {
+        this.elements.statusButton.innerHTML = svg.playSVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Idle`;
       } else {
-        this.indicator.innerHTML = meta.newSTate;
+        this.elements.indicator.innerHTML = meta.newSTate;
       }
-    } else if (eventName === "attribute-rejection") {
-      helper.log(
-        "Attributes",
+    } else if (eventName === `attribute-rejection`) {
+      mch.log(
+        `Attributes`,
         meta.attributes,
-        "have been rejected from animation with id " + meta.animationID
+        `have been rejected from animation with id ${meta.animationID}`
       );
-    } else if (eventName === "animation-rejection") {
-      helper.log(
-        "Animation " +
-          meta.animationID +
-          " has been rejected as all attributes of it overlap on specific elements because of existing animations"
+    } else if (eventName === `animation-rejection`) {
+      mch.log(
+        `Animation ${meta.animationID} has been rejected as all attributes of 
+        it overlap on specific elements because of existing animations`
       );
-    } else if (eventName === "duration-change" && this.needsUpdate) {
+    } else if (eventName === `duration-change`) {
+      this.elements.totalTime.innerHTML = this.clip.duration;
+      this.settings.loopEndMillisecond = this.clip.duration;
       this.millisecondChange(
         this.clip.runTimeInfo.currentMillisecond,
         this.clip.state
@@ -332,7 +218,7 @@ class Player {
   }
 
   handleDragStart() {
-    this.needsUpdate = true;
+    this.settings.needsUpdate = true;
     this.journey = timeCapsule.startJourney(this.clip);
   }
 
@@ -340,18 +226,19 @@ class Player {
     if (!isFinite(loopBarPositionX)) {
       loopBarPositionX = 0;
     }
-    const duration = this.clip.duration;
+    const { duration } = this.clip;
+    const { loopBar, totalBar } = this.elements;
 
-    const totalBarPositionX = loopBarPositionX + this.loopBar.offsetLeft;
+    const totalBarPositionX = loopBarPositionX + loopBar.offsetLeft;
 
     const millisecond = Math.round(
-      (duration * totalBarPositionX) / this.totalBar.offsetWidth
+      (duration * totalBarPositionX) / totalBar.offsetWidth
     );
 
-    this.currentTime.innerHTML = millisecond;
+    this.elements.currentTime.innerHTML = millisecond;
 
-    this.runningBar.style.width =
-      (loopBarPositionX / this.loopBar.offsetWidth) * 100 + "%";
+    this.elements.runningBar.style.width =
+      (loopBarPositionX / loopBar.offsetWidth) * 100 + `%`;
 
     this.journey.station(millisecond);
   }
@@ -361,94 +248,96 @@ class Player {
   }
 
   addEventListeners() {
-    this.volumeBtn.onclick = () => {
-      if (this.volumeMute) {
-        this.volumeBarActive.style.width = this.previusVolume * 100 + "%";
-        this.clip.setVolume(this.previusVolume);
-        this.volumeMute = false;
-        const SVG = document.createElement("span");
+    this.elements.volumeBtn.onclick = () => {
+      if (this.settings.volumeMute) {
+        this.elements.volumeBarActive.style.width =
+          this.settings.previousVolume * 100 + `%`;
+        this.clip.setVolume(this.settings.previousVolume);
+        this.settings.volumeMute = false;
+        const SVG = document.createElement(`span`);
         SVG.innerHTML = svg.volumeSVG;
-        this.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+        this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
       } else {
-        this.volumeMute = true;
-        this.volumeBarActive.style.width = "0%";
+        this.settings.volumeMute = true;
+        this.elements.volumeBarActive.style.width = `0%`;
         this.clip.setVolume(0);
-        const SVG = document.createElement("span");
+        const SVG = document.createElement(`span`);
         SVG.innerHTML = svg.volumeMuteSVG;
-        this.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+        this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
       }
     };
 
     const onCursorMoveVolumeBar = e => {
       e.preventDefault();
       const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-      const viewportOffset = this.volumeBarHelper.getBoundingClientRect();
+      const viewportOffset = this.elements.volumeBarHelper.getBoundingClientRect();
       let positionX = clientX - viewportOffset.left;
 
       if (positionX < 0) {
         positionX = 0;
-      } else if (positionX > this.volumeBarHelper.offsetWidth) {
-        positionX = this.volumeBarHelper.offsetWidth;
+      } else if (positionX > this.elements.volumeBarHelper.offsetWidth) {
+        positionX = this.elements.volumeBarHelper.offsetWidth;
       }
-      this.volume = Number(
-        (positionX / this.volumeBarHelper.offsetWidth).toFixed(2)
+      this.settings.volume = Number(
+        (positionX / this.elements.volumeBarHelper.offsetWidth).toFixed(2)
       );
-      this.volumeBarActive.style.width = this.volume * 100 + "%";
-      this.clip.setVolume(this.volume);
+      this.elements.volumeBarActive.style.width =
+        this.settings.volume * 100 + `%`;
+      this.clip.setVolume(this.settings.volume);
 
-      if (this.volume > 0) {
-        this.volumeMute = false;
-        const SVG = document.createElement("span");
+      if (this.settings.volume > 0) {
+        this.settings.volumeMute = false;
+        const SVG = document.createElement(`span`);
         SVG.innerHTML = svg.volumeSVG;
-        this.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
-      } else if (this.volume === 0) {
-        this.volumeMute = true;
-        const SVG = document.createElement("span");
+        this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
+      } else if (this.settings.volume === 0) {
+        this.settings.volumeMute = true;
+        const SVG = document.createElement(`span`);
         SVG.innerHTML = svg.volumeMuteSVG;
-        this.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+        this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
       }
     };
 
     const onMouseUpVolumeBar = e => {
       e.preventDefault();
-      if (this.volume > 0) {
-        this.previusVolume = this.volume;
+      if (this.settings.volume > 0) {
+        this.settings.previousVolume = this.settings.volume;
       }
-      removeListener("mouseup", onMouseUpVolumeBar, false);
-      removeListener("touchend", onMouseUpVolumeBar, false);
-      removeListener("mousemove", onCursorMoveVolumeBar, false);
-      removeListener("touchmove", onCursorMoveVolumeBar, false);
+      removeListener(`mouseup`, onMouseUpVolumeBar, false);
+      removeListener(`touchend`, onMouseUpVolumeBar, false);
+      removeListener(`mousemove`, onCursorMoveVolumeBar, false);
+      removeListener(`touchmove`, onCursorMoveVolumeBar, false);
     };
 
     const onMouseDownVolumeBar = e => {
       e.preventDefault();
       onCursorMoveVolumeBar(e);
-      addListener("mouseup", onMouseUpVolumeBar, false);
-      addListener("touchend", onMouseUpVolumeBar, false);
-      addListener("mousemove", onCursorMoveVolumeBar, false);
-      addListener("touchmove", onCursorMoveVolumeBar, false);
+      addListener(`mouseup`, onMouseUpVolumeBar, false);
+      addListener(`touchend`, onMouseUpVolumeBar, false);
+      addListener(`mousemove`, onCursorMoveVolumeBar, false);
+      addListener(`touchmove`, onCursorMoveVolumeBar, false);
     };
 
-    this.volumeBarHelper.addEventListener(
-      "mousedown",
+    this.elements.volumeBarHelper.addEventListener(
+      `mousedown`,
       onMouseDownVolumeBar,
       false
     );
-    this.volumeCursor.addEventListener(
-      "mousedown",
+    this.elements.volumeCursor.addEventListener(
+      `mousedown`,
       onMouseDownVolumeBar,
       false
     );
-    this.volumeBarHelper.addEventListener(
-      "touchstart",
+    this.elements.volumeBarHelper.addEventListener(
+      `touchstart`,
       onMouseDownVolumeBar,
       {
         passive: true
       },
       false
     );
-    this.volumeCursor.addEventListener(
-      "touchstart",
+    this.elements.volumeCursor.addEventListener(
+      `touchstart`,
       onMouseDownVolumeBar,
       {
         passive: true
@@ -460,18 +349,20 @@ class Player {
     */
 
     const editableLoopStartTime = () => {
-      this.editableLoopStartTime.value = this.loopStartTime.innerHTML;
-      this.loopStartTime.replaceWith(this.editableLoopStartTime);
-      this.editableLoopStartTime.focus();
+      this.elements.editableLoopStartTime.value = this.elements.loopStartTime.innerHTML;
+      this.elements.loopStartTime.replaceWith(
+        this.elements.editableLoopStartTime
+      );
+      this.elements.editableLoopStartTime.focus();
     };
 
     const editableLoopEndTime = () => {
-      this.editableLoopEndTime.value = this.loopEndTime.innerHTML;
-      this.loopEndTime.replaceWith(this.editableLoopEndTime);
-      this.editableLoopEndTime.focus();
+      this.elements.editableLoopEndTime.value = this.elements.loopEndTime.innerHTML;
+      this.elements.loopEndTime.replaceWith(this.elements.editableLoopEndTime);
+      this.elements.editableLoopEndTime.focus();
     };
 
-    this.editableLoopEndTime.onkeydown = this.editableLoopStartTime.onkeydown = e => {
+    this.elements.editableLoopEndTime.onkeydown = this.elements.editableLoopStartTime.onkeydown = e => {
       e.preventDefault();
       if (e.keyCode === 8) {
         e.target.value = e.target.value
@@ -490,23 +381,25 @@ class Player {
       }
       e.target.value = newValue;
 
-      if (e.target === this.editableLoopStartTime) {
-        const viewportOffset = this.totalBar.getBoundingClientRect();
+      if (e.target === this.elements.editableLoopStartTime) {
+        const viewportOffset = this.elements.totalBar.getBoundingClientRect();
         const event = {
           preventDefault: () => {},
           clientX:
-            (this.totalBar.offsetWidth / this.clip.duration) * e.target.value +
+            (this.elements.totalBar.offsetWidth / this.clip.duration) *
+              e.target.value +
             viewportOffset.left
         };
         onMouseDownLoopStart(event);
         onCursorMoveLoopStart(event);
         onMouseUpLoopStart(event);
-      } else if (e.target === this.editableLoopEndTime) {
-        const viewportOffset = this.totalBar.getBoundingClientRect();
+      } else if (e.target === this.elements.editableLoopEndTime) {
+        const viewportOffset = this.elements.totalBar.getBoundingClientRect();
         const event = {
           preventDefault: () => {},
           clientX:
-            (this.totalBar.offsetWidth / this.clip.duration) * e.target.value +
+            (this.elements.totalBar.offsetWidth / this.clip.duration) *
+              e.target.value +
             viewportOffset.left
         };
         onMouseDownLoopEnd(event);
@@ -515,218 +408,226 @@ class Player {
       }
     };
 
-    this.loopStartTime.onclick = editableLoopStartTime;
-    this.loopEndTime.onclick = editableLoopEndTime;
+    this.elements.loopStartTime.onclick = editableLoopStartTime;
+    this.elements.loopEndTime.onclick = editableLoopEndTime;
 
-    this.editableLoopStartTime.onfocusout = () => {
-      this.editableLoopStartTime.replaceWith(this.loopStartTime);
+    this.elements.editableLoopStartTime.onfocusout = () => {
+      this.elements.editableLoopStartTime.replaceWith(
+        this.elements.loopStartTime
+      );
     };
 
-    this.editableLoopEndTime.onfocusout = () => {
-      this.editableLoopEndTime.replaceWith(this.loopEndTime);
+    this.elements.editableLoopEndTime.onfocusout = () => {
+      this.elements.editableLoopEndTime.replaceWith(this.elements.loopEndTime);
     };
 
-    this.statusButton.onclick = e => {
+    this.elements.statusButton.onclick = e => {
       e.preventDefault();
-      if (this.clip.state === "playing") {
+      if (this.clip.state === `playing`) {
         this.clip.wait();
-      } else if (this.clip.state === "waiting") {
+      } else if (this.clip.state === `waiting`) {
         this.clip.resume();
-      } else if (this.clip.state === "idle") {
+      } else if (this.clip.state === `idle`) {
         if (this.clip.speed >= 0) {
           this.clip.play();
-          this.needsUpdate = true;
+          this.settings.needsUpdate = true;
         } else {
           this.clip.stop();
           this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.station(this.settings.loopEndMillisecond - 1);
           this.journey.destination();
           this.clip.play();
-          this.needsUpdate = true;
+          this.settings.needsUpdate = true;
         }
-      } else if (this.clip.state === "completed") {
+      } else if (this.clip.state === `completed`) {
         if (this.clip.speed >= 0) {
           this.clip.stop();
           this.journey = timeCapsule.startJourney(this.clip);
           this.journey.station(0);
           this.journey.destination();
           this.clip.play();
-          this.needsUpdate = true;
+          this.settings.needsUpdate = true;
         } else {
           this.clip.stop();
           this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.station(this.settings.loopEndMillisecond - 1);
           this.journey.destination();
           this.clip.play();
-          this.needsUpdate = true;
+          this.settings.needsUpdate = true;
         }
       }
     };
 
-    this.settingsShowIndicator.onclick = e => {
+    this.elements.settingsShowIndicator.onclick = e => {
       e.preventDefault();
-      const checkbox = elid("mc-player-show-indicator-checkbox");
+      const checkbox = elid(`${this.name}-show-indicator-checkbox`);
       if (checkbox.checked) {
         checkbox.checked = false;
-        this.indicator.style.visibility = "hidden";
-        this.statusButton.style.width = "40px";
-        this.statusButton.style.height = "25px";
-        this.statusButton.style.bottom = "0px";
+        this.elements.indicator.style.visibility = `hidden`;
+        this.elements.statusButton.style.width = `40px`;
+        this.elements.statusButton.style.height = `25px`;
+        this.elements.statusButton.style.bottom = `0px`;
       } else {
         checkbox.checked = true;
-        this.indicator.style.visibility = "visible";
-        this.statusButton.style.width = "35px";
-        this.statusButton.style.height = "20px";
-        this.statusButton.style.bottom = "5px";
+        this.elements.indicator.style.visibility = `visible`;
+        this.elements.statusButton.style.width = `35px`;
+        this.elements.statusButton.style.height = `20px`;
+        this.elements.statusButton.style.bottom = `5px`;
       }
     };
 
-    this.settingsShowVolume.onclick = e => {
+    this.elements.settingsShowVolume.onclick = e => {
       e.preventDefault();
-      this.volumeControl.classList.toggle("mc-player-volume-width-transition");
-      this.volumeBar.classList.toggle("mc-player-volume-width-transition");
-      this.volumeBarHelper.classList.toggle(
-        "mc-player-volume-width-transition"
+      this.elements.volumeControl.classList.toggle(
+        `${this.name}-volume-width-transition`
       );
-      this.timeDisplay.classList.toggle("mc-player-time-width-transition");
+      this.elements.volumeBar.classList.toggle(
+        `${this.name}-volume-width-transition`
+      );
+      this.elements.volumeBarHelper.classList.toggle(
+        `${this.name}-volume-width-transition`
+      );
+      this.elements.timeDisplay.classList.toggle(
+        `${this.name}-time-width-transition`
+      );
 
-      const checkbox = elid("mc-player-show-volume-checkbox");
+      const checkbox = elid(`${this.name}-show-volume-checkbox`);
       if (checkbox.checked) {
         checkbox.checked = false;
-        this.volumeControl.style.visibility = "hidden";
-        this.timeDisplay.style.left = "45px";
+        this.elements.volumeControl.style.visibility = `hidden`;
+        this.elements.timeDisplay.style.left = `45px`;
       } else {
         checkbox.checked = true;
-        this.volumeControl.style.visibility = "visible";
-        this.timeDisplay.style.left = "";
+        this.elements.volumeControl.style.visibility = `visible`;
+        this.elements.timeDisplay.style.left = ``;
       }
     };
 
-    this.settingsShowPreview.onclick = e => {
+    this.elements.settingsShowPreview.onclick = e => {
       e.preventDefault();
-      const checkbox = elid("mc-player-show-preview-checkbox");
+      const checkbox = elid(`${this.name}-show-preview-checkbox`);
       if (checkbox.checked) {
         checkbox.checked = false;
-        elid("mc-player-hover-display").style.visibility = "hidden";
-        elid("mc-player-hover-display").style.display = "none";
+        elid(`${this.name}-hover-display`).style.visibility = `hidden`;
+        elid(`${this.name}-hover-display`).style.display = `none`;
         this.options.preview = false;
       } else {
         if (!this.previewClip) {
-          this.createHoverDisplay();
+          this.createPreviewDisplay();
         }
         checkbox.checked = true;
-        elid("mc-player-hover-display").style.visibility = "visible";
-        elid("mc-player-hover-display").style.display = "flex";
+        elid(`${this.name}-hover-display`).style.visibility = `visible`;
+        elid(`${this.name}-hover-display`).style.display = `flex`;
         this.options.preview = true;
       }
     };
 
-    this.settingsButton.onclick = e => {
+    this.elements.settingsButton.onclick = e => {
       e.preventDefault();
 
       const showHideSettings = e => {
-        if (this.settingsPanel.contains(e.target)) {
+        if (this.elements.settingsPanel.contains(e.target)) {
           return true;
         }
-        this.settingsPanel.classList.toggle("m-fadeOut");
-        this.settingsPanel.classList.toggle("m-fadeIn");
-        if (this.settingsPanel.className.includes("m-fadeOut")) {
-          removeListener("click", showHideSettings, false);
+        this.elements.settingsPanel.classList.toggle(`m-fadeOut`);
+        this.elements.settingsPanel.classList.toggle(`m-fadeIn`);
+        if (this.elements.settingsPanel.className.includes(`m-fadeOut`)) {
+          removeListener(`click`, showHideSettings, false);
         }
       };
 
-      if (this.settingsPanel.className.includes("m-fadeOut")) {
-        addListener("click", showHideSettings, false);
+      if (this.elements.settingsPanel.className.includes(`m-fadeOut`)) {
+        addListener(`click`, showHideSettings, false);
       } else {
-        removeListener("click", showHideSettings, false);
+        removeListener(`click`, showHideSettings, false);
       }
     };
-    this.settingsSpeedButtonShow.onclick = this.settingsSpeedButtonHide.onclick = e => {
+
+    this.elements.settingsSpeedButtonShow.onclick = this.elements.settingsSpeedButtonHide.onclick = e => {
       e.preventDefault();
-      this.settingsPanel.classList.toggle("mc-player-settings-speed-panel");
-      const includesClass = this.settingsPanel.className.includes(
-        "mc-player-settings-speed-panel"
+      this.elements.settingsPanel.classList.toggle(
+        `${this.name}-settings-speed-panel`
+      );
+      const includesClass = this.elements.settingsPanel.className.includes(
+        `${this.name}-settings-speed-panel`
       );
       if (includesClass) {
-        this.settingsMainPanel.style.display = "none";
-        this.settingsSpeedPanel.style.display = "block";
+        this.elements.settingsMainPanel.style.display = `none`;
+        this.elements.settingsSpeedPanel.style.display = `block`;
       } else {
-        this.settingsSpeedPanel.style.display = "none";
-        this.settingsMainPanel.style.display = "block";
+        this.elements.settingsSpeedPanel.style.display = `none`;
+        this.elements.settingsMainPanel.style.display = `block`;
       }
     };
 
     const onCursorMove = e => {
       e.preventDefault();
       const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-      const viewportOffset = this.loopBar.getBoundingClientRect();
+      const viewportOffset = this.elements.loopBar.getBoundingClientRect();
       let positionX = clientX - viewportOffset.left;
 
       if (positionX < 0) {
         positionX = 0;
-      } else if (positionX > this.loopBar.offsetWidth) {
-        positionX = this.loopBar.offsetWidth;
+      } else if (positionX > this.elements.loopBar.offsetWidth) {
+        positionX = this.elements.loopBar.offsetWidth;
       }
       this.handleDrag(positionX);
     };
 
     const onMouseUp = e => {
       e.preventDefault();
-      removeListener("mouseup", onMouseUp, false);
-      removeListener("touchend", onMouseUp, false);
-      removeListener("mousemove", onCursorMove, false);
-      removeListener("touchmove", onCursorMove, false);
+      removeListener(`mouseup`, onMouseUp, false);
+      removeListener(`touchend`, onMouseUp, false);
+      removeListener(`mousemove`, onCursorMove, false);
+      removeListener(`touchmove`, onCursorMove, false);
       this.handleDragEnd();
 
-      if (this.playAfterResize) {
-        if (
-          this.clip.state === "idle" &&
-          !this.loopButton.className.includes("svg-selected")
-        ) {
+      if (this.settings.playAfterResize) {
+        if (this.clip.state === `idle` && !this.settings.loopActivated) {
           this.clip.play();
         } else if (
-          this.clip.state === "completed" &&
-          !this.loopButton.className.includes("svg-selected")
+          this.clip.state === `completed` &&
+          !this.settings.loopActivated
         ) {
           this.clip.stop();
           this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.loopEndMillisecond - 1);
+          this.journey.station(this.settings.loopEndMillisecond - 1);
           this.journey.destination();
           this.clip.play();
         } else if (
-          (this.clip.state === "completed" || this.clip.state === "idle") &&
-          this.loopButton.className.includes("svg-selected")
+          (this.clip.state === `completed` || this.clip.state === `idle`) &&
+          this.settings.loopActivated
         ) {
           this.clip.stop();
           this.journey = timeCapsule.startJourney(this.clip);
           this.clip.speed >= 0
-            ? this.journey.station(this.loopStartMillisecond + 1)
-            : this.journey.station(this.loopEndMillisecond - 1);
+            ? this.journey.station(this.settings.loopStartMillisecond + 1)
+            : this.journey.station(this.settings.loopEndMillisecond - 1);
           this.journey.destination();
           this.clip.play();
         } else {
           this.clip.resume();
         }
-        this.playAfterResize = false;
+        this.settings.playAfterResize = false;
       }
     };
 
     const onMouseDown = e => {
       e.preventDefault();
-      if (this.clip.state === "playing") {
-        this.playAfterResize = true;
+      if (this.clip.state === `playing`) {
+        this.settings.playAfterResize = true;
       }
       this.handleDragStart();
       onCursorMove(e);
-      addListener("mouseup", onMouseUp, false);
-      addListener("touchend", onMouseUp, false);
-      addListener("mousemove", onCursorMove, false);
-      addListener("touchmove", onCursorMove, false);
+      addListener(`mouseup`, onMouseUp, false);
+      addListener(`touchend`, onMouseUp, false);
+      addListener(`mousemove`, onCursorMove, false);
+      addListener(`touchmove`, onCursorMove, false);
     };
 
-    this.loopBar.addEventListener("mousedown", onMouseDown, false);
-    this.loopBar.addEventListener(
-      "touchstart",
+    this.elements.loopBar.addEventListener(`mousedown`, onMouseDown, false);
+    this.elements.loopBar.addEventListener(
+      `touchstart`,
       onMouseDown,
       {
         passive: true
@@ -736,56 +637,60 @@ class Player {
 
     const onCursorMoveSpeedBar = e => {
       e.preventDefault();
-      const viewportOffset = this.speedBar.getBoundingClientRect();
+      const viewportOffset = this.elements.speedBar.getBoundingClientRect();
       const clientY = e.clientY || ((e.touches || [])[0] || {}).clientY;
       let positionY = clientY - viewportOffset.top;
 
       positionY -= 8;
       if (positionY < 0) {
         positionY = 0;
-      } else if (positionY > this.speedBar.offsetHeight - 15.5) {
-        positionY = this.speedBar.offsetHeight - 15.5;
+      } else if (positionY > this.elements.speedBar.offsetHeight - 15.5) {
+        positionY = this.elements.speedBar.offsetHeight - 15.5;
       }
 
       // show speed
       const percentage = (positionY / 128.5 - 1) * -1;
       const step = 1 / 8;
-      const speed = this.calculateSpeed(step, this.speedValues, percentage);
-      elid("mc-player-speed-runtime").innerHTML = speed + "0";
-      elid("mc-player-speed-cursor").style.top = positionY + "px";
+      const speed = this.calculateSpeed(
+        step,
+        this.options.speedValues,
+        percentage
+      );
+      elid(`${this.name}-speed-runtime`).innerHTML = speed + `0`;
+      elid(`${this.name}-speed-cursor`).style.top = positionY + `px`;
       this.clip.executionSpeed = speed;
     };
 
     const onMouseUpSpeedBar = e => {
       e.preventDefault();
-      removeListener("mouseup", onMouseUpSpeedBar, false);
-      removeListener("touchend", onMouseUpSpeedBar, false);
-      removeListener("mousemove", onCursorMoveSpeedBar, false);
-      removeListener("touchmove", onCursorMoveSpeedBar, false);
-      elid("mc-player-speed-runtime").innerHTML = "Speed";
+      removeListener(`mouseup`, onMouseUpSpeedBar, false);
+      removeListener(`touchend`, onMouseUpSpeedBar, false);
+      removeListener(`mousemove`, onCursorMoveSpeedBar, false);
+      removeListener(`touchmove`, onCursorMoveSpeedBar, false);
+      elid(`${this.name}-speed-runtime`).innerHTML = `Speed`;
       let speedDisplay;
       this.clip.speed == 1
-        ? (speedDisplay = "Normal")
+        ? (speedDisplay = `Normal`)
         : (speedDisplay = this.clip.speed);
 
-      this.speedCurrent.innerHTML = speedDisplay;
+      this.elements.speedCurrent.innerHTML = speedDisplay;
     };
     const onMouseDownSpeedBar = e => {
       e.preventDefault();
       onCursorMoveSpeedBar(e);
-      addListener("mouseup", onMouseUpSpeedBar, false);
-      addListener("touchend", onMouseUpSpeedBar, false);
-      addListener("mousemove", onCursorMoveSpeedBar, false);
-      addListener("touchmove", onCursorMoveSpeedBar, false);
+      addListener(`mouseup`, onMouseUpSpeedBar, false);
+      addListener(`touchend`, onMouseUpSpeedBar, false);
+      addListener(`mousemove`, onCursorMoveSpeedBar, false);
+      addListener(`touchmove`, onCursorMoveSpeedBar, false);
     };
 
-    this.speedBarHelper.addEventListener(
-      "mousedown",
+    this.elements.speedBarHelper.addEventListener(
+      `mousedown`,
       onMouseDownSpeedBar,
       false
     );
-    this.speedBarHelper.addEventListener(
-      "touchstart",
+    this.elements.speedBarHelper.addEventListener(
+      `touchstart`,
       onMouseDownSpeedBar,
       {
         passive: true
@@ -793,106 +698,113 @@ class Player {
       false
     );
 
-    this.fullScreenButton.addEventListener("click", () => {
+    this.elements.fullScreenButton.addEventListener(`click`, () => {
       const elFullScreen = this.clip.props.host.className.includes(
-        "full-screen"
+        `full-screen`
       );
       elFullScreen
         ? this.exitFullscreen()
         : this.launchIntoFullscreen(this.clip.props.host);
-      this.clip.props.host.classList.toggle("full-screen");
+      this.clip.props.host.classList.toggle(`full-screen`);
     });
 
-    this.loopButton.onclick = () => {
-      this.loopButton.classList.toggle("svg-selected");
-      this.loopBarStart.classList.toggle("m-fadeOut");
-      this.loopBarEnd.classList.toggle("m-fadeOut");
-      this.loopBarStart.classList.toggle("m-fadeIn");
-      this.loopBarEnd.classList.toggle("m-fadeIn");
-      elid("mc-player-loop-time").classList.toggle("m-fadeOut");
-      elid("mc-player-loop-time").classList.toggle("m-fadeIn");
+    this.elements.loopButton.onclick = () => {
+      this.settings.loopActivated = !this.settings.loopActivated;
+      this.elements.loopButton.classList.toggle(`svg-selected`);
+      this.elements.loopBarStart.classList.toggle(`m-fadeOut`);
+      this.elements.loopBarEnd.classList.toggle(`m-fadeOut`);
+      this.elements.loopBarStart.classList.toggle(`m-fadeIn`);
+      this.elements.loopBarEnd.classList.toggle(`m-fadeIn`);
+      elid(`${this.name}-loop-time`).classList.toggle(`m-fadeOut`);
+      elid(`${this.name}-loop-time`).classList.toggle(`m-fadeIn`);
 
-      this.loopEndTime.innerHTML = this.loopEndMillisecond;
-      this.loopStartTime.innerHTML = this.loopStartMillisecond;
-      this.needsUpdate = true;
+      this.elements.loopEndTime.innerHTML = this.settings.loopEndMillisecond;
+      this.elements.loopStartTime.innerHTML = this.settings.loopStartMillisecond;
+      this.settings.needsUpdate = true;
 
-      if (elid("mc-player-loop-time").className.includes("m-fadeOut")) {
-        this.loopBar.style.left = "0%";
-        this.loopBar.style.width = "100%";
-        this.loopStartMillisecond = 0;
-        this.loopEndMillisecond = this.clip.duration;
-        this.loopLastPositionXPxls = 0;
-        this.loopLastPositionXPercentage = 0;
-        this.runningBar.style.width =
+      if (!this.settings.loopActivated) {
+        this.elements.loopBar.style.left = `0%`;
+        this.elements.loopBar.style.width = `100%`;
+        this.settings.loopStartMillisecond = 0;
+        this.settings.loopEndMillisecond = this.clip.duration;
+        this.settings.loopLastPositionXPxls = 0;
+        this.settings.loopLastPositionXPercentage = 0;
+        this.elements.runningBar.style.width =
           (this.clip.runTimeInfo.currentMillisecond / this.clip.duration) *
             100 +
-          "%";
+          `%`;
       }
     };
 
-    elid("mc-player-controls").onmouseover = () => {
-      if (!this.loopButton.className.includes("svg-selected")) {
+    elid(`${this.name}-controls`).onmouseover = () => {
+      if (!this.settings.loopActivated) {
         return;
       }
-      this.loopBarStart.classList.remove("m-fadeOut");
-      this.loopBarEnd.classList.remove("m-fadeOut");
-      this.loopBarStart.classList.add("m-fadeIn");
-      this.loopBarEnd.classList.add("m-fadeIn");
+      this.elements.loopBarStart.classList.remove(`m-fadeOut`);
+      this.elements.loopBarEnd.classList.remove(`m-fadeOut`);
+      this.elements.loopBarStart.classList.add(`m-fadeIn`);
+      this.elements.loopBarEnd.classList.add(`m-fadeIn`);
     };
 
-    elid("mc-player-controls").onmouseout = () => {
-      if (!this.loopButton.className.includes("svg-selected")) {
+    elid(`${this.name}-controls`).onmouseout = () => {
+      if (!this.settings.loopActivated) {
         return;
       }
-      this.loopBarStart.classList.add("m-fadeOut");
-      this.loopBarEnd.classList.add("m-fadeOut");
-      this.loopBarStart.classList.remove("m-fadeIn");
-      this.loopBarEnd.classList.remove("m-fadeIn");
+      this.elements.loopBarStart.classList.add(`m-fadeOut`);
+      this.elements.loopBarEnd.classList.add(`m-fadeOut`);
+      this.elements.loopBarStart.classList.remove(`m-fadeIn`);
+      this.elements.loopBarEnd.classList.remove(`m-fadeIn`);
     };
 
     const onCursorMoveLoopStart = e => {
       e.preventDefault();
       const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-      const viewportOffset = this.totalBar.getBoundingClientRect();
+      const viewportOffset = this.elements.totalBar.getBoundingClientRect();
       let positionX = clientX - viewportOffset.left;
 
-      const endPosition = this.loopBar.offsetWidth + this.loopBar.offsetLeft;
+      const endPosition =
+        this.elements.loopBar.offsetWidth + this.elements.loopBar.offsetLeft;
       if (positionX < 0) {
         positionX = 0;
-      } else if (positionX > this.totalBar.offsetWidth) {
-        positionX = this.totalBar.offsetWidth;
+      } else if (positionX > this.elements.totalBar.offsetWidth) {
+        positionX = this.elements.totalBar.offsetWidth;
       }
 
-      const loopBarDeltaX = positionX - this.loopLastPositionXPxls || 0;
-      const runningBarWidthInPxls = this.runningBar.offsetWidth - loopBarDeltaX;
+      const loopBarDeltaX =
+        positionX - this.settings.loopLastPositionXPxls || 0;
+      const runningBarWidthInPxls =
+        this.elements.runningBar.offsetWidth - loopBarDeltaX;
 
-      this.loopBar.style.left = positionX + "px";
+      this.elements.loopBar.style.left = positionX + `px`;
 
-      const diff = endPosition - this.loopBar.offsetLeft;
-      this.loopBar.style.width = diff + "px";
+      const diff = endPosition - this.elements.loopBar.offsetLeft;
+      this.elements.loopBar.style.width = diff + `px`;
 
-      this.runningBar.style.width = runningBarWidthInPxls + "px";
+      this.elements.runningBar.style.width = runningBarWidthInPxls + `px`;
 
-      this.loopLastPositionXPxls = positionX;
+      this.settings.loopLastPositionXPxls = positionX;
 
-      this.loopStartMillisecond = Math.round(
-        (this.clip.duration * this.loopBar.offsetLeft) /
-          this.totalBar.offsetWidth
+      this.settings.loopStartMillisecond = Math.round(
+        (this.clip.duration * this.elements.loopBar.offsetLeft) /
+          this.elements.totalBar.offsetWidth
       );
 
-      if (this.loopEndMillisecond < this.loopStartMillisecond) {
-        this.loopEndMillisecond = this.loopStartMillisecond;
-        this.loopBar.style.width = "0px";
-        this.runningBar.style.width = "0px";
+      if (
+        this.settings.loopEndMillisecond < this.settings.loopStartMillisecond
+      ) {
+        this.settings.loopEndMillisecond = this.settings.loopStartMillisecond;
+        this.elements.loopBar.style.width = `0px`;
+        this.elements.runningBar.style.width = `0px`;
       }
 
-      this.loopEndTime.innerHTML = this.loopEndMillisecond;
-      this.loopStartTime.innerHTML = this.loopStartMillisecond;
+      this.elements.loopEndTime.innerHTML = this.settings.loopEndMillisecond;
+      this.elements.loopStartTime.innerHTML = this.settings.loopStartMillisecond;
 
       if (
-        this.loopStartMillisecond > this.clip.runTimeInfo.currentMillisecond
+        this.settings.loopStartMillisecond >
+        this.clip.runTimeInfo.currentMillisecond
       ) {
-        this.loopJourney = true;
+        this.settings.loopJourney = true;
       }
     };
 
@@ -900,33 +812,42 @@ class Player {
       this.resizeLoop = false;
 
       e.preventDefault();
-      if (this.loopJourney) {
+      if (this.settings.loopJourney) {
         this.handleDragStart();
-        this.handleDrag(this.runningBar.offsetWidth);
+        this.handleDrag(this.elements.runningBar.offsetWidth);
         this.handleDragEnd();
-        this.loopJourney = false;
+        this.settings.loopJourney = false;
       }
 
-      this.loopBar.style.left =
-        (this.loopBar.offsetLeft / this.totalBar.offsetWidth) * 100 + "%";
+      this.elements.loopBar.style.left =
+        (this.elements.loopBar.offsetLeft /
+          this.elements.totalBar.offsetWidth) *
+          100 +
+        `%`;
 
-      this.loopBar.style.width =
-        (this.loopBar.offsetWidth / this.totalBar.offsetWidth) * 100 + "%";
+      this.elements.loopBar.style.width =
+        (this.elements.loopBar.offsetWidth /
+          this.elements.totalBar.offsetWidth) *
+          100 +
+        `%`;
 
-      this.loopStartMillisecond = Math.round(
-        (this.clip.duration * this.loopBar.offsetLeft) /
-          this.totalBar.offsetWidth
+      this.settings.loopStartMillisecond = Math.round(
+        (this.clip.duration * this.elements.loopBar.offsetLeft) /
+          this.elements.totalBar.offsetWidth
       );
 
-      this.runningBar.style.width =
-        (this.runningBar.offsetWidth / this.loopBar.offsetWidth) * 100 + "%";
-      removeListener("mouseup", onMouseUpLoopStart, false);
-      removeListener("touchend", onMouseUpLoopStart, false);
-      removeListener("mousemove", onCursorMoveLoopStart, false);
-      removeListener("touchmove", onCursorMoveLoopStart, false);
-      this.loopBar.addEventListener("mousedown", onMouseDown, false);
-      this.loopBar.addEventListener(
-        "touchstart",
+      this.elements.runningBar.style.width =
+        (this.elements.runningBar.offsetWidth /
+          this.elements.loopBar.offsetWidth) *
+          100 +
+        `%`;
+      removeListener(`mouseup`, onMouseUpLoopStart, false);
+      removeListener(`touchend`, onMouseUpLoopStart, false);
+      removeListener(`mousemove`, onCursorMoveLoopStart, false);
+      removeListener(`touchmove`, onCursorMoveLoopStart, false);
+      this.elements.loopBar.addEventListener(`mousedown`, onMouseDown, false);
+      this.elements.loopBar.addEventListener(
+        `touchstart`,
         onMouseDown,
         {
           passive: true
@@ -934,28 +855,28 @@ class Player {
         false
       );
 
-      if (this.playAfterResize) {
-        if (this.clip.state === "idle") {
+      if (this.settings.playAfterResize) {
+        if (this.clip.state === `idle`) {
           let loopms;
           if (this.clip.speed >= 0) {
-            loopms = this.loopStartMillisecond + 1;
+            loopms = this.settings.loopStartMillisecond + 1;
           } else {
-            loopms = this.loopEndMillisecond - 1;
+            loopms = this.settings.loopEndMillisecond - 1;
           }
-          this.needsUpdate = true;
+          this.settings.needsUpdate = true;
           this.clip.stop();
           this.journey = timeCapsule.startJourney(this.clip);
           this.journey.station(loopms);
           this.journey.destination();
           this.clip.play();
-        } else if (this.clip.state === "completed") {
+        } else if (this.clip.state === `completed`) {
           let loopms;
           if (this.clip.speed >= 0) {
-            loopms = this.loopStartMillisecond + 1;
+            loopms = this.settings.loopStartMillisecond + 1;
           } else {
-            loopms = this.loopEndMillisecond - 1;
+            loopms = this.settings.loopEndMillisecond - 1;
           }
-          this.needsUpdate = true;
+          this.settings.needsUpdate = true;
           this.clip.stop();
           this.journey = timeCapsule.startJourney(this.clip);
           this.journey.station(loopms);
@@ -964,7 +885,7 @@ class Player {
         } else {
           this.clip.resume();
         }
-        this.playAfterResize = false;
+        this.settings.playAfterResize = false;
       }
     };
 
@@ -972,29 +893,37 @@ class Player {
       this.resizeLoop = true;
 
       e.preventDefault();
-      this.needsUpdate = true;
+      this.settings.needsUpdate = true;
 
-      if (this.clip.state === "playing") {
+      if (this.clip.state === `playing`) {
         this.clip.wait();
-        this.playAfterResize = true;
+        this.settings.playAfterResize = true;
       }
 
-      this.loopBar.removeEventListener("mousedown", onMouseDown, false);
-      this.loopBar.removeEventListener("touchstart", onMouseDown, false);
+      this.elements.loopBar.removeEventListener(
+        `mousedown`,
+        onMouseDown,
+        false
+      );
+      this.elements.loopBar.removeEventListener(
+        `touchstart`,
+        onMouseDown,
+        false
+      );
       onCursorMoveLoopStart(e);
-      addListener("mouseup", onMouseUpLoopStart, false);
-      addListener("touchend", onMouseUpLoopStart, false);
-      addListener("mousemove", onCursorMoveLoopStart, false);
-      addListener("touchmove", onCursorMoveLoopStart, false);
+      addListener(`mouseup`, onMouseUpLoopStart, false);
+      addListener(`touchend`, onMouseUpLoopStart, false);
+      addListener(`mousemove`, onCursorMoveLoopStart, false);
+      addListener(`touchmove`, onCursorMoveLoopStart, false);
     };
 
-    this.loopBarStart.addEventListener(
-      "mousedown",
+    this.elements.loopBarStart.addEventListener(
+      `mousedown`,
       onMouseDownLoopStart,
       false
     );
-    this.loopBarStart.addEventListener(
-      "touchstart",
+    this.elements.loopBarStart.addEventListener(
+      `touchstart`,
       onMouseDownLoopStart,
       {
         passive: true
@@ -1005,71 +934,86 @@ class Player {
     const onCursorMoveLoopEnd = e => {
       e.preventDefault();
       const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-      const viewportOffset = this.totalBar.getBoundingClientRect();
+      const viewportOffset = this.elements.totalBar.getBoundingClientRect();
       let positionX = clientX - viewportOffset.left;
 
       if (positionX < 0) {
         positionX = 0;
-      } else if (positionX > this.totalBar.offsetWidth) {
-        positionX = this.totalBar.offsetWidth;
+      } else if (positionX > this.elements.totalBar.offsetWidth) {
+        positionX = this.elements.totalBar.offsetWidth;
       }
 
-      if (this.runningBar.offsetWidth + this.loopBar.offsetLeft > positionX) {
-        this.runningBar.style.width =
-          positionX - this.loopBar.offsetLeft + "px";
+      if (
+        this.elements.runningBar.offsetWidth +
+          this.elements.loopBar.offsetLeft >
+        positionX
+      ) {
+        this.elements.runningBar.style.width =
+          positionX - this.elements.loopBar.offsetLeft + `px`;
       }
 
-      if (this.loopLastPositionXPxls - positionX < 0) {
-        this.loopBar.style.width =
-          Math.abs(this.loopLastPositionXPxls - positionX) + "px";
+      if (this.settings.loopLastPositionXPxls - positionX < 0) {
+        this.elements.loopBar.style.width =
+          Math.abs(this.settings.loopLastPositionXPxls - positionX) + `px`;
       } else {
-        this.loopBar.style.left = positionX + "px";
-        this.loopLastPositionXPxls = positionX;
+        this.elements.loopBar.style.left = positionX + `px`;
+        this.settings.loopLastPositionXPxls = positionX;
       }
 
-      this.loopEndMillisecond = Math.round(
+      this.settings.loopEndMillisecond = Math.round(
         (this.clip.duration *
-          ((parseFloat(this.loopBar.style.left) || 0) +
-            parseFloat(this.loopBar.style.width))) /
-          this.totalBar.offsetWidth
+          ((parseFloat(this.elements.loopBar.style.left) || 0) +
+            parseFloat(this.elements.loopBar.style.width))) /
+          this.elements.totalBar.offsetWidth
       );
-      if (this.loopStartMillisecond > this.loopEndMillisecond) {
-        this.loopStartMillisecond = this.loopEndMillisecond;
-        this.loopJourney = true;
+      if (
+        this.settings.loopStartMillisecond > this.settings.loopEndMillisecond
+      ) {
+        this.settings.loopStartMillisecond = this.settings.loopEndMillisecond;
+        this.settings.loopJourney = true;
       }
-      this.loopEndTime.innerHTML = this.loopEndMillisecond;
-      this.loopStartTime.innerHTML = this.loopStartMillisecond;
+      this.elements.loopEndTime.innerHTML = this.settings.loopEndMillisecond;
+      this.elements.loopStartTime.innerHTML = this.settings.loopStartMillisecond;
     };
 
     const onMouseUpLoopEnd = e => {
       this.resizeLoop = false;
       e.preventDefault();
-      this.runningBar.style.width =
-        (this.runningBar.offsetWidth / this.loopBar.offsetWidth) * 100 + "%";
+      this.elements.runningBar.style.width =
+        (this.elements.runningBar.offsetWidth /
+          this.elements.loopBar.offsetWidth) *
+          100 +
+        `%`;
 
-      this.loopBar.style.left =
-        (this.loopBar.offsetLeft / this.totalBar.offsetWidth) * 100 + "%";
+      this.elements.loopBar.style.left =
+        (this.elements.loopBar.offsetLeft /
+          this.elements.totalBar.offsetWidth) *
+          100 +
+        `%`;
 
-      this.loopBar.style.width =
-        (this.loopBar.offsetWidth / this.totalBar.offsetWidth) * 100 + "%";
+      this.elements.loopBar.style.width =
+        (this.elements.loopBar.offsetWidth /
+          this.elements.totalBar.offsetWidth) *
+          100 +
+        `%`;
 
-      this.loopStartMillisecond = Math.round(
-        (this.clip.duration * this.loopBar.offsetLeft) / 100
+      this.settings.loopStartMillisecond = Math.round(
+        (this.clip.duration * this.elements.loopBar.offsetLeft) / 100
       );
 
-      if (this.loopJourney) {
+      if (this.settings.loopJourney) {
         this.handleDragStart();
-        this.handleDrag(this.runningBar.offsetWidth);
+        this.handleDrag(this.elements.runningBar.offsetWidth);
         this.handleDragEnd();
-        this.loopJourney = false;
+        this.settings.loopJourney = false;
       }
-      removeListener("mouseup", onMouseUpLoopEnd, false);
-      removeListener("touchend", onMouseUpLoopEnd, false);
-      removeListener("mousemove", onCursorMoveLoopEnd, false);
-      removeListener("touchmove", onCursorMoveLoopEnd, false);
-      this.loopBar.addEventListener("mousedown", onMouseDown, false);
-      this.loopBar.addEventListener(
-        "touchstart",
+      removeListener(`mouseup`, onMouseUpLoopEnd, false);
+      removeListener(`touchend`, onMouseUpLoopEnd, false);
+      removeListener(`mousemove`, onCursorMoveLoopEnd, false);
+      removeListener(`touchmove`, onCursorMoveLoopEnd, false);
+      this.elements.loopBar.addEventListener(`mousedown`, onMouseDown, false);
+      this.elements.loopBar.addEventListener(
+        `touchstart`,
         onMouseDown,
         {
           passive: true
@@ -1077,28 +1021,28 @@ class Player {
         false
       );
 
-      if (this.playAfterResize) {
-        if (this.clip.state === "idle") {
+      if (this.settings.playAfterResize) {
+        if (this.clip.state === `idle`) {
           let loopms;
           if (this.clip.speed >= 0) {
-            loopms = this.loopStartMillisecond + 1;
+            loopms = this.settings.loopStartMillisecond + 1;
           } else {
-            loopms = this.loopEndMillisecond - 1;
+            loopms = this.settings.loopEndMillisecond - 1;
           }
-          this.needsUpdate = true;
+          this.settings.needsUpdate = true;
           this.clip.stop();
           this.journey = timeCapsule.startJourney(this.clip);
           this.journey.station(loopms);
           this.journey.destination();
           this.clip.play();
-        } else if (this.clip.state === "completed") {
+        } else if (this.clip.state === `completed`) {
           let loopms;
           if (this.clip.speed >= 0) {
-            loopms = this.loopStartMillisecond + 1;
+            loopms = this.settings.loopStartMillisecond + 1;
           } else {
-            loopms = this.loopEndMillisecond - 1;
+            loopms = this.settings.loopEndMillisecond - 1;
           }
-          this.needsUpdate = true;
+          this.settings.needsUpdate = true;
           this.clip.stop();
           this.journey = timeCapsule.startJourney(this.clip);
           this.journey.station(loopms);
@@ -1107,36 +1051,51 @@ class Player {
         } else {
           this.clip.resume();
         }
-        this.playAfterResize = false;
+        this.settings.playAfterResize = false;
       }
     };
 
     const onMouseDownLoopEnd = e => {
       this.resizeLoop = true;
-      this.needsUpdate = true;
+      this.settings.needsUpdate = true;
 
-      if (this.clip.state === "playing") {
+      if (this.clip.state === `playing`) {
         this.clip.wait();
-        this.playAfterResize = true;
+        this.settings.playAfterResize = true;
       }
       e.preventDefault();
-      this.runningBar.style.width = this.runningBar.offsetWidth + "px";
+      this.elements.runningBar.style.width =
+        this.elements.runningBar.offsetWidth + `px`;
 
-      this.loopBar.style.left = this.loopBar.offsetLeft + "px";
+      this.elements.loopBar.style.left =
+        this.elements.loopBar.offsetLeft + `px`;
 
-      this.loopBar.style.width = this.loopBar.offsetWidth + "px";
-      this.loopBar.removeEventListener("mousedown", onMouseDown, false);
-      this.loopBar.removeEventListener("touchstart", onMouseDown, false);
+      this.elements.loopBar.style.width =
+        this.elements.loopBar.offsetWidth + `px`;
+      this.elements.loopBar.removeEventListener(
+        `mousedown`,
+        onMouseDown,
+        false
+      );
+      this.elements.loopBar.removeEventListener(
+        `touchstart`,
+        onMouseDown,
+        false
+      );
       onCursorMoveLoopEnd(e);
-      addListener("mouseup", onMouseUpLoopEnd, false);
-      addListener("touchend", onMouseUpLoopEnd, false);
-      addListener("mousemove", onCursorMoveLoopEnd, false);
-      addListener("touchmove", onCursorMoveLoopEnd, false);
+      addListener(`mouseup`, onMouseUpLoopEnd, false);
+      addListener(`touchend`, onMouseUpLoopEnd, false);
+      addListener(`mousemove`, onCursorMoveLoopEnd, false);
+      addListener(`touchmove`, onCursorMoveLoopEnd, false);
     };
 
-    this.loopBarEnd.addEventListener("mousedown", onMouseDownLoopEnd, false);
-    this.loopBarEnd.addEventListener(
-      "touchstart",
+    this.elements.loopBarEnd.addEventListener(
+      `mousedown`,
+      onMouseDownLoopEnd,
+      false
+    );
+    this.elements.loopBarEnd.addEventListener(
+      `touchstart`,
       onMouseDownLoopEnd,
       {
         passive: true
@@ -1154,15 +1113,15 @@ class Player {
         if (!this.options.preview) {
           return;
         }
-        elid("mc-player-hover-display").classList.toggle("m-fadeOut");
-        elid("mc-player-hover-display").classList.toggle("m-fadeIn");
+        elid(`${this.name}-hover-display`).classList.toggle(`m-fadeOut`);
+        elid(`${this.name}-hover-display`).classList.toggle(`m-fadeIn`);
 
-        if (elid("mc-player-hover-display").className.includes("m-fadeIn")) {
-          this.hoverJourney = hoverTimeCapsule.startJourney(this.previewClip);
+        if (elid(`${this.name}-hover-display`).className.includes(`m-fadeIn`)) {
+          this.previewJourney = hoverTimeCapsule.startJourney(this.previewClip);
         } else {
-          this.hoverJourney.destination();
+          this.previewJourney.destination();
         }
-        this.loopBar.onmousemove = loopBarMouseMove;
+        this.elements.loopBar.onmousemove = loopBarMouseMove;
       };
 
       const loopBarAddListeners = () => {
@@ -1170,104 +1129,106 @@ class Player {
           return;
         }
         loopBarMouseInOut();
-        this.loopBar.onmouseover = this.loopBar.onmouseout = loopBarMouseInOut;
-        this.loopBar.onmousemove = loopBarMouseMove;
-        removeListener("mouseup", loopBarAddListeners, false);
-        removeListener("touchend", loopBarAddListeners, false);
-        removeListener("mousemove", loopBarMouseMove, false);
-        removeListener("touchmove", loopBarMouseMove, false);
+        this.elements.loopBar.onmouseover = this.elements.loopBar.onmouseout = loopBarMouseInOut;
+        this.elements.loopBar.onmousemove = loopBarMouseMove;
+        removeListener(`mouseup`, loopBarAddListeners, false);
+        removeListener(`touchend`, loopBarAddListeners, false);
+        removeListener(`mousemove`, loopBarMouseMove, false);
+        removeListener(`touchmove`, loopBarMouseMove, false);
       };
 
-      this.loopBar.onmouseover = this.loopBar.onmouseout = loopBarMouseInOut;
+      this.elements.loopBar.onmouseover = this.elements.loopBar.onmouseout = loopBarMouseInOut;
 
-      this.loopBar.onmousedown = () => {
+      this.elements.loopBar.onmousedown = () => {
         if (!this.options.preview) {
           return;
         }
-        this.loopBar.onmouseover = this.loopBar.onmouseout = null;
-        this.loopBar.onmousemove = null;
-        addListener("mouseup", loopBarAddListeners, false);
-        addListener("touchend", loopBarAddListeners, false);
-        addListener("mousemove", loopBarMouseMove, false);
-        addListener("touchmove", loopBarMouseMove, false);
+        this.elements.loopBar.onmouseover = this.elements.loopBar.onmouseout = null;
+        this.elements.loopBar.onmousemove = null;
+        addListener(`mouseup`, loopBarAddListeners, false);
+        addListener(`touchend`, loopBarAddListeners, false);
+        addListener(`mousemove`, loopBarMouseMove, false);
+        addListener(`touchmove`, loopBarMouseMove, false);
       };
-      this.loopBar.onmouseup = () => {
+      this.elements.loopBar.onmouseup = () => {
         if (!this.options.preview) {
           return;
         }
-        removeListener("mouseup", loopBarAddListeners, false);
-        removeListener("touchend", loopBarAddListeners, false);
-        removeListener("mousemove", loopBarMouseMove, false);
-        removeListener("touchmove", loopBarMouseMove, false);
-        this.loopBar.onmouseover = this.loopBar.onmouseout = loopBarMouseInOut;
-        this.loopBar.onmousemove = loopBarMouseMove;
+        removeListener(`mouseup`, loopBarAddListeners, false);
+        removeListener(`touchend`, loopBarAddListeners, false);
+        removeListener(`mousemove`, loopBarMouseMove, false);
+        removeListener(`touchmove`, loopBarMouseMove, false);
+        this.elements.loopBar.onmouseover = this.elements.loopBar.onmouseout = loopBarMouseInOut;
+        this.elements.loopBar.onmousemove = loopBarMouseMove;
       };
 
       const loopBarMouseMove = e => {
         const clientX = e.clientX;
-        const viewportOffset = this.loopBar.getBoundingClientRect();
+        const viewportOffset = this.elements.loopBar.getBoundingClientRect();
         if (
-          clientX - viewportOffset.left + this.loopLastPositionXPxls >
-            this.loopLastPositionXPxls + this.loopBar.offsetWidth &&
+          clientX - viewportOffset.left + this.settings.loopLastPositionXPxls >
+            this.settings.loopLastPositionXPxls +
+              this.elements.loopBar.offsetWidth &&
           !this.resizeLoop
         ) {
           elid(
-            "mc-player-hover-millisecond"
-          ).innerHTML = this.loopEndMillisecond;
+            `${this.name}-hover-millisecond`
+          ).innerHTML = this.settings.loopEndMillisecond;
           return;
         } else if (clientX - viewportOffset.left < 0 && !this.resizeLoop) {
           elid(
-            "mc-player-hover-millisecond"
-          ).innerHTML = this.loopStartMillisecond;
+            `${this.name}-hover-millisecond`
+          ).innerHTML = this.settings.loopStartMillisecond;
           return;
         }
 
         let positionX =
-          clientX - viewportOffset.left + this.loopLastPositionXPxls;
+          clientX - viewportOffset.left + this.settings.loopLastPositionXPxls;
 
         if (positionX < 0) {
           positionX = 0;
         }
 
-        let left = positionX - elid("mc-player-hover-display").offsetWidth / 2;
+        let left =
+          positionX - elid(`${this.name}-hover-display`).offsetWidth / 2;
 
         if (left < 0) {
           left = 0;
         } else if (
-          left + elid("mc-player-hover-display").offsetWidth >
-          this.totalBar.offsetWidth
+          left + elid(`${this.name}-hover-display`).offsetWidth >
+          this.elements.totalBar.offsetWidth
         ) {
           left =
-            this.totalBar.offsetWidth -
-            elid("mc-player-hover-display").offsetWidth;
+            this.elements.totalBar.offsetWidth -
+            elid(`${this.name}-hover-display`).offsetWidth;
         }
 
         const ms = Math.round(
-          (positionX / this.totalBar.offsetWidth) * this.clip.duration
+          (positionX / this.elements.totalBar.offsetWidth) * this.clip.duration
         );
         if (this.options.preview) {
-          this.hoverJourney.station(ms);
+          this.previewJourney.station(ms);
         }
 
-        elid("mc-player-hover-millisecond").innerHTML = ms;
-        elid("mc-player-hover-display").style.left = left + "px";
+        elid(`${this.name}-hover-millisecond`).innerHTML = ms;
+        elid(`${this.name}-hover-display`).style.left = left + `px`;
       };
     }
 
-    el("body")[0].addEventListener("click", e => {
-      if (e.target.className === "mc-player-speed-value") {
+    el(`body`)[0].addEventListener(`click`, e => {
+      if (e.target.className === `${this.name}-speed-value`) {
         let speedDisplay = e.target.dataset.speedValue - 0;
         this.clip.executionSpeed = e.target.dataset.speedValue;
         this.clip.speed == 1
-          ? (speedDisplay = "Normal")
+          ? (speedDisplay = `Normal`)
           : (speedDisplay = this.clip.speed);
-        this.speedCurrent.innerHTML = speedDisplay;
+        this.elements.speedCurrent.innerHTML = speedDisplay;
 
-        const step = 1 / (this.speedValues.length - 1);
+        const step = 1 / (this.options.speedValues.length - 1);
 
         const positionY = (e.target.dataset.zone * step - 1) * -1 * 128.5;
 
-        elid("mc-player-speed-cursor").style.top = positionY + "px";
+        elid(`${this.name}-speed-cursor`).style.top = positionY + `px`;
       }
     });
   }
@@ -1289,7 +1250,7 @@ class Player {
     const realSpeed = (realZoneSpeed + arrayOfValues[botLimitIndex]).toFixed(1);
 
     if (realSpeed == 0) {
-      return "0.0";
+      return `0.0`;
     }
     return realSpeed;
   }
@@ -1299,7 +1260,7 @@ class Player {
       this.setPreviewDimentions();
     }
 
-    this.mcPlayer.classList.toggle("full-screen");
+    this.elements.mcPlayer.classList.toggle(`full-screen`);
     if (element.requestFullscreen) {
       element.requestFullscreen();
     } else if (element.mozRequestFullScreen) {
@@ -1315,7 +1276,7 @@ class Player {
     if (this.options.preview) {
       this.setPreviewDimentions();
     }
-    this.mcPlayer.classList.toggle("full-screen");
+    this.elements.mcPlayer.classList.toggle(`full-screen`);
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.mozCancelFullScreen) {
@@ -1327,53 +1288,52 @@ class Player {
 
   setTheme() {
     // replace multiple spaces with one space
-    this.theme.replace(/\s\s+/g, " ");
-    this.theme.trim();
+    this.options.theme.replace(/\s\s+/g, ` `);
+    this.options.theme.trim();
 
     if (
-      !this.theme.includes("on-top") &&
-      !this.theme.includes("position-default")
+      !this.options.theme.includes(`on-top`) &&
+      !this.options.theme.includes(`position-default`)
     ) {
-      this.theme += " position-default";
+      this.options.theme += ` position-default`;
     }
 
     const theme = {};
-    for (const i in this.theme.split(" ")) {
-      const confTheme = confThemes(this.theme.split(" ")[i]);
+    for (const i in this.options.theme.split(` `)) {
+      const confTheme = confThemes(this.options.theme.split(` `)[i]);
       for (const q in confTheme || {}) {
         theme[q] = confTheme[q];
       }
     }
-    const css = confStyle(theme);
-
-    const style = elcreate("style");
+    const css = confStyle(theme, this.name);
+    const style = elcreate(`style`);
 
     style.styleSheet
       ? (style.styleSheet.cssText = css)
       : style.appendChild(document.createTextNode(css));
 
     // append player style to document
-    eltag("head")[0].appendChild(style);
+    eltag(`head`)[0].appendChild(style);
   }
 
   setSpeed() {
     let currentSpeed;
     this.clip.speed == 1
-      ? (currentSpeed = "Normal")
+      ? (currentSpeed = `Normal`)
       : (currentSpeed = this.clip.speed);
-    this.speedCurrent.innerHTML = currentSpeed;
+    this.elements.speedCurrent.innerHTML = currentSpeed;
 
     const targetZone = (() => {
-      for (let i = 0; i < this.speedValues.length - 1; i++) {
+      for (let i = 0; i < this.options.speedValues.length - 1; i++) {
         if (
-          this.speedValues[i] <= this.clip.speed &&
-          this.speedValues[i + 1] > this.clip.speed
+          this.options.speedValues[i] <= this.clip.speed &&
+          this.options.speedValues[i + 1] > this.clip.speed
         ) {
           return (
             i +
             Math.abs(
-              (this.clip.speed - this.speedValues[i]) /
-                (this.speedValues[i] - this.speedValues[i + 1])
+              (this.clip.speed - this.options.speedValues[i]) /
+                (this.options.speedValues[i] - this.options.speedValues[i + 1])
             )
           );
         }
@@ -1384,19 +1344,19 @@ class Player {
 
     const positionY = (targetZone * step - 1) * -1 * 128.5;
 
-    elid("mc-player-speed-cursor").style.top = positionY + "px";
+    elid(`${this.name}-speed-cursor`).style.top = positionY + `px`;
   }
 
-  createHoverDisplay() {
+  createPreviewDisplay() {
     const definition = this.clip.exportState({ unprocessed: true });
 
-    definition.props.host = elid("mc-player-hover-display");
+    definition.props.host = elid(`${this.name}-hover-display`);
     this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
     const previewClip = this.previewClip.props.host.getElementsByTagName(
-      "iframe"
+      `iframe`
     )[0];
 
-    previewClip.style.position = "absolute";
+    previewClip.style.position = `absolute`;
 
     previewClip.style.zIndex = 1;
     this.setPreviewDimentions();
@@ -1404,9 +1364,9 @@ class Player {
   }
 
   setPreviewDimentions() {
-    const clip = this.clip.props.host.getElementsByTagName("iframe")[0];
+    const clip = this.clip.props.host.getElementsByTagName(`iframe`)[0];
     const previewClip = this.previewClip.props.host.getElementsByTagName(
-      "iframe"
+      `iframe`
     )[0];
 
     const clipWidth = clip.offsetWidth;
@@ -1419,60 +1379,52 @@ class Player {
 
     // max width is 300
     if (
-      previewWidth > parseFloat(elid("mc-player-hover-display").style.maxWidth)
+      previewWidth >
+      parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
     ) {
-      previewWidth = parseFloat(elid("mc-player-hover-display").style.maxWidth);
+      previewWidth = parseFloat(
+        elid(`${this.name}-hover-display`).style.maxWidth
+      );
     }
 
-    elid("mc-player-hover-display").style.width = previewWidth + "px";
+    elid(`${this.name}-hover-display`).style.width = previewWidth + `px`;
 
     const previewHeight = (clipHeight / clipWidth) * previewWidth;
 
-    elid("mc-player-hover-display").style.height = previewHeight + "px";
+    elid(`${this.name}-hover-display`).style.height = previewHeight + `px`;
 
     const scaleY = previewHeight / clipHeight;
     const scaleX = previewWidth / clipWidth;
 
     previewClip.style.transform = `scale(${scaleX},${scaleY})`;
-    previewClip.style.transformOrigin = "center bottom";
-    previewClip.style.boxSizing = "border-box";
+    previewClip.style.transformOrigin = `center bottom`;
+    previewClip.style.boxSizing = `border-box`;
 
     // check if width of iframe is percentage
-    if (this.clip.props.containerParams.width.includes("%")) {
+    if (this.clip.props.containerParams.width.includes(`%`)) {
       if (
         previewWidth / previewRatio - 2 / previewRatio >
-        parseFloat(elid("mc-player-hover-display").style.maxWidth)
+        parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
       ) {
-        previewClip.style.width = "298px";
+        previewClip.style.width = `298px`;
       } else {
         previewClip.style.width =
-          previewWidth / previewRatio - 2 / previewRatio + "px";
+          previewWidth / previewRatio - 2 / previewRatio + `px`;
       }
     }
 
-    if (this.clip.props.containerParams.height.includes("%")) {
+    if (this.clip.props.containerParams.height.includes(`%`)) {
       if (
         previewWidth / previewRatio - 2 / previewRatio >
-        parseFloat(elid("mc-player-hover-display").style.maxWidth)
+        parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
       ) {
-        previewClip.style.height = (clipHeight / clipWidth) * 300 - 2 + "px";
+        previewClip.style.height = (clipHeight / clipWidth) * 300 - 2 + `px`;
       } else {
         previewClip.style.height =
-          previewHeight / previewRatio - 2 / previewRatio + "px";
+          previewHeight / previewRatio - 2 / previewRatio + `px`;
       }
     }
   }
 }
-
-const el = selector => document.querySelectorAll(selector);
-const elid = id => document.getElementById(id);
-const eltag = tag => document.getElementsByTagName(tag);
-const elcreate = tag => document.createElement(tag);
-const addListener = function() {
-  return document.addEventListener(...arguments);
-};
-const removeListener = function() {
-  return document.removeEventListener(...arguments);
-};
 
 module.exports = Player;
