@@ -1,22 +1,28 @@
 const MC = require(`@kissmybutton/motorcortex`);
 
-const mch = new MC.Helper();
 const timeCapsule = new MC.TimeCapsule();
-const hoverTimeCapsule = new MC.TimeCapsule();
+const mch = new MC.Helper();
 
-const {
-  el,
-  elid,
-  eltag,
-  elcreate,
-  addListener,
-  removeListener
-} = require(`./helpers`);
+const { elid, eltag, elcreate } = require(`./helpers`);
 const svg = require("./html/svg");
 const config = require(`./config`);
 const confStyle = require(`./html/style`);
 const confThemes = require(`./html/themes`);
 const setElements = require(`./html/setElements`);
+
+const volumeListener = require(`./listeners/volume`);
+const loopBarStartListener = require(`./listeners/loopBarStart`);
+const loopBarEndListener = require(`./listeners/loopBarEnd`);
+const loopStartEndListener = require(`./listeners/loopStartEnd`);
+const progressBarListener = require(`./listeners/progressBar`);
+const statusBtnListener = require(`./listeners/statusBtn`);
+const settingsListener = require(`./listeners/settings`);
+const speedListener = require(`./listeners/speed`);
+const loopBtnListener = require(`./listeners/loopBtn`);
+const controlsListener = require(`./listeners/controls`);
+const fullscreenListener = require(`./listeners/fullscreen`);
+const previewListener = require(`./listeners/preview`);
+const bodyListener = require(`./listeners/body`);
 
 /**
  * @classdesc
@@ -54,15 +60,18 @@ class Player {
     this.previewClip = null;
     this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
-    this.journey = null;
-    this.previewJourney = null;
+
+    this.listeners = {};
 
     this.settings = {
       volume: 1,
+      journey: null,
       previousVolume: 1,
       volumeMute: false,
       needsUpdate: true,
+      resizeLoop: false,
       loopJourney: false,
+      previewJourney: null,
       loopActivated: false,
       requestingLoop: false,
       playAfterResize: false,
@@ -73,7 +82,12 @@ class Player {
     };
 
     // create the timer controls main div
-    this.elements = setElements(this.clip, this.name, this.options);
+    this.elements = setElements(
+      this.clip,
+      this.name,
+      this.options,
+      this.settings
+    );
     this.setSpeed();
     this.setTheme();
     this.subscribeToTimer();
@@ -91,11 +105,15 @@ class Player {
     });
   }
 
-  createJourney(clip, millisecond) {
+  createJourney(clip, millisecond, clipCommands) {
     setTimeout(() => {
-      this.journey = timeCapsule.startJourney(clip);
-      this.journey.station(millisecond);
-      this.journey.destination();
+      const def = null;
+      const { before = def, after = def } = clipCommands;
+      before ? clip[before]() : null;
+      this.settings.journey = timeCapsule.startJourney(clip);
+      this.settings.journey.station(millisecond);
+      this.settings.journey.destination();
+      after ? clip[after]() : null;
     }, 0);
   }
 
@@ -124,22 +142,26 @@ class Player {
 
     if (millisecond >= loopEndMillisecond && loopActivated) {
       if (clip.state === `idle` || clip.state === `completed`) {
-        clip.stop();
-        this.createJourney(clip, loopStartMillisecond + 1);
-        clip.play();
+        this.createJourney(clip, loopStartMillisecond + 1, {
+          before: "stop",
+          after: "play"
+        });
       } else {
-        this.createJourney(clip, loopStartMillisecond + 1);
-        this.clip.resume();
+        this.createJourney(clip, loopStartMillisecond + 1, {
+          after: "resume"
+        });
       }
       return 1;
     } else if (millisecond <= loopStartMillisecond && loopActivated) {
       if (clip.state === `idle` || clip.state === `completed`) {
-        this.clip.stop();
-        this.createJourney(clip, loopEndMillisecond - 1);
-        this.clip.play();
+        this.createJourney(clip, loopEndMillisecond - 1, {
+          before: "stop",
+          after: "play"
+        });
       } else {
-        this.createJourney(clip, loopEndMillisecond - 1);
-        this.clip.resume();
+        this.createJourney(clip, loopEndMillisecond - 1, {
+          after: "resume"
+        });
       }
       return 1;
     } else if (millisecond > loopEndMillisecond) {
@@ -219,7 +241,7 @@ class Player {
 
   handleDragStart() {
     this.settings.needsUpdate = true;
-    this.journey = timeCapsule.startJourney(this.clip);
+    this.settings.journey = timeCapsule.startJourney(this.clip);
   }
 
   handleDrag(loopBarPositionX) {
@@ -227,7 +249,8 @@ class Player {
       loopBarPositionX = 0;
     }
     const { duration } = this.clip;
-    const { loopBar, totalBar } = this.elements;
+    const { journey } = this.settings;
+    const { loopBar, totalBar, runningBar, currentTime } = this.elements;
 
     const totalBarPositionX = loopBarPositionX + loopBar.offsetLeft;
 
@@ -235,1002 +258,37 @@ class Player {
       (duration * totalBarPositionX) / totalBar.offsetWidth
     );
 
-    this.elements.currentTime.innerHTML = millisecond;
+    currentTime.innerHTML = millisecond;
 
-    this.elements.runningBar.style.width =
+    runningBar.style.width =
       (loopBarPositionX / loopBar.offsetWidth) * 100 + `%`;
 
-    this.journey.station(millisecond);
+    journey.station(millisecond);
   }
 
   handleDragEnd() {
-    this.journey.destination();
+    this.settings.journey.destination();
   }
 
+  createProgressDrag(loopBarPositionX) {
+    this.handleDragStart();
+    this.handleDrag(loopBarPositionX);
+    this.handleDragEnd();
+  }
   addEventListeners() {
-    this.elements.volumeBtn.onclick = () => {
-      if (this.settings.volumeMute) {
-        this.elements.volumeBarActive.style.width =
-          this.settings.previousVolume * 100 + `%`;
-        this.clip.setVolume(this.settings.previousVolume);
-        this.settings.volumeMute = false;
-        const SVG = document.createElement(`span`);
-        SVG.innerHTML = svg.volumeSVG;
-        this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
-      } else {
-        this.settings.volumeMute = true;
-        this.elements.volumeBarActive.style.width = `0%`;
-        this.clip.setVolume(0);
-        const SVG = document.createElement(`span`);
-        SVG.innerHTML = svg.volumeMuteSVG;
-        this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
-      }
-    };
-
-    const onCursorMoveVolumeBar = e => {
-      e.preventDefault();
-      const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-      const viewportOffset = this.elements.volumeBarHelper.getBoundingClientRect();
-      let positionX = clientX - viewportOffset.left;
-
-      if (positionX < 0) {
-        positionX = 0;
-      } else if (positionX > this.elements.volumeBarHelper.offsetWidth) {
-        positionX = this.elements.volumeBarHelper.offsetWidth;
-      }
-      this.settings.volume = Number(
-        (positionX / this.elements.volumeBarHelper.offsetWidth).toFixed(2)
-      );
-      this.elements.volumeBarActive.style.width =
-        this.settings.volume * 100 + `%`;
-      this.clip.setVolume(this.settings.volume);
-
-      if (this.settings.volume > 0) {
-        this.settings.volumeMute = false;
-        const SVG = document.createElement(`span`);
-        SVG.innerHTML = svg.volumeSVG;
-        this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
-      } else if (this.settings.volume === 0) {
-        this.settings.volumeMute = true;
-        const SVG = document.createElement(`span`);
-        SVG.innerHTML = svg.volumeMuteSVG;
-        this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
-      }
-    };
-
-    const onMouseUpVolumeBar = e => {
-      e.preventDefault();
-      if (this.settings.volume > 0) {
-        this.settings.previousVolume = this.settings.volume;
-      }
-      removeListener(`mouseup`, onMouseUpVolumeBar, false);
-      removeListener(`touchend`, onMouseUpVolumeBar, false);
-      removeListener(`mousemove`, onCursorMoveVolumeBar, false);
-      removeListener(`touchmove`, onCursorMoveVolumeBar, false);
-    };
-
-    const onMouseDownVolumeBar = e => {
-      e.preventDefault();
-      onCursorMoveVolumeBar(e);
-      addListener(`mouseup`, onMouseUpVolumeBar, false);
-      addListener(`touchend`, onMouseUpVolumeBar, false);
-      addListener(`mousemove`, onCursorMoveVolumeBar, false);
-      addListener(`touchmove`, onCursorMoveVolumeBar, false);
-    };
-
-    this.elements.volumeBarHelper.addEventListener(
-      `mousedown`,
-      onMouseDownVolumeBar,
-      false
-    );
-    this.elements.volumeCursor.addEventListener(
-      `mousedown`,
-      onMouseDownVolumeBar,
-      false
-    );
-    this.elements.volumeBarHelper.addEventListener(
-      `touchstart`,
-      onMouseDownVolumeBar,
-      {
-        passive: true
-      },
-      false
-    );
-    this.elements.volumeCursor.addEventListener(
-      `touchstart`,
-      onMouseDownVolumeBar,
-      {
-        passive: true
-      },
-      false
-    );
-    /* 
-    * Play - pause - replay interactions
-    */
-
-    const editableLoopStartTime = () => {
-      this.elements.editableLoopStartTime.value = this.elements.loopStartTime.innerHTML;
-      this.elements.loopStartTime.replaceWith(
-        this.elements.editableLoopStartTime
-      );
-      this.elements.editableLoopStartTime.focus();
-    };
-
-    const editableLoopEndTime = () => {
-      this.elements.editableLoopEndTime.value = this.elements.loopEndTime.innerHTML;
-      this.elements.loopEndTime.replaceWith(this.elements.editableLoopEndTime);
-      this.elements.editableLoopEndTime.focus();
-    };
-
-    this.elements.editableLoopEndTime.onkeydown = this.elements.editableLoopStartTime.onkeydown = e => {
-      e.preventDefault();
-      if (e.keyCode === 8) {
-        e.target.value = e.target.value
-          .toString()
-          .substring(0, e.target.value.toString().length - 1);
-      }
-
-      if (e.keyCode === 13) {
-        e.target.blur();
-      }
-
-      const newValue = parseFloat((e.target.value || 0).toString() + e.key);
-
-      if (newValue > this.clip.duration) {
-        return;
-      }
-      e.target.value = newValue;
-
-      if (e.target === this.elements.editableLoopStartTime) {
-        const viewportOffset = this.elements.totalBar.getBoundingClientRect();
-        const event = {
-          preventDefault: () => {},
-          clientX:
-            (this.elements.totalBar.offsetWidth / this.clip.duration) *
-              e.target.value +
-            viewportOffset.left
-        };
-        onMouseDownLoopStart(event);
-        onCursorMoveLoopStart(event);
-        onMouseUpLoopStart(event);
-      } else if (e.target === this.elements.editableLoopEndTime) {
-        const viewportOffset = this.elements.totalBar.getBoundingClientRect();
-        const event = {
-          preventDefault: () => {},
-          clientX:
-            (this.elements.totalBar.offsetWidth / this.clip.duration) *
-              e.target.value +
-            viewportOffset.left
-        };
-        onMouseDownLoopEnd(event);
-        onCursorMoveLoopEnd(event);
-        onMouseUpLoopEnd(event);
-      }
-    };
-
-    this.elements.loopStartTime.onclick = editableLoopStartTime;
-    this.elements.loopEndTime.onclick = editableLoopEndTime;
-
-    this.elements.editableLoopStartTime.onfocusout = () => {
-      this.elements.editableLoopStartTime.replaceWith(
-        this.elements.loopStartTime
-      );
-    };
-
-    this.elements.editableLoopEndTime.onfocusout = () => {
-      this.elements.editableLoopEndTime.replaceWith(this.elements.loopEndTime);
-    };
-
-    this.elements.statusButton.onclick = e => {
-      e.preventDefault();
-      if (this.clip.state === `playing`) {
-        this.clip.wait();
-      } else if (this.clip.state === `waiting`) {
-        this.clip.resume();
-      } else if (this.clip.state === `idle`) {
-        if (this.clip.speed >= 0) {
-          this.clip.play();
-          this.settings.needsUpdate = true;
-        } else {
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.settings.loopEndMillisecond - 1);
-          this.journey.destination();
-          this.clip.play();
-          this.settings.needsUpdate = true;
-        }
-      } else if (this.clip.state === `completed`) {
-        if (this.clip.speed >= 0) {
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(0);
-          this.journey.destination();
-          this.clip.play();
-          this.settings.needsUpdate = true;
-        } else {
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.settings.loopEndMillisecond - 1);
-          this.journey.destination();
-          this.clip.play();
-          this.settings.needsUpdate = true;
-        }
-      }
-    };
-
-    this.elements.settingsShowIndicator.onclick = e => {
-      e.preventDefault();
-      const checkbox = elid(`${this.name}-show-indicator-checkbox`);
-      if (checkbox.checked) {
-        checkbox.checked = false;
-        this.elements.indicator.style.visibility = `hidden`;
-        this.elements.statusButton.style.width = `40px`;
-        this.elements.statusButton.style.height = `25px`;
-        this.elements.statusButton.style.bottom = `0px`;
-      } else {
-        checkbox.checked = true;
-        this.elements.indicator.style.visibility = `visible`;
-        this.elements.statusButton.style.width = `35px`;
-        this.elements.statusButton.style.height = `20px`;
-        this.elements.statusButton.style.bottom = `5px`;
-      }
-    };
-
-    this.elements.settingsShowVolume.onclick = e => {
-      e.preventDefault();
-      this.elements.volumeControl.classList.toggle(
-        `${this.name}-volume-width-transition`
-      );
-      this.elements.volumeBar.classList.toggle(
-        `${this.name}-volume-width-transition`
-      );
-      this.elements.volumeBarHelper.classList.toggle(
-        `${this.name}-volume-width-transition`
-      );
-      this.elements.timeDisplay.classList.toggle(
-        `${this.name}-time-width-transition`
-      );
-
-      const checkbox = elid(`${this.name}-show-volume-checkbox`);
-      if (checkbox.checked) {
-        checkbox.checked = false;
-        this.elements.volumeControl.style.visibility = `hidden`;
-        this.elements.timeDisplay.style.left = `45px`;
-      } else {
-        checkbox.checked = true;
-        this.elements.volumeControl.style.visibility = `visible`;
-        this.elements.timeDisplay.style.left = ``;
-      }
-    };
-
-    this.elements.settingsShowPreview.onclick = e => {
-      e.preventDefault();
-      const checkbox = elid(`${this.name}-show-preview-checkbox`);
-      if (checkbox.checked) {
-        checkbox.checked = false;
-        elid(`${this.name}-hover-display`).style.visibility = `hidden`;
-        elid(`${this.name}-hover-display`).style.display = `none`;
-        this.options.preview = false;
-      } else {
-        if (!this.previewClip) {
-          this.createPreviewDisplay();
-        }
-        checkbox.checked = true;
-        elid(`${this.name}-hover-display`).style.visibility = `visible`;
-        elid(`${this.name}-hover-display`).style.display = `flex`;
-        this.options.preview = true;
-      }
-    };
-
-    this.elements.settingsButton.onclick = e => {
-      e.preventDefault();
-
-      const showHideSettings = e => {
-        if (this.elements.settingsPanel.contains(e.target)) {
-          return true;
-        }
-        this.elements.settingsPanel.classList.toggle(`m-fadeOut`);
-        this.elements.settingsPanel.classList.toggle(`m-fadeIn`);
-        if (this.elements.settingsPanel.className.includes(`m-fadeOut`)) {
-          removeListener(`click`, showHideSettings, false);
-        }
-      };
-
-      if (this.elements.settingsPanel.className.includes(`m-fadeOut`)) {
-        addListener(`click`, showHideSettings, false);
-      } else {
-        removeListener(`click`, showHideSettings, false);
-      }
-    };
-
-    this.elements.settingsSpeedButtonShow.onclick = this.elements.settingsSpeedButtonHide.onclick = e => {
-      e.preventDefault();
-      this.elements.settingsPanel.classList.toggle(
-        `${this.name}-settings-speed-panel`
-      );
-      const includesClass = this.elements.settingsPanel.className.includes(
-        `${this.name}-settings-speed-panel`
-      );
-      if (includesClass) {
-        this.elements.settingsMainPanel.style.display = `none`;
-        this.elements.settingsSpeedPanel.style.display = `block`;
-      } else {
-        this.elements.settingsSpeedPanel.style.display = `none`;
-        this.elements.settingsMainPanel.style.display = `block`;
-      }
-    };
-
-    const onCursorMove = e => {
-      e.preventDefault();
-      const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-      const viewportOffset = this.elements.loopBar.getBoundingClientRect();
-      let positionX = clientX - viewportOffset.left;
-
-      if (positionX < 0) {
-        positionX = 0;
-      } else if (positionX > this.elements.loopBar.offsetWidth) {
-        positionX = this.elements.loopBar.offsetWidth;
-      }
-      this.handleDrag(positionX);
-    };
-
-    const onMouseUp = e => {
-      e.preventDefault();
-      removeListener(`mouseup`, onMouseUp, false);
-      removeListener(`touchend`, onMouseUp, false);
-      removeListener(`mousemove`, onCursorMove, false);
-      removeListener(`touchmove`, onCursorMove, false);
-      this.handleDragEnd();
-
-      if (this.settings.playAfterResize) {
-        if (this.clip.state === `idle` && !this.settings.loopActivated) {
-          this.clip.play();
-        } else if (
-          this.clip.state === `completed` &&
-          !this.settings.loopActivated
-        ) {
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(this.settings.loopEndMillisecond - 1);
-          this.journey.destination();
-          this.clip.play();
-        } else if (
-          (this.clip.state === `completed` || this.clip.state === `idle`) &&
-          this.settings.loopActivated
-        ) {
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.clip.speed >= 0
-            ? this.journey.station(this.settings.loopStartMillisecond + 1)
-            : this.journey.station(this.settings.loopEndMillisecond - 1);
-          this.journey.destination();
-          this.clip.play();
-        } else {
-          this.clip.resume();
-        }
-        this.settings.playAfterResize = false;
-      }
-    };
-
-    const onMouseDown = e => {
-      e.preventDefault();
-      if (this.clip.state === `playing`) {
-        this.settings.playAfterResize = true;
-      }
-      this.handleDragStart();
-      onCursorMove(e);
-      addListener(`mouseup`, onMouseUp, false);
-      addListener(`touchend`, onMouseUp, false);
-      addListener(`mousemove`, onCursorMove, false);
-      addListener(`touchmove`, onCursorMove, false);
-    };
-
-    this.elements.loopBar.addEventListener(`mousedown`, onMouseDown, false);
-    this.elements.loopBar.addEventListener(
-      `touchstart`,
-      onMouseDown,
-      {
-        passive: true
-      },
-      false
-    );
-
-    const onCursorMoveSpeedBar = e => {
-      e.preventDefault();
-      const viewportOffset = this.elements.speedBar.getBoundingClientRect();
-      const clientY = e.clientY || ((e.touches || [])[0] || {}).clientY;
-      let positionY = clientY - viewportOffset.top;
-
-      positionY -= 8;
-      if (positionY < 0) {
-        positionY = 0;
-      } else if (positionY > this.elements.speedBar.offsetHeight - 15.5) {
-        positionY = this.elements.speedBar.offsetHeight - 15.5;
-      }
-
-      // show speed
-      const percentage = (positionY / 128.5 - 1) * -1;
-      const step = 1 / 8;
-      const speed = this.calculateSpeed(
-        step,
-        this.options.speedValues,
-        percentage
-      );
-      elid(`${this.name}-speed-runtime`).innerHTML = speed + `0`;
-      elid(`${this.name}-speed-cursor`).style.top = positionY + `px`;
-      this.clip.executionSpeed = speed;
-    };
-
-    const onMouseUpSpeedBar = e => {
-      e.preventDefault();
-      removeListener(`mouseup`, onMouseUpSpeedBar, false);
-      removeListener(`touchend`, onMouseUpSpeedBar, false);
-      removeListener(`mousemove`, onCursorMoveSpeedBar, false);
-      removeListener(`touchmove`, onCursorMoveSpeedBar, false);
-      elid(`${this.name}-speed-runtime`).innerHTML = `Speed`;
-      let speedDisplay;
-      this.clip.speed == 1
-        ? (speedDisplay = `Normal`)
-        : (speedDisplay = this.clip.speed);
-
-      this.elements.speedCurrent.innerHTML = speedDisplay;
-    };
-    const onMouseDownSpeedBar = e => {
-      e.preventDefault();
-      onCursorMoveSpeedBar(e);
-      addListener(`mouseup`, onMouseUpSpeedBar, false);
-      addListener(`touchend`, onMouseUpSpeedBar, false);
-      addListener(`mousemove`, onCursorMoveSpeedBar, false);
-      addListener(`touchmove`, onCursorMoveSpeedBar, false);
-    };
-
-    this.elements.speedBarHelper.addEventListener(
-      `mousedown`,
-      onMouseDownSpeedBar,
-      false
-    );
-    this.elements.speedBarHelper.addEventListener(
-      `touchstart`,
-      onMouseDownSpeedBar,
-      {
-        passive: true
-      },
-      false
-    );
-
-    this.elements.fullScreenButton.addEventListener(`click`, () => {
-      const elFullScreen = this.clip.props.host.className.includes(
-        `full-screen`
-      );
-      elFullScreen
-        ? this.exitFullscreen()
-        : this.launchIntoFullscreen(this.clip.props.host);
-      this.clip.props.host.classList.toggle(`full-screen`);
-    });
-
-    this.elements.loopButton.onclick = () => {
-      this.settings.loopActivated = !this.settings.loopActivated;
-      this.elements.loopButton.classList.toggle(`svg-selected`);
-      this.elements.loopBarStart.classList.toggle(`m-fadeOut`);
-      this.elements.loopBarEnd.classList.toggle(`m-fadeOut`);
-      this.elements.loopBarStart.classList.toggle(`m-fadeIn`);
-      this.elements.loopBarEnd.classList.toggle(`m-fadeIn`);
-      elid(`${this.name}-loop-time`).classList.toggle(`m-fadeOut`);
-      elid(`${this.name}-loop-time`).classList.toggle(`m-fadeIn`);
-
-      this.elements.loopEndTime.innerHTML = this.settings.loopEndMillisecond;
-      this.elements.loopStartTime.innerHTML = this.settings.loopStartMillisecond;
-      this.settings.needsUpdate = true;
-
-      if (!this.settings.loopActivated) {
-        this.elements.loopBar.style.left = `0%`;
-        this.elements.loopBar.style.width = `100%`;
-        this.settings.loopStartMillisecond = 0;
-        this.settings.loopEndMillisecond = this.clip.duration;
-        this.settings.loopLastPositionXPxls = 0;
-        this.settings.loopLastPositionXPercentage = 0;
-        this.elements.runningBar.style.width =
-          (this.clip.runTimeInfo.currentMillisecond / this.clip.duration) *
-            100 +
-          `%`;
-      }
-    };
-
-    elid(`${this.name}-controls`).onmouseover = () => {
-      if (!this.settings.loopActivated) {
-        return;
-      }
-      this.elements.loopBarStart.classList.remove(`m-fadeOut`);
-      this.elements.loopBarEnd.classList.remove(`m-fadeOut`);
-      this.elements.loopBarStart.classList.add(`m-fadeIn`);
-      this.elements.loopBarEnd.classList.add(`m-fadeIn`);
-    };
-
-    elid(`${this.name}-controls`).onmouseout = () => {
-      if (!this.settings.loopActivated) {
-        return;
-      }
-      this.elements.loopBarStart.classList.add(`m-fadeOut`);
-      this.elements.loopBarEnd.classList.add(`m-fadeOut`);
-      this.elements.loopBarStart.classList.remove(`m-fadeIn`);
-      this.elements.loopBarEnd.classList.remove(`m-fadeIn`);
-    };
-
-    const onCursorMoveLoopStart = e => {
-      e.preventDefault();
-      const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-      const viewportOffset = this.elements.totalBar.getBoundingClientRect();
-      let positionX = clientX - viewportOffset.left;
-
-      const endPosition =
-        this.elements.loopBar.offsetWidth + this.elements.loopBar.offsetLeft;
-      if (positionX < 0) {
-        positionX = 0;
-      } else if (positionX > this.elements.totalBar.offsetWidth) {
-        positionX = this.elements.totalBar.offsetWidth;
-      }
-
-      const loopBarDeltaX =
-        positionX - this.settings.loopLastPositionXPxls || 0;
-      const runningBarWidthInPxls =
-        this.elements.runningBar.offsetWidth - loopBarDeltaX;
-
-      this.elements.loopBar.style.left = positionX + `px`;
-
-      const diff = endPosition - this.elements.loopBar.offsetLeft;
-      this.elements.loopBar.style.width = diff + `px`;
-
-      this.elements.runningBar.style.width = runningBarWidthInPxls + `px`;
-
-      this.settings.loopLastPositionXPxls = positionX;
-
-      this.settings.loopStartMillisecond = Math.round(
-        (this.clip.duration * this.elements.loopBar.offsetLeft) /
-          this.elements.totalBar.offsetWidth
-      );
-
-      if (
-        this.settings.loopEndMillisecond < this.settings.loopStartMillisecond
-      ) {
-        this.settings.loopEndMillisecond = this.settings.loopStartMillisecond;
-        this.elements.loopBar.style.width = `0px`;
-        this.elements.runningBar.style.width = `0px`;
-      }
-
-      this.elements.loopEndTime.innerHTML = this.settings.loopEndMillisecond;
-      this.elements.loopStartTime.innerHTML = this.settings.loopStartMillisecond;
-
-      if (
-        this.settings.loopStartMillisecond >
-        this.clip.runTimeInfo.currentMillisecond
-      ) {
-        this.settings.loopJourney = true;
-      }
-    };
-
-    const onMouseUpLoopStart = e => {
-      this.resizeLoop = false;
-
-      e.preventDefault();
-      if (this.settings.loopJourney) {
-        this.handleDragStart();
-        this.handleDrag(this.elements.runningBar.offsetWidth);
-        this.handleDragEnd();
-        this.settings.loopJourney = false;
-      }
-
-      this.elements.loopBar.style.left =
-        (this.elements.loopBar.offsetLeft /
-          this.elements.totalBar.offsetWidth) *
-          100 +
-        `%`;
-
-      this.elements.loopBar.style.width =
-        (this.elements.loopBar.offsetWidth /
-          this.elements.totalBar.offsetWidth) *
-          100 +
-        `%`;
-
-      this.settings.loopStartMillisecond = Math.round(
-        (this.clip.duration * this.elements.loopBar.offsetLeft) /
-          this.elements.totalBar.offsetWidth
-      );
-
-      this.elements.runningBar.style.width =
-        (this.elements.runningBar.offsetWidth /
-          this.elements.loopBar.offsetWidth) *
-          100 +
-        `%`;
-      removeListener(`mouseup`, onMouseUpLoopStart, false);
-      removeListener(`touchend`, onMouseUpLoopStart, false);
-      removeListener(`mousemove`, onCursorMoveLoopStart, false);
-      removeListener(`touchmove`, onCursorMoveLoopStart, false);
-      this.elements.loopBar.addEventListener(`mousedown`, onMouseDown, false);
-      this.elements.loopBar.addEventListener(
-        `touchstart`,
-        onMouseDown,
-        {
-          passive: true
-        },
-        false
-      );
-
-      if (this.settings.playAfterResize) {
-        if (this.clip.state === `idle`) {
-          let loopms;
-          if (this.clip.speed >= 0) {
-            loopms = this.settings.loopStartMillisecond + 1;
-          } else {
-            loopms = this.settings.loopEndMillisecond - 1;
-          }
-          this.settings.needsUpdate = true;
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(loopms);
-          this.journey.destination();
-          this.clip.play();
-        } else if (this.clip.state === `completed`) {
-          let loopms;
-          if (this.clip.speed >= 0) {
-            loopms = this.settings.loopStartMillisecond + 1;
-          } else {
-            loopms = this.settings.loopEndMillisecond - 1;
-          }
-          this.settings.needsUpdate = true;
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(loopms);
-          this.journey.destination();
-          this.clip.play();
-        } else {
-          this.clip.resume();
-        }
-        this.settings.playAfterResize = false;
-      }
-    };
-
-    const onMouseDownLoopStart = e => {
-      this.resizeLoop = true;
-
-      e.preventDefault();
-      this.settings.needsUpdate = true;
-
-      if (this.clip.state === `playing`) {
-        this.clip.wait();
-        this.settings.playAfterResize = true;
-      }
-
-      this.elements.loopBar.removeEventListener(
-        `mousedown`,
-        onMouseDown,
-        false
-      );
-      this.elements.loopBar.removeEventListener(
-        `touchstart`,
-        onMouseDown,
-        false
-      );
-      onCursorMoveLoopStart(e);
-      addListener(`mouseup`, onMouseUpLoopStart, false);
-      addListener(`touchend`, onMouseUpLoopStart, false);
-      addListener(`mousemove`, onCursorMoveLoopStart, false);
-      addListener(`touchmove`, onCursorMoveLoopStart, false);
-    };
-
-    this.elements.loopBarStart.addEventListener(
-      `mousedown`,
-      onMouseDownLoopStart,
-      false
-    );
-    this.elements.loopBarStart.addEventListener(
-      `touchstart`,
-      onMouseDownLoopStart,
-      {
-        passive: true
-      },
-      false
-    );
-
-    const onCursorMoveLoopEnd = e => {
-      e.preventDefault();
-      const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-      const viewportOffset = this.elements.totalBar.getBoundingClientRect();
-      let positionX = clientX - viewportOffset.left;
-
-      if (positionX < 0) {
-        positionX = 0;
-      } else if (positionX > this.elements.totalBar.offsetWidth) {
-        positionX = this.elements.totalBar.offsetWidth;
-      }
-
-      if (
-        this.elements.runningBar.offsetWidth +
-          this.elements.loopBar.offsetLeft >
-        positionX
-      ) {
-        this.elements.runningBar.style.width =
-          positionX - this.elements.loopBar.offsetLeft + `px`;
-      }
-
-      if (this.settings.loopLastPositionXPxls - positionX < 0) {
-        this.elements.loopBar.style.width =
-          Math.abs(this.settings.loopLastPositionXPxls - positionX) + `px`;
-      } else {
-        this.elements.loopBar.style.left = positionX + `px`;
-        this.settings.loopLastPositionXPxls = positionX;
-      }
-
-      this.settings.loopEndMillisecond = Math.round(
-        (this.clip.duration *
-          ((parseFloat(this.elements.loopBar.style.left) || 0) +
-            parseFloat(this.elements.loopBar.style.width))) /
-          this.elements.totalBar.offsetWidth
-      );
-      if (
-        this.settings.loopStartMillisecond > this.settings.loopEndMillisecond
-      ) {
-        this.settings.loopStartMillisecond = this.settings.loopEndMillisecond;
-        this.settings.loopJourney = true;
-      }
-      this.elements.loopEndTime.innerHTML = this.settings.loopEndMillisecond;
-      this.elements.loopStartTime.innerHTML = this.settings.loopStartMillisecond;
-    };
-
-    const onMouseUpLoopEnd = e => {
-      this.resizeLoop = false;
-      e.preventDefault();
-      this.elements.runningBar.style.width =
-        (this.elements.runningBar.offsetWidth /
-          this.elements.loopBar.offsetWidth) *
-          100 +
-        `%`;
-
-      this.elements.loopBar.style.left =
-        (this.elements.loopBar.offsetLeft /
-          this.elements.totalBar.offsetWidth) *
-          100 +
-        `%`;
-
-      this.elements.loopBar.style.width =
-        (this.elements.loopBar.offsetWidth /
-          this.elements.totalBar.offsetWidth) *
-          100 +
-        `%`;
-
-      this.settings.loopStartMillisecond = Math.round(
-        (this.clip.duration * this.elements.loopBar.offsetLeft) / 100
-      );
-
-      if (this.settings.loopJourney) {
-        this.handleDragStart();
-        this.handleDrag(this.elements.runningBar.offsetWidth);
-        this.handleDragEnd();
-        this.settings.loopJourney = false;
-      }
-      removeListener(`mouseup`, onMouseUpLoopEnd, false);
-      removeListener(`touchend`, onMouseUpLoopEnd, false);
-      removeListener(`mousemove`, onCursorMoveLoopEnd, false);
-      removeListener(`touchmove`, onCursorMoveLoopEnd, false);
-      this.elements.loopBar.addEventListener(`mousedown`, onMouseDown, false);
-      this.elements.loopBar.addEventListener(
-        `touchstart`,
-        onMouseDown,
-        {
-          passive: true
-        },
-        false
-      );
-
-      if (this.settings.playAfterResize) {
-        if (this.clip.state === `idle`) {
-          let loopms;
-          if (this.clip.speed >= 0) {
-            loopms = this.settings.loopStartMillisecond + 1;
-          } else {
-            loopms = this.settings.loopEndMillisecond - 1;
-          }
-          this.settings.needsUpdate = true;
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(loopms);
-          this.journey.destination();
-          this.clip.play();
-        } else if (this.clip.state === `completed`) {
-          let loopms;
-          if (this.clip.speed >= 0) {
-            loopms = this.settings.loopStartMillisecond + 1;
-          } else {
-            loopms = this.settings.loopEndMillisecond - 1;
-          }
-          this.settings.needsUpdate = true;
-          this.clip.stop();
-          this.journey = timeCapsule.startJourney(this.clip);
-          this.journey.station(loopms);
-          this.journey.destination();
-          this.clip.play();
-        } else {
-          this.clip.resume();
-        }
-        this.settings.playAfterResize = false;
-      }
-    };
-
-    const onMouseDownLoopEnd = e => {
-      this.resizeLoop = true;
-      this.settings.needsUpdate = true;
-
-      if (this.clip.state === `playing`) {
-        this.clip.wait();
-        this.settings.playAfterResize = true;
-      }
-      e.preventDefault();
-      this.elements.runningBar.style.width =
-        this.elements.runningBar.offsetWidth + `px`;
-
-      this.elements.loopBar.style.left =
-        this.elements.loopBar.offsetLeft + `px`;
-
-      this.elements.loopBar.style.width =
-        this.elements.loopBar.offsetWidth + `px`;
-      this.elements.loopBar.removeEventListener(
-        `mousedown`,
-        onMouseDown,
-        false
-      );
-      this.elements.loopBar.removeEventListener(
-        `touchstart`,
-        onMouseDown,
-        false
-      );
-      onCursorMoveLoopEnd(e);
-      addListener(`mouseup`, onMouseUpLoopEnd, false);
-      addListener(`touchend`, onMouseUpLoopEnd, false);
-      addListener(`mousemove`, onCursorMoveLoopEnd, false);
-      addListener(`touchmove`, onCursorMoveLoopEnd, false);
-    };
-
-    this.elements.loopBarEnd.addEventListener(
-      `mousedown`,
-      onMouseDownLoopEnd,
-      false
-    );
-    this.elements.loopBarEnd.addEventListener(
-      `touchstart`,
-      onMouseDownLoopEnd,
-      {
-        passive: true
-      },
-      false
-    );
-
-    // only on desctop devices
-    if (
-      !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      const loopBarMouseInOut = () => {
-        if (!this.options.preview) {
-          return;
-        }
-        elid(`${this.name}-hover-display`).classList.toggle(`m-fadeOut`);
-        elid(`${this.name}-hover-display`).classList.toggle(`m-fadeIn`);
-
-        if (elid(`${this.name}-hover-display`).className.includes(`m-fadeIn`)) {
-          this.previewJourney = hoverTimeCapsule.startJourney(this.previewClip);
-        } else {
-          this.previewJourney.destination();
-        }
-        this.elements.loopBar.onmousemove = loopBarMouseMove;
-      };
-
-      const loopBarAddListeners = () => {
-        if (!this.options.preview) {
-          return;
-        }
-        loopBarMouseInOut();
-        this.elements.loopBar.onmouseover = this.elements.loopBar.onmouseout = loopBarMouseInOut;
-        this.elements.loopBar.onmousemove = loopBarMouseMove;
-        removeListener(`mouseup`, loopBarAddListeners, false);
-        removeListener(`touchend`, loopBarAddListeners, false);
-        removeListener(`mousemove`, loopBarMouseMove, false);
-        removeListener(`touchmove`, loopBarMouseMove, false);
-      };
-
-      this.elements.loopBar.onmouseover = this.elements.loopBar.onmouseout = loopBarMouseInOut;
-
-      this.elements.loopBar.onmousedown = () => {
-        if (!this.options.preview) {
-          return;
-        }
-        this.elements.loopBar.onmouseover = this.elements.loopBar.onmouseout = null;
-        this.elements.loopBar.onmousemove = null;
-        addListener(`mouseup`, loopBarAddListeners, false);
-        addListener(`touchend`, loopBarAddListeners, false);
-        addListener(`mousemove`, loopBarMouseMove, false);
-        addListener(`touchmove`, loopBarMouseMove, false);
-      };
-      this.elements.loopBar.onmouseup = () => {
-        if (!this.options.preview) {
-          return;
-        }
-        removeListener(`mouseup`, loopBarAddListeners, false);
-        removeListener(`touchend`, loopBarAddListeners, false);
-        removeListener(`mousemove`, loopBarMouseMove, false);
-        removeListener(`touchmove`, loopBarMouseMove, false);
-        this.elements.loopBar.onmouseover = this.elements.loopBar.onmouseout = loopBarMouseInOut;
-        this.elements.loopBar.onmousemove = loopBarMouseMove;
-      };
-
-      const loopBarMouseMove = e => {
-        const clientX = e.clientX;
-        const viewportOffset = this.elements.loopBar.getBoundingClientRect();
-        if (
-          clientX - viewportOffset.left + this.settings.loopLastPositionXPxls >
-            this.settings.loopLastPositionXPxls +
-              this.elements.loopBar.offsetWidth &&
-          !this.resizeLoop
-        ) {
-          elid(
-            `${this.name}-hover-millisecond`
-          ).innerHTML = this.settings.loopEndMillisecond;
-          return;
-        } else if (clientX - viewportOffset.left < 0 && !this.resizeLoop) {
-          elid(
-            `${this.name}-hover-millisecond`
-          ).innerHTML = this.settings.loopStartMillisecond;
-          return;
-        }
-
-        let positionX =
-          clientX - viewportOffset.left + this.settings.loopLastPositionXPxls;
-
-        if (positionX < 0) {
-          positionX = 0;
-        }
-
-        let left =
-          positionX - elid(`${this.name}-hover-display`).offsetWidth / 2;
-
-        if (left < 0) {
-          left = 0;
-        } else if (
-          left + elid(`${this.name}-hover-display`).offsetWidth >
-          this.elements.totalBar.offsetWidth
-        ) {
-          left =
-            this.elements.totalBar.offsetWidth -
-            elid(`${this.name}-hover-display`).offsetWidth;
-        }
-
-        const ms = Math.round(
-          (positionX / this.elements.totalBar.offsetWidth) * this.clip.duration
-        );
-        if (this.options.preview) {
-          this.previewJourney.station(ms);
-        }
-
-        elid(`${this.name}-hover-millisecond`).innerHTML = ms;
-        elid(`${this.name}-hover-display`).style.left = left + `px`;
-      };
-    }
-
-    el(`body`)[0].addEventListener(`click`, e => {
-      if (e.target.className === `${this.name}-speed-value`) {
-        let speedDisplay = e.target.dataset.speedValue - 0;
-        this.clip.executionSpeed = e.target.dataset.speedValue;
-        this.clip.speed == 1
-          ? (speedDisplay = `Normal`)
-          : (speedDisplay = this.clip.speed);
-        this.elements.speedCurrent.innerHTML = speedDisplay;
-
-        const step = 1 / (this.options.speedValues.length - 1);
-
-        const positionY = (e.target.dataset.zone * step - 1) * -1 * 128.5;
-
-        elid(`${this.name}-speed-cursor`).style.top = positionY + `px`;
-      }
-    });
+    loopBarEndListener(this);
+    progressBarListener(this);
+    loopBarStartListener(this);
+    loopStartEndListener(this);
+    volumeListener(this);
+    statusBtnListener(this);
+    settingsListener(this);
+    speedListener(this);
+    loopBtnListener(this);
+    controlsListener(this);
+    fullscreenListener(this);
+    previewListener(this);
+    bodyListener(this);
   }
   calculateSpeed(step, arrayOfValues, currentPercentage) {
     const botLimitIndex = Math.floor(currentPercentage / step);
@@ -1359,7 +417,6 @@ class Player {
     previewClip.style.position = `absolute`;
 
     previewClip.style.zIndex = 1;
-    this.setPreviewDimentions();
     this.setPreviewDimentions();
   }
 

@@ -2,7 +2,7 @@ const { elid, elcreate } = require("../helpers");
 const svg = require("./svg");
 const playerHTML = require("./playerHTML");
 
-module.exports = (clip, name, options) => {
+module.exports = (clip, name, options, settings) => {
   const elements = {};
   const clipIframe = clip.props.host.getElementsByTagName(`iframe`)[0];
 
@@ -50,7 +50,7 @@ module.exports = (clip, name, options) => {
   elements.settingsSpeedButtonShow = elid(`${name}-settings-speed-show`);
   elements.settingsSpeedButtonHide = elid(`${name}-settings-speed-hide`);
 
-  elements.volumeBarActive.style.width = elements.volume * 100 + `%`;
+  elements.volumeBarActive.style.width = settings.volume * 100 + `%`;
 
   elements.currentTime.innerHTML = 0;
 
