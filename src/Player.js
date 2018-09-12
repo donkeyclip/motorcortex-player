@@ -418,6 +418,7 @@ class Player {
   createPreviewDisplay() {
     const definition = this.clip.exportState({ unprocessed: true });
 
+    definition.props.type = "preview";
     definition.props.host = elid(`${this.name}-hover-display`);
     this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
     const previewClip = this.previewClip.props.host.getElementsByTagName(

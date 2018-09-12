@@ -150,6 +150,7 @@ module.exports = _this => {
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "auto";
     elid(`${_this.name}-controls`).style.pointerEvents = "auto";
+    _this.elements.settingsPanel.style.pointerEvents = "auto";
   } else {
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "none";
