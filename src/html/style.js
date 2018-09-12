@@ -125,6 +125,7 @@ module.exports = (theme, name, options) => `
 }
 
 #${name}-controls {
+  touch-action: none;
   background-color: ${theme["background-color"]};
   border: ${theme["controls-border"]};
   position: absolute;
@@ -347,6 +348,7 @@ module.exports = (theme, name, options) => `
 }
 
 #${name}-settings-panel {
+  touch-action: none;
   box-sizing: border-box;
   position: absolute;
   z-index:101;

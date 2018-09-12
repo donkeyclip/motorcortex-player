@@ -420,7 +420,7 @@ var Player = function () {
     value: function createPreviewDisplay() {
       var definition = this.clip.exportState({ unprocessed: true });
 
-      definition.props.type = 'preview';
+      definition.props.isPreviewClip = true;
       definition.props.host = elid(this.name + "-hover-display");
       this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
       var previewClip = this.previewClip.props.host.getElementsByTagName("iframe")[0];

@@ -171,7 +171,7 @@ module.exports = _this => {
     `touchstart`,
     _this.listeners.onMouseDownLoopStart,
     {
-      passive: true
+      passive: false
     },
     false
   );

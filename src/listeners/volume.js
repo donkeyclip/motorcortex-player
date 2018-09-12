@@ -87,7 +87,7 @@ module.exports = _this => {
     `touchstart`,
     _this.listeners.onMouseDownVolumeBar,
     {
-      passive: true
+      passive: false
     },
     false
   );
@@ -95,7 +95,7 @@ module.exports = _this => {
     `touchstart`,
     _this.listeners.onMouseDownVolumeBar,
     {
-      passive: true
+      passive: false
     },
     false
   );

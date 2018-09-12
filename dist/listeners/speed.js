@@ -64,6 +64,6 @@ module.exports = function (_this) {
 
   _this.elements.speedBarHelper.addEventListener("mousedown", onMouseDownSpeedBar, false);
   _this.elements.speedBarHelper.addEventListener("touchstart", onMouseDownSpeedBar, {
-    passive: true
+    passive: false
   }, false);
 };

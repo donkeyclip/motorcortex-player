@@ -76,9 +76,9 @@ module.exports = function (_this) {
   _this.elements.volumeBarHelper.addEventListener("mousedown", _this.listeners.onMouseDownVolumeBar, false);
   _this.elements.volumeCursor.addEventListener("mousedown", _this.listeners.onMouseDownVolumeBar, false);
   _this.elements.volumeBarHelper.addEventListener("touchstart", _this.listeners.onMouseDownVolumeBar, {
-    passive: true
+    passive: false
   }, false);
   _this.elements.volumeCursor.addEventListener("touchstart", _this.listeners.onMouseDownVolumeBar, {
-    passive: true
+    passive: false
   }, false);
 };

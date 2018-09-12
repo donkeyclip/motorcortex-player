@@ -125,6 +125,6 @@ module.exports = function (_this) {
 
   _this.elements.loopBarStart.addEventListener("mousedown", _this.listeners.onMouseDownLoopStart, false);
   _this.elements.loopBarStart.addEventListener("touchstart", _this.listeners.onMouseDownLoopStart, {
-    passive: true
+    passive: false
   }, false);
 };

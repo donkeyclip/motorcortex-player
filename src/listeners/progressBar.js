@@ -84,7 +84,7 @@ module.exports = _this => {
     `touchstart`,
     _this.listeners.onMouseDown,
     {
-      passive: true
+      passive: false
     },
     false
   );

@@ -77,7 +77,7 @@ module.exports = _this => {
     `touchstart`,
     onMouseDownSpeedBar,
     {
-      passive: true
+      passive: false
     },
     false
   );

@@ -25,6 +25,14 @@ module.exports = _this => {
     _this.elements.loopBarStart.classList.remove(`m-fadeIn`);
     _this.elements.loopBarEnd.classList.remove(`m-fadeIn`);
   };
+
+  // elid(`${_this.name}-left-controls`).ontouchstart = function (event) {
+  //   const e = event.toElement || event.relatedTarget || event.target;
+  //     if (isDescendant(_this.elements.statusBtn, e) || e === _this.elements.statusBtn) {
+  //       return false;
+  //     }
+  //     return "";
+  // };
 };
 
 function isDescendant(parent, child) {
