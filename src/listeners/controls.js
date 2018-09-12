@@ -11,7 +11,12 @@ module.exports = _this => {
     _this.elements.loopBarEnd.classList.add(`m-fadeIn`);
   };
 
-  elid(`${_this.name}-controls`).onmouseout = () => {
+  elid(`${_this.name}-controls`).onmouseout = function(event) {
+    const e = event.toElement || event.relatedTarget || event.target;
+    if (isDescendant(this, e) || e === this) {
+      return;
+    }
+
     if (!_this.settings.loopActivated) {
       return;
     }
@@ -21,3 +26,14 @@ module.exports = _this => {
     _this.elements.loopBarEnd.classList.remove(`m-fadeIn`);
   };
 };
+
+function isDescendant(parent, child) {
+  let node = child.parentNode;
+  while (node != null) {
+    if (node == parent) {
+      return true;
+    }
+    node = node.parentNode;
+  }
+  return false;
+}

@@ -27,13 +27,14 @@ module.exports = _this => {
     positionY -= 8;
     if (positionY < 0) {
       positionY = 0;
-    } else if (positionY > _this.elements.speedBar.offsetHeight - 15.5) {
-      positionY = _this.elements.speedBar.offsetHeight - 15.5;
+    } else if (positionY > _this.elements.speedBar.offsetHeight - 16) {
+      positionY = _this.elements.speedBar.offsetHeight - 16;
     }
-
+    positionY = Math.floor(positionY);
     // show speed
-    const percentage = (positionY / 128.5 - 1) * -1;
-    const step = 1 / 8;
+    const percentage =
+      (positionY / ((_this.options.speedValues.length - 1) * 16) - 1) * -1;
+    const step = 1 / (_this.options.speedValues.length - 1);
     const speed = _this.calculateSpeed(
       step,
       _this.options.speedValues,

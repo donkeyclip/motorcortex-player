@@ -1,4 +1,7 @@
 module.exports = config => `
+  <div class="pointer-event-panel" id="${
+    config.name
+  }-pointer-event-panel"></div>
   <div class="grad"></div>
   <div class="background"></div>
   <div id="${config.name}-controls">
@@ -58,6 +61,13 @@ module.exports = config => `
   </div>
   <div id="${config.name}-settings-panel">
     <ul id="${config.name}-main-settings">
+      <li id="${config.name}-settings-pointer-events">
+        <label>Pointer Events</label>
+        <label class="switch settings-switch">
+          <input id="${config.name}-pointer-events-checkbox" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+      </li>
       <li id="${config.name}-settings-preview">
         <label>Show Preview</label>
         <label class="switch settings-switch">
@@ -98,44 +108,8 @@ module.exports = config => `
 }-speed-cursor">
             <div></div>
           </div>
-          <div class="${config.name}-speed-value-step"></div>
-          <div class="${config.name}-speed-value-step"></div>
-          <div class="${config.name}-speed-value-step"></div>
-          <div class="${config.name}-speed-value-step"></div>
-          <div class="${config.name}-speed-value-step"></div>
-          <div class="${config.name}-speed-value-step"></div>
-          <div class="${config.name}-speed-value-step"></div>
-          <div class="${config.name}-speed-value-step"></div>
-          <div class="${config.name}-speed-value-step"></div>
         </div>
         <div id="${config.name}-speed-value">
-          <div class="${
-            config.name
-          }-speed-value" data-speed-value="4.0" data-zone="8">4</div>
-          <div class="${
-            config.name
-          }-speed-value" data-speed-value="2.0" data-zone="7">2</div>
-          <div class="${
-            config.name
-          }-speed-value" data-speed-value="1.0" data-zone="6">Normal</div>
-          <div class="${
-            config.name
-          }-speed-value" data-speed-value="0.5" data-zone="5">0.5</div>
-          <div class="${
-            config.name
-          }-speed-value" data-speed-value="0.0" data-zone="4">0</div>
-          <div class="${
-            config.name
-          }-speed-value" data-speed-value="-0.5" data-zone="3">-0.5</div>
-          <div class="${
-            config.name
-          }-speed-value" data-speed-value="-1.0" data-zone="2">-1</div>
-          <div class="${
-            config.name
-          }-speed-value" data-speed-value="-2.0" data-zone="1">-2</div>
-          <div class="${
-            config.name
-          }-speed-value" data-speed-value="-4.0" data-zone="0">-4</div>
         </div>
       </li>
     </ul>

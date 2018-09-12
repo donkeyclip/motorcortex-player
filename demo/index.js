@@ -62,5 +62,23 @@ new Player({
   clip,
   theme: "transparent on-top",
   preview: true,
-  showVolume: true
+  showVolume: true,
+  speedValues: [
+    8,
+    3,
+    "d",
+    -4,
+    -2,
+    -1,
+    "dd",
+    -0.5,
+    0,
+    0.5,
+    1,
+    2,
+    4,
+    32,
+    -32,
+    1.2
+  ]
 });

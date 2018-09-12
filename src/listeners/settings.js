@@ -19,6 +19,25 @@ module.exports = _this => {
     }
   };
 
+  _this.elements.settingsPointerEvents.onclick = e => {
+    e.preventDefault();
+    const checkbox = elid(`${_this.name}-pointer-events-checkbox`);
+    if (checkbox.checked) {
+      checkbox.checked = false;
+      _this.options.pointerEvents = false;
+      _this.elements.mcPlayer.style.pointerEvents = "none";
+      _this.elements.pointerEventPanel.style.pointerEvents = "none";
+      elid(`${_this.name}-controls`).style.pointerEvents = "auto";
+      _this.elements.settingsPanel.style.pointerEvents = "auto";
+    } else {
+      checkbox.checked = true;
+      _this.elements.mcPlayer.style.pointerEvents = "none";
+      _this.elements.pointerEventPanel.style.pointerEvents = "auto";
+      elid(`${_this.name}-controls`).style.pointerEvents = "auto";
+      _this.elements.settingsPanel.style.pointerEvents = "auto";
+    }
+  };
+
   _this.elements.settingsShowVolume.onclick = e => {
     e.preventDefault();
     _this.elements.volumeControl.classList.toggle(

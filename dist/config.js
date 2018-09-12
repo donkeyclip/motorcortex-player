@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
   // the players start name
   name: "mc-player",

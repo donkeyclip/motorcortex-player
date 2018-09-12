@@ -1,4 +1,4 @@
-module.exports = (theme, name) => `
+module.exports = (theme, name, options) => `
 .background {
   background-color: black;
   width:100%;
@@ -24,6 +24,12 @@ module.exports = (theme, name) => `
   stroke: ${theme["svg-color"]};
 }
 
+#${name}-pointer-event-panel{
+  width:100%;
+  height:calc( 100% - 45px );
+  position:absolute;
+  z-index:100;
+}
 .svg-selected svg{
   fill: ${theme["svg-selected-color"]};
   stroke: ${theme["svg-selected-color"]};
@@ -343,12 +349,13 @@ module.exports = (theme, name) => `
 #${name}-settings-panel {
   box-sizing: border-box;
   position: absolute;
+  z-index:101;
   background-color: ${theme["settings-background-color"]};
   bottom: ${theme["settings-panel-bottom"]};
   border: ${theme["border"]};
   right: 5px;
   width: 164px;
-  height: 143px;
+  height: 175px;
   padding: 5px;
   margin: 0px;
   -webkit-transition: all 0.3s ease;
@@ -362,7 +369,7 @@ module.exports = (theme, name) => `
   background-color: ${theme["speedbar-color"]};
   display: inline-block;
   box-sizing: border-box;
-  height: 144px;
+  height: ${options.speedValues.length * 16}px;
   float: left;
   margin-right:15px;
 }
@@ -370,7 +377,7 @@ module.exports = (theme, name) => `
 #${name}-speed-value-helperbar {
   position: absolute;
   width: 25px;
-  height: 144px;
+  height: ${options.speedValues.length * 16}px;
   float: left;
   left: -5px;
   z-index:10;
@@ -413,7 +420,7 @@ module.exports = (theme, name) => `
 }
 
 .${name}-speed-value-step {
-  width: 15px;
+  width: 16px;
   background-color: ${theme["speedbar-color"]};
   display: inline-block;
   box-sizing: border-box;
@@ -426,7 +433,7 @@ module.exports = (theme, name) => `
 #${name}-speed-value {
   display: inline-block;
   box-sizing: border-box;
-  height: 144px;
+  height: ${options.speedValues.length * 16}px;
   text-align: left;
 }
 
@@ -444,10 +451,17 @@ module.exports = (theme, name) => `
   white-space: nowrap;
 }
 
+#${name}-speed-settings {
+  height: ${options.speedValues.length * 16 + 32 + 10 - 2}px;
+}
+
+#${name}-speed-settings li.no-hover { 
+  height: ${options.speedValues.length * 16 + 10 - 2}px; 
+}
 #${name}-settings-panel.${name}-settings-speed-panel {
   overflow: hidden;
   width: 80px;
-  height: 195px;
+  height: ${options.speedValues.length * 16 + 32 + 20}px;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;

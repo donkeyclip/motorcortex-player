@@ -12,7 +12,10 @@ module.exports = _this => {
 
       const step = 1 / (_this.options.speedValues.length - 1);
 
-      const positionY = (e.target.dataset.zone * step - 1) * -1 * 128.5;
+      const positionY =
+        (e.target.dataset.zone * step - 1) *
+        -1 *
+        ((_this.options.speedValues.length - 1) * 16);
 
       elid(`${_this.name}-speed-cursor`).style.top = positionY + `px`;
     }

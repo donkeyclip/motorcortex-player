@@ -38,6 +38,9 @@ class Player {
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
     options.theme = options.theme || `transparent on-top`;
+    options.pointerEvents === undefined
+      ? (options.pointerEvents = true)
+      : (options.pointerEvents = false);
     options.speedValues = options.speedValues || [
       -4,
       -2,
@@ -49,9 +52,20 @@ class Player {
       2,
       4
     ];
+    // remove strings
+    for (const i in options.speedValues) {
+      if (!isFinite(options.speedValues[i])) {
+        options.speedValues.splice(i, 1);
+      }
+    }
+
+    options.speedValues.sort(function(a, b) {
+      return a - b;
+    });
+
+    this.className = config.name;
 
     config.playerName = options.id;
-
     this.options = options;
 
     this.id = this.options.id;
@@ -82,14 +96,9 @@ class Player {
     };
 
     // create the timer controls main div
-    this.elements = setElements(
-      this.clip,
-      this.name,
-      this.options,
-      this.settings
-    );
-    this.setSpeed();
+    setElements(this);
     this.setTheme();
+    this.setSpeed();
     this.subscribeToTimer();
     this.subscribeToEvents();
     this.addEventListeners();
@@ -97,7 +106,6 @@ class Player {
     if (this.options.preview) {
       this.createPreviewDisplay();
     }
-
     window.addEventListener(`resize`, () => {
       if (this.options.preview) {
         this.setPreviewDimentions();
@@ -290,28 +298,6 @@ class Player {
     previewListener(this);
     bodyListener(this);
   }
-  calculateSpeed(step, arrayOfValues, currentPercentage) {
-    const botLimitIndex = Math.floor(currentPercentage / step);
-
-    if (botLimitIndex === arrayOfValues.length - 1) {
-      return arrayOfValues[botLimitIndex].toFixed(1);
-    }
-
-    const limitZonePercentage = (currentPercentage / step) % 1;
-
-    const limitZoneLength = Math.abs(
-      arrayOfValues[botLimitIndex] - arrayOfValues[botLimitIndex + 1]
-    );
-
-    const realZoneSpeed = limitZonePercentage * limitZoneLength;
-
-    const realSpeed = (realZoneSpeed + arrayOfValues[botLimitIndex]).toFixed(1);
-
-    if (realSpeed == 0) {
-      return `0.0`;
-    }
-    return realSpeed;
-  }
 
   launchIntoFullscreen(element) {
     if (this.options.preview) {
@@ -363,7 +349,7 @@ class Player {
         theme[q] = confTheme[q];
       }
     }
-    const css = confStyle(theme, this.name);
+    const css = confStyle(theme, this.name, this.options);
     const style = elcreate(`style`);
 
     style.styleSheet
@@ -398,11 +384,35 @@ class Player {
       }
     })();
 
-    const step = 1 / 8;
+    const step = 1 / (this.options.speedValues.length - 1);
 
-    const positionY = (targetZone * step - 1) * -1 * 128.5;
+    const positionY =
+      (targetZone * step - 1) * -1 * (this.options.speedValues.length - 1) * 16;
 
     elid(`${this.name}-speed-cursor`).style.top = positionY + `px`;
+  }
+
+  calculateSpeed(step, arrayOfValues, currentPercentage) {
+    const botLimitIndex = Math.floor(currentPercentage / step);
+
+    if (botLimitIndex === arrayOfValues.length - 1) {
+      return arrayOfValues[botLimitIndex].toFixed(1);
+    }
+
+    const limitZonePercentage = (currentPercentage / step) % 1;
+
+    const limitZoneLength = Math.abs(
+      arrayOfValues[botLimitIndex] - arrayOfValues[botLimitIndex + 1]
+    );
+
+    const realZoneSpeed = limitZonePercentage * limitZoneLength;
+
+    const realSpeed = (realZoneSpeed + arrayOfValues[botLimitIndex]).toFixed(1);
+
+    if (realSpeed == 0) {
+      return `0.0`;
+    }
+    return realSpeed;
   }
 
   createPreviewDisplay() {
