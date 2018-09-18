@@ -1,6 +1,7 @@
 const { addListener, removeListener } = require(`../helpers`);
 
 module.exports = _this => {
+  let pe = false;
   _this.listeners.onCursorMoveLoopEnd = e => {
     e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
@@ -56,6 +57,9 @@ module.exports = _this => {
   };
 
   _this.listeners.onMouseUpLoopEnd = e => {
+    if (pe) {
+      _this.elements.settingsPointerEvents.click();
+    }
     _this.settings.resizeLoop = false;
     e.preventDefault();
     _this.elements.runningBar.style.width =
@@ -132,6 +136,10 @@ module.exports = _this => {
   };
 
   _this.listeners.onMouseDownLoopEnd = e => {
+    if (!_this.options.pointerEvents) {
+      pe = true;
+      _this.elements.settingsPointerEvents.click();
+    }
     _this.settings.resizeLoop = true;
     _this.settings.needsUpdate = true;
 

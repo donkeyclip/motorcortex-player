@@ -5,6 +5,7 @@ var _require = require("../helpers"),
     removeListener = _require.removeListener;
 
 module.exports = function (_this) {
+  var pe = false;
   _this.listeners.onCursorMoveLoopEnd = function (e) {
     e.preventDefault();
     var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
@@ -44,6 +45,9 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseUpLoopEnd = function (e) {
+    if (pe) {
+      _this.elements.settingsPointerEvents.click();
+    }
     _this.settings.resizeLoop = false;
     e.preventDefault();
     _this.elements.runningBar.style.width = _this.elements.runningBar.offsetWidth / _this.elements.loopBar.offsetWidth * 100 + "%";
@@ -99,6 +103,10 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseDownLoopEnd = function (e) {
+    if (!_this.options.pointerEvents) {
+      pe = true;
+      _this.elements.settingsPointerEvents.click();
+    }
     _this.settings.resizeLoop = true;
     _this.settings.needsUpdate = true;
 

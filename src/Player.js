@@ -417,14 +417,15 @@ class Player {
 
   createPreviewDisplay() {
     const definition = this.clip.exportState({ unprocessed: true });
-
-    definition.props.isPreviewClip = true;
     definition.props.host = elid(`${this.name}-hover-display`);
+    definition.props.isPreviewClip = true;
     this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
+
     const previewClip = this.previewClip.props.host.getElementsByTagName(
       `iframe`
     )[0];
 
+    this.previewClip.ownContext.isPreviewClip = true;
     previewClip.style.position = `absolute`;
 
     previewClip.style.zIndex = 1;

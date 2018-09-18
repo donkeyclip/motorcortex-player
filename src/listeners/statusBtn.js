@@ -31,5 +31,6 @@ module.exports = _this => {
         _this.settings.needsUpdate = true;
       }
     }
+    return false;
   };
 };

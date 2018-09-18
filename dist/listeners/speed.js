@@ -6,6 +6,7 @@ var _require = require("../helpers"),
     removeListener = _require.removeListener;
 
 module.exports = function (_this) {
+  var pe = false;
   _this.elements.settingsSpeedButtonShow.onclick = _this.elements.settingsSpeedButtonHide.onclick = function (e) {
     e.preventDefault();
     _this.elements.settingsPanel.classList.toggle(_this.name + "-settings-speed-panel");
@@ -42,6 +43,9 @@ module.exports = function (_this) {
   };
 
   var onMouseUpSpeedBar = function onMouseUpSpeedBar(e) {
+    if (pe) {
+      _this.elements.settingsPointerEvents.click();
+    }
     e.preventDefault();
     removeListener("mouseup", onMouseUpSpeedBar, false);
     removeListener("touchend", onMouseUpSpeedBar, false);
@@ -54,6 +58,10 @@ module.exports = function (_this) {
     _this.elements.speedCurrent.innerHTML = speedDisplay;
   };
   var onMouseDownSpeedBar = function onMouseDownSpeedBar(e) {
+    if (!_this.options.pointerEvents) {
+      pe = true;
+      _this.elements.settingsPointerEvents.click();
+    }
     e.preventDefault();
     onCursorMoveSpeedBar(e);
     addListener("mouseup", onMouseUpSpeedBar, false);

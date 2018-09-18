@@ -1,8 +1,9 @@
-const { addListener, removeListener } = require(`../helpers`);
+const { addListener, removeListener, elid } = require(`../helpers`);
 
 const svg = require("../html/svg");
 
 module.exports = _this => {
+  let pe = false;
   _this.elements.volumeBtn.onclick = () => {
     if (_this.settings.volumeMute) {
       _this.elements.volumeBarActive.style.width =
@@ -20,6 +21,49 @@ module.exports = _this => {
       SVG.innerHTML = svg.volumeMuteSVG;
       _this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
     }
+  };
+  let volumeOpen = false;
+  _this.elements.volumeBtn.onmouseover = () => {
+    volumeOpen = true;
+    _this.elements.volumeCursor.classList.add(
+      `${_this.name}-volume-cursor-transition`
+    );
+    _this.elements.volumeBar.classList.add(
+      `${_this.name}-volume-width-transition`
+    );
+    _this.elements.volumeBarHelper.classList.add(
+      `${_this.name}-volume-width-transition`
+    );
+    _this.elements.timeDisplay.classList.add(
+      `${_this.name}-time-width-transition`
+    );
+  };
+
+  elid(`${_this.name}-left-controls`).onmouseout = () => {
+    if (!volumeOpen) {
+      return;
+    }
+
+    const e = event.toElement || event.relatedTarget || event.target;
+    if (
+      isDescendant(elid(`${_this.name}-left-controls`), e) ||
+      e === elid(`${_this.name}-left-controls`)
+    ) {
+      return;
+    }
+    volumeOpen = false;
+    _this.elements.volumeCursor.classList.remove(
+      `${_this.name}-volume-cursor-transition`
+    );
+    _this.elements.volumeBar.classList.remove(
+      `${_this.name}-volume-width-transition`
+    );
+    _this.elements.volumeBarHelper.classList.remove(
+      `${_this.name}-volume-width-transition`
+    );
+    _this.elements.timeDisplay.classList.remove(
+      `${_this.name}-time-width-transition`
+    );
   };
 
   _this.listeners.onCursorMoveVolumeBar = e => {
@@ -54,6 +98,9 @@ module.exports = _this => {
   };
 
   _this.listeners.onMouseUpVolumeBar = e => {
+    if (pe) {
+      _this.elements.settingsPointerEvents.click();
+    }
     e.preventDefault();
     if (_this.settings.volume > 0) {
       _this.settings.previousVolume = _this.settings.volume;
@@ -65,6 +112,10 @@ module.exports = _this => {
   };
 
   _this.listeners.onMouseDownVolumeBar = e => {
+    if (!_this.options.pointerEvents) {
+      pe = true;
+      _this.elements.settingsPointerEvents.click();
+    }
     e.preventDefault();
     _this.listeners.onCursorMoveVolumeBar(e);
     addListener(`mouseup`, _this.listeners.onMouseUpVolumeBar, false);
@@ -100,3 +151,14 @@ module.exports = _this => {
     false
   );
 };
+
+function isDescendant(parent, child) {
+  let node = child.parentNode;
+  while (node != null) {
+    if (node == parent) {
+      return true;
+    }
+    node = node.parentNode;
+  }
+  return false;
+}

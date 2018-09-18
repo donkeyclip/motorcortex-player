@@ -5,8 +5,11 @@ var _require = require("../helpers"),
     removeListener = _require.removeListener;
 
 module.exports = function (_this) {
+  var pe = false;
+
   _this.listeners.onCursorMove = function (e) {
     e.preventDefault();
+
     var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     var viewportOffset = _this.elements.loopBar.getBoundingClientRect();
     var positionX = clientX - viewportOffset.left;
@@ -19,8 +22,11 @@ module.exports = function (_this) {
     _this.handleDrag(positionX);
   };
 
-  _this.listeners.onMouseUp = function (e) {
-    e.preventDefault();
+  _this.listeners.onMouseUp = function () {
+    if (pe) {
+      _this.elements.settingsPointerEvents.click();
+    }
+    // e.preventDefault();
     removeListener("mouseup", _this.listeners.onMouseUp, false);
     removeListener("touchend", _this.listeners.onMouseUp, false);
     removeListener("mousemove", _this.listeners.onCursorMove, false);
@@ -51,7 +57,11 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseDown = function (e) {
-    e.preventDefault();
+    // e.preventDefault();
+    if (!_this.options.pointerEvents) {
+      pe = true;
+      _this.elements.settingsPointerEvents.click();
+    }
     if (_this.clip.state === "playing") {
       _this.settings.playAfterResize = true;
     }

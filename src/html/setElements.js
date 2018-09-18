@@ -164,20 +164,20 @@ module.exports = _this => {
   } else {
     _this.elements.timeDisplay.style.left = ``;
 
-    _this.elements.volumeControl.classList.toggle(
-      `${_this.name}-volume-width-transition`
-    );
+    // _this.elements.volumeControl.classList.toggle(
+    //   `${_this.name}-volume-width-transition`
+    // );
 
-    _this.elements.volumeBar.classList.toggle(
-      `${_this.name}-volume-width-transition`
-    );
+    // _this.elements.volumeBar.classList.toggle(
+    //   `${_this.name}-volume-width-transition`
+    // );
 
-    _this.elements.volumeBarHelper.classList.toggle(
-      `${_this.name}-volume-width-transition`
-    );
-    _this.elements.timeDisplay.classList.toggle(
-      `${_this.name}-time-width-transition`
-    );
+    // _this.elements.volumeBarHelper.classList.toggle(
+    //   `${_this.name}-volume-width-transition`
+    // );
+    // _this.elements.timeDisplay.classList.toggle(
+    //   `${_this.name}-time-width-transition`
+    // );
 
     _this.elements.volumeControl.style.visibility = `visible`;
   }

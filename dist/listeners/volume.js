@@ -2,11 +2,13 @@
 
 var _require = require("../helpers"),
     addListener = _require.addListener,
-    removeListener = _require.removeListener;
+    removeListener = _require.removeListener,
+    elid = _require.elid;
 
 var svg = require("../html/svg");
 
 module.exports = function (_this) {
+  var pe = false;
   _this.elements.volumeBtn.onclick = function () {
     if (_this.settings.volumeMute) {
       _this.elements.volumeBarActive.style.width = _this.settings.previousVolume * 100 + "%";
@@ -23,6 +25,30 @@ module.exports = function (_this) {
       _SVG.innerHTML = svg.volumeMuteSVG;
       _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(_SVG);
     }
+  };
+  var volumeOpen = false;
+  _this.elements.volumeBtn.onmouseover = function () {
+    volumeOpen = true;
+    _this.elements.volumeCursor.classList.add(_this.name + "-volume-cursor-transition");
+    _this.elements.volumeBar.classList.add(_this.name + "-volume-width-transition");
+    _this.elements.volumeBarHelper.classList.add(_this.name + "-volume-width-transition");
+    _this.elements.timeDisplay.classList.add(_this.name + "-time-width-transition");
+  };
+
+  elid(_this.name + "-left-controls").onmouseout = function () {
+    if (!volumeOpen) {
+      return;
+    }
+
+    var e = event.toElement || event.relatedTarget || event.target;
+    if (isDescendant(elid(_this.name + "-left-controls"), e) || e === elid(_this.name + "-left-controls")) {
+      return;
+    }
+    volumeOpen = false;
+    _this.elements.volumeCursor.classList.remove(_this.name + "-volume-cursor-transition");
+    _this.elements.volumeBar.classList.remove(_this.name + "-volume-width-transition");
+    _this.elements.volumeBarHelper.classList.remove(_this.name + "-volume-width-transition");
+    _this.elements.timeDisplay.classList.remove(_this.name + "-time-width-transition");
   };
 
   _this.listeners.onCursorMoveVolumeBar = function (e) {
@@ -54,6 +80,9 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseUpVolumeBar = function (e) {
+    if (pe) {
+      _this.elements.settingsPointerEvents.click();
+    }
     e.preventDefault();
     if (_this.settings.volume > 0) {
       _this.settings.previousVolume = _this.settings.volume;
@@ -65,6 +94,10 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseDownVolumeBar = function (e) {
+    if (!_this.options.pointerEvents) {
+      pe = true;
+      _this.elements.settingsPointerEvents.click();
+    }
     e.preventDefault();
     _this.listeners.onCursorMoveVolumeBar(e);
     addListener("mouseup", _this.listeners.onMouseUpVolumeBar, false);
@@ -82,3 +115,14 @@ module.exports = function (_this) {
     passive: false
   }, false);
 };
+
+function isDescendant(parent, child) {
+  var node = child.parentNode;
+  while (node != null) {
+    if (node == parent) {
+      return true;
+    }
+    node = node.parentNode;
+  }
+  return false;
+}

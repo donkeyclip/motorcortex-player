@@ -167,7 +167,7 @@ module.exports = (theme, name, options) => `
 #${name}-helperbar {
   position: absolute;
   height: 20px;
-  top: -7px;
+  top: -10px;
   left: 0px;
   right: 0px;
   z-index:2;
@@ -627,8 +627,7 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#${name}-left-controls:active #${name}-volume-cursor,
-#${name}-left-controls:hover #${name}-volume-cursor {
+#${name}-volume .${name}-volume-cursor-transition {
   width: 12px;
   height: 12px;
   -webkit-transition: all 0.3s ease;
@@ -636,8 +635,7 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#${name}-left-controls:active .${name}-volume-width-transition,
-#${name}-left-controls:hover .${name}-volume-width-transition
+#${name}-volume .${name}-volume-width-transition
  {
   width: 50px;
   -webkit-transition: all 0.3s ease;
@@ -645,8 +643,7 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#${name}-left-controls:active .${name}-time-width-transition,
-#${name}-left-controls:hover .${name}-time-width-transition {
+#${name}-time-display.${name}-time-width-transition {
   left: 140px;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
