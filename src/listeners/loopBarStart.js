@@ -1,7 +1,7 @@
 const { addListener, removeListener } = require(`../helpers`);
 
 module.exports = _this => {
-  let pe = false;
+  // let pe = false;
   _this.listeners.onCursorMoveLoopStart = e => {
     e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
@@ -54,9 +54,9 @@ module.exports = _this => {
   };
 
   _this.listeners.onMouseUpLoopStart = e => {
-    if (pe) {
-      _this.elements.settingsPointerEvents.click();
-    }
+    // if (pe) {
+    //   _this.elements.settingsPointerEvents.click();
+    // }
     _this.settings.resizeLoop = false;
 
     e.preventDefault();
@@ -139,10 +139,10 @@ module.exports = _this => {
   };
 
   _this.listeners.onMouseDownLoopStart = e => {
-    if (!_this.options.pointerEvents) {
-      pe = true;
-      _this.elements.settingsPointerEvents.click();
-    }
+    // if (!_this.options.pointerEvents) {
+    //   pe = true;
+    //   _this.elements.settingsPointerEvents.click();
+    // }
 
     _this.settings.resizeLoop = true;
 

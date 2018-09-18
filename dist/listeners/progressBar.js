@@ -5,7 +5,7 @@ var _require = require("../helpers"),
     removeListener = _require.removeListener;
 
 module.exports = function (_this) {
-  var pe = false;
+  // let pe = false;
 
   _this.listeners.onCursorMove = function (e) {
     e.preventDefault();
@@ -23,9 +23,9 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseUp = function () {
-    if (pe) {
-      _this.elements.settingsPointerEvents.click();
-    }
+    // if (pe) {
+    //   _this.elements.settingsPointerEvents.click();
+    // }
     // e.preventDefault();
     removeListener("mouseup", _this.listeners.onMouseUp, false);
     removeListener("touchend", _this.listeners.onMouseUp, false);
@@ -58,10 +58,10 @@ module.exports = function (_this) {
 
   _this.listeners.onMouseDown = function (e) {
     // e.preventDefault();
-    if (!_this.options.pointerEvents) {
-      pe = true;
-      _this.elements.settingsPointerEvents.click();
-    }
+    // if (!_this.options.pointerEvents) {
+    //   pe = true;
+    //   _this.elements.settingsPointerEvents.click();
+    // }
     if (_this.clip.state === "playing") {
       _this.settings.playAfterResize = true;
     }
