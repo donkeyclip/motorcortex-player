@@ -52,7 +52,12 @@ var Player = function () {
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
     options.theme = options.theme || "transparent on-top";
-    options.pointerEvents === undefined ? options.pointerEvents = true : options.pointerEvents = false;
+    if (options.pointerEvents === undefined || options.pointerEvents === null) {
+      options.pointerEvents = true;
+    } else {
+      options.pointerEvents = Boolean(options.pointerEvents);
+    }
+
     options.speedValues = options.speedValues || [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     // remove strings
     for (var i in options.speedValues) {

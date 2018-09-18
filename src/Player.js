@@ -38,9 +38,12 @@ class Player {
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
     options.theme = options.theme || `transparent on-top`;
-    options.pointerEvents === undefined
-      ? (options.pointerEvents = true)
-      : (options.pointerEvents = false);
+    if (options.pointerEvents === undefined || options.pointerEvents === null) {
+      options.pointerEvents = true;
+    } else {
+      options.pointerEvents = Boolean(options.pointerEvents);
+    }
+
     options.speedValues = options.speedValues || [
       -4,
       -2,
