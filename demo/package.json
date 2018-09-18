@@ -13,11 +13,11 @@
     "threejs"
   ],
   "peerDependencies": {
-    "@kissmybutton/motorcortex": "1.10.8-rc.13",
+    "@kissmybutton/motorcortex": "1.10.8-rc.53",
     "babel-core": "^6.26.3"
   },
   "devDependencies": {
-    "@kissmybutton/motorcortex": "^1.10.8-rc.49",
+    "@kissmybutton/motorcortex": "1.10.8-rc.53",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",

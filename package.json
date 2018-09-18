@@ -1,6 +1,6 @@
 {
   "name": "@kissmybutton/motorcortex-player",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "description": "Player plugin for MotorCortex",
   "main": "./dist/Player.js",
   "author": "KissMyButton PC (kissmybutton.gr) <opensource@kissmybutton.gr>",
@@ -68,19 +68,18 @@
     }
   },
   "dependencies": {
-    "@kissmybutton/motorcortex-threejs": "^1.1.0",
     "exports-loader": "^0.7.0",
     "imports-loader": "^0.8.0",
     "whatwg-fetch": "^2.0.4"
   },
   "peerDependencies": {
-    "@kissmybutton/motorcortex": "1.10.8-rc.33",
+    "@kissmybutton/motorcortex": "1.10.8-rc.53",
     "babel-core": "^6.26.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
-    "@kissmybutton/motorcortex": "^1.10.8-rc.49",
+    "@kissmybutton/motorcortex": "1.10.8-rc.53",
     "@semantic-release/changelog": "^2.0.2",
     "@semantic-release/git": "^5.0.0",
     "@semantic-release/github": "^4.2.17",
