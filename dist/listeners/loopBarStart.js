@@ -47,6 +47,8 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseUpLoopStart = function (e) {
+    _this.elements.listenerHelper.style.pointerEvents = "none";
+
     // if (pe) {
     //   _this.elements.settingsPointerEvents.click();
     // }
@@ -108,6 +110,8 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseDownLoopStart = function (e) {
+    _this.elements.listenerHelper.style.pointerEvents = "auto";
+
     // if (!_this.options.pointerEvents) {
     //   pe = true;
     //   _this.elements.settingsPointerEvents.click();

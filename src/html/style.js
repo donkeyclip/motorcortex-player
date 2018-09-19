@@ -30,6 +30,12 @@ module.exports = (theme, name, options) => `
   position:absolute;
   z-index:100;
 }
+#${name}-listener-helper{
+  width:100%;
+  height:calc( 100% - 45px );
+  position:absolute;
+  z-index:110;
+}
 .svg-selected svg{
   fill: ${theme["svg-selected-color"]};
   stroke: ${theme["svg-selected-color"]};

@@ -25,6 +25,7 @@ module.exports = function (_this) {
   elid(_this.clip.props.host.id).appendChild(_this.elements.mcPlayer);
 
   _this.elements.pointerEventPanel = elid(_this.name + "-pointer-event-panel");
+  _this.elements.listenerHelper = elid(_this.name + "-listener-helper");
   _this.elements.loopBar = elid(_this.name + "-loopbar");
   _this.elements.totalBar = elid(_this.name + "-totalbar");
   _this.elements.indicator = elid(_this.name + "-indicator");
@@ -136,6 +137,7 @@ module.exports = function (_this) {
     elid(_this.name + "-controls").style.pointerEvents = "auto";
     _this.elements.settingsPanel.style.pointerEvents = "auto";
   }
+  _this.elements.listenerHelper.style.pointerEvents = "none";
 
   if (!_this.options.showVolume) {
     _this.elements.timeDisplay.style.left = "45px";

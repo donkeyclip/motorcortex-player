@@ -23,6 +23,8 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseUp = function () {
+    _this.elements.listenerHelper.style.pointerEvents = "none";
+
     // if (pe) {
     //   _this.elements.settingsPointerEvents.click();
     // }
@@ -57,6 +59,8 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseDown = function (e) {
+    _this.elements.listenerHelper.style.pointerEvents = "auto";
+
     // e.preventDefault();
     // if (!_this.options.pointerEvents) {
     //   pe = true;

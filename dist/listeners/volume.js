@@ -8,7 +8,8 @@ var _require = require("../helpers"),
 var svg = require("../html/svg");
 
 module.exports = function (_this) {
-  var pe = false;
+  // let pe = false;
+  var volumeDrag = false;
   _this.elements.volumeBtn.onclick = function () {
     if (_this.settings.volumeMute) {
       _this.elements.volumeBarActive.style.width = _this.settings.previousVolume * 100 + "%";
@@ -36,7 +37,7 @@ module.exports = function (_this) {
   };
 
   elid(_this.name + "-left-controls").onmouseout = function () {
-    if (!volumeOpen) {
+    if (!volumeOpen || volumeDrag) {
       return;
     }
 
@@ -62,6 +63,7 @@ module.exports = function (_this) {
     } else if (positionX > _this.elements.volumeBarHelper.offsetWidth) {
       positionX = _this.elements.volumeBarHelper.offsetWidth;
     }
+
     _this.settings.volume = Number((positionX / _this.elements.volumeBarHelper.offsetWidth).toFixed(2));
     _this.elements.volumeBarActive.style.width = _this.settings.volume * 100 + "%";
     _this.clip.setVolume(_this.settings.volume);
@@ -80,9 +82,12 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseUpVolumeBar = function (e) {
-    if (pe) {
-      _this.elements.settingsPointerEvents.click();
-    }
+    volumeDrag = false;
+    // if (pe) {
+    //   _this.elements.settingsPointerEvents.click();
+    // }
+    _this.elements.listenerHelper.style.pointerEvents = "none";
+
     e.preventDefault();
     if (_this.settings.volume > 0) {
       _this.settings.previousVolume = _this.settings.volume;
@@ -94,10 +99,13 @@ module.exports = function (_this) {
   };
 
   _this.listeners.onMouseDownVolumeBar = function (e) {
-    if (!_this.options.pointerEvents) {
-      pe = true;
-      _this.elements.settingsPointerEvents.click();
-    }
+    volumeDrag = true;
+    // if (!_this.options.pointerEvents) {
+    //   pe = true;
+    //   _this.elements.settingsPointerEvents.click();
+    // }
+    _this.elements.listenerHelper.style.pointerEvents = "auto";
+
     e.preventDefault();
     _this.listeners.onCursorMoveVolumeBar(e);
     addListener("mouseup", _this.listeners.onMouseUpVolumeBar, false);

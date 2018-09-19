@@ -54,6 +54,8 @@ module.exports = _this => {
   };
 
   _this.listeners.onMouseUpLoopStart = e => {
+    _this.elements.listenerHelper.style.pointerEvents = "none";
+
     // if (pe) {
     //   _this.elements.settingsPointerEvents.click();
     // }
@@ -139,6 +141,8 @@ module.exports = _this => {
   };
 
   _this.listeners.onMouseDownLoopStart = e => {
+    _this.elements.listenerHelper.style.pointerEvents = "auto";
+
     // if (!_this.options.pointerEvents) {
     //   pe = true;
     //   _this.elements.settingsPointerEvents.click();

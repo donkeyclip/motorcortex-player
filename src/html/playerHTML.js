@@ -2,6 +2,7 @@ module.exports = config => `
   <div class="pointer-event-panel" id="${
     config.name
   }-pointer-event-panel"></div>
+  <div class="pointer-event-panel" id="${config.name}-listener-helper"></div>
   <div class="grad"></div>
   <div class="background"></div>
   <div id="${config.name}-controls">

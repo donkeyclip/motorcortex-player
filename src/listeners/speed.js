@@ -1,7 +1,7 @@
 const { elid, addListener, removeListener } = require(`../helpers`);
 
 module.exports = _this => {
-  let pe = false;
+  // const pe = false;
   _this.elements.settingsSpeedButtonShow.onclick = _this.elements.settingsSpeedButtonHide.onclick = e => {
     e.preventDefault();
     _this.elements.settingsPanel.classList.toggle(
@@ -47,9 +47,11 @@ module.exports = _this => {
   };
 
   const onMouseUpSpeedBar = e => {
-    if (pe) {
-      _this.elements.settingsPointerEvents.click();
-    }
+    // if (pe) {
+    //   _this.elements.settingsPointerEvents.click();
+    // }
+    _this.elements.listenerHelper.style.pointerEvents = "none";
+
     e.preventDefault();
     removeListener(`mouseup`, onMouseUpSpeedBar, false);
     removeListener(`touchend`, onMouseUpSpeedBar, false);
@@ -64,10 +66,12 @@ module.exports = _this => {
     _this.elements.speedCurrent.innerHTML = speedDisplay;
   };
   const onMouseDownSpeedBar = e => {
-    if (!_this.options.pointerEvents) {
-      pe = true;
-      _this.elements.settingsPointerEvents.click();
-    }
+    // if (!_this.options.pointerEvents) {
+    //   pe = true;
+    //   _this.elements.settingsPointerEvents.click();
+    // }
+    _this.elements.listenerHelper.style.pointerEvents = "auto";
+
     e.preventDefault();
     onCursorMoveSpeedBar(e);
     addListener(`mouseup`, onMouseUpSpeedBar, false);
