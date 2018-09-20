@@ -175,19 +175,19 @@ class Player {
         });
       }
       return 1;
-    } else if (millisecond > loopEndMillisecond) {
-      this.settings.needsUpdate = false;
-      this.createJourney(clip, loopEndMillisecond);
+    } /*else if (millisecond > loopEndMillisecond) {
+      // this.settings.needsUpdate = false;
+      // this.createJourney(clip, loopEndMillisecond);
       this.elements.runningBar.style.width = `100%`;
       this.elements.currentTime.innerHTML = loopEndMillisecond;
       return 1;
     } else if (millisecond < loopStartMillisecond) {
       this.settings.needsUpdate = false;
-      this.createJourney(clip, loopStartMillisecond);
+      // this.createJourney(clip, loopStartMillisecond);
       this.elements.runningBar.style.width = `0%`;
       this.elements.currentTime.innerHTML = loopStartMillisecond;
       return 1;
-    }
+    }*/
 
     this.elements.runningBar.style.width =
       (localMillisecond / localDuration) * 100 + `%`;
