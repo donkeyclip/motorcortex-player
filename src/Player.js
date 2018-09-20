@@ -116,7 +116,7 @@ class Player {
     });
   }
 
-  createJourney(clip, millisecond, clipCommands) {
+  createJourney(clip, millisecond, clipCommands = {}) {
     setTimeout(() => {
       const def = null;
       const { before = def, after = def } = clipCommands;

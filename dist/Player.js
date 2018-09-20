@@ -122,8 +122,10 @@ var Player = function () {
 
   _createClass(Player, [{
     key: "createJourney",
-    value: function createJourney(clip, millisecond, clipCommands) {
+    value: function createJourney(clip, millisecond) {
       var _this2 = this;
+
+      var clipCommands = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
       setTimeout(function () {
         var def = null;
