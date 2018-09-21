@@ -1,3 +1,2 @@
-import MC from "@kissmybutton/motorcortex";
-
+const MC = require("@kissmybutton/motorcortex");
 module.exports = MC.AttributeChannel;

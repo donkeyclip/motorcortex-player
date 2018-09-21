@@ -1,13 +1,11 @@
-"use strict";
-
-module.exports = function (_this) {
-  _this.elements.statusButton.onclick = function (e) {
+module.exports = _this => {
+  _this.elements.statusButton.onclick = e => {
     e.preventDefault();
-    if (_this.clip.state === "playing") {
+    if (_this.clip.state === `playing`) {
       _this.clip.wait();
-    } else if (_this.clip.state === "waiting") {
+    } else if (_this.clip.state === `waiting`) {
       _this.clip.resume();
-    } else if (_this.clip.state === "idle") {
+    } else if (_this.clip.state === `idle`) {
       if (_this.clip.speed >= 0) {
         _this.clip.play();
         _this.settings.needsUpdate = true;
@@ -18,7 +16,7 @@ module.exports = function (_this) {
         });
         _this.settings.needsUpdate = true;
       }
-    } else if (_this.clip.state === "completed") {
+    } else if (_this.clip.state === `completed`) {
       if (_this.clip.speed >= 0) {
         _this.createJourney(_this.clip, 0, {
           before: "stop",

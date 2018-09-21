@@ -1,5 +1,698 @@
-"use strict";
+module.exports = (theme, name, options) => `
+.background {
+  background-color: black;
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0px;
+  left:0px;
+  z-index:-2000;
+}
+.full-screen #${name}-controls {
+  position:fixed;
+  left:0px;
+  bottom:0px;
+}
 
-module.exports = function (theme, name, options) {
-  return "\n.background {\n  background-color: black;\n  width:100%;\n  height:100%;\n  position:absolute;\n  top:0px;\n  left:0px;\n  z-index:-2000;\n}\n.full-screen #" + name + "-controls {\n  position:fixed;\n  left:0px;\n  bottom:0px;\n}\n\n.full-screen #" + name + "-settings-panel {\n  position:fixed;\n  bottom: 45px;\n}\n\n.svg {\n  fill: " + theme["svg-color"] + ";\n  stroke: " + theme["svg-color"] + ";\n}\n\n#" + name + "-pointer-event-panel{\n  width:100%;\n  height:calc( 100% - 45px );\n  position:absolute;\n  z-index:100;\n}\n#" + name + "-listener-helper{\n  width:100%;\n  height:calc( 100% - 45px );\n  position:absolute;\n  z-index:110;\n}\n.svg-selected svg{\n  fill: " + theme["svg-selected-color"] + ";\n  stroke: " + theme["svg-selected-color"] + ";\n}\n#" + name + "-hover-display{\n    border: " + theme["preview-border"] + ";\n    max-width:300px;\n    display: flex;\n    overflow:hidden;\n    background-color: black;\n    position: absolute;\n    bottom: 14px;\n    left: 0px;\n    align-items: flex-end;\n    justify-content: center;\n}\n\n#" + name + "-hover-millisecond {\n  background-color: " + theme["hms-background-color"] + ";\n  padding:3px;\n  height:18px;\n  margin:0px;\n  line-height:12px;\n  font-size:10px;\n  text-align: center;\n  min-width:20px;\n  max-width:100px;\n  z-index:2;\n}\n#" + name + ",\n#" + name + " ::before,\n#" + name + " ::after,\n#" + name + " div,\n#" + name + " p,\n#" + name + " span,\n#" + name + " ul,\n#" + name + " li {\n  font-weight: 400;\n  line-height: 1.9 !important;\n  color: " + theme["color"] + ";\n  font-family: \"Century Gothic\", CenturyGothic, AppleGothic, sans-serif;\n  box-sizing:border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n#" + name + " {\n  line-height: 1.9;\n  font-size: 12px;\n  overflow:hidden;\n  height: calc(100% + " + theme["controls-position"] + ");\n  width:100%;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  \n}\n\n#" + name + "-settings-speed-hide {\n  text-align:right;\n}\n\n.grad {\n  background-image: linear-gradient(\n    rgba(100,100,100,00.01),\n    rgba(100,100,100,00.02),\n    rgba(100,100,100,00.03),\n    rgba(100,100,100,0.04),\n    rgba(100,100,100,0.05),\n    rgba(0,0,0,0.06),\n    rgba(0,0,0,0.07),\n    rgba(0,0,0,0.08),\n    rgba(0,0,0,0.09),\n    rgba(0,0,0,0.1),\n    rgba(0,0,0,0.2),\n    rgba(0,0,0,0.3),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.5),\n    rgba(0,0,0,0.6),\n    rgba(0,0,0,0.7),\n    rgba(0,0,0,0.8),\n    rgba(0,0,0,0.9),\n    rgba(0,0,0,1)\n  );\n  position:absolute;\n  width:100%;\n  height:" + theme["grad-height"] + ";\n  left:0px;\n  bottom:0px;\n}\n\n#" + name + "-controls {\n  touch-action: none;\n  background-color: " + theme["background-color"] + ";\n  border: " + theme["controls-border"] + ";\n  position: absolute;\n  bottom: " + theme["controls-bottom"] + ";\n  left: 0px;\n  width: 100%;\n  height: 40px;\n}\n\n#" + name + "-totalbar {\n  width: calc(100% - 20px);\n  height: 5px;\n  margin: 0px 10px 0px 10px;\n  background-color: #505056;\n  position: relative;\n  top: 0px;\n  left: 0px;\n}\n\n#" + name + "-loopbar {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0px;\n  left: 0px;\n  background-color: " + theme["loopbar-color"] + ";\n}\n\n." + name + "-loop-boundaries {\n  transform:translate(-50%,-37%);\n  position:absolute;\n  width:18px;\n  background-color:" + theme["loopbar-color"] + ";\n  height:18px;\n  border-radius:10px;\n  z-index:40;\n}\n\n#" + name + "-helperbar {\n  position: absolute;\n  height: 20px;\n  top: -10px;\n  left: 0px;\n  right: 0px;\n  z-index:2;\n}\n\n#" + name + "-runningbar {\n  position: relative;\n  width: 0px;\n  max-width:100%;\n  height: 100%;\n  background-color: " + theme["runningbar-color"] + ";\n}\n\n#" + name + "-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: " + theme["cursor-color"] + ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n#" + name + "-left-controls {\n  display:inline-block;\n  width:200px;\n  height:35px;\n}\n#" + name + "-time-display {\n  display: table;\n  text-align: center;\n  width: auto;\n  height: 34px;\n  position: absolute;\n  left: 90px;\n  -webkit-transition: all 0.1s ease;\n  -moz-transition: all 0.1s ease;\n  transition: all 0.1s ease;\n}\n\n#" + name + "-time-display span {\n  display: table-cell;\n  vertical-align: middle;\n}\n\n#" + name + "-status-btn {\n  opacity: " + theme["button-opacity"] + ";\n  background-repeat: no-repeat;\n  background-size: 100% 100%;\n  width: 40px;\n  height: 25px;\n  position: absolute;\n  overflow:visible;\n  left: 0px;\n  bottom: 0px;\n  margin: 10px 5px 5px 5px;\n  text-align: center;\n  z-index:3;\n}\n\n#" + name + "-volume {\n  opacity: " + theme["button-opacity"] + ";\n  background-repeat: no-repeat;\n  background-size: 100% 100%;\n  position: absolute;\n  left: 45px;\n  bottom: 5px;\n  margin: 10px 5px 5px 5px;\n  text-align: center;\n  z-index:3;\n}\n#" + name + "-volume-btn {\n  width: 20px;\n  height: 15px;\n}\n\n#" + name + "-volumebar {\n  width: 0px;\n  height: 3px;\n  background-color: " + theme["loopbar-color"] + ";\n  position:absolute;\n  left:25px;\n  bottom:6px;\n  -webkit-transition: all 0.1s ease;\n  -moz-transition: all 0.1s ease;\n  transition: all 0.1s ease;\n}\n\n#" + name + "-volumebar-helper {\n  position: absolute;\n  width: 0px;\n  height: 15px;\n  left:25px;\n  bottom:0px;\n  z-index:10;\n}\n\n#" + name + "-volumebar-active {\n  position: relative;\n  width: 0%;\n  height: 100%;\n  background-color: " + theme["color"] + ";\n  position:relative;\n  left:0px;\n  bottom:0px;\n}\n\n#" + name + "-volume-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: " + theme["color"] + ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n." + name + "-loopbar-time {\n  width:auto;\n  height:12px;\n  background-color:" + theme["background-color"] + ";\n  line-height:10px;\n  font-size:10px;\n}\n\n#" + name + "-loop-time { \n  position:absolute;\n  right:85px;\n  bottom:5px;\n}\n\n#" + name + "-loop-btn {\n  opacity: " + theme["button-opacity"] + ";\n  background-repeat: no-repeat;\n  background-size: 100% 100%;\n  width: 15px;\n  height: 15px;\n  position: absolute;\n  right: 55px;\n  bottom: 5px;\n  margin: 10px 5px 5px 5px;\n}\n\n#" + name + "-settings-btn {\n  opacity: " + theme["button-opacity"] + ";\n  background-repeat: no-repeat;\n  background-size: 100% 100%;\n  width: 15px;\n  height: 15px;\n  position: absolute;\n  right: 30px;\n  bottom: 5px;\n  margin: 10px 5px 5px 5px;\n}\n\n#" + name + "-full-screen-btn {\n  opacity: " + theme["button-opacity"] + ";\n  background-repeat: no-repeat;\n  background-size: 100% 100%;\n  width: 15px;\n  height: 15px;\n  position: absolute;\n  right: 5px;\n  bottom: 5px;\n  margin: 10px 5px 5px 5px;\n}\n\n." + name + "-speed-btn {\n  position: relative;\n  opacity: " + theme["button-opacity"] + ";\n  width: 10px;\n  height: 10px;\n  display: inline-block;\n}\n\n#" + name + "-settings-panel {\n  touch-action: none;\n  box-sizing: border-box;\n  position: absolute;\n  z-index:101;\n  background-color: " + theme["settings-background-color"] + ";\n  bottom: " + theme["settings-panel-bottom"] + ";\n  border: " + theme["border"] + ";\n  right: 5px;\n  width: 164px;\n  height: 175px;\n  padding: 5px;\n  margin: 0px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#" + name + "-speed-value-bar {\n  position: relative;\n  width: 5px;\n  background-color: " + theme["speedbar-color"] + ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: " + options.speedValues.length * 16 + "px;\n  float: left;\n  margin-right:15px;\n}\n\n#" + name + "-speed-value-helperbar {\n  position: absolute;\n  width: 25px;\n  height: " + options.speedValues.length * 16 + "px;\n  float: left;\n  left: -5px;\n  z-index:10;\n}\n\n\n#" + name + "-speed-value-bar:hover,\n#" + name + "-speed-value-helperbar {\n  cursor: pointer;\n}\n\n#" + name + "-volumebar:hover,\n#" + name + "-volumebar-helper:hover,\n#" + name + "-volume-btn:hover,\n#" + name + "-volumebar:active,\n#" + name + "-volumebar-helper:active,\n#" + name + "-volume-btn:active {\n  cursor:pointer;\n}\n\n#" + name + "-speed-cursor {\n  position: absolute;\n  background-color: " + theme["speedbar-cursor-color"] + ";\n  top: 0px;\n  left: 0px;\n}\n\n#" + name + "-speed-cursor div {\n  position: absolute;\n  background-color: " + theme["speedbar-cursor-color"] + ";\n  left: -2.5px;\n  top: -4px;\n  width: 10px;\n  height: 10px;\n  border-radius: 5px;\n}\n\n#" + name + "-speed-cursor:hover {\n  cursor: pointer;\n}\n\n." + name + "-speed-value-step {\n  width: 16px;\n  background-color: " + theme["speedbar-color"] + ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: 2px;\n  margin-top: 7px;\n  margin-bottom: 7px;\n  float: left;\n}\n\n#" + name + "-speed-value {\n  display: inline-block;\n  box-sizing: border-box;\n  height: " + options.speedValues.length * 16 + "px;\n  text-align: left;\n}\n\n." + name + "-speed-value {\n  box-sizing: border-box;\n  height: 16px;\n  font-size: 12px;\n}\n\n#" + name + "-indicator {\n  font-size: 8px !important;\n  position: relative;\n  bottom: 15px;\n  color: " + theme["color"] + ";\n  white-space: nowrap;\n}\n\n#" + name + "-speed-settings {\n  height: " + (options.speedValues.length * 16 + 32 + 10 - 2) + "px;\n}\n\n#" + name + "-speed-settings li.no-hover { \n  height: " + (options.speedValues.length * 16 + 10 - 2) + "px; \n}\n#" + name + "-settings-panel." + name + "-settings-speed-panel {\n  overflow: hidden;\n  width: 80px;\n  height: " + (options.speedValues.length * 16 + 32 + 20) + "px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#" + name + "-settings-panel." + name + "-settings-speed-panel ." + name + "-speed-btn {\n  float: left;\n}\n\n." + name + "-settings-speed-panel ul:first-child {\n  text-align: right;\n}\n\n#" + name + "-speed-current {\n  float: right;\n  padding-right: 10px\n}\n\n#" + name + "-settings-panel ." + name + "-speed-btn {\n  float: right;\n}\n\n#" + name + "-settings-panel ul {\n  width: 100%;\n  margin: 0px;\n  padding: 0px;\n  overflow: hidden;\n}\n\n#" + name + "-settings-panel." + name + "-settings-speed-panel ul li {\n  min-width: 70px;\n}\n\n#" + name + "-settings-panel ul li.no-hover:hover {\n  background-color: transparent;\n  cursor: default;\n}\n\ndiv." + name + "-speed-value:hover {\n  background-color: " + theme["hover-color"] + ";\n  cursor: pointer;\n}\n\n#" + name + "-settings-panel ul li {\n  position: relative;\n  width: 100%;\n  min-width: 154px;\n  list-style-type: none;\n  margin: 0px;\n  padding: 5px;\n}\n\n#" + name + "-settings-panel ul li label {\n  margin: 0px;\n}\n\n.switch {\n  position: relative;\n  display: inline-block;\n  width: 35px;\n  height: 18px;\n}\n\n.switch input {\n  display: none;\n}\n\n.settings-switch {\n  float: right;\n}\n\n.settings-switch:after {\n  clear: both;\n}\n\n.slider {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: " + theme["slider-off-color"] + ";\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\n.slider:before {\n  position: absolute;\n  content: \"\";\n  height: 16px;\n  width: 16px;\n  left: 1px;\n  bottom: 1px;\n  background-color: white;\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\ninput:checked+.slider {\n  background-color: " + theme["slider-on-color"] + ";\n}\n\ninput:focus+.slider {\n  box-shadow: 0 0 1px " + theme["slider-on-color"] + ";\n}\n\ninput:checked+.slider:before {\n  -webkit-transform: translateX(16px);\n  -ms-transform: translateX(16px);\n  transform: translateX(16px);\n}\n\n\n/* Rounded sliders */\n\n.slider.round {\n  border-radius: 34px;\n}\n\n.slider.round:before {\n  border-radius: 50%;\n}\n\n\n.m-fadeOut {\n  visibility: hidden;\n  opacity: 0;\n  transition: visibility 0s linear 300ms, opacity 300ms;\n}\n\n.m-fadeIn {\n  visibility: visible;\n  opacity: 1;\n  transition: visibility 0s linear 0s, opacity 300ms;\n}\n\n#" + name + "-settings-panel ul li:hover {\n  background-color: " + theme["hover-color"] + ";\n  cursor: pointer;\n}\n\n#" + name + "-settings-panel ul li label:hover {\n  cursor: pointer;\n}\n\n#" + name + "-loopbar:hover {\n  cursor: pointer;\n}\n\n#" + name + "-status-btn:hover {\n  cursor: pointer;\n}\n\n#" + name + "-controls:active #" + name + "-cursor,\n#" + name + "-controls:hover #" + name + "-cursor  {\n  width: 16px;\n  height: 16px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#" + name + "-volume ." + name + "-volume-cursor-transition {\n  width: 12px;\n  height: 12px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#" + name + "-volume ." + name + "-volume-width-transition\n {\n  width: 50px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#" + name + "-time-display." + name + "-time-width-transition {\n  left: 140px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#" + name + "-settings-speed:hover ." + name + "-speed-btn {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#" + name + "-status-btn:hover {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#" + name + "-loop-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n#" + name + "-settings-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#" + name + "-full-screen-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}";
-};
+.full-screen #${name}-settings-panel {
+  position:fixed;
+  bottom: 45px;
+}
+
+.svg {
+  fill: ${theme["svg-color"]};
+  stroke: ${theme["svg-color"]};
+}
+
+#${name}-pointer-event-panel{
+  width:100%;
+  height:calc( 100% - 45px );
+  position:absolute;
+  z-index:100;
+}
+#${name}-listener-helper{
+  width:100%;
+  height:calc( 100% - 45px );
+  position:absolute;
+  z-index:110;
+}
+.svg-selected svg{
+  fill: ${theme["svg-selected-color"]};
+  stroke: ${theme["svg-selected-color"]};
+}
+#${name}-hover-display{
+    border: ${theme["preview-border"]};
+    max-width:300px;
+    display: flex;
+    overflow:hidden;
+    background-color: black;
+    position: absolute;
+    bottom: 14px;
+    left: 0px;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+#${name}-hover-millisecond {
+  background-color: ${theme["hms-background-color"]};
+  padding:3px;
+  height:18px;
+  margin:0px;
+  line-height:12px;
+  font-size:10px;
+  text-align: center;
+  min-width:20px;
+  max-width:100px;
+  z-index:2;
+}
+#${name},
+#${name} ::before,
+#${name} ::after,
+#${name} div,
+#${name} p,
+#${name} span,
+#${name} ul,
+#${name} li {
+  font-weight: 400;
+  line-height: 1.9 !important;
+  color: ${theme["color"]};
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  box-sizing:border-box;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#${name} {
+  line-height: 1.9;
+  font-size: 12px;
+  overflow:hidden;
+  height: calc(100% + ${theme["controls-position"]});
+  width:100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  
+}
+
+#${name}-settings-speed-hide {
+  text-align:right;
+}
+
+.grad {
+  background-image: linear-gradient(
+    rgba(100,100,100,00.01),
+    rgba(100,100,100,00.02),
+    rgba(100,100,100,00.03),
+    rgba(100,100,100,0.04),
+    rgba(100,100,100,0.05),
+    rgba(0,0,0,0.06),
+    rgba(0,0,0,0.07),
+    rgba(0,0,0,0.08),
+    rgba(0,0,0,0.09),
+    rgba(0,0,0,0.1),
+    rgba(0,0,0,0.2),
+    rgba(0,0,0,0.3),
+    rgba(0,0,0,0.4),
+    rgba(0,0,0,0.4),
+    rgba(0,0,0,0.5),
+    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.7),
+    rgba(0,0,0,0.8),
+    rgba(0,0,0,0.9),
+    rgba(0,0,0,1)
+  );
+  position:absolute;
+  width:100%;
+  height:${theme["grad-height"]};
+  left:0px;
+  bottom:0px;
+}
+
+#${name}-controls {
+  touch-action: none;
+  background-color: ${theme["background-color"]};
+  border: ${theme["controls-border"]};
+  position: absolute;
+  bottom: ${theme["controls-bottom"]};
+  left: 0px;
+  width: 100%;
+  height: 40px;
+}
+
+#${name}-totalbar {
+  width: calc(100% - 20px);
+  height: 5px;
+  margin: 0px 10px 0px 10px;
+  background-color: #505056;
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+#${name}-loopbar {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  background-color: ${theme["loopbar-color"]};
+}
+
+.${name}-loop-boundaries {
+  transform:translate(-50%,-37%);
+  position:absolute;
+  width:18px;
+  background-color:${theme["loopbar-color"]};
+  height:18px;
+  border-radius:10px;
+  z-index:40;
+}
+
+#${name}-helperbar {
+  position: absolute;
+  height: 20px;
+  top: -10px;
+  left: 0px;
+  right: 0px;
+  z-index:2;
+}
+
+#${name}-runningbar {
+  position: relative;
+  width: 0px;
+  max-width:100%;
+  height: 100%;
+  background-color: ${theme["runningbar-color"]};
+}
+
+#${name}-cursor {
+  transform:translate(50%,-36%);
+  right: 0px;
+  top: 0px;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  background-color: ${theme["cursor-color"]};
+  border-radius: 10px;
+  z-index: 5;
+}
+
+#${name}-left-controls {
+  display:inline-block;
+  width:200px;
+  height:35px;
+}
+#${name}-time-display {
+  display: table;
+  text-align: center;
+  width: auto;
+  height: 34px;
+  position: absolute;
+  left: 90px;
+  -webkit-transition: left 0.1s ease;
+  -moz-transition: left 0.1s ease;
+  transition: left 0.1s ease;
+}
+
+#${name}-time-display span {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#${name}-status-btn {
+  opacity: ${theme["button-opacity"]};
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 40px;
+  height: 25px;
+  position: absolute;
+  overflow:visible;
+  left: 0px;
+  bottom: 0px;
+  margin: 10px 5px 5px 5px;
+  text-align: center;
+  z-index:3;
+}
+
+#${name}-volume {
+  opacity: ${theme["button-opacity"]};
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  left: 45px;
+  bottom: 5px;
+  margin: 10px 5px 5px 5px;
+  text-align: center;
+  z-index:3;
+}
+#${name}-volume-btn {
+  width: 20px;
+  height: 15px;
+}
+
+#${name}-volumebar {
+  width: 0px;
+  height: 3px;
+  background-color: ${theme["loopbar-color"]};
+  position:absolute;
+  left:25px;
+  bottom:6px;
+  -webkit-transition: left 0.1s ease;
+  -moz-transition: left 0.1s ease;
+  transition: left 0.1s ease;
+}
+
+#${name}-volumebar-helper {
+  position: absolute;
+  width: 0px;
+  height: 15px;
+  left:25px;
+  bottom:0px;
+  z-index:10;
+}
+
+#${name}-volumebar-active {
+  position: relative;
+  width: 0%;
+  height: 100%;
+  background-color: ${theme["color"]};
+  position:relative;
+  left:0px;
+  bottom:0px;
+}
+
+#${name}-volume-cursor {
+  transform:translate(50%,-36%);
+  right: 0px;
+  top: 0px;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  background-color: ${theme["color"]};
+  border-radius: 10px;
+  z-index: 5;
+}
+
+.${name}-loopbar-time {
+  width:auto;
+  height:12px;
+  background-color:${theme["background-color"]};
+  line-height:10px;
+  font-size:10px;
+}
+
+#${name}-loop-time { 
+  position:absolute;
+  right:85px;
+  bottom:5px;
+}
+
+#${name}-loop-btn {
+  opacity: ${theme["button-opacity"]};
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  right: 55px;
+  bottom: 5px;
+  margin: 10px 5px 5px 5px;
+}
+
+#${name}-settings-btn {
+  opacity: ${theme["button-opacity"]};
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  right: 30px;
+  bottom: 5px;
+  margin: 10px 5px 5px 5px;
+}
+
+#${name}-full-screen-btn {
+  opacity: ${theme["button-opacity"]};
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  margin: 10px 5px 5px 5px;
+}
+
+.${name}-speed-btn {
+  position: relative;
+  opacity: ${theme["button-opacity"]};
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}
+
+#${name}-settings-panel {
+  touch-action: none;
+  box-sizing: border-box;
+  position: absolute;
+  z-index:101;
+  background-color: ${theme["settings-background-color"]};
+  bottom: ${theme["settings-panel-bottom"]};
+  border: ${theme["border"]};
+  right: 5px;
+  width: 164px;
+  height: 175px;
+  padding: 5px;
+  margin: 0px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.${name}-hide {
+  display:none !important;
+}
+
+#${name}-speed-value-bar {
+  position: relative;
+  width: 5px;
+  background-color: ${theme["speedbar-color"]};
+  display: inline-block;
+  box-sizing: border-box;
+  height: ${options.speedValues.length * 16}px;
+  float: left;
+  margin-right:15px;
+}
+
+#${name}-speed-value-helperbar {
+  position: absolute;
+  width: 25px;
+  height: ${options.speedValues.length * 16}px;
+  float: left;
+  left: -5px;
+  z-index:10;
+}
+
+
+#${name}-speed-value-bar:hover,
+#${name}-speed-value-helperbar {
+  cursor: pointer;
+}
+
+#${name}-volumebar:hover,
+#${name}-volumebar-helper:hover,
+#${name}-volume-btn:hover,
+#${name}-volumebar:active,
+#${name}-volumebar-helper:active,
+#${name}-volume-btn:active {
+  cursor:pointer;
+}
+
+#${name}-speed-cursor {
+  position: absolute;
+  background-color: ${theme["speedbar-cursor-color"]};
+  top: 0px;
+  left: 0px;
+}
+
+#${name}-speed-cursor div {
+  position: absolute;
+  background-color: ${theme["speedbar-cursor-color"]};
+  left: -2.5px;
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+}
+
+#${name}-speed-cursor:hover {
+  cursor: pointer;
+}
+
+.${name}-speed-value-step {
+  width: 16px;
+  background-color: ${theme["speedbar-color"]};
+  display: inline-block;
+  box-sizing: border-box;
+  height: 2px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  float: left;
+}
+
+#${name}-speed-value {
+  display: inline-block;
+  box-sizing: border-box;
+  height: ${options.speedValues.length * 16}px;
+  text-align: left;
+}
+
+.${name}-speed-value {
+  box-sizing: border-box;
+  height: 16px;
+  font-size: 12px;
+}
+
+#${name}-indicator {
+  font-size: 8px !important;
+  position: relative;
+  bottom: 15px;
+  color: ${theme["color"]};
+  white-space: nowrap;
+}
+
+#${name}-speed-settings {
+  height: ${options.speedValues.length * 16 + 32 + 10 - 2}px;
+}
+
+#${name}-speed-settings li.no-hover { 
+  height: ${options.speedValues.length * 16 + 10 - 2}px; 
+}
+#${name}-settings-panel.${name}-settings-speed-panel {
+  overflow: hidden;
+  width: 80px;
+  height: ${options.speedValues.length * 16 + 32 + 20}px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#${name}-settings-panel.${name}-settings-speed-panel .${name}-speed-btn {
+  float: left;
+}
+
+.${name}-settings-speed-panel ul:first-child {
+  text-align: right;
+}
+
+#${name}-speed-current {
+  float: right;
+  padding-right: 10px
+}
+
+#${name}-settings-panel .${name}-speed-btn {
+  float: right;
+}
+
+#${name}-settings-panel ul {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+#${name}-settings-panel.${name}-settings-speed-panel ul li {
+  min-width: 70px;
+}
+
+#${name}-settings-panel ul li.no-hover:hover {
+  background-color: transparent;
+  cursor: default;
+}
+
+div.${name}-speed-value:hover {
+  background-color: ${theme["hover-color"]};
+  cursor: pointer;
+}
+
+#${name}-settings-panel ul li {
+  position: relative;
+  width: 100%;
+  min-width: 154px;
+  list-style-type: none;
+  margin: 0px;
+  padding: 5px;
+}
+
+#${name}-settings-panel ul li label {
+  margin: 0px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 35px;
+  height: 18px;
+}
+
+.switch input {
+  display: none;
+}
+
+.settings-switch {
+  float: right;
+}
+
+.settings-switch:after {
+  clear: both;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: ${theme["slider-off-color"]};
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 1px;
+  bottom: 1px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked+.slider {
+  background-color: ${theme["slider-on-color"]};
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px ${theme["slider-on-color"]};
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+
+
+/* Rounded sliders */
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+.m-fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 300ms, opacity 300ms;
+}
+
+.m-fadeIn {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 300ms;
+}
+
+#${name}-settings-panel ul li:hover {
+  background-color: ${theme["hover-color"]};
+  cursor: pointer;
+}
+
+#${name}-settings-panel ul li label:hover {
+  cursor: pointer;
+}
+
+#${name}-loopbar:hover {
+  cursor: pointer;
+}
+
+#${name}-status-btn:hover {
+  cursor: pointer;
+}
+
+#${name}-controls:active #${name}-cursor,
+#${name}-controls:hover #${name}-cursor  {
+  width: 16px;
+  height: 16px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#${name}-volume .${name}-volume-cursor-transition {
+  width: 12px;
+  height: 12px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#${name}-volume .${name}-volume-width-transition
+ {
+  width: 50px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#${name}-time-display.${name}-time-width-transition {
+  left: 140px;
+  -webkit-transition: left 0.3s ease;
+  -moz-transition: left 0.3s ease;
+  transition: left 0.3s ease;
+}
+
+#${name}-settings-speed:hover .${name}-speed-btn {
+  opacity: 1;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#${name}-status-btn:hover {
+  opacity: 1;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#${name}-loop-btn:hover {
+  cursor: pointer;
+  opacity: 1;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#${name}-settings-btn:hover {
+  cursor: pointer;
+  opacity: 1;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#${name}-full-screen-btn:hover {
+  cursor: pointer;
+  opacity: 1;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}`;

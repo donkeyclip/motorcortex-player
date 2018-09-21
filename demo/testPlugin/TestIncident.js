@@ -1,5 +1,4 @@
-import MC from "@kissmybutton/motorcortex";
-
+const MC = require("@kissmybutton/motorcortex");
 const { TimedIncident } = MC;
 
 class TestIncident extends TimedIncident {

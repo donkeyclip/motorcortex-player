@@ -46,6 +46,7 @@ module.exports = _this => {
     _this.elements.volumeBar.classList.toggle(
       `${_this.name}-volume-width-transition`
     );
+    _this.elements.volumeBar.classList.toggle(`${_this.name}-hide`);
     _this.elements.volumeBarHelper.classList.toggle(
       `${_this.name}-volume-width-transition`
     );
@@ -91,6 +92,8 @@ module.exports = _this => {
       if (_this.elements.settingsPanel.contains(e.target)) {
         return true;
       }
+      _this.elements.settingsPanel.classList.toggle(`${_this.name}-hide`);
+
       _this.elements.settingsPanel.classList.toggle(`m-fadeOut`);
       _this.elements.settingsPanel.classList.toggle(`m-fadeIn`);
       if (_this.elements.settingsPanel.className.includes(`m-fadeOut`)) {

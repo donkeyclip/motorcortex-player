@@ -73,6 +73,7 @@ module.exports = {
     host: "0.0.0.0",
     port: 8080,
     historyApiFallback: false,
-    hot: false
+    hot: false,
+    contentBase: "./demo"
   }
 };

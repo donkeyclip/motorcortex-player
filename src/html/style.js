@@ -211,9 +211,9 @@ module.exports = (theme, name, options) => `
   height: 34px;
   position: absolute;
   left: 90px;
-  -webkit-transition: all 0.1s ease;
-  -moz-transition: all 0.1s ease;
-  transition: all 0.1s ease;
+  -webkit-transition: left 0.1s ease;
+  -moz-transition: left 0.1s ease;
+  transition: left 0.1s ease;
 }
 
 #${name}-time-display span {
@@ -259,9 +259,9 @@ module.exports = (theme, name, options) => `
   position:absolute;
   left:25px;
   bottom:6px;
-  -webkit-transition: all 0.1s ease;
-  -moz-transition: all 0.1s ease;
-  transition: all 0.1s ease;
+  -webkit-transition: left 0.1s ease;
+  -moz-transition: left 0.1s ease;
+  transition: left 0.1s ease;
 }
 
 #${name}-volumebar-helper {
@@ -369,6 +369,10 @@ module.exports = (theme, name, options) => `
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
+}
+
+.${name}-hide {
+  display:none !important;
 }
 
 #${name}-speed-value-bar {
@@ -651,9 +655,9 @@ input:checked+.slider:before {
 
 #${name}-time-display.${name}-time-width-transition {
   left: 140px;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+  -webkit-transition: left 0.3s ease;
+  -moz-transition: left 0.3s ease;
+  transition: left 0.3s ease;
 }
 
 #${name}-settings-speed:hover .${name}-speed-btn {

@@ -1,38 +1,28 @@
-"use strict";
+const MC = require(`@kissmybutton/motorcortex`);
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+const timeCapsule = new MC.TimeCapsule();
+const mch = new MC.Helper();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+const { elid, eltag, elcreate } = require(`./helpers`);
+const svg = require("./html/svg");
+const config = require(`./config`);
+const confStyle = require(`./html/style`);
+const confThemes = require(`./html/themes`);
+const setElements = require(`./html/setElements`);
 
-var MC = require("@kissmybutton/motorcortex");
-
-var timeCapsule = new MC.TimeCapsule();
-var mch = new MC.Helper();
-
-var _require = require("./helpers"),
-    elid = _require.elid,
-    eltag = _require.eltag,
-    elcreate = _require.elcreate;
-
-var svg = require("./html/svg");
-var config = require("./config");
-var confStyle = require("./html/style");
-var confThemes = require("./html/themes");
-var setElements = require("./html/setElements");
-
-var volumeListener = require("./listeners/volume");
-var loopBarStartListener = require("./listeners/loopBarStart");
-var loopBarEndListener = require("./listeners/loopBarEnd");
-var loopStartEndListener = require("./listeners/loopStartEnd");
-var progressBarListener = require("./listeners/progressBar");
-var statusBtnListener = require("./listeners/statusBtn");
-var settingsListener = require("./listeners/settings");
-var speedListener = require("./listeners/speed");
-var loopBtnListener = require("./listeners/loopBtn");
-var controlsListener = require("./listeners/controls");
-var fullscreenListener = require("./listeners/fullscreen");
-var previewListener = require("./listeners/preview");
-var bodyListener = require("./listeners/body");
+const volumeListener = require(`./listeners/volume`);
+const loopBarStartListener = require(`./listeners/loopBarStart`);
+const loopBarEndListener = require(`./listeners/loopBarEnd`);
+const loopStartEndListener = require(`./listeners/loopStartEnd`);
+const progressBarListener = require(`./listeners/progressBar`);
+const statusBtnListener = require(`./listeners/statusBtn`);
+const settingsListener = require(`./listeners/settings`);
+const speedListener = require(`./listeners/speed`);
+const loopBtnListener = require(`./listeners/loopBtn`);
+const controlsListener = require(`./listeners/controls`);
+const fullscreenListener = require(`./listeners/fullscreen`);
+const previewListener = require(`./listeners/preview`);
+const bodyListener = require(`./listeners/body`);
 
 /**
  * @classdesc
@@ -41,17 +31,13 @@ var bodyListener = require("./listeners/body");
  * state but also provide an interface for interacting/altering the timing of it
  */
 
-var Player = function () {
-  function Player(options) {
-    var _this = this;
-
-    _classCallCheck(this, Player);
-
+class Player {
+  constructor(options) {
     // set defaults
     options.id = options.id || mch.getAnId();
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
-    options.theme = options.theme || "transparent on-top";
+    options.theme = options.theme || `transparent on-top`;
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
     } else {
@@ -60,7 +46,7 @@ var Player = function () {
 
     options.speedValues = options.speedValues || [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     // remove strings
-    for (var i in options.speedValues) {
+    for (const i in options.speedValues) {
       if (!isFinite(options.speedValues[i])) {
         options.speedValues.splice(i, 1);
       }
@@ -113,383 +99,345 @@ var Player = function () {
     if (this.options.preview) {
       this.createPreviewDisplay();
     }
-    window.addEventListener("resize", function () {
-      if (_this.options.preview) {
-        _this.setPreviewDimentions();
+    window.addEventListener(`resize`, () => {
+      if (this.options.preview) {
+        this.setPreviewDimentions();
       }
     });
   }
 
-  _createClass(Player, [{
-    key: "createJourney",
-    value: function createJourney(clip, millisecond) {
-      var _this2 = this;
-
-      var clipCommands = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      setTimeout(function () {
-        var def = null;
-        var _clipCommands$before = clipCommands.before,
-            before = _clipCommands$before === undefined ? def : _clipCommands$before,
-            _clipCommands$after = clipCommands.after,
-            after = _clipCommands$after === undefined ? def : _clipCommands$after;
-
-        before ? clip[before]() : null;
-        _this2.settings.journey = timeCapsule.startJourney(clip);
-        _this2.settings.journey.station(millisecond);
-        _this2.settings.journey.destination();
-        after ? clip[after]() : null;
-      }, 0);
-    }
-  }, {
-    key: "millisecondChange",
-    value: function millisecondChange(millisecond) {
-      if (!this.settings.needsUpdate) {
-        this.clip.wait();
-        return 1;
-      }
-
-      var clip = this.clip;
-      var _settings = this.settings,
-          loopActivated = _settings.loopActivated,
-          loopEndMillisecond = _settings.loopEndMillisecond,
-          loopStartMillisecond = _settings.loopStartMillisecond;
-
-
-      var duration = this.clip.duration;
-
-      var _elements = this.elements,
-          totalBar = _elements.totalBar,
-          loopBar = _elements.loopBar;
-
-
-      var loopBarWidth = loopBar.offsetWidth;
-      var loopBarLeft = loopBar.offsetLeft / totalBar.offsetWidth;
-      var localMillisecond = millisecond - duration * loopBarLeft;
-      var localDuration = duration / totalBar.offsetWidth * loopBarWidth;
-
-      if (millisecond >= loopEndMillisecond && loopActivated) {
-        if (clip.state === "idle" || clip.state === "completed") {
-          this.createJourney(clip, loopStartMillisecond + 1, {
-            before: "stop",
-            after: "play"
-          });
-        } else {
-          this.createJourney(clip, loopStartMillisecond + 1, {
-            after: "resume"
-          });
-        }
-        return 1;
-      } else if (millisecond <= loopStartMillisecond && loopActivated) {
-        if (clip.state === "idle" || clip.state === "completed") {
-          this.createJourney(clip, loopEndMillisecond - 1, {
-            before: "stop",
-            after: "play"
-          });
-        } else {
-          this.createJourney(clip, loopEndMillisecond - 1, {
-            after: "resume"
-          });
-        }
-        return 1;
-      } /*else if (millisecond > loopEndMillisecond) {
-        // this.settings.needsUpdate = false;
-        // this.createJourney(clip, loopEndMillisecond);
-        this.elements.runningBar.style.width = `100%`;
-        this.elements.currentTime.innerHTML = loopEndMillisecond;
-        return 1;
-        } else if (millisecond < loopStartMillisecond) {
-        this.settings.needsUpdate = false;
-        // this.createJourney(clip, loopStartMillisecond);
-        this.elements.runningBar.style.width = `0%`;
-        this.elements.currentTime.innerHTML = loopStartMillisecond;
-        return 1;
-        }*/
-
-      this.elements.runningBar.style.width = localMillisecond / localDuration * 100 + "%";
-
-      this.elements.currentTime.innerHTML = millisecond;
-    }
-  }, {
-    key: "eventBroadcast",
-    value: function eventBroadcast(eventName, meta) {
-      if (eventName === "state-change") {
-        if (meta.newState === "waiting") {
-          this.elements.statusButton.innerHTML = svg.playSVG;
-          this.elements.statusButton.appendChild(this.elements.indicator);
-          this.elements.indicator.innerHTML = "Waiting";
-        } else if (meta.newState === "playing") {
-          this.elements.statusButton.innerHTML = svg.pauseSVG;
-          this.elements.statusButton.appendChild(this.elements.indicator);
-          this.elements.indicator.innerHTML = "Playing";
-        } else if (meta.newState === "completed") {
-          this.elements.currentTime.innerHTML = this.clip.duration;
-          this.elements.statusButton.innerHTML = svg.replaySVG;
-          this.elements.statusButton.appendChild(this.elements.indicator);
-          this.elements.indicator.innerHTML = "Completed";
-        } else if (meta.newState === "transitional") {
-          this.elements.statusButton.innerHTML = svg.playSVG;
-          this.elements.statusButton.appendChild(this.elements.indicator);
-          this.elements.indicator.innerHTML = "Transitional";
-        } else if (meta.newState === "idle") {
-          this.elements.statusButton.innerHTML = svg.playSVG;
-          this.elements.statusButton.appendChild(this.elements.indicator);
-          this.elements.indicator.innerHTML = "Idle";
-        } else {
-          this.elements.indicator.innerHTML = meta.newSTate;
-        }
-      } else if (eventName === "attribute-rejection") {
-        mch.log("Attributes", meta.attributes, "have been rejected from animation with id " + meta.animationID);
-      } else if (eventName === "animation-rejection") {
-        mch.log("Animation " + meta.animationID + " has been rejected as all attributes of \n        it overlap on specific elements because of existing animations");
-      } else if (eventName === "duration-change") {
-        this.elements.totalTime.innerHTML = this.clip.duration;
-        this.settings.loopEndMillisecond = this.clip.duration;
-        this.millisecondChange(this.clip.runTimeInfo.currentMillisecond, this.clip.state);
-      }
-    }
-  }, {
-    key: "subscribeToEvents",
-    value: function subscribeToEvents() {
-      this.clip.subscribeToEvents(this.id, this.eventBroadcast.bind(this));
-    }
-  }, {
-    key: "subscribeToTimer",
-    value: function subscribeToTimer() {
-      this.clip.subscribe(this.id, this.millisecondChange.bind(this));
-    }
-  }, {
-    key: "handleDragStart",
-    value: function handleDragStart() {
-      this.settings.needsUpdate = true;
-      this.settings.journey = timeCapsule.startJourney(this.clip);
-    }
-  }, {
-    key: "handleDrag",
-    value: function handleDrag(loopBarPositionX) {
-      if (!isFinite(loopBarPositionX)) {
-        loopBarPositionX = 0;
-      }
-      var duration = this.clip.duration;
-      var journey = this.settings.journey;
-      var _elements2 = this.elements,
-          loopBar = _elements2.loopBar,
-          totalBar = _elements2.totalBar,
-          runningBar = _elements2.runningBar,
-          currentTime = _elements2.currentTime;
-
-
-      var totalBarPositionX = loopBarPositionX + loopBar.offsetLeft;
-
-      var millisecond = Math.round(duration * totalBarPositionX / totalBar.offsetWidth);
-
-      currentTime.innerHTML = millisecond;
-
-      runningBar.style.width = loopBarPositionX / loopBar.offsetWidth * 100 + "%";
-
-      journey.station(millisecond);
-    }
-  }, {
-    key: "handleDragEnd",
-    value: function handleDragEnd() {
+  createJourney(clip, millisecond, clipCommands = {}) {
+    setTimeout(() => {
+      const def = null;
+      const { before = def, after = def } = clipCommands;
+      before ? clip[before]() : null;
+      this.settings.journey = timeCapsule.startJourney(clip);
+      this.settings.journey.station(millisecond);
       this.settings.journey.destination();
+      after ? clip[after]() : null;
+    }, 0);
+  }
+
+  millisecondChange(millisecond) {
+    if (!this.settings.needsUpdate) {
+      this.clip.wait();
+      return 1;
     }
-  }, {
-    key: "createProgressDrag",
-    value: function createProgressDrag(loopBarPositionX) {
-      this.handleDragStart();
-      this.handleDrag(loopBarPositionX);
-      this.handleDragEnd();
+
+    const { clip } = this;
+
+    const {
+      loopActivated,
+      loopEndMillisecond,
+      loopStartMillisecond
+    } = this.settings;
+
+    const duration = this.clip.duration;
+
+    const { totalBar, loopBar } = this.elements;
+
+    const loopBarWidth = loopBar.offsetWidth;
+    const loopBarLeft = loopBar.offsetLeft / totalBar.offsetWidth;
+    const localMillisecond = millisecond - duration * loopBarLeft;
+    const localDuration = duration / totalBar.offsetWidth * loopBarWidth;
+
+    if (millisecond >= loopEndMillisecond && loopActivated) {
+      if (clip.state === `idle` || clip.state === `completed`) {
+        this.createJourney(clip, loopStartMillisecond + 1, {
+          before: "stop",
+          after: "play"
+        });
+      } else {
+        this.createJourney(clip, loopStartMillisecond + 1, {
+          after: "resume"
+        });
+      }
+      return 1;
+    } else if (millisecond <= loopStartMillisecond && loopActivated) {
+      if (clip.state === `idle` || clip.state === `completed`) {
+        this.createJourney(clip, loopEndMillisecond - 1, {
+          before: "stop",
+          after: "play"
+        });
+      } else {
+        this.createJourney(clip, loopEndMillisecond - 1, {
+          after: "resume"
+        });
+      }
+      return 1;
+    } /*else if (millisecond > loopEndMillisecond) {
+      // this.settings.needsUpdate = false;
+      // this.createJourney(clip, loopEndMillisecond);
+      this.elements.runningBar.style.width = `100%`;
+      this.elements.currentTime.innerHTML = loopEndMillisecond;
+      return 1;
+      } else if (millisecond < loopStartMillisecond) {
+      this.settings.needsUpdate = false;
+      // this.createJourney(clip, loopStartMillisecond);
+      this.elements.runningBar.style.width = `0%`;
+      this.elements.currentTime.innerHTML = loopStartMillisecond;
+      return 1;
+      }*/
+
+    this.elements.runningBar.style.width = localMillisecond / localDuration * 100 + `%`;
+
+    this.elements.currentTime.innerHTML = millisecond;
+  }
+
+  eventBroadcast(eventName, meta) {
+    if (eventName === `state-change`) {
+      if (meta.newState === `waiting`) {
+        this.elements.statusButton.innerHTML = svg.playSVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Waiting`;
+      } else if (meta.newState === `playing`) {
+        this.elements.statusButton.innerHTML = svg.pauseSVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Playing`;
+      } else if (meta.newState === `completed`) {
+        this.elements.currentTime.innerHTML = this.clip.duration;
+        this.elements.statusButton.innerHTML = svg.replaySVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Completed`;
+      } else if (meta.newState === `transitional`) {
+        this.elements.statusButton.innerHTML = svg.playSVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Transitional`;
+      } else if (meta.newState === `idle`) {
+        this.elements.statusButton.innerHTML = svg.playSVG;
+        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.indicator.innerHTML = `Idle`;
+      } else {
+        this.elements.indicator.innerHTML = meta.newSTate;
+      }
+    } else if (eventName === `attribute-rejection`) {
+      mch.log(`Attributes`, meta.attributes, `have been rejected from animation with id ${meta.animationID}`);
+    } else if (eventName === `animation-rejection`) {
+      mch.log(`Animation ${meta.animationID} has been rejected as all attributes of 
+        it overlap on specific elements because of existing animations`);
+    } else if (eventName === `duration-change`) {
+      this.elements.totalTime.innerHTML = this.clip.duration;
+      this.settings.loopEndMillisecond = this.clip.duration;
+      this.millisecondChange(this.clip.runTimeInfo.currentMillisecond, this.clip.state);
     }
-  }, {
-    key: "addEventListeners",
-    value: function addEventListeners() {
-      loopBarEndListener(this);
-      progressBarListener(this);
-      loopBarStartListener(this);
-      loopStartEndListener(this);
-      volumeListener(this);
-      statusBtnListener(this);
-      settingsListener(this);
-      speedListener(this);
-      loopBtnListener(this);
-      controlsListener(this);
-      fullscreenListener(this);
-      previewListener(this);
-      bodyListener(this);
+  }
+
+  subscribeToEvents() {
+    this.clip.subscribeToEvents(this.id, this.eventBroadcast.bind(this));
+  }
+
+  subscribeToTimer() {
+    this.clip.subscribe(this.id, this.millisecondChange.bind(this));
+  }
+
+  handleDragStart() {
+    this.settings.needsUpdate = true;
+    this.settings.journey = timeCapsule.startJourney(this.clip);
+  }
+
+  handleDrag(loopBarPositionX) {
+    if (!isFinite(loopBarPositionX)) {
+      loopBarPositionX = 0;
     }
-  }, {
-    key: "launchIntoFullscreen",
-    value: function launchIntoFullscreen(element) {
-      if (this.options.preview) {
-        this.setPreviewDimentions();
-      }
+    const { duration } = this.clip;
+    const { journey } = this.settings;
+    const { loopBar, totalBar, runningBar, currentTime } = this.elements;
 
-      this.elements.mcPlayer.classList.toggle("full-screen");
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen();
-      } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
-      }
-    }
-  }, {
-    key: "exitFullscreen",
-    value: function exitFullscreen() {
-      if (this.options.preview) {
-        this.setPreviewDimentions();
-      }
-      this.elements.mcPlayer.classList.toggle("full-screen");
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
-    }
-  }, {
-    key: "setTheme",
-    value: function setTheme() {
-      // replace multiple spaces with one space
-      this.options.theme.replace(/\s\s+/g, " ");
-      this.options.theme.trim();
+    const totalBarPositionX = loopBarPositionX + loopBar.offsetLeft;
 
-      if (!this.options.theme.includes("on-top") && !this.options.theme.includes("position-default")) {
-        this.options.theme += " position-default";
-      }
+    const millisecond = Math.round(duration * totalBarPositionX / totalBar.offsetWidth);
 
-      var theme = {};
-      for (var i in this.options.theme.split(" ")) {
-        var confTheme = confThemes(this.options.theme.split(" ")[i]);
-        for (var q in confTheme || {}) {
-          theme[q] = confTheme[q];
-        }
-      }
-      var css = confStyle(theme, this.name, this.options);
-      var style = elcreate("style");
+    currentTime.innerHTML = millisecond;
 
-      style.styleSheet ? style.styleSheet.cssText = css : style.appendChild(document.createTextNode(css));
+    runningBar.style.width = loopBarPositionX / loopBar.offsetWidth * 100 + `%`;
 
-      // append player style to document
-      eltag("head")[0].appendChild(style);
-    }
-  }, {
-    key: "setSpeed",
-    value: function setSpeed() {
-      var _this3 = this;
+    journey.station(millisecond);
+  }
 
-      var currentSpeed = void 0;
-      this.clip.speed == 1 ? currentSpeed = "Normal" : currentSpeed = this.clip.speed;
-      this.elements.speedCurrent.innerHTML = currentSpeed;
+  handleDragEnd() {
+    this.settings.journey.destination();
+  }
 
-      var targetZone = function () {
-        for (var i = 0; i < _this3.options.speedValues.length - 1; i++) {
-          if (_this3.options.speedValues[i] <= _this3.clip.speed && _this3.options.speedValues[i + 1] > _this3.clip.speed) {
-            return i + Math.abs((_this3.clip.speed - _this3.options.speedValues[i]) / (_this3.options.speedValues[i] - _this3.options.speedValues[i + 1]));
-          }
-        }
-      }();
+  createProgressDrag(loopBarPositionX) {
+    this.handleDragStart();
+    this.handleDrag(loopBarPositionX);
+    this.handleDragEnd();
+  }
+  addEventListeners() {
+    loopBarEndListener(this);
+    progressBarListener(this);
+    loopBarStartListener(this);
+    loopStartEndListener(this);
+    volumeListener(this);
+    statusBtnListener(this);
+    settingsListener(this);
+    speedListener(this);
+    loopBtnListener(this);
+    controlsListener(this);
+    fullscreenListener(this);
+    previewListener(this);
+    bodyListener(this);
+  }
 
-      var step = 1 / (this.options.speedValues.length - 1);
-
-      var positionY = (targetZone * step - 1) * -1 * (this.options.speedValues.length - 1) * 16;
-
-      elid(this.name + "-speed-cursor").style.top = positionY + "px";
-    }
-  }, {
-    key: "calculateSpeed",
-    value: function calculateSpeed(step, arrayOfValues, currentPercentage) {
-      var botLimitIndex = Math.floor(currentPercentage / step);
-
-      if (botLimitIndex === arrayOfValues.length - 1) {
-        return arrayOfValues[botLimitIndex].toFixed(1);
-      }
-
-      var limitZonePercentage = currentPercentage / step % 1;
-
-      var limitZoneLength = Math.abs(arrayOfValues[botLimitIndex] - arrayOfValues[botLimitIndex + 1]);
-
-      var realZoneSpeed = limitZonePercentage * limitZoneLength;
-
-      var realSpeed = (realZoneSpeed + arrayOfValues[botLimitIndex]).toFixed(1);
-
-      if (realSpeed == 0) {
-        return "0.0";
-      }
-      return realSpeed;
-    }
-  }, {
-    key: "createPreviewDisplay",
-    value: function createPreviewDisplay() {
-      var definition = this.clip.exportState({ unprocessed: true });
-      definition.props.host = elid(this.name + "-hover-display");
-      definition.props.isPreviewClip = true;
-      this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
-
-      var previewClip = this.previewClip.props.host.getElementsByTagName("iframe")[0];
-
-      this.previewClip.ownContext.isPreviewClip = true;
-      previewClip.style.position = "absolute";
-
-      previewClip.style.zIndex = 1;
+  launchIntoFullscreen(element) {
+    if (this.options.preview) {
       this.setPreviewDimentions();
     }
-  }, {
-    key: "setPreviewDimentions",
-    value: function setPreviewDimentions() {
-      var clip = this.clip.props.host.getElementsByTagName("iframe")[0];
-      var previewClip = this.previewClip.props.host.getElementsByTagName("iframe")[0];
 
-      var clipWidth = clip.offsetWidth;
+    this.elements.mcPlayer.classList.toggle(`full-screen`);
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  }
 
-      var clipHeight = clip.offsetHeight;
+  exitFullscreen() {
+    if (this.options.preview) {
+      this.setPreviewDimentions();
+    }
+    this.elements.mcPlayer.classList.toggle(`full-screen`);
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
 
-      var previewRatio = 0.25;
+  setTheme() {
+    // replace multiple spaces with one space
+    this.options.theme.replace(/\s\s+/g, ` `);
+    this.options.theme.trim();
 
-      var previewWidth = clipWidth * previewRatio;
+    if (!this.options.theme.includes(`on-top`) && !this.options.theme.includes(`position-default`)) {
+      this.options.theme += ` position-default`;
+    }
 
-      // max width is 300
-      if (previewWidth > parseFloat(elid(this.name + "-hover-display").style.maxWidth)) {
-        previewWidth = parseFloat(elid(this.name + "-hover-display").style.maxWidth);
-      }
-
-      elid(this.name + "-hover-display").style.width = previewWidth + "px";
-
-      var previewHeight = clipHeight / clipWidth * previewWidth;
-
-      elid(this.name + "-hover-display").style.height = previewHeight + "px";
-
-      var scaleY = previewHeight / clipHeight;
-      var scaleX = previewWidth / clipWidth;
-
-      previewClip.style.transform = "scale(" + scaleX + "," + scaleY + ")";
-      previewClip.style.transformOrigin = "center bottom";
-      previewClip.style.boxSizing = "border-box";
-
-      // check if width of iframe is percentage
-      if (this.clip.props.containerParams.width.includes("%")) {
-        if (previewWidth / previewRatio - 2 / previewRatio > parseFloat(elid(this.name + "-hover-display").style.maxWidth)) {
-          previewClip.style.width = "298px";
-        } else {
-          previewClip.style.width = previewWidth / previewRatio - 2 / previewRatio + "px";
-        }
-      }
-
-      if (this.clip.props.containerParams.height.includes("%")) {
-        if (previewWidth / previewRatio - 2 / previewRatio > parseFloat(elid(this.name + "-hover-display").style.maxWidth)) {
-          previewClip.style.height = clipHeight / clipWidth * 300 - 2 + "px";
-        } else {
-          previewClip.style.height = previewHeight / previewRatio - 2 / previewRatio + "px";
-        }
+    const theme = {};
+    for (const i in this.options.theme.split(` `)) {
+      const confTheme = confThemes(this.options.theme.split(` `)[i]);
+      for (const q in confTheme || {}) {
+        theme[q] = confTheme[q];
       }
     }
-  }]);
+    const css = confStyle(theme, this.name, this.options);
+    const style = elcreate(`style`);
 
-  return Player;
-}();
+    style.styleSheet ? style.styleSheet.cssText = css : style.appendChild(document.createTextNode(css));
+
+    // append player style to document
+    eltag(`head`)[0].appendChild(style);
+  }
+
+  setSpeed() {
+    let currentSpeed;
+    this.clip.speed == 1 ? currentSpeed = `Normal` : currentSpeed = this.clip.speed;
+    this.elements.speedCurrent.innerHTML = currentSpeed;
+
+    const targetZone = (() => {
+      for (let i = 0; i < this.options.speedValues.length - 1; i++) {
+        if (this.options.speedValues[i] <= this.clip.speed && this.options.speedValues[i + 1] > this.clip.speed) {
+          return i + Math.abs((this.clip.speed - this.options.speedValues[i]) / (this.options.speedValues[i] - this.options.speedValues[i + 1]));
+        }
+      }
+    })();
+
+    const step = 1 / (this.options.speedValues.length - 1);
+
+    const positionY = (targetZone * step - 1) * -1 * (this.options.speedValues.length - 1) * 16;
+
+    elid(`${this.name}-speed-cursor`).style.top = positionY + `px`;
+  }
+
+  calculateSpeed(step, arrayOfValues, currentPercentage) {
+    const botLimitIndex = Math.floor(currentPercentage / step);
+
+    if (botLimitIndex === arrayOfValues.length - 1) {
+      return arrayOfValues[botLimitIndex].toFixed(1);
+    }
+
+    const limitZonePercentage = currentPercentage / step % 1;
+
+    const limitZoneLength = Math.abs(arrayOfValues[botLimitIndex] - arrayOfValues[botLimitIndex + 1]);
+
+    const realZoneSpeed = limitZonePercentage * limitZoneLength;
+
+    const realSpeed = (realZoneSpeed + arrayOfValues[botLimitIndex]).toFixed(1);
+
+    if (realSpeed == 0) {
+      return `0.0`;
+    }
+    return realSpeed;
+  }
+
+  createPreviewDisplay() {
+    const definition = this.clip.exportState({ unprocessed: true });
+    definition.props.host = elid(`${this.name}-hover-display`);
+    definition.props.isPreviewClip = true;
+    this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
+
+    const previewClip = this.previewClip.props.host.getElementsByTagName(`iframe`)[0];
+
+    this.previewClip.ownContext.isPreviewClip = true;
+    previewClip.style.position = `absolute`;
+
+    previewClip.style.zIndex = 1;
+    this.setPreviewDimentions();
+  }
+
+  setPreviewDimentions() {
+    const clip = this.clip.props.host.getElementsByTagName(`iframe`)[0];
+    const previewClip = this.previewClip.props.host.getElementsByTagName(`iframe`)[0];
+
+    const clipWidth = clip.offsetWidth;
+
+    const clipHeight = clip.offsetHeight;
+
+    const previewRatio = 0.25;
+
+    let previewWidth = clipWidth * previewRatio;
+
+    // max width is 300
+    if (previewWidth > parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)) {
+      previewWidth = parseFloat(elid(`${this.name}-hover-display`).style.maxWidth);
+    }
+
+    elid(`${this.name}-hover-display`).style.width = previewWidth + `px`;
+
+    const previewHeight = clipHeight / clipWidth * previewWidth;
+
+    elid(`${this.name}-hover-display`).style.height = previewHeight + `px`;
+
+    const scaleY = previewHeight / clipHeight;
+    const scaleX = previewWidth / clipWidth;
+
+    previewClip.style.transform = `scale(${scaleX},${scaleY})`;
+    previewClip.style.transformOrigin = `center bottom`;
+    previewClip.style.boxSizing = `border-box`;
+
+    // check if width of iframe is percentage
+    if (this.clip.props.containerParams.width.includes(`%`)) {
+      if (previewWidth / previewRatio - 2 / previewRatio > parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)) {
+        previewClip.style.width = `298px`;
+      } else {
+        previewClip.style.width = previewWidth / previewRatio - 2 / previewRatio + `px`;
+      }
+    }
+
+    if (this.clip.props.containerParams.height.includes(`%`)) {
+      if (previewWidth / previewRatio - 2 / previewRatio > parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)) {
+        previewClip.style.height = clipHeight / clipWidth * 300 - 2 + `px`;
+      } else {
+        previewClip.style.height = previewHeight / previewRatio - 2 / previewRatio + `px`;
+      }
+    }
+  }
+}
 
 module.exports = Player;

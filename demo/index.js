@@ -1,4 +1,4 @@
-const MotorCortex = require("./node_modules/@kissmybutton/motorcortex");
+const MotorCortex = require("@kissmybutton/motorcortex");
 const TestPluginDefinition = require("./testPlugin/main");
 const Player = require("../src/Player");
 
@@ -30,7 +30,7 @@ const config = {
     }
   `,
   html: `<div class="container">
-    <div id="one" class="element">MotorCortex\n Textillate-Plugin</div>
+    <div id="one" class="element">Motorcortex Player-Test Plugin</div>
   </div>`,
   host: document.getElementById("clip"),
   containerParams: {

@@ -1,3 +1,1 @@
-"use strict";
-
-module.exports = function () /*millisecond*/{};
+module.exports = () => /*millisecond*/{};
