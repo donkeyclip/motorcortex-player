@@ -1,6 +1,6 @@
 {
   "name": "@kissmybutton/motorcortex-player",
-  "version": "1.2.18",
+  "version": "1.2.19",
   "description": "Player plugin for MotorCortex",
   "main": "./dist/Player.js",
   "author": "KissMyButton PC (kissmybutton.gr) <opensource@kissmybutton.gr>",
@@ -69,7 +69,7 @@
     }
   },
   "peerDependencies": {
-    "@kissmybutton/motorcortex": "1.10.8-rc.57"
+    "@kissmybutton/motorcortex": "^1.10.8-rc.57"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
