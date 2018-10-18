@@ -50,9 +50,9 @@ module.exports = _this => {
     _this.elements.volumeBarHelper.classList.toggle(
       `${_this.name}-volume-width-transition`
     );
-    _this.elements.timeDisplay.classList.toggle(
-      `${_this.name}-time-width-transition`
-    );
+    // _this.elements.timeDisplay.classList.toggle(
+    //   `${_this.name}-time-width-transition`
+    // );
 
     const checkbox = elid(`${_this.name}-show-volume-checkbox`);
     if (checkbox.checked) {

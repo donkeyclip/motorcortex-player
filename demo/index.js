@@ -62,7 +62,7 @@ new Player({
   clip,
   theme: "transparent on-top",
   preview: true,
-  showVolume: true,
+  showVolume: false,
   speedValues: [
     8,
     3,

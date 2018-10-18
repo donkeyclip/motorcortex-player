@@ -138,6 +138,8 @@ module.exports = _this => {
   if (!_this.options.showVolume) {
     _this.elements.timeDisplay.style.left = `45px`;
     _this.elements.volumeControl.style.visibility = `hidden`;
+    _this.elements.volumeBar.classList.toggle(`${_this.name}-hide`);
+    _this.elements.volumeBar.classList.toggle(`${_this.name}-volume-width-transition`);
   } else {
     _this.elements.timeDisplay.style.left = ``;
 
