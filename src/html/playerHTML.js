@@ -56,6 +56,7 @@ module.exports = config => `
   config.name
 }-loopbar-time"></span>
     </div>
+    <div id="${config.name}-dc-btn">${config.svg.dcSVG}</div>
     <div id="${config.name}-loop-btn">${config.svg.loopSVG}</div>
     <div id="${config.name}-settings-btn">${config.svg.settingsSVG}</div>
     <div id="${config.name}-full-screen-btn">${config.svg.fullScreenSVG}</div>

@@ -21,6 +21,7 @@ const speedListener = require(`./listeners/speed`);
 const loopBtnListener = require(`./listeners/loopBtn`);
 const controlsListener = require(`./listeners/controls`);
 const fullscreenListener = require(`./listeners/fullscreen`);
+const donkeyclipListener = require(`./listeners/donkeyclip`);
 const previewListener = require(`./listeners/preview`);
 const bodyListener = require(`./listeners/body`);
 
@@ -298,6 +299,7 @@ class Player {
     loopBtnListener(this);
     controlsListener(this);
     fullscreenListener(this);
+    donkeyclipListener(this);
     previewListener(this);
     bodyListener(this);
   }
