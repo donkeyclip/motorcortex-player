@@ -39,6 +39,7 @@ module.exports = _this => {
   _this.elements.loopBarStart = elid(`${_this.name}-loopbar-start`);
   _this.elements.volumeCursor = elid(`${_this.name}-volume-cursor`);
   _this.elements.settingsButton = elid(`${_this.name}-settings-btn`);
+  _this.elements.donkeyclipButton = elid(`${_this.name}-dc-btn`);
   _this.elements.timeSeparator = elid(`${_this.name}-time-separator`);
   _this.elements.settingsPanel = elid(`${_this.name}-settings-panel`);
   _this.elements.settingsMainPanel = elid(`${_this.name}-main-settings`);

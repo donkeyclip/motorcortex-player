@@ -305,8 +305,21 @@ module.exports = (theme, name, options) => `
 
 #${name}-loop-time { 
   position:absolute;
-  right:85px;
+  right:115px;
   bottom:5px;
+}
+
+#${name}-dc-btn {
+    opacity: 0.8;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 20px;
+    height: 15px;
+    position: absolute;
+    right: 60px;
+    bottom: 7px;
+    margin: 10px 5px 5px 5px;
+    transform: scale(1.5,1.5);
 }
 
 #${name}-loop-btn {
@@ -316,10 +329,11 @@ module.exports = (theme, name, options) => `
   width: 15px;
   height: 15px;
   position: absolute;
-  right: 55px;
+  right: 85px;
   bottom: 5px;
   margin: 10px 5px 5px 5px;
 }
+
 
 #${name}-settings-btn {
   opacity: ${theme["button-opacity"]};
@@ -674,7 +688,9 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#${name}-loop-btn:hover {
+#${name}-loop-btn:hover,
+#${name}-dc-btn:hover
+ {
   cursor: pointer;
   opacity: 1;
   -webkit-transition: all 0.3s ease;

@@ -5,7 +5,8 @@ module.exports = {
   npm_name: "@kissmybutton/test-plugin",
   incidents: [
     {
-      exportable: TestIncident
+      exportable: TestIncident,
+      name: "TestIncident"
     }
   ],
   channel: TestChannel
