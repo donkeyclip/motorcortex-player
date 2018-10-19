@@ -1,9 +1,7 @@
 module.exports = _this => {
   _this.elements.donkeyclipButton.addEventListener(`click`, () => {
     const u = create_UUID();
-    const popupDC = window.open(
-      `https://kissmybutton.github.io/donkeyclip/dist/?u=${u}`
-    );
+    const popupDC = window.open(`http://localhost:8081?u=${u}`);
     const definition = _this.clip.exportState({ unprocessed: true });
     const clipClass = _this.clipClass;
     window.addEventListener("message", receiveMessage, false);
