@@ -51,7 +51,7 @@ const animation_1 = new TestPlugin.TestIncident(
   {
     id: "animation_1",
     selector: "#one",
-    duration: 9000
+    duration: 180000
   }
 );
 
