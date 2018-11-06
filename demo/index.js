@@ -51,11 +51,39 @@ const animation_1 = new TestPlugin.TestIncident(
   {
     id: "animation_1",
     selector: "#one",
-    duration: 180000
+    duration: 60000
+  }
+);
+const animation_2 = new TestPlugin.TestIncident(
+  {
+    animatedAttrs: {
+      left: 800,
+      opacity: 0
+    }
+  },
+  {
+    id: "animation_2",
+    selector: "#one",
+    duration: 60000
+  }
+);
+const animation_3 = new TestPlugin.TestIncident(
+  {
+    animatedAttrs: {
+      left: 800,
+      opacity: 0
+    }
+  },
+  {
+    id: "animation_3",
+    selector: "#one",
+    duration: 60000
   }
 );
 
 clip.addIncident(animation_1, 0);
+clip.addIncident(animation_2, 60000);
+clip.addIncident(animation_3, 120000);
 
 // Add clip to timer
 new Player({
