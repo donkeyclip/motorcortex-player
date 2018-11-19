@@ -110,7 +110,7 @@ const themes = {
     "controls-position": "0px"
   },
   "position-default": {
-    "controls-bottom": "-40px",
+    "controls-bottom": "-0px",
     "settings-panel-bottom": "5px",
     "controls-position": "40px"
   }

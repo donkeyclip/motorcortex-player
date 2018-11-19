@@ -88,7 +88,7 @@ clip.addIncident(animation_3, 120000);
 // Add clip to timer
 new Player({
   clip,
-  theme: "transparent on-top",
+  theme: "transparent",
   preview: true,
   showVolume: false,
   speedValues: [
