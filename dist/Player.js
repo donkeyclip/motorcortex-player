@@ -44,7 +44,7 @@ class Player {
     } else {
       options.pointerEvents = Boolean(options.pointerEvents);
     }
-
+    options.onMillisecondChange = options.onMillisecondChange || null;
     options.speedValues = options.speedValues || [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4];
     // remove strings
     for (const i in options.speedValues) {
@@ -89,6 +89,10 @@ class Player {
       loopEndMillisecond: this.clip.duration
     };
 
+    this.functions = {
+      millisecondChange: this.millisecondChange,
+      createJourney: this.createJourney
+    };
     // create the timer controls main div
     setElements(this);
     this.setTheme();
@@ -119,7 +123,7 @@ class Player {
     }, 0);
   }
 
-  millisecondChange(millisecond) {
+  millisecondChange(millisecond, timestamp, roundTo, makeJouney, executeOnMillisecondChange = true) {
     if (!this.settings.needsUpdate) {
       this.clip.wait();
       return 1;
@@ -166,23 +170,20 @@ class Player {
         });
       }
       return 1;
-    } /*else if (millisecond > loopEndMillisecond) {
-      // this.settings.needsUpdate = false;
-      // this.createJourney(clip, loopEndMillisecond);
-      this.elements.runningBar.style.width = `100%`;
-      this.elements.currentTime.innerHTML = loopEndMillisecond;
-      return 1;
-      } else if (millisecond < loopStartMillisecond) {
-      this.settings.needsUpdate = false;
-      // this.createJourney(clip, loopStartMillisecond);
-      this.elements.runningBar.style.width = `0%`;
-      this.elements.currentTime.innerHTML = loopStartMillisecond;
-      return 1;
-      }*/
+    }
 
+    if (makeJouney) {
+      this.createJourney(clip, millisecond, {
+        after: this.settings.playAfterResize ? "resume" : null
+      });
+    }
     this.elements.runningBar.style.width = localMillisecond / localDuration * 100 + `%`;
 
     this.elements.currentTime.innerHTML = millisecond;
+
+    if (this.options.onMillisecondChange && executeOnMillisecondChange) {
+      this.options.onMillisecondChange(millisecond);
+    }
   }
 
   eventBroadcast(eventName, meta) {
@@ -219,7 +220,7 @@ class Player {
     } else if (eventName === `duration-change`) {
       this.elements.totalTime.innerHTML = this.clip.duration;
       this.settings.loopEndMillisecond = this.clip.duration;
-      this.millisecondChange(this.clip.runTimeInfo.currentMillisecond, this.clip.state);
+      this.millisecondChange(this.clip.runTimeInfo.currentMillisecond);
     }
   }
 
@@ -236,7 +237,7 @@ class Player {
     this.settings.journey = timeCapsule.startJourney(this.clip);
   }
 
-  handleDrag(loopBarPositionX) {
+  handleDrag(loopBarPositionX, executeOnMillisecondChange = true) {
     if (!isFinite(loopBarPositionX)) {
       loopBarPositionX = 0;
     }
@@ -253,6 +254,10 @@ class Player {
     runningBar.style.width = loopBarPositionX / loopBar.offsetWidth * 100 + `%`;
 
     journey.station(millisecond);
+
+    if (this.options.onMillisecondChange && executeOnMillisecondChange) {
+      this.options.onMillisecondChange(millisecond);
+    }
   }
 
   handleDragEnd() {
