@@ -105,11 +105,15 @@ const themes = {
     "svg-selected-color": "red"
   },
   "on-top": {
+    "background-height": "100%",
+    "pointer-event-panel-height": "calc(100% - 45px)",
     "controls-bottom": "0px",
     "settings-panel-bottom": "45px",
     "controls-position": "0px"
   },
   "position-default": {
+    "background-height": "calc(100% - 40px)",
+    "pointer-event-panel-height": "calc(100% - 40px)",
     "controls-bottom": "-0px",
     "settings-panel-bottom": "5px",
     "controls-position": "40px"

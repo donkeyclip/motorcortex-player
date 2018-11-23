@@ -21,11 +21,8 @@ const config = {
     }
     .container {
       display: table;
-      position: absolute;
       height: 100%;
-      width: 80%;
       background-color:#292929;
-      margin-left:10%;
       border:2px solid black;
     }
   `,

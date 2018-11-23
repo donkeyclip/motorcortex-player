@@ -2,7 +2,7 @@ module.exports = (theme, name, options) => `
 .background {
   background-color: black;
   width:100%;
-  height:100%;
+  height:${theme["background-height"]};;
   position:absolute;
   top:0px;
   left:0px;
@@ -24,9 +24,11 @@ module.exports = (theme, name, options) => `
   stroke: ${theme["svg-color"]};
 }
 
+.pointer-event-panel {
+  height: ${theme["pointer-event-panel-height"]};
+}
 #${name}-pointer-event-panel{
   width:100%;
-  height:calc( 100% - 45px );
   position:absolute;
   z-index:100;
 }

@@ -4,15 +4,18 @@ const playerHTML = require("./playerHTML");
 
 module.exports = _this => {
   _this.elements = {};
-  const clipIframe = _this.clip.props.host.getElementsByTagName(`iframe`)[0];
+  const clipIframe = _this.clip.rootElement;
 
   // set _this.clip position to relative
   clipIframe.style.display = `block`;
   clipIframe.style.margin = `0 auto`;
   _this.clip.props.host.style.position = `relative`;
-
+  _this.clip.props.host.style.zIndex = `0`;
   // create the timer controls main div
   _this.elements.mcPlayer = elcreate(`div`);
+  clipIframe.innerHTML += "<slot></slot>";
+  // console.log(clipIframe);
+  // clipIframe.remove();
 
   _this.elements.mcPlayer.id = `${_this.name}`;
   _this.elements.mcPlayer.className = `${_this.className}`;

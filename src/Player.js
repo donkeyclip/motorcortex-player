@@ -434,9 +434,7 @@ class Player {
     definition.props.isPreviewClip = true;
     this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
 
-    const previewClip = this.previewClip.props.host.getElementsByTagName(
-      `iframe`
-    )[0];
+    const previewClip = this.previewClip.rootElement;
 
     this.previewClip.ownContext.isPreviewClip = true;
     previewClip.style.position = `absolute`;
@@ -446,10 +444,8 @@ class Player {
   }
 
   setPreviewDimentions() {
-    const clip = this.clip.props.host.getElementsByTagName(`iframe`)[0];
-    const previewClip = this.previewClip.props.host.getElementsByTagName(
-      `iframe`
-    )[0];
+    const clip = this.clip.rootElement;
+    const previewClip = this.previewClip.rootElement;
 
     const clipWidth = clip.offsetWidth;
 
