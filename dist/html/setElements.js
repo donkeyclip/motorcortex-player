@@ -13,7 +13,6 @@ module.exports = _this => {
   _this.clip.props.host.style.zIndex = `0`;
   // create the timer controls main div
   _this.elements.mcPlayer = elcreate(`div`);
-  clipIframe.innerHTML += "<slot></slot>";
   // console.log(clipIframe);
   // clipIframe.remove();
 
