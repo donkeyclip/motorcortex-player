@@ -39,6 +39,7 @@ class Player {
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
     options.theme = options.theme || `transparent on-top`;
+    options.host = options.host || options.clip.props.host;
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
     } else {
@@ -71,7 +72,6 @@ class Player {
 
     config.playerName = options.id;
     this.options = options;
-
     this.id = this.options.id;
     this.name = config.name;
 

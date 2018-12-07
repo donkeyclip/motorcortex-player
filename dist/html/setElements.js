@@ -11,15 +11,12 @@ module.exports = _this => {
   clipIframe.style.margin = `0 auto`;
   _this.clip.props.host.style.position = `relative`;
   _this.clip.props.host.style.zIndex = `0`;
-  // create the timer controls main div
   _this.elements.mcPlayer = elcreate(`div`);
-  // console.log(clipIframe);
-  // clipIframe.remove();
 
   _this.elements.mcPlayer.id = `${_this.name}`;
   _this.elements.mcPlayer.className = `${_this.className}`;
   _this.elements.mcPlayer.innerHTML = playerHTML({ svg, name: _this.name });
-  elid(_this.clip.props.host.id).appendChild(_this.elements.mcPlayer);
+  _this.options.host.appendChild(_this.elements.mcPlayer);
 
   _this.elements.pointerEventPanel = elid(`${_this.name}-pointer-event-panel`);
   _this.elements.listenerHelper = elid(`${_this.name}-listener-helper`);
@@ -144,22 +141,6 @@ module.exports = _this => {
     _this.elements.volumeBar.classList.toggle(`${_this.name}-volume-width-transition`);
   } else {
     _this.elements.timeDisplay.style.left = ``;
-
-    // _this.elements.volumeControl.classList.toggle(
-    //   `${_this.name}-volume-width-transition`
-    // );
-
-    // _this.elements.volumeBar.classList.toggle(
-    //   `${_this.name}-volume-width-transition`
-    // );
-
-    // _this.elements.volumeBarHelper.classList.toggle(
-    //   `${_this.name}-volume-width-transition`
-    // );
-    // _this.elements.timeDisplay.classList.toggle(
-    //   `${_this.name}-time-width-transition`
-    // );
-
     _this.elements.volumeControl.style.visibility = `visible`;
   }
 
@@ -175,5 +156,22 @@ module.exports = _this => {
     elid(`${_this.name}-speed-value`).prepend(valueDiv);
 
     _this.elements.speedBar.prepend(barDiv);
+  }
+
+  // show hide buttons
+  if (_this.options.buttons.fullScreen === false) {
+    _this.elements.fullScreenButton.remove();
+  }
+
+  if (_this.options.buttons.settings === false) {
+    _this.elements.settingsButton.remove();
+  }
+
+  if (_this.options.buttons.donkeyclip === false) {
+    _this.elements.donkeyclipButton.remove();
+  }
+
+  if (_this.options.buttons.loop === false) {
+    _this.elements.loopButton.remove();
   }
 };

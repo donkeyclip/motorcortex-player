@@ -141,6 +141,7 @@ module.exports = (theme, name, options) => `
   left: 0px;
   width: 100%;
   height: 40px;
+  z-index:100;
 }
 
 #${name}-totalbar {
@@ -305,10 +306,8 @@ module.exports = (theme, name, options) => `
   font-size:10px;
 }
 
-#${name}-loop-time { 
-  position:absolute;
-  right:115px;
-  bottom:5px;
+#${name}-loop-time {
+  margin: 7px;
 }
 
 #${name}-dc-btn {
@@ -317,10 +316,7 @@ module.exports = (theme, name, options) => `
     background-size: 100% 100%;
     width: 20px;
     height: 15px;
-    position: absolute;
-    right: 60px;
-    bottom: 7px;
-    margin: 10px 5px 5px 5px;
+    margin: 7px 10px 5px 0px;
     transform: scale(1.5,1.5);
 }
 
@@ -330,9 +326,6 @@ module.exports = (theme, name, options) => `
   background-size: 100% 100%;
   width: 15px;
   height: 15px;
-  position: absolute;
-  right: 85px;
-  bottom: 5px;
   margin: 10px 5px 5px 5px;
 }
 
@@ -343,9 +336,6 @@ module.exports = (theme, name, options) => `
   background-size: 100% 100%;
   width: 15px;
   height: 15px;
-  position: absolute;
-  right: 30px;
-  bottom: 5px;
   margin: 10px 5px 5px 5px;
 }
 
@@ -355,9 +345,6 @@ module.exports = (theme, name, options) => `
   background-size: 100% 100%;
   width: 15px;
   height: 15px;
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
   margin: 10px 5px 5px 5px;
 }
 
@@ -385,6 +372,10 @@ module.exports = (theme, name, options) => `
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
+}
+
+.${name}-mc-right-controls {
+  float: right;
 }
 
 .${name}-hide {

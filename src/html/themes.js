@@ -115,7 +115,7 @@ const themes = {
     "background-height": "calc(100% - 40px)",
     "pointer-event-panel-height": "calc(100% - 40px)",
     "controls-bottom": "-0px",
-    "settings-panel-bottom": "5px",
+    "settings-panel-bottom": "45px",
     "controls-position": "40px"
   }
 };

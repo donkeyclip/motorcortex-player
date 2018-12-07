@@ -105,5 +105,8 @@ new Player({
     32,
     -32,
     1.2
-  ]
+  ],
+  buttons: {
+    donkeyclip: false
+  }
 });

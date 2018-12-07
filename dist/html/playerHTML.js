@@ -1,6 +1,12 @@
 module.exports = config => `
-  <div class="pointer-event-panel" id="${config.name}-pointer-event-panel"></div>
-  <div class="pointer-event-panel" id="${config.name}-listener-helper"></div>
+  <div
+    class="pointer-event-panel"
+    id="${config.name}-pointer-event-panel"
+  ></div>
+  <div
+    class="pointer-event-panel"
+    id="${config.name}-listener-helper"
+  ></div>
   <div class="grad"></div>
   <div class="background"></div>
   <div id="${config.name}-controls">
@@ -9,10 +15,14 @@ module.exports = config => `
         <div id="${config.name}-hover-millisecond"></div>
       </div>
       <div id="${config.name}-loopbar">
-        <div class="${config.name}-loop-boundaries" id="${config.name}-loopbar-start">
-        </div>
-        <div class="${config.name}-loop-boundaries" id="${config.name}-loopbar-end">
-        </div>
+        <div
+          class="${config.name}-loop-boundaries"
+          id="${config.name}-loopbar-start"
+        ></div>
+        <div
+          class="${config.name}-loop-boundaries"
+          id="${config.name}-loopbar-end"
+        ></div>
         <div id="${config.name}-helperbar"></div>
         <div id="${config.name}-runningbar">
           <div id="${config.name}-cursor"></div>
@@ -41,15 +51,44 @@ module.exports = config => `
         <span id="${config.name}-time-total"></span>
       </div>
     </div>
-    <div id="${config.name}-loop-time">
-      <span id="${config.name}-loopbar-start-time" class="${config.name}-loopbar-time"></span>
-      <span>:</span>
-      <span id="${config.name}-loopbar-end-time" class="${config.name}-loopbar-time"></span>
+    <div
+      id="${config.name}-full-screen-btn"
+      class="${config.name}-mc-right-controls"
+    >${config.svg.fullScreenSVG}</div>
+    <div
+      id="${config.name}-settings-btn"
+      class="${config.name}-mc-right-controls"
+    >${config.svg.settingsSVG}</div>
+    <div
+      id="${config.name}-dc-btn"
+      class="${config.name}-mc-right-controls"
+    >
+      ${config.svg.dcSVG}
     </div>
-    <div id="${config.name}-dc-btn">${config.svg.dcSVG}</div>
-    <div id="${config.name}-loop-btn">${config.svg.loopSVG}</div>
-    <div id="${config.name}-settings-btn">${config.svg.settingsSVG}</div>
-    <div id="${config.name}-full-screen-btn">${config.svg.fullScreenSVG}</div>
+    <div
+      id="${config.name}-loop-btn-container"
+      class="${config.name}-mc-right-controls"
+    >
+      <div
+        id="${config.name}-loop-btn"
+        class="${config.name}-mc-right-controls"
+      >${config.svg.loopSVG}</div>
+      <div
+        id="${config.name}-loop-time"
+        class="${config.name}-mc-right-controls"
+      >
+        <span
+          id="${config.name}-loopbar-start-time"
+          class="${config.name}-loopbar-time"
+        ></span>
+        <span>:</span>
+        <span
+          id="${config.name}-loopbar-end-time"
+          class="${config.name}-loopbar-time"
+        ></span>
+      </div>
+    </div>
+
   </div>
   <div id="${config.name}-settings-panel">
     <ul id="${config.name}-main-settings">
@@ -95,7 +134,10 @@ module.exports = config => `
       <li>
         <div id="${config.name}-speed-value-helperbar"></div>
         <div id="${config.name}-speed-value-bar">
-          <div class="${config.name}-speed-value-step" id="${config.name}-speed-cursor">
+          <div
+            class="${config.name}-speed-value-step"
+            id="${config.name}-speed-cursor"
+          >
             <div></div>
           </div>
         </div>
