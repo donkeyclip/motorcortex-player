@@ -8,6 +8,7 @@ module.exports = (theme, name, options) => `
   left:0px;
   z-index:-2000;
 }
+
 .full-screen #${name}-controls {
   position:fixed;
   left:0px;
