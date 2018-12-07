@@ -40,6 +40,8 @@ class Player {
     options.showVolume = options.showVolume || false;
     options.theme = options.theme || `transparent on-top`;
     options.host = options.host || options.clip.props.host;
+    options.buttons = options.buttons || {};
+
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
     } else {
