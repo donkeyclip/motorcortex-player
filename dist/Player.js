@@ -172,11 +172,11 @@ class Player {
         });
       }
       return 1;
-    } else if (millisecond <= loopStartMillisecond) {
+    } /*else if (millisecond <= loopStartMillisecond) {
       this.createJourney(clip, loopStartMillisecond);
-    } else if (millisecond >= loopEndMillisecond) {
+      } else if (millisecond >= loopEndMillisecond) {
       this.createJourney(clip, loopEndMillisecond);
-    }
+      }*/
 
     if (makeJouney) {
       this.createJourney(clip, millisecond, {
