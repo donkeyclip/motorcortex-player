@@ -1,4 +1,6 @@
-const themes = {
+"use strict";
+
+var themes = {
   default: {
     "settings-background-color": "whitesmoke",
     "hms-background-color": "whitesmoke",
@@ -120,4 +122,6 @@ const themes = {
   }
 };
 
-module.exports = theme => themes[theme];
+module.exports = function (theme) {
+  return themes[theme];
+};

@@ -1,12 +1,26 @@
+"use strict";
+
 module.exports = {
-  el: selector => document.querySelectorAll(selector),
-  elid: id => document.getElementById(id),
-  eltag: tag => document.getElementsByTagName(tag),
-  elcreate: tag => document.createElement(tag),
-  addListener: function () {
-    return document.addEventListener(...arguments);
+  el: function el(selector) {
+    return document.querySelectorAll(selector);
   },
-  removeListener: function () {
-    return document.removeEventListener(...arguments);
+  elid: function elid(id) {
+    return document.getElementById(id);
+  },
+  eltag: function eltag(tag) {
+    return document.getElementsByTagName(tag);
+  },
+  elcreate: function elcreate(tag) {
+    return document.createElement(tag);
+  },
+  addListener: function addListener() {
+    var _document;
+
+    return (_document = document).addEventListener.apply(_document, arguments);
+  },
+  removeListener: function removeListener() {
+    var _document2;
+
+    return (_document2 = document).removeEventListener.apply(_document2, arguments);
   }
 };

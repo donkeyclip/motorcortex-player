@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
   // the players start name
   name: "mc-player",
@@ -6,4 +8,5 @@ module.exports = {
   set playerName(name) {
     this.name += "-" + name;
   }
+
 };
