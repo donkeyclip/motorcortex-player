@@ -59,9 +59,9 @@ module.exports = _this => {
     removeListener(`touchmove`, onCursorMoveSpeedBar, false);
     elid(`${_this.name}-speed-runtime`).innerHTML = `Speed`;
     let speedDisplay;
-    _this.clip.speed == 1
+    _this.clip.realClip.speed == 1
       ? (speedDisplay = `Normal`)
-      : (speedDisplay = _this.clip.speed);
+      : (speedDisplay = _this.clip.realClip.speed);
 
     _this.elements.speedCurrent.innerHTML = speedDisplay;
   };

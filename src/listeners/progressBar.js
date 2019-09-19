@@ -5,7 +5,7 @@ module.exports = _this => {
 
   _this.listeners.onCursorMove = e => {
     e.preventDefault();
-
+    // console.log(_this);
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.loopBar.getBoundingClientRect();
     let positionX = clientX - viewportOffset.left;
@@ -32,26 +32,30 @@ module.exports = _this => {
     _this.handleDragEnd(_this.settings);
 
     if (_this.settings.playAfterResize) {
-      if (_this.clip.state === `idle` && !_this.settings.loopActivated) {
+      if (
+        _this.clip.runTimeInfo.state === `idle` &&
+        !_this.settings.loopActivated
+      ) {
         _this.clip.play();
       } else if (
-        _this.clip.state === `completed` &&
+        _this.clip.runTimeInfo.state === `completed` &&
         !_this.settings.loopActivated
       ) {
         _this.createJourney(_this.clip, _this.settings.loopBarMillisecond - 1, {
-          before: "stop",
+          before: "pause",
           after: "play"
         });
       } else if (
-        (_this.clip.state === `completed` || _this.clip.state === `idle`) &&
+        (_this.clip.runTimeInfo.state === `completed` ||
+          _this.clip.runTimeInfo.state === `idle`) &&
         _this.settings.loopActivated
       ) {
-        _this.clip.speed >= 0
+        _this.clip.realClip.speed >= 0
           ? _this.createJourney(
               _this.clip,
               _this.settings.loopBarStartMillisecond + 1,
               {
-                before: "stop",
+                before: "pause",
                 after: "play"
               }
             )
@@ -59,12 +63,12 @@ module.exports = _this => {
               _this.clip,
               _this.settings.loopBarEndMillisecond - 1,
               {
-                before: "stop",
+                before: "pause",
                 after: "play"
               }
             );
       } else {
-        _this.clip.resume();
+        _this.clip.play();
       }
       _this.settings.playAfterResize = false;
     }
@@ -72,13 +76,13 @@ module.exports = _this => {
 
   _this.listeners.onMouseDown = e => {
     _this.elements.listenerHelper.style.pointerEvents = "auto";
-
+    _this.clip.pause();
     // e.preventDefault();
     // if (!_this.options.pointerEvents) {
     //   pe = true;
     //   _this.elements.settingsPointerEvents.click();
     // }
-    if (_this.clip.state === `playing`) {
+    if (_this.clip.runTimeInfo.state === `playing`) {
       _this.settings.playAfterResize = true;
     }
     _this.handleDragStart(_this.clip);

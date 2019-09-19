@@ -5,9 +5,9 @@ module.exports = _this => {
     if (e.target.className === `${_this.name}-speed-value`) {
       let speedDisplay = e.target.dataset.speedValue - 0;
       _this.clip.executionSpeed = e.target.dataset.speedValue;
-      _this.clip.speed == 1
+      _this.clip.realClip.speed == 1
         ? (speedDisplay = `Normal`)
-        : (speedDisplay = _this.clip.speed);
+        : (speedDisplay = _this.clip.realClip.speed);
       _this.elements.speedCurrent.innerHTML = speedDisplay;
 
       const step = 1 / (_this.options.speedValues.length - 1);

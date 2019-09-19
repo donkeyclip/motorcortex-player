@@ -1,4 +1,3 @@
-const TestChannel = require("./TestChannel");
 const TestIncident = require("./TestIncident");
 
 module.exports = {
@@ -8,6 +7,5 @@ module.exports = {
       exportable: TestIncident,
       name: "TestIncident"
     }
-  ],
-  channel: TestChannel
+  ]
 };

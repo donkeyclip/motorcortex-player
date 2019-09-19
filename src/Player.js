@@ -1,7 +1,6 @@
 const MC = require(`@kissmybutton/motorcortex`);
 
 const timeCapsule = new MC.TimeCapsule();
-const mch = new MC.Helper();
 
 const { elid, eltag, elcreate } = require(`./helpers`);
 const svg = require("./html/svg");
@@ -35,7 +34,7 @@ const bodyListener = require(`./listeners/body`);
 class Player {
   constructor(options) {
     // set defaults
-    options.id = options.id || mch.getAnId();
+    options.id = options.id || Date.now();
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
     options.theme = options.theme || `transparent on-top`;
@@ -110,7 +109,7 @@ class Player {
     this.setTheme();
     this.setSpeed();
     this.subscribeToTimer();
-    this.subscribeToEvents();
+    this.subscribeToDurationChange();
     this.addEventListeners();
 
     if (this.options.preview) {
@@ -142,6 +141,13 @@ class Player {
     makeJouney,
     executeOnMillisecondChange = true
   ) {
+    // console.log(
+    //   millisecond,
+    //   timestamp,
+    //   roundTo,
+    //   makeJouney,
+    //   (executeOnMillisecondChange = true)
+    // );
     if (!this.settings.needsUpdate) {
       this.clip.wait();
       return 1;
@@ -165,26 +171,32 @@ class Player {
     const localDuration = (duration / totalBar.offsetWidth) * loopBarWidth;
 
     if (millisecond >= loopEndMillisecond && loopActivated) {
-      if (clip.state === `idle` || clip.state === `completed`) {
+      if (
+        clip.runTimeInfo.state === `idle` ||
+        clip.runTimeInfo.state === `completed`
+      ) {
         this.createJourney(clip, loopStartMillisecond + 1, {
-          before: "stop",
+          before: "pause",
           after: "play"
         });
       } else {
         this.createJourney(clip, loopStartMillisecond + 1, {
-          after: "resume"
+          after: "play"
         });
       }
       return 1;
     } else if (millisecond <= loopStartMillisecond && loopActivated) {
-      if (clip.state === `idle` || clip.state === `completed`) {
+      if (
+        clip.runTimeInfo.state === `idle` ||
+        clip.runTimeInfo.state === `completed`
+      ) {
         this.createJourney(clip, loopEndMillisecond - 1, {
-          before: "stop",
+          before: "pause",
           after: "play"
         });
       } else {
         this.createJourney(clip, loopEndMillisecond - 1, {
-          after: "resume"
+          after: "play"
         });
       }
       return 1;
@@ -196,7 +208,7 @@ class Player {
 
     if (makeJouney) {
       this.createJourney(clip, millisecond, {
-        after: this.settings.playAfterResize ? "resume" : null
+        after: this.settings.playAfterResize ? "play" : null
       });
     }
     this.elements.runningBar.style.width =
@@ -210,6 +222,7 @@ class Player {
   }
 
   eventBroadcast(eventName, meta) {
+    // console.log("in");
     if (eventName === `state-change`) {
       if (meta.newState === `waiting`) {
         this.elements.statusButton.innerHTML = svg.playSVG;
@@ -236,16 +249,16 @@ class Player {
         this.elements.indicator.innerHTML = meta.newSTate;
       }
     } else if (eventName === `attribute-rejection`) {
-      mch.log(
-        `Attributes`,
-        meta.attributes,
-        `have been rejected from animation with id ${meta.animationID}`
-      );
+      // console.log(
+      //   `Attributes`,
+      //   meta.attributes,
+      //   `have been rejected from animation with id ${meta.animationID}`
+      // );
     } else if (eventName === `animation-rejection`) {
-      mch.log(
-        `Animation ${meta.animationID} has been rejected as all attributes of 
-        it overlap on specific elements because of existing animations`
-      );
+      // console.log(
+      //   `Animation ${meta.animationID} has been rejected as all attributes of
+      //   it overlap on specific elements because of existing animations`
+      // );
     } else if (eventName === `duration-change`) {
       this.elements.totalTime.innerHTML = this.clip.duration;
       this.settings.loopEndMillisecond = this.clip.duration;
@@ -253,8 +266,11 @@ class Player {
     }
   }
 
-  subscribeToEvents() {
-    this.clip.subscribeToEvents(this.id, this.eventBroadcast.bind(this));
+  subscribeToDurationChange() {
+    this.clip.subscribeToDurationChange(
+      this.id,
+      this.eventBroadcast.bind(this)
+    );
   }
 
   subscribeToTimer() {
@@ -381,21 +397,21 @@ class Player {
 
   setSpeed() {
     let currentSpeed;
-    this.clip.speed == 1
+    this.clip.realClip.speed == 1
       ? (currentSpeed = `Normal`)
-      : (currentSpeed = this.clip.speed);
+      : (currentSpeed = this.clip.realClip.speed);
     this.elements.speedCurrent.innerHTML = currentSpeed;
 
     const targetZone = (() => {
       for (let i = 0; i < this.options.speedValues.length - 1; i++) {
         if (
-          this.options.speedValues[i] <= this.clip.speed &&
-          this.options.speedValues[i + 1] > this.clip.speed
+          this.options.speedValues[i] <= this.clip.realClip.speed &&
+          this.options.speedValues[i + 1] > this.clip.realClip.speed
         ) {
           return (
             i +
             Math.abs(
-              (this.clip.speed - this.options.speedValues[i]) /
+              (this.clip.realClip.speed - this.options.speedValues[i]) /
                 (this.options.speedValues[i] - this.options.speedValues[i + 1])
             )
           );

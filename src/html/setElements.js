@@ -4,11 +4,12 @@ const playerHTML = require("./playerHTML");
 
 module.exports = _this => {
   _this.elements = {};
-  const clipIframe = _this.clip.rootElement;
-
+  const clipIframe = _this.clip.props.host;
+  // console.log(_this.clip);
   // set _this.clip position to relative
-  clipIframe.style.display = `block`;
-  clipIframe.style.margin = `0 auto`;
+  clipIframe.style.display = `flex`;
+  clipIframe.style.justifyContent = `center`;
+  clipIframe.style.alignItems = `center`;
   _this.clip.props.host.style.position = `relative`;
   _this.clip.props.host.style.zIndex = `0`;
   _this.elements.mcPlayer = elcreate(`div`);
@@ -74,7 +75,7 @@ module.exports = _this => {
   _this.elements.settingsPanel.classList.add(`m-fadeOut`, `${_this.name}-hide`);
 
   _this.elements.indicator.style.visibility = `hidden`;
-  _this.elements.indicator.innerHTML = _this.clip.state;
+  _this.elements.indicator.innerHTML = _this.clip.runTimeInfo.state;
 
   _this.elements.settingsSpeedPanel.style.display = `none`;
 

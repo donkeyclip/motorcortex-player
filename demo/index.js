@@ -37,7 +37,7 @@ const config = {
 };
 
 // Create clip
-const clip = new MotorCortex.Clip(null, config);
+const clip = new MotorCortex.Clip(config);
 const animation_1 = new TestPlugin.TestIncident(
   {
     animatedAttrs: {
@@ -81,12 +81,12 @@ const animation_3 = new TestPlugin.TestIncident(
 clip.addIncident(animation_1, 0);
 clip.addIncident(animation_2, 60000);
 clip.addIncident(animation_3, 120000);
-
+window.clip = clip;
 // Add clip to timer
 new Player({
   clip,
   theme: "transparent",
-  preview: true,
+  preview: false,
   showVolume: false,
   speedValues: [
     8,

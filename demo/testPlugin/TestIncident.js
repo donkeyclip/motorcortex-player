@@ -1,23 +1,19 @@
 const MC = require("@kissmybutton/motorcortex");
-const { TimedIncident } = MC;
+const { Incident } = MC.API;
 
-class TestIncident extends TimedIncident {
+class TestIncident extends Incident {
   onProgress(progress /*, millisecond*/) {
-    for (let i = 0; i < this.elements.length; i++) {
-      for (const attr in this.attrs.animatedAttrs) {
-        const delta = this.attrs.animatedAttrs[attr] - this.initialValues[attr];
-        const value = this.initialValues[attr] + delta * progress;
-        this.elements[i].setAttribute(attr, value);
-      }
-    }
+    const delta = this.targetValue - this.initialValues[this.attributeKey];
+    const value = this.initialValues[this.attributeKey] + delta * progress;
+    this.element.setAttribute(this.attributeKey, value);
   }
 
-  getScratchValue(mcid, attribute) {
-    // console.log(this.props.mcid)
-    if (this.props.mcid) {
-      return this.attrs[attribute];
+  getScratchValue() {
+    const attribute = this.attributeKey;
+    if (this.mcid) {
+      return this.targetValue;
     }
-    const element = this.getElementByMCID(mcid);
+    const element = this.element;
     if (element === null) {
       return null;
     }
