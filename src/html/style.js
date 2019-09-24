@@ -45,7 +45,6 @@ module.exports = (theme, name, options) => `
 }
 #${name}-hover-display{
     border: ${theme["preview-border"]};
-    max-width:300px;
     display: flex;
     overflow:hidden;
     background-color: black;

@@ -9,7 +9,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var MC = require("@kissmybutton/motorcortex");
 
 var timeCapsule = new MC.TimeCapsule();
-var mch = new MC.Helper();
 
 var _require = require("./helpers"),
     elid = _require.elid,
@@ -70,7 +69,7 @@ function () {
     _classCallCheck(this, Player);
 
     // set defaults
-    options.id = options.id || mch.getAnId();
+    options.id = options.id || Date.now();
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
     options.theme = options.theme || "transparent on-top";
@@ -104,7 +103,9 @@ function () {
     this.clip = options.clip; // host to apply the timer
 
     this.clipClass = options.clipClass;
+    this.state = this.clip.runTimeInfo.state;
     this.listeners = {};
+    this.previewScale = 0.25;
     this.settings = {
       volume: 1,
       journey: null,
@@ -131,7 +132,7 @@ function () {
     this.setTheme();
     this.setSpeed();
     this.subscribeToTimer();
-    this.subscribeToEvents();
+    this.subscribeToDurationChange();
     this.addEventListeners();
 
     if (this.options.preview) {
@@ -169,8 +170,13 @@ function () {
     }
   }, {
     key: "millisecondChange",
-    value: function millisecondChange(millisecond, timestamp, roundTo, makeJouney) {
+    value: function millisecondChange(millisecond, state, roundTo, makeJouney) {
       var executeOnMillisecondChange = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+
+      if (this.state !== state) {
+        this.state = state;
+        this.eventBroadcast("state-change", state);
+      }
 
       if (!this.settings.needsUpdate) {
         this.clip.wait();
@@ -192,27 +198,27 @@ function () {
       var localDuration = duration / totalBar.offsetWidth * loopBarWidth;
 
       if (millisecond >= loopEndMillisecond && loopActivated) {
-        if (clip.state === "idle" || clip.state === "completed") {
+        if (clip.runTimeInfo.state === "idle" || clip.runTimeInfo.state === "completed") {
           this.createJourney(clip, loopStartMillisecond + 1, {
-            before: "stop",
+            before: "pause",
             after: "play"
           });
         } else {
           this.createJourney(clip, loopStartMillisecond + 1, {
-            after: "resume"
+            after: "play"
           });
         }
 
         return 1;
       } else if (millisecond <= loopStartMillisecond && loopActivated) {
-        if (clip.state === "idle" || clip.state === "completed") {
+        if (clip.runTimeInfo.state === "idle" || clip.runTimeInfo.state === "completed") {
           this.createJourney(clip, loopEndMillisecond - 1, {
-            before: "stop",
+            before: "pause",
             after: "play"
           });
         } else {
           this.createJourney(clip, loopEndMillisecond - 1, {
-            after: "resume"
+            after: "play"
           });
         }
 
@@ -227,7 +233,7 @@ function () {
 
       if (makeJouney) {
         this.createJourney(clip, millisecond, {
-          after: this.settings.playAfterResize ? "resume" : null
+          after: this.settings.playAfterResize ? "play" : null
         });
       }
 
@@ -240,36 +246,17 @@ function () {
     }
   }, {
     key: "eventBroadcast",
-    value: function eventBroadcast(eventName, meta) {
+    value: function eventBroadcast(eventName, state) {
       if (eventName === "state-change") {
-        if (meta.newState === "waiting") {
+        if (state === "paused" || state === "idle" || state === "transitional") {
           this.elements.statusButton.innerHTML = svg.playSVG;
           this.elements.statusButton.appendChild(this.elements.indicator);
-          this.elements.indicator.innerHTML = "Waiting";
-        } else if (meta.newState === "playing") {
+          this.elements.indicator.innerHTML = "".concat(state.charAt(0).toUpperCase() + state.slice(1));
+        } else {
           this.elements.statusButton.innerHTML = svg.pauseSVG;
           this.elements.statusButton.appendChild(this.elements.indicator);
           this.elements.indicator.innerHTML = "Playing";
-        } else if (meta.newState === "completed") {
-          this.elements.currentTime.innerHTML = this.clip.duration;
-          this.elements.statusButton.innerHTML = svg.replaySVG;
-          this.elements.statusButton.appendChild(this.elements.indicator);
-          this.elements.indicator.innerHTML = "Completed";
-        } else if (meta.newState === "transitional") {
-          this.elements.statusButton.innerHTML = svg.playSVG;
-          this.elements.statusButton.appendChild(this.elements.indicator);
-          this.elements.indicator.innerHTML = "Transitional";
-        } else if (meta.newState === "idle") {
-          this.elements.statusButton.innerHTML = svg.playSVG;
-          this.elements.statusButton.appendChild(this.elements.indicator);
-          this.elements.indicator.innerHTML = "Idle";
-        } else {
-          this.elements.indicator.innerHTML = meta.newSTate;
         }
-      } else if (eventName === "attribute-rejection") {
-        mch.log("Attributes", meta.attributes, "have been rejected from animation with id ".concat(meta.animationID));
-      } else if (eventName === "animation-rejection") {
-        mch.log("Animation ".concat(meta.animationID, " has been rejected as all attributes of \n        it overlap on specific elements because of existing animations"));
       } else if (eventName === "duration-change") {
         this.elements.totalTime.innerHTML = this.clip.duration;
         this.settings.loopEndMillisecond = this.clip.duration;
@@ -277,9 +264,9 @@ function () {
       }
     }
   }, {
-    key: "subscribeToEvents",
-    value: function subscribeToEvents() {
-      this.clip.subscribeToEvents(this.id, this.eventBroadcast.bind(this));
+    key: "subscribeToDurationChange",
+    value: function subscribeToDurationChange() {
+      this.clip.subscribeToDurationChange(this.id, this.eventBroadcast.bind(this));
     }
   }, {
     key: "subscribeToTimer",
@@ -455,14 +442,13 @@ function () {
   }, {
     key: "createPreviewDisplay",
     value: function createPreviewDisplay() {
-      var definition = this.clip.exportState({
-        unprocessed: true
-      });
-      definition.props.host = elid("".concat(this.name, "-hover-display"));
-      definition.props.isPreviewClip = true;
-      this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
-      var previewClip = this.previewClip.rootElement;
-      this.previewClip.ownContext.isPreviewClip = true;
+      // const definition = this.clip.exportState({ unprocessed: true });
+      // definition.props.host = elid(`${this.name}-hover-display`);
+      // definition.props.isPreviewClip = true;
+      // this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
+      this.previewClip = this.clip.paste(elid("".concat(this.name, "-hover-display")));
+      var previewClip = elid("".concat(this.name, "-hover-display")); // this.previewClip.ownContext.isPreviewClip = true;
+
       previewClip.style.position = "absolute";
       previewClip.style.zIndex = 1;
       this.setPreviewDimentions();
@@ -470,41 +456,44 @@ function () {
   }, {
     key: "setPreviewDimentions",
     value: function setPreviewDimentions() {
-      var clip = this.clip.rootElement;
-      var previewClip = this.previewClip.rootElement;
+      var clip = this.clip.props.host;
+      var previewClip = this.previewClip.ownClip.props.host;
       var clipWidth = clip.offsetWidth;
       var clipHeight = clip.offsetHeight;
-      var previewRatio = 0.25;
-      var previewWidth = clipWidth * previewRatio; // max width is 300
+      var previewWidth = clipWidth * this.previewScale; // max width is 300
 
-      if (previewWidth > parseFloat(elid("".concat(this.name, "-hover-display")).style.maxWidth)) {
+      if (previewWidth > 300) {
         previewWidth = parseFloat(elid("".concat(this.name, "-hover-display")).style.maxWidth);
+        this.previewScale = previewWidth / clipWidth;
       }
 
-      elid("".concat(this.name, "-hover-display")).style.width = previewWidth + "px";
-      var previewHeight = clipHeight / clipWidth * previewWidth;
-      elid("".concat(this.name, "-hover-display")).style.height = previewHeight + "px";
-      var scaleY = previewHeight / clipHeight;
-      var scaleX = previewWidth / clipWidth;
-      previewClip.style.transform = "scale(".concat(scaleX, ",").concat(scaleY, ")");
+      elid("".concat(this.name, "-hover-display")).style.width = clipWidth + "px";
+      elid("".concat(this.name, "-hover-display")).style.height = clipHeight + "px";
+      previewClip.style.transform = "scale(".concat(this.previewScale, ")");
       previewClip.style.transformOrigin = "center bottom";
       previewClip.style.boxSizing = "border-box"; // check if width of iframe is percentage
-
-      if (this.clip.props.containerParams.width.includes("%")) {
-        if (previewWidth / previewRatio - 2 / previewRatio > parseFloat(elid("".concat(this.name, "-hover-display")).style.maxWidth)) {
-          previewClip.style.width = "298px";
-        } else {
-          previewClip.style.width = previewWidth / previewRatio - 2 / previewRatio + "px";
-        }
-      }
-
-      if (this.clip.props.containerParams.height.includes("%")) {
-        if (previewWidth / previewRatio - 2 / previewRatio > parseFloat(elid("".concat(this.name, "-hover-display")).style.maxWidth)) {
-          previewClip.style.height = clipHeight / clipWidth * 300 - 2 + "px";
-        } else {
-          previewClip.style.height = previewHeight / previewRatio - 2 / previewRatio + "px";
-        }
-      }
+      // if (this.clip.props.containerParams.width.includes(`%`)) {
+      //   if (
+      //     previewWidth / previewRatio - 2 / previewRatio >
+      //     parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
+      //   ) {
+      //     previewClip.style.width = `298px`;
+      //   } else {
+      //     previewClip.style.width =
+      //       previewWidth / previewRatio - 2 / previewRatio + `px`;
+      //   }
+      // }
+      // if (this.clip.props.containerParams.height.includes(`%`)) {
+      //   if (
+      //     previewWidth / previewRatio - 2 / previewRatio >
+      //     parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
+      //   ) {
+      //     previewClip.style.height = (clipHeight / clipWidth) * 300 - 2 + `px`;
+      //   } else {
+      //     previewClip.style.height =
+      //       previewHeight / previewRatio - 2 / previewRatio + `px`;
+      //   }
+      // }
     }
   }]);
 

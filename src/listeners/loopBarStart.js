@@ -111,7 +111,7 @@ module.exports = _this => {
     if (_this.settings.playAfterResize) {
       if (_this.clip.runTimeInfo.state === `idle`) {
         let loopms;
-        if (_this.clip.realClip.speed >= 0) {
+        if (_this.clip.speed >= 0) {
           loopms = _this.settings.loopStartMillisecond + 1;
         } else {
           loopms = _this.settings.loopEndMillisecond - 1;
@@ -123,7 +123,7 @@ module.exports = _this => {
         });
       } else if (_this.clip.runTimeInfo.state === `completed`) {
         let loopms;
-        if (_this.clip.realClip.speed >= 0) {
+        if (_this.clip.speed >= 0) {
           loopms = _this.settings.loopStartMillisecond + 1;
         } else {
           loopms = _this.settings.loopEndMillisecond - 1;
@@ -154,7 +154,7 @@ module.exports = _this => {
     _this.settings.needsUpdate = true;
 
     if (_this.clip.runTimeInfo.state === `playing`) {
-      _this.clip.wait();
+      _this.clip.pause();
       _this.settings.playAfterResize = true;
     }
 

@@ -4,10 +4,16 @@ module.exports = _this => {
     // console.log(_this.clip);
     if (_this.clip.runTimeInfo.state === `playing`) {
       _this.clip.pause();
-    } else if (_this.clip.runTimeInfo.state === `paused`) {
+    } else if (
+      _this.clip.runTimeInfo.state === `paused` ||
+      _this.clip.runTimeInfo.state === `idle` ||
+      _this.clip.runTimeInfo.state === `transitional`
+    ) {
       _this.clip.play();
-    } else if (_this.clip.runTimeInfo.state === `idle`) {
-      if (_this.clip.realClip.speed >= 0) {
+    }
+    //not working below this
+    else if (_this.clip.runTimeInfo.state === `idle`) {
+      if (_this.clip.speed >= 0) {
         _this.clip.play();
         _this.settings.needsUpdate = true;
       } else {
@@ -18,7 +24,7 @@ module.exports = _this => {
         _this.settings.needsUpdate = true;
       }
     } else if (_this.clip.runTimeInfo.state === `completed`) {
-      if (_this.clip.realClip.speed >= 0) {
+      if (_this.clip.speed >= 0) {
         _this.createJourney(_this.clip, 0, {
           before: "pause",
           after: "play"

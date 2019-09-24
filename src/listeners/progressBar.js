@@ -31,52 +31,52 @@ module.exports = _this => {
     removeListener(`touchmove`, _this.listeners.onCursorMove, false);
     _this.handleDragEnd(_this.settings);
 
-    if (_this.settings.playAfterResize) {
-      if (
-        _this.clip.runTimeInfo.state === `idle` &&
-        !_this.settings.loopActivated
-      ) {
-        _this.clip.play();
-      } else if (
-        _this.clip.runTimeInfo.state === `completed` &&
-        !_this.settings.loopActivated
-      ) {
-        _this.createJourney(_this.clip, _this.settings.loopBarMillisecond - 1, {
-          before: "pause",
-          after: "play"
-        });
-      } else if (
-        (_this.clip.runTimeInfo.state === `completed` ||
-          _this.clip.runTimeInfo.state === `idle`) &&
-        _this.settings.loopActivated
-      ) {
-        _this.clip.realClip.speed >= 0
-          ? _this.createJourney(
-              _this.clip,
-              _this.settings.loopBarStartMillisecond + 1,
-              {
-                before: "pause",
-                after: "play"
-              }
-            )
-          : _this.createJourney(
-              _this.clip,
-              _this.settings.loopBarEndMillisecond - 1,
-              {
-                before: "pause",
-                after: "play"
-              }
-            );
-      } else {
-        _this.clip.play();
-      }
-      _this.settings.playAfterResize = false;
-    }
+    // if (_this.settings.playAfterResize) {
+    //   if (
+    //     _this.clip.runTimeInfo.state === `idle` &&
+    //     !_this.settings.loopActivated
+    //   ) {
+    //     _this.clip.play();
+    //   } else if (
+    //     _this.clip.runTimeInfo.state === `completed` &&
+    //     !_this.settings.loopActivated
+    //   ) {
+    //     _this.createJourney(_this.clip, _this.settings.loopBarMillisecond - 1, {
+    //       before: "pause",
+    //       after: "play"
+    //     });
+    //   } else if (
+    //     (_this.clip.runTimeInfo.state === `completed` ||
+    //       _this.clip.runTimeInfo.state === `idle`) &&
+    //     _this.settings.loopActivated
+    //   ) {
+    //     _this.clip.speed >= 0
+    //       ? _this.createJourney(
+    //           _this.clip,
+    //           _this.settings.loopBarStartMillisecond + 1,
+    //           {
+    //             before: "pause",
+    //             after: "play"
+    //           }
+    //         )
+    //       : _this.createJourney(
+    //           _this.clip,
+    //           _this.settings.loopBarEndMillisecond - 1,
+    //           {
+    //             before: "pause",
+    //             after: "play"
+    //           }
+    //         );
+    //   } else {
+    //     _this.clip.play();
+    //   }
+    //   _this.settings.playAfterResize = false;
+    // }
   };
 
   _this.listeners.onMouseDown = e => {
     _this.elements.listenerHelper.style.pointerEvents = "auto";
-    _this.clip.pause();
+    // _this.clip.pause();
     // e.preventDefault();
     // if (!_this.options.pointerEvents) {
     //   pe = true;

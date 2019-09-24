@@ -7,7 +7,8 @@ var _require = require("../helpers"),
 module.exports = function (_this) {
   // let pe = false;
   _this.listeners.onCursorMove = function (e) {
-    e.preventDefault();
+    e.preventDefault(); // console.log(_this);
+
     var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
 
     var viewportOffset = _this.elements.loopBar.getBoundingClientRect();
@@ -34,40 +35,59 @@ module.exports = function (_this) {
     removeListener("mousemove", _this.listeners.onCursorMove, false);
     removeListener("touchmove", _this.listeners.onCursorMove, false);
 
-    _this.handleDragEnd(_this.settings);
+    _this.handleDragEnd(_this.settings); // if (_this.settings.playAfterResize) {
+    //   if (
+    //     _this.clip.runTimeInfo.state === `idle` &&
+    //     !_this.settings.loopActivated
+    //   ) {
+    //     _this.clip.play();
+    //   } else if (
+    //     _this.clip.runTimeInfo.state === `completed` &&
+    //     !_this.settings.loopActivated
+    //   ) {
+    //     _this.createJourney(_this.clip, _this.settings.loopBarMillisecond - 1, {
+    //       before: "pause",
+    //       after: "play"
+    //     });
+    //   } else if (
+    //     (_this.clip.runTimeInfo.state === `completed` ||
+    //       _this.clip.runTimeInfo.state === `idle`) &&
+    //     _this.settings.loopActivated
+    //   ) {
+    //     _this.clip.speed >= 0
+    //       ? _this.createJourney(
+    //           _this.clip,
+    //           _this.settings.loopBarStartMillisecond + 1,
+    //           {
+    //             before: "pause",
+    //             after: "play"
+    //           }
+    //         )
+    //       : _this.createJourney(
+    //           _this.clip,
+    //           _this.settings.loopBarEndMillisecond - 1,
+    //           {
+    //             before: "pause",
+    //             after: "play"
+    //           }
+    //         );
+    //   } else {
+    //     _this.clip.play();
+    //   }
+    //   _this.settings.playAfterResize = false;
+    // }
 
-    if (_this.settings.playAfterResize) {
-      if (_this.clip.state === "idle" && !_this.settings.loopActivated) {
-        _this.clip.play();
-      } else if (_this.clip.state === "completed" && !_this.settings.loopActivated) {
-        _this.createJourney(_this.clip, _this.settings.loopBarMillisecond - 1, {
-          before: "stop",
-          after: "play"
-        });
-      } else if ((_this.clip.state === "completed" || _this.clip.state === "idle") && _this.settings.loopActivated) {
-        _this.clip.speed >= 0 ? _this.createJourney(_this.clip, _this.settings.loopBarStartMillisecond + 1, {
-          before: "stop",
-          after: "play"
-        }) : _this.createJourney(_this.clip, _this.settings.loopBarEndMillisecond - 1, {
-          before: "stop",
-          after: "play"
-        });
-      } else {
-        _this.clip.resume();
-      }
-
-      _this.settings.playAfterResize = false;
-    }
   };
 
   _this.listeners.onMouseDown = function (e) {
-    _this.elements.listenerHelper.style.pointerEvents = "auto"; // e.preventDefault();
+    _this.elements.listenerHelper.style.pointerEvents = "auto"; // _this.clip.pause();
+    // e.preventDefault();
     // if (!_this.options.pointerEvents) {
     //   pe = true;
     //   _this.elements.settingsPointerEvents.click();
     // }
 
-    if (_this.clip.state === "playing") {
+    if (_this.clip.runTimeInfo.state === "playing") {
       _this.settings.playAfterResize = true;
     }
 

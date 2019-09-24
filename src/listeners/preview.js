@@ -1,8 +1,8 @@
 const { elid, addListener, removeListener } = require(`../helpers`);
 
-const MC = require(`@kissmybutton/motorcortex`);
+// const MC = require(`@kissmybutton/motorcortex`);
 
-const hoverTimeCapsule = new MC.TimeCapsule();
+// const hoverTimeCapsule = new MC.TimeCapsule();
 
 module.exports = _this => {
   // only on desctop devices
@@ -21,11 +21,11 @@ module.exports = _this => {
         `${_this.name}-hide`
       );
 
-      if (elid(`${_this.name}-hover-display`).className.includes(`m-fadeIn`)) {
-        _this.previewJourney = hoverTimeCapsule.startJourney(_this.previewClip);
-      } else {
-        _this.previewJourney.destination();
-      }
+      // if (elid(`${_this.name}-hover-display`).className.includes(`m-fadeIn`)) {
+      //   _this.previewJourney = hoverTimeCapsule.startJourney(_this.previewClip);
+      // } else {
+      //   _this.previewJourney.destination();
+      // }
       _this.elements.loopBar.onmousemove = loopBarMouseMove;
     };
 
@@ -70,6 +70,7 @@ module.exports = _this => {
     const loopBarMouseMove = e => {
       const clientX = e.clientX;
       const viewportOffset = _this.elements.loopBar.getBoundingClientRect();
+
       if (
         clientX - viewportOffset.left + _this.settings.loopLastPositionXPxls >
           _this.settings.loopLastPositionXPxls +
@@ -94,27 +95,28 @@ module.exports = _this => {
       if (positionX < 0) {
         positionX = 0;
       }
+      const previewWidth =
+        elid(`${_this.name}-hover-display`).offsetWidth * _this.previewScale;
 
-      let left =
-        positionX - elid(`${_this.name}-hover-display`).offsetWidth / 2;
+      const halfClipWidth = elid(`${_this.name}-hover-display`).offsetWidth / 2;
 
-      if (left < 0) {
+      let left = positionX - halfClipWidth;
+      // console.log(left, halfClipWidth);
+      if (left + halfClipWidth < 0) {
         left = 0;
       } else if (
-        left + elid(`${_this.name}-hover-display`).offsetWidth >
+        left + previewWidth - halfClipWidth >
         _this.elements.totalBar.offsetWidth
       ) {
-        left =
-          _this.elements.totalBar.offsetWidth -
-          elid(`${_this.name}-hover-display`).offsetWidth;
+        left = _this.elements.totalBar.offsetWidth - previewWidth;
       }
 
       const ms = Math.round(
         (positionX / _this.elements.totalBar.offsetWidth) * _this.clip.duration
       );
-      if (_this.options.preview) {
-        _this.previewJourney.station(ms);
-      }
+      // if (_this.options.preview) {
+      //   _this.previewJourney.station(ms);
+      // }
 
       elid(`${_this.name}-hover-millisecond`).innerHTML = ms;
       elid(`${_this.name}-hover-display`).style.left = left + `px`;

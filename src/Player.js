@@ -79,8 +79,9 @@ class Player {
     this.previewClip = null;
     this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
-
+    this.state = this.clip.runTimeInfo.state;
     this.listeners = {};
+    this.previewScale = 0.25;
 
     this.settings = {
       volume: 1,
@@ -136,18 +137,15 @@ class Player {
 
   millisecondChange(
     millisecond,
-    timestamp,
+    state,
     roundTo,
     makeJouney,
     executeOnMillisecondChange = true
   ) {
-    // console.log(
-    //   millisecond,
-    //   timestamp,
-    //   roundTo,
-    //   makeJouney,
-    //   (executeOnMillisecondChange = true)
-    // );
+    if (this.state !== state) {
+      this.state = state;
+      this.eventBroadcast("state-change", state);
+    }
     if (!this.settings.needsUpdate) {
       this.clip.wait();
       return 1;
@@ -221,44 +219,18 @@ class Player {
     }
   }
 
-  eventBroadcast(eventName, meta) {
-    // console.log("in");
+  eventBroadcast(eventName, state) {
     if (eventName === `state-change`) {
-      if (meta.newState === `waiting`) {
+      if (state === `paused` || state === `idle` || state === `transitional`) {
         this.elements.statusButton.innerHTML = svg.playSVG;
         this.elements.statusButton.appendChild(this.elements.indicator);
-        this.elements.indicator.innerHTML = `Waiting`;
-      } else if (meta.newState === `playing`) {
+        this.elements.indicator.innerHTML = `${state.charAt(0).toUpperCase() +
+          state.slice(1)}`;
+      } else {
         this.elements.statusButton.innerHTML = svg.pauseSVG;
         this.elements.statusButton.appendChild(this.elements.indicator);
         this.elements.indicator.innerHTML = `Playing`;
-      } else if (meta.newState === `completed`) {
-        this.elements.currentTime.innerHTML = this.clip.duration;
-        this.elements.statusButton.innerHTML = svg.replaySVG;
-        this.elements.statusButton.appendChild(this.elements.indicator);
-        this.elements.indicator.innerHTML = `Completed`;
-      } else if (meta.newState === `transitional`) {
-        this.elements.statusButton.innerHTML = svg.playSVG;
-        this.elements.statusButton.appendChild(this.elements.indicator);
-        this.elements.indicator.innerHTML = `Transitional`;
-      } else if (meta.newState === `idle`) {
-        this.elements.statusButton.innerHTML = svg.playSVG;
-        this.elements.statusButton.appendChild(this.elements.indicator);
-        this.elements.indicator.innerHTML = `Idle`;
-      } else {
-        this.elements.indicator.innerHTML = meta.newSTate;
       }
-    } else if (eventName === `attribute-rejection`) {
-      // console.log(
-      //   `Attributes`,
-      //   meta.attributes,
-      //   `have been rejected from animation with id ${meta.animationID}`
-      // );
-    } else if (eventName === `animation-rejection`) {
-      // console.log(
-      //   `Animation ${meta.animationID} has been rejected as all attributes of
-      //   it overlap on specific elements because of existing animations`
-      // );
     } else if (eventName === `duration-change`) {
       this.elements.totalTime.innerHTML = this.clip.duration;
       this.settings.loopEndMillisecond = this.clip.duration;
@@ -397,21 +369,21 @@ class Player {
 
   setSpeed() {
     let currentSpeed;
-    this.clip.realClip.speed == 1
+    this.clip.speed == 1
       ? (currentSpeed = `Normal`)
-      : (currentSpeed = this.clip.realClip.speed);
+      : (currentSpeed = this.clip.speed);
     this.elements.speedCurrent.innerHTML = currentSpeed;
 
     const targetZone = (() => {
       for (let i = 0; i < this.options.speedValues.length - 1; i++) {
         if (
-          this.options.speedValues[i] <= this.clip.realClip.speed &&
-          this.options.speedValues[i + 1] > this.clip.realClip.speed
+          this.options.speedValues[i] <= this.clip.speed &&
+          this.options.speedValues[i + 1] > this.clip.speed
         ) {
           return (
             i +
             Math.abs(
-              (this.clip.realClip.speed - this.options.speedValues[i]) /
+              (this.clip.speed - this.options.speedValues[i]) /
                 (this.options.speedValues[i] - this.options.speedValues[i + 1])
             )
           );
@@ -451,14 +423,14 @@ class Player {
   }
 
   createPreviewDisplay() {
-    const definition = this.clip.exportState({ unprocessed: true });
-    definition.props.host = elid(`${this.name}-hover-display`);
-    definition.props.isPreviewClip = true;
-    this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
+    // const definition = this.clip.exportState({ unprocessed: true });
+    // definition.props.host = elid(`${this.name}-hover-display`);
+    // definition.props.isPreviewClip = true;
+    // this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
+    this.previewClip = this.clip.paste(elid(`${this.name}-hover-display`));
+    const previewClip = elid(`${this.name}-hover-display`);
 
-    const previewClip = this.previewClip.rootElement;
-
-    this.previewClip.ownContext.isPreviewClip = true;
+    // this.previewClip.ownContext.isPreviewClip = true;
     previewClip.style.position = `absolute`;
 
     previewClip.style.zIndex = 1;
@@ -466,64 +438,52 @@ class Player {
   }
 
   setPreviewDimentions() {
-    const clip = this.clip.rootElement;
-    const previewClip = this.previewClip.rootElement;
-
+    const clip = this.clip.props.host;
+    const previewClip = this.previewClip.ownClip.props.host;
     const clipWidth = clip.offsetWidth;
-
     const clipHeight = clip.offsetHeight;
 
-    const previewRatio = 0.25;
-
-    let previewWidth = clipWidth * previewRatio;
+    let previewWidth = clipWidth * this.previewScale;
 
     // max width is 300
-    if (
-      previewWidth >
-      parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
-    ) {
+    if (previewWidth > 300) {
       previewWidth = parseFloat(
         elid(`${this.name}-hover-display`).style.maxWidth
       );
+      this.previewScale = previewWidth / clipWidth;
     }
 
-    elid(`${this.name}-hover-display`).style.width = previewWidth + `px`;
+    elid(`${this.name}-hover-display`).style.width = clipWidth + `px`;
+    elid(`${this.name}-hover-display`).style.height = clipHeight + `px`;
 
-    const previewHeight = (clipHeight / clipWidth) * previewWidth;
-
-    elid(`${this.name}-hover-display`).style.height = previewHeight + `px`;
-
-    const scaleY = previewHeight / clipHeight;
-    const scaleX = previewWidth / clipWidth;
-
-    previewClip.style.transform = `scale(${scaleX},${scaleY})`;
+    previewClip.style.transform = `scale(${this.previewScale})`;
     previewClip.style.transformOrigin = `center bottom`;
     previewClip.style.boxSizing = `border-box`;
 
     // check if width of iframe is percentage
-    if (this.clip.props.containerParams.width.includes(`%`)) {
-      if (
-        previewWidth / previewRatio - 2 / previewRatio >
-        parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
-      ) {
-        previewClip.style.width = `298px`;
-      } else {
-        previewClip.style.width =
-          previewWidth / previewRatio - 2 / previewRatio + `px`;
-      }
-    }
+    // if (this.clip.props.containerParams.width.includes(`%`)) {
+    //   if (
+    //     previewWidth / previewRatio - 2 / previewRatio >
+    //     parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
+    //   ) {
+    //     previewClip.style.width = `298px`;
+    //   } else {
+    //     previewClip.style.width =
+    //       previewWidth / previewRatio - 2 / previewRatio + `px`;
+    //   }
+    // }
 
-    if (this.clip.props.containerParams.height.includes(`%`)) {
-      if (
-        previewWidth / previewRatio - 2 / previewRatio >
-        parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
-      ) {
-        previewClip.style.height = (clipHeight / clipWidth) * 300 - 2 + `px`;
-      } else {
-        previewClip.style.height =
-          previewHeight / previewRatio - 2 / previewRatio + `px`;
-      }
-    }
+    // if (this.clip.props.containerParams.height.includes(`%`)) {
+    //   if (
+    //     previewWidth / previewRatio - 2 / previewRatio >
+    //     parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
+    //   ) {
+    //     previewClip.style.height = (clipHeight / clipWidth) * 300 - 2 + `px`;
+    //   } else {
+    //     previewClip.style.height =
+    //       previewHeight / previewRatio - 2 / previewRatio + `px`;
+    //   }
+    // }
   }
 }
 

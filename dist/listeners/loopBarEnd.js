@@ -75,7 +75,7 @@ module.exports = function (_this) {
     }, false);
 
     if (_this.settings.playAfterResize) {
-      if (_this.clip.state === "idle") {
+      if (_this.clip.runTimeInfo.state === "idle") {
         var loopms;
 
         if (_this.clip.speed >= 0) {
@@ -87,10 +87,10 @@ module.exports = function (_this) {
         _this.settings.needsUpdate = true;
 
         _this.createJourney(_this.clip, loopms, {
-          before: "stop",
+          before: "pause",
           after: "play"
         });
-      } else if (_this.clip.state === "completed") {
+      } else if (_this.clip.runTimeInfo.state === "completed") {
         var _loopms;
 
         if (_this.clip.speed >= 0) {
@@ -102,11 +102,11 @@ module.exports = function (_this) {
         _this.settings.needsUpdate = true;
 
         _this.createJourney(_this.clip, _loopms, {
-          before: "stop",
+          before: "pause",
           after: "play"
         });
       } else {
-        _this.clip.resume();
+        _this.clip.play();
       }
 
       _this.settings.playAfterResize = false;
@@ -122,8 +122,8 @@ module.exports = function (_this) {
     _this.settings.resizeLoop = true;
     _this.settings.needsUpdate = true;
 
-    if (_this.clip.state === "playing") {
-      _this.clip.wait();
+    if (_this.clip.runTimeInfo.state === "playing") {
+      _this.clip.pause();
 
       _this.settings.playAfterResize = true;
     }

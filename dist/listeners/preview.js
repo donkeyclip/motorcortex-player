@@ -3,11 +3,9 @@
 var _require = require("../helpers"),
     elid = _require.elid,
     addListener = _require.addListener,
-    removeListener = _require.removeListener;
+    removeListener = _require.removeListener; // const MC = require(`@kissmybutton/motorcortex`);
+// const hoverTimeCapsule = new MC.TimeCapsule();
 
-var MC = require("@kissmybutton/motorcortex");
-
-var hoverTimeCapsule = new MC.TimeCapsule();
 
 module.exports = function (_this) {
   // only on desctop devices
@@ -19,13 +17,11 @@ module.exports = function (_this) {
 
       elid("".concat(_this.name, "-hover-display")).classList.toggle("m-fadeOut");
       elid("".concat(_this.name, "-hover-display")).classList.toggle("m-fadeIn");
-      elid("".concat(_this.name, "-hover-display")).classList.toggle("".concat(_this.name, "-hide"));
-
-      if (elid("".concat(_this.name, "-hover-display")).className.includes("m-fadeIn")) {
-        _this.previewJourney = hoverTimeCapsule.startJourney(_this.previewClip);
-      } else {
-        _this.previewJourney.destination();
-      }
+      elid("".concat(_this.name, "-hover-display")).classList.toggle("".concat(_this.name, "-hide")); // if (elid(`${_this.name}-hover-display`).className.includes(`m-fadeIn`)) {
+      //   _this.previewJourney = hoverTimeCapsule.startJourney(_this.previewClip);
+      // } else {
+      //   _this.previewJourney.destination();
+      // }
 
       _this.elements.loopBar.onmousemove = loopBarMouseMove;
     };
@@ -91,19 +87,20 @@ module.exports = function (_this) {
         positionX = 0;
       }
 
-      var left = positionX - elid("".concat(_this.name, "-hover-display")).offsetWidth / 2;
+      var previewWidth = elid("".concat(_this.name, "-hover-display")).offsetWidth * _this.previewScale;
 
-      if (left < 0) {
+      var halfClipWidth = elid("".concat(_this.name, "-hover-display")).offsetWidth / 2;
+      var left = positionX - halfClipWidth; // console.log(left, halfClipWidth);
+
+      if (left + halfClipWidth < 0) {
         left = 0;
-      } else if (left + elid("".concat(_this.name, "-hover-display")).offsetWidth > _this.elements.totalBar.offsetWidth) {
-        left = _this.elements.totalBar.offsetWidth - elid("".concat(_this.name, "-hover-display")).offsetWidth;
+      } else if (left + previewWidth - halfClipWidth > _this.elements.totalBar.offsetWidth) {
+        left = _this.elements.totalBar.offsetWidth - previewWidth;
       }
 
-      var ms = Math.round(positionX / _this.elements.totalBar.offsetWidth * _this.clip.duration);
-
-      if (_this.options.preview) {
-        _this.previewJourney.station(ms);
-      }
+      var ms = Math.round(positionX / _this.elements.totalBar.offsetWidth * _this.clip.duration); // if (_this.options.preview) {
+      //   _this.previewJourney.station(ms);
+      // }
 
       elid("".concat(_this.name, "-hover-millisecond")).innerHTML = ms;
       elid("".concat(_this.name, "-hover-display")).style.left = left + "px";
