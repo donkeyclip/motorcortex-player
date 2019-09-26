@@ -1,9 +1,5 @@
 const { elid, addListener, removeListener } = require(`../helpers`);
 
-// const MC = require(`@kissmybutton/motorcortex`);
-
-// const hoverTimeCapsule = new MC.TimeCapsule();
-
 module.exports = _this => {
   // only on desctop devices
   if (
@@ -114,9 +110,10 @@ module.exports = _this => {
       const ms = Math.round(
         (positionX / _this.elements.totalBar.offsetWidth) * _this.clip.duration
       );
-      // if (_this.options.preview) {
-      //   _this.previewJourney.station(ms);
-      // }
+      if (_this.options.preview) {
+        const fraction = ms / _this.clip.duration;
+        _this.previewClip.onProgress(fraction, ms);
+      }
 
       elid(`${_this.name}-hover-millisecond`).innerHTML = ms;
       elid(`${_this.name}-hover-display`).style.left = left + `px`;

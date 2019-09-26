@@ -7,20 +7,18 @@ const TestPlugin = MotorCortex.loadPlugin(TestPluginDefinition);
 // Configure clip
 const config = {
   css: `
-    body{
-      background-color:black;
-    }
     #one {
       font-size:40px;
-      display: table-cell;
-      vertical-align: middle;
       text-align:center;
       font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
       color:#4b475f;
       
     }
     .container {
-      display: table;
+      background-color:black;
+      display:flex;
+      justify-content:center;
+      align-items:center;
       height: 100%;
       background-color:#292929;
       border:2px solid black;
@@ -86,7 +84,7 @@ window.clip = clip;
 new Player({
   clip,
   theme: "transparent",
-  preview: true,
+  preview: false,
   showVolume: true,
   speedValues: [
     8,

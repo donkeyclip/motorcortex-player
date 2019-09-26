@@ -3,9 +3,7 @@
 var _require = require("../helpers"),
     elid = _require.elid,
     addListener = _require.addListener,
-    removeListener = _require.removeListener; // const MC = require(`@kissmybutton/motorcortex`);
-// const hoverTimeCapsule = new MC.TimeCapsule();
-
+    removeListener = _require.removeListener;
 
 module.exports = function (_this) {
   // only on desctop devices
@@ -98,9 +96,13 @@ module.exports = function (_this) {
         left = _this.elements.totalBar.offsetWidth - previewWidth;
       }
 
-      var ms = Math.round(positionX / _this.elements.totalBar.offsetWidth * _this.clip.duration); // if (_this.options.preview) {
-      //   _this.previewJourney.station(ms);
-      // }
+      var ms = Math.round(positionX / _this.elements.totalBar.offsetWidth * _this.clip.duration);
+
+      if (_this.options.preview) {
+        var fraction = ms / _this.clip.duration;
+
+        _this.previewClip.onProgress(fraction, ms);
+      }
 
       elid("".concat(_this.name, "-hover-millisecond")).innerHTML = ms;
       elid("".concat(_this.name, "-hover-display")).style.left = left + "px";

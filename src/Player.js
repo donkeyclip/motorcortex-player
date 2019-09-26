@@ -423,14 +423,9 @@ class Player {
   }
 
   createPreviewDisplay() {
-    // const definition = this.clip.exportState({ unprocessed: true });
-    // definition.props.host = elid(`${this.name}-hover-display`);
-    // definition.props.isPreviewClip = true;
-    // this.previewClip = MC.ClipFromDefinition(definition, this.clipClass);
     this.previewClip = this.clip.paste(elid(`${this.name}-hover-display`));
     const previewClip = elid(`${this.name}-hover-display`);
 
-    // this.previewClip.ownContext.isPreviewClip = true;
     previewClip.style.position = `absolute`;
 
     previewClip.style.zIndex = 1;
@@ -459,31 +454,6 @@ class Player {
     previewClip.style.transform = `scale(${this.previewScale})`;
     previewClip.style.transformOrigin = `center bottom`;
     previewClip.style.boxSizing = `border-box`;
-
-    // check if width of iframe is percentage
-    // if (this.clip.props.containerParams.width.includes(`%`)) {
-    //   if (
-    //     previewWidth / previewRatio - 2 / previewRatio >
-    //     parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
-    //   ) {
-    //     previewClip.style.width = `298px`;
-    //   } else {
-    //     previewClip.style.width =
-    //       previewWidth / previewRatio - 2 / previewRatio + `px`;
-    //   }
-    // }
-
-    // if (this.clip.props.containerParams.height.includes(`%`)) {
-    //   if (
-    //     previewWidth / previewRatio - 2 / previewRatio >
-    //     parseFloat(elid(`${this.name}-hover-display`).style.maxWidth)
-    //   ) {
-    //     previewClip.style.height = (clipHeight / clipWidth) * 300 - 2 + `px`;
-    //   } else {
-    //     previewClip.style.height =
-    //       previewHeight / previewRatio - 2 / previewRatio + `px`;
-    //   }
-    // }
   }
 }
 
