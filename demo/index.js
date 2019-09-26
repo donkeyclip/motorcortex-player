@@ -31,7 +31,8 @@ const config = {
   containerParams: {
     width: "70%",
     height: "100%"
-  }
+  },
+  audio: "off"
 };
 
 // Create clip

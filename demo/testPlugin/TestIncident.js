@@ -1,7 +1,7 @@
 const MC = require("@kissmybutton/motorcortex");
-const { Incident } = MC.API;
+const { MonoIncident } = MC.API;
 
-class TestIncident extends Incident {
+class TestIncident extends MonoIncident {
   onProgress(progress /*, millisecond*/) {
     const delta = this.targetValue - this.initialValues[this.attributeKey];
     const value = this.initialValues[this.attributeKey] + delta * progress;
