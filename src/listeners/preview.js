@@ -94,17 +94,33 @@ module.exports = _this => {
       const previewWidth =
         elid(`${_this.name}-hover-display`).offsetWidth * _this.previewScale;
 
-      const halfClipWidth = elid(`${_this.name}-hover-display`).offsetWidth / 2;
+      const halfPreviewWidth = previewWidth / 2;
+
+      const clipWidth = elid(`${_this.name}-hover-display`).offsetWidth;
+      const halfClipWidth = clipWidth / 2;
+
+      // console.log(
+      //   elid(`${_this.name}-hover-display`).offsetWidth,
+      //   _this.previewScale,
+      //   positionX,
+      //   clipWidth,
+      //   halfClipWidth,
+      //   previewWidth,
+      //   halfPreviewWidth
+      // );
 
       let left = positionX - halfClipWidth;
       // console.log(left, halfClipWidth);
-      if (left + halfClipWidth < 0) {
-        left = 0;
+      if (positionX - halfPreviewWidth < 0) {
+        left = 0 - (previewWidth + halfPreviewWidth);
       } else if (
-        left + previewWidth - halfClipWidth >
+        positionX + halfPreviewWidth >
         _this.elements.totalBar.offsetWidth
       ) {
-        left = _this.elements.totalBar.offsetWidth - previewWidth;
+        left =
+          _this.elements.totalBar.offsetWidth -
+          halfClipWidth -
+          halfPreviewWidth;
       }
 
       const ms = Math.round(

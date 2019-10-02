@@ -27,6 +27,9 @@ module.exports = (theme, name, options) => `
 
 .pointer-event-panel {
   height: ${theme["pointer-event-panel-height"]};
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 #${name}-pointer-event-panel{
   width:100%;

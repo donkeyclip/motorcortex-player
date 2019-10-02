@@ -87,13 +87,24 @@ module.exports = function (_this) {
 
       var previewWidth = elid("".concat(_this.name, "-hover-display")).offsetWidth * _this.previewScale;
 
-      var halfClipWidth = elid("".concat(_this.name, "-hover-display")).offsetWidth / 2;
+      var halfPreviewWidth = previewWidth / 2;
+      var clipWidth = elid("".concat(_this.name, "-hover-display")).offsetWidth;
+      var halfClipWidth = clipWidth / 2; // console.log(
+      //   elid(`${_this.name}-hover-display`).offsetWidth,
+      //   _this.previewScale,
+      //   positionX,
+      //   clipWidth,
+      //   halfClipWidth,
+      //   previewWidth,
+      //   halfPreviewWidth
+      // );
+
       var left = positionX - halfClipWidth; // console.log(left, halfClipWidth);
 
-      if (left + halfClipWidth < 0) {
-        left = 0;
-      } else if (left + previewWidth - halfClipWidth > _this.elements.totalBar.offsetWidth) {
-        left = _this.elements.totalBar.offsetWidth - previewWidth;
+      if (positionX - halfPreviewWidth < 0) {
+        left = 0 - (previewWidth + halfPreviewWidth);
+      } else if (positionX + halfPreviewWidth > _this.elements.totalBar.offsetWidth) {
+        left = _this.elements.totalBar.offsetWidth - halfClipWidth - halfPreviewWidth;
       }
 
       var ms = Math.round(positionX / _this.elements.totalBar.offsetWidth * _this.clip.duration);

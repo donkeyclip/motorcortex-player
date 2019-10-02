@@ -248,18 +248,24 @@ function () {
     key: "eventBroadcast",
     value: function eventBroadcast(eventName, state) {
       if (eventName === "state-change") {
-        if (state === "paused" || state === "idle" || state === "transitional") {
+        if (state === "paused" || state === "idle" || state === "transitional" || state === "armed" || state === "blocked") {
           this.elements.statusButton.innerHTML = svg.playSVG;
           this.elements.statusButton.appendChild(this.elements.indicator);
           this.elements.indicator.innerHTML = "".concat(state.charAt(0).toUpperCase() + state.slice(1));
+
+          if (state === "blocked") {
+            this.elements.pointerEventPanel.innerHTML = svg.loadingSVG;
+          }
         } else {
           this.elements.statusButton.innerHTML = svg.pauseSVG;
           this.elements.statusButton.appendChild(this.elements.indicator);
           this.elements.indicator.innerHTML = "Playing";
+          this.elements.pointerEventPanel.innerHTML = "";
         }
       } else if (eventName === "duration-change") {
         this.elements.totalTime.innerHTML = this.clip.duration;
         this.settings.loopEndMillisecond = this.clip.duration;
+        this.elements.pointerEventPanel.innerHTML = "";
         this.millisecondChange(this.clip.runTimeInfo.currentMillisecond);
       }
     }

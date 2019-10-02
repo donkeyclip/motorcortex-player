@@ -85,7 +85,7 @@ window.clip = clip;
 new Player({
   clip,
   theme: "transparent",
-  preview: false,
+  preview: true,
   showVolume: true,
   speedValues: [
     8,

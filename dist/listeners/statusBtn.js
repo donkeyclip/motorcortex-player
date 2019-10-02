@@ -6,7 +6,7 @@ module.exports = function (_this) {
 
     if (_this.clip.runTimeInfo.state === "playing") {
       _this.clip.pause();
-    } else if (_this.clip.runTimeInfo.state === "paused" || _this.clip.runTimeInfo.state === "idle" || _this.clip.runTimeInfo.state === "transitional") {
+    } else if (_this.clip.runTimeInfo.state === "paused" || _this.clip.runTimeInfo.state === "idle" || _this.clip.runTimeInfo.state === "transitional" || _this.clip.runTimeInfo.state === "armed") {
       _this.clip.play();
     } //not working below this
     else if (_this.clip.runTimeInfo.state === "idle") {
