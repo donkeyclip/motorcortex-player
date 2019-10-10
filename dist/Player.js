@@ -464,7 +464,10 @@ function () {
       var previewWidth = clipWidth * this.previewScale; // max width is 300
 
       if (previewWidth > 300) {
-        previewWidth = parseFloat(elid("".concat(this.name, "-hover-display")).style.maxWidth);
+        // previewWidth = parseFloat(
+        //   elid(`${this.name}-hover-display`).style.maxWidth
+        // );
+        previewWidth = 300;
         this.previewScale = previewWidth / clipWidth;
       }
 
