@@ -17,6 +17,10 @@ module.exports = _this => {
 
   _this.elements.editableLoopEndTime.onkeydown = _this.elements.editableLoopStartTime.onkeydown = e => {
     e.preventDefault();
+    if (e.keyCode === 13) {
+      _this.elements.editableLoopStartTime.onfocusout();
+      _this.elements.editableLoopEndTime.onfocusout();
+    }
     if (e.keyCode === 8) {
       e.target.value = e.target.value
         .toString()

@@ -20,6 +20,12 @@ module.exports = function (_this) {
   _this.elements.editableLoopEndTime.onkeydown = _this.elements.editableLoopStartTime.onkeydown = function (e) {
     e.preventDefault();
 
+    if (e.keyCode === 13) {
+      _this.elements.editableLoopStartTime.onfocusout();
+
+      _this.elements.editableLoopEndTime.onfocusout();
+    }
+
     if (e.keyCode === 8) {
       e.target.value = e.target.value.toString().substring(0, e.target.value.toString().length - 1);
     }

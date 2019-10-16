@@ -147,7 +147,7 @@ class Player {
       this.eventBroadcast("state-change", state);
     }
     if (!this.settings.needsUpdate) {
-      this.clip.wait();
+      this.clip.pause();
       return 1;
     }
 
@@ -168,41 +168,59 @@ class Player {
     const localMillisecond = millisecond - duration * loopBarLeft;
     const localDuration = (duration / totalBar.offsetWidth) * loopBarWidth;
 
-    if (millisecond >= loopEndMillisecond && loopActivated) {
-      if (
-        clip.runTimeInfo.state === `idle` ||
-        clip.runTimeInfo.state === `completed`
-      ) {
-        this.createJourney(clip, loopStartMillisecond + 1, {
-          before: "pause",
-          after: "play"
-        });
-      } else {
-        this.createJourney(clip, loopStartMillisecond + 1, {
-          after: "play"
-        });
-      }
+    if (
+      millisecond >= loopEndMillisecond &&
+      loopActivated &&
+      this.clip.speed >= 0
+    ) {
+      this.createJourney(clip, loopStartMillisecond + 1, {
+        after:
+          this.settings.playAfterResize ||
+          this.clip.runTimeInfo.state == "playing"
+            ? "play"
+            : null
+      });
       return 1;
-    } else if (millisecond <= loopStartMillisecond && loopActivated) {
-      if (
-        clip.runTimeInfo.state === `idle` ||
-        clip.runTimeInfo.state === `completed`
-      ) {
-        this.createJourney(clip, loopEndMillisecond - 1, {
-          before: "pause",
-          after: "play"
-        });
-      } else {
-        this.createJourney(clip, loopEndMillisecond - 1, {
-          after: "play"
-        });
-      }
+    } else if (
+      millisecond >= loopEndMillisecond &&
+      loopActivated &&
+      this.clip.speed < 0
+    ) {
+      this.createJourney(clip, loopEndMillisecond - 1, {
+        after:
+          this.settings.playAfterResize ||
+          this.clip.runTimeInfo.state == "playing"
+            ? "play"
+            : null
+      });
       return 1;
-    } /*else if (millisecond <= loopStartMillisecond) {
-      this.createJourney(clip, loopStartMillisecond);
-    } else if (millisecond >= loopEndMillisecond) {
-      this.createJourney(clip, loopEndMillisecond);
-    }*/
+    } else if (
+      millisecond <= loopStartMillisecond &&
+      loopActivated &&
+      this.clip.speed >= 0
+    ) {
+      this.createJourney(clip, loopStartMillisecond + 1, {
+        after:
+          this.settings.playAfterResize ||
+          this.clip.runTimeInfo.state == "playing"
+            ? "play"
+            : null
+      });
+      return 1;
+    } else if (
+      millisecond <= loopStartMillisecond &&
+      loopActivated &&
+      this.clip.speed < 0
+    ) {
+      this.createJourney(clip, loopEndMillisecond - 1, {
+        after:
+          this.settings.playAfterResize ||
+          this.clip.runTimeInfo.state == "playing"
+            ? "play"
+            : null
+      });
+      return 1;
+    }
 
     if (makeJouney) {
       this.createJourney(clip, millisecond, {
@@ -233,13 +251,39 @@ class Player {
         this.elements.indicator.innerHTML = `${state.charAt(0).toUpperCase() +
           state.slice(1)}`;
         if (state === `blocked`) {
-          this.elements.pointerEventPanel.innerHTML = svg.loadingSVG;
+          this.elements.pointerEventPanel.innerHTML = `
+            <div style="width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">${
+              svg.loadingSVG
+            }</div>`;
         }
       } else {
         this.elements.statusButton.innerHTML = svg.pauseSVG;
         this.elements.statusButton.appendChild(this.elements.indicator);
         this.elements.indicator.innerHTML = `Playing`;
         this.elements.pointerEventPanel.innerHTML = "";
+        if (
+          state === `playing` &&
+          this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
+          this.clip.speed >= 0
+        ) {
+          this.createJourney(this.clip, 1, { after: "play" });
+        } else if (
+          state === `playing` &&
+          this.clip.runTimeInfo.currentMillisecond === 0 &&
+          this.clip.speed < 0
+        ) {
+          this.createJourney(this.clip, this.clip.duration - 1, {
+            after: "play"
+          });
+        } else if (
+          state === `playing` &&
+          this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
+          this.clip.speed < 0
+        ) {
+          this.createJourney(this.clip, this.clip.duration - 1, {
+            after: "play"
+          });
+        }
       }
     } else if (eventName === `duration-change`) {
       this.elements.totalTime.innerHTML = this.clip.duration;

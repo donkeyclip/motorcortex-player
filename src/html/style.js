@@ -133,7 +133,7 @@ module.exports = (theme, name, options) => `
   height:${theme["grad-height"]};
   left:0px;
   bottom:0px;
-  z-index:1;
+  z-index:100;
 }
 
 #${name}-controls {

@@ -12,8 +12,8 @@ module.exports = function (_this) {
 
     var viewportOffset = _this.elements.totalBar.getBoundingClientRect();
 
-    var positionX = clientX - viewportOffset.left;
-    var endPosition = _this.elements.loopBar.offsetWidth + _this.elements.loopBar.offsetLeft;
+    var positionX = Math.round(clientX - viewportOffset.left);
+    var endPositionsInPxls = Math.round(_this.settings.loopEndMillisecond / _this.clip.duration * _this.elements.totalBar.offsetWidth);
 
     if (positionX < 0) {
       positionX = 0;
@@ -21,11 +21,9 @@ module.exports = function (_this) {
       positionX = _this.elements.totalBar.offsetWidth;
     }
 
-    var loopBarDeltaX = positionX - _this.settings.loopLastPositionXPxls || 0;
-    var runningBarWidthInPxls = _this.elements.runningBar.offsetWidth - loopBarDeltaX;
+    var runningBarWidthInPxls = _this.clip.runTimeInfo.currentMillisecond / _this.clip.duration * _this.elements.totalBar.offsetWidth - positionX;
     _this.elements.loopBar.style.left = positionX + "px";
-    var diff = endPosition - _this.elements.loopBar.offsetLeft;
-    _this.elements.loopBar.style.width = diff + "px";
+    _this.elements.loopBar.style.width = endPositionsInPxls - positionX + "px";
     _this.elements.runningBar.style.width = runningBarWidthInPxls + "px";
     _this.settings.loopLastPositionXPxls = positionX;
     _this.settings.loopStartMillisecond = Math.round(_this.clip.duration * _this.elements.loopBar.offsetLeft / _this.elements.totalBar.offsetWidth);
@@ -86,21 +84,6 @@ module.exports = function (_this) {
         _this.settings.needsUpdate = true;
 
         _this.createJourney(_this.clip, loopms, {
-          before: "pause",
-          after: "play"
-        });
-      } else if (_this.clip.runTimeInfo.state === "completed") {
-        var _loopms;
-
-        if (_this.clip.speed >= 0) {
-          _loopms = _this.settings.loopStartMillisecond + 1;
-        } else {
-          _loopms = _this.settings.loopEndMillisecond - 1;
-        }
-
-        _this.settings.needsUpdate = true;
-
-        _this.createJourney(_this.clip, _loopms, {
           before: "pause",
           after: "play"
         });

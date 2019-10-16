@@ -6,26 +6,30 @@ module.exports = _this => {
     e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.totalBar.getBoundingClientRect();
-    let positionX = clientX - viewportOffset.left;
+    let positionX = Math.round(clientX - viewportOffset.left);
 
-    const endPosition =
-      _this.elements.loopBar.offsetWidth + _this.elements.loopBar.offsetLeft;
+    const endPositionsInPxls = Math.round(
+      (_this.settings.loopEndMillisecond / _this.clip.duration) *
+        _this.elements.totalBar.offsetWidth
+    );
+
     if (positionX < 0) {
       positionX = 0;
     } else if (positionX > _this.elements.totalBar.offsetWidth) {
       positionX = _this.elements.totalBar.offsetWidth;
     }
 
-    const loopBarDeltaX = positionX - _this.settings.loopLastPositionXPxls || 0;
     const runningBarWidthInPxls =
-      _this.elements.runningBar.offsetWidth - loopBarDeltaX;
+      (_this.clip.runTimeInfo.currentMillisecond / _this.clip.duration) *
+        _this.elements.totalBar.offsetWidth -
+      positionX;
 
     _this.elements.loopBar.style.left = positionX + `px`;
 
-    const diff = endPosition - _this.elements.loopBar.offsetLeft;
-    _this.elements.loopBar.style.width = diff + `px`;
+    _this.elements.loopBar.style.width = endPositionsInPxls - positionX + `px`;
 
     _this.elements.runningBar.style.width = runningBarWidthInPxls + `px`;
+
     _this.settings.loopLastPositionXPxls = positionX;
 
     _this.settings.loopStartMillisecond = Math.round(
@@ -110,18 +114,6 @@ module.exports = _this => {
 
     if (_this.settings.playAfterResize) {
       if (_this.clip.runTimeInfo.state === `idle`) {
-        let loopms;
-        if (_this.clip.speed >= 0) {
-          loopms = _this.settings.loopStartMillisecond + 1;
-        } else {
-          loopms = _this.settings.loopEndMillisecond - 1;
-        }
-        _this.settings.needsUpdate = true;
-        _this.createJourney(_this.clip, loopms, {
-          before: "pause",
-          after: "play"
-        });
-      } else if (_this.clip.runTimeInfo.state === `completed`) {
         let loopms;
         if (_this.clip.speed >= 0) {
           loopms = _this.settings.loopStartMillisecond + 1;
