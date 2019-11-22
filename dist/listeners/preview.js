@@ -14,8 +14,10 @@ module.exports = function (_this) {
       }
 
       elid("".concat(_this.name, "-hover-display")).classList.toggle("m-fadeOut");
-      elid("".concat(_this.name, "-hover-display")).classList.toggle("m-fadeIn");
-      elid("".concat(_this.name, "-hover-display")).classList.toggle("".concat(_this.name, "-hide")); // if (elid(`${_this.name}-hover-display`).className.includes(`m-fadeIn`)) {
+      elid("".concat(_this.name, "-hover-display")).classList.toggle("m-fadeIn"); // elid(`${_this.name}-hover-display`).classList.toggle(
+      //   `${_this.name}-hide`
+      // );
+      // if (elid(`${_this.name}-hover-display`).className.includes(`m-fadeIn`)) {
       //   _this.previewJourney = hoverTimeCapsule.startJourney(_this.previewClip);
       // } else {
       //   _this.previewJourney.destination();

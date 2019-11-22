@@ -37,6 +37,7 @@ class Player {
     options.id = options.id || Date.now();
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
+    options.showIndicator = options.showIndicator || false;
     options.theme = options.theme || `transparent on-top`;
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
@@ -480,6 +481,7 @@ class Player {
   createPreviewDisplay() {
     this.previewClip = this.clip.paste(elid(`${this.name}-hover-display`));
     const previewClip = elid(`${this.name}-hover-display`);
+    window.previewClip = this.previewClip;
 
     previewClip.style.position = `absolute`;
 

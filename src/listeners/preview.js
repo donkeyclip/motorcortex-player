@@ -13,9 +13,9 @@ module.exports = _this => {
       }
       elid(`${_this.name}-hover-display`).classList.toggle(`m-fadeOut`);
       elid(`${_this.name}-hover-display`).classList.toggle(`m-fadeIn`);
-      elid(`${_this.name}-hover-display`).classList.toggle(
-        `${_this.name}-hide`
-      );
+      // elid(`${_this.name}-hover-display`).classList.toggle(
+      //   `${_this.name}-hide`
+      // );
 
       // if (elid(`${_this.name}-hover-display`).className.includes(`m-fadeIn`)) {
       //   _this.previewJourney = hoverTimeCapsule.startJourney(_this.previewClip);

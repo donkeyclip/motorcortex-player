@@ -74,7 +74,14 @@ module.exports = _this => {
 
   _this.elements.settingsPanel.classList.add(`m-fadeOut`, `${_this.name}-hide`);
 
-  _this.elements.indicator.style.visibility = `hidden`;
+  if (!_this.options.showIndicator) {
+    _this.elements.indicator.style.visibility = `hidden`;
+  } else {
+    _this.elements.indicator.style.visibility = `visible`;
+    _this.elements.statusButton.style.width = `35px`;
+    _this.elements.statusButton.style.height = `20px`;
+    _this.elements.statusButton.style.bottom = `5px`;
+  }
   _this.elements.indicator.innerHTML = _this.clip.runTimeInfo.state;
 
   _this.elements.settingsSpeedPanel.style.display = `none`;
@@ -143,11 +150,14 @@ module.exports = _this => {
   );
 
   elid(`${_this.name}-hover-display`).classList.add(
-    `m-fadeOut`,
-    `${_this.name}-hide`
+    `m-fadeOut`
+    // `${_this.name}-hide`
   );
 
   elid(`${_this.name}-show-volume-checkbox`).checked = _this.options.showVolume;
+
+  elid(`${_this.name}-show-indicator-checkbox`).checked =
+    _this.options.showIndicator;
 
   elid(`${_this.name}-show-preview-checkbox`).checked = _this.options.preview;
 

@@ -72,6 +72,7 @@ function () {
     options.id = options.id || Date.now();
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
+    options.showIndicator = options.showIndicator || false;
     options.theme = options.theme || "transparent on-top";
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
@@ -452,6 +453,7 @@ function () {
     value: function createPreviewDisplay() {
       this.previewClip = this.clip.paste(elid("".concat(this.name, "-hover-display")));
       var previewClip = elid("".concat(this.name, "-hover-display"));
+      window.previewClip = this.previewClip;
       previewClip.style.position = "absolute";
       previewClip.style.zIndex = 1;
       this.setPreviewDimentions();
