@@ -5,9 +5,7 @@ module.exports = function (_this) {
     var u = create_UUID();
     var popupDC = window.open("https://donkeyclip.com?u=".concat(u));
 
-    var definition = _this.clip.exportState({
-      unprocessed: true
-    });
+    var definition = _this.clip.exportDefinition();
 
     var clipClass = _this.clipClass;
     window.addEventListener("message", receiveMessage, false);
