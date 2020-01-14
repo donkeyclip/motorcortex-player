@@ -296,9 +296,11 @@ class Player {
 
   subscribeToDurationChange() {
     this.clip.subscribeToDurationChange(
-      this.id,
-      this.eventBroadcast.bind(this)
+      this.subscribeToDurationChangeCallback.bind(this)
     );
+  }
+  subscribeToDurationChangeCallback(/*newDuration*/) {
+    this.eventBroadcast("duration-change");
   }
 
   subscribeToTimer() {
