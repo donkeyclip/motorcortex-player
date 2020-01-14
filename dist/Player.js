@@ -275,7 +275,14 @@ function () {
   }, {
     key: "subscribeToDurationChange",
     value: function subscribeToDurationChange() {
-      this.clip.subscribeToDurationChange(this.id, this.eventBroadcast.bind(this));
+      this.clip.subscribeToDurationChange(this.subscribeToDurationChangeCallback.bind(this));
+    }
+  }, {
+    key: "subscribeToDurationChangeCallback",
+    value: function subscribeToDurationChangeCallback()
+    /*newDuration*/
+    {
+      this.eventBroadcast("duration-change");
     }
   }, {
     key: "subscribeToTimer",
