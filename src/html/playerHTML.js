@@ -51,43 +51,41 @@ module.exports = config => `
         <span id="${config.name}-time-total"></span>
       </div>
     </div>
-    <div
-      id="${config.name}-full-screen-btn"
-      class="${config.name}-mc-right-controls"
-    >${config.svg.fullScreenSVG}</div>
-    <div
-      id="${config.name}-settings-btn"
-      class="${config.name}-mc-right-controls"
-    >${config.svg.settingsSVG}</div>
-    <div
-      id="${config.name}-dc-btn"
-      class="${config.name}-mc-right-controls"
-    >
-      ${config.svg.dcSVG}
-    </div>
-    <div
-      id="${config.name}-loop-btn-container"
-      class="${config.name}-mc-right-controls"
-    >
+    <div id="${config.name}-right-controls">
       <div
-        id="${config.name}-loop-btn"
-        class="${config.name}-mc-right-controls"
-      >${config.svg.loopSVG}</div>
-      <div
-        id="${config.name}-loop-time"
-        class="${config.name}-mc-right-controls"
+        id="${config.name}-loop-btn-container"
       >
-        <span
-          id="${config.name}-loopbar-start-time"
-          class="${config.name}-loopbar-time"
-        ></span>
-        <span>:</span>
-        <span
-          id="${config.name}-loopbar-end-time"
-          class="${config.name}-loopbar-time"
-        ></span>
+        <div
+          id="${config.name}-loop-btn"
+        >${config.svg.loopSVG}</div>
+        <div
+          id="${config.name}-loop-time"
+        >
+          <span
+            id="${config.name}-loopbar-start-time"
+            class="${config.name}-loopbar-time"
+          ></span>
+          <span>:</span>
+          <span
+            id="${config.name}-loopbar-end-time"
+            class="${config.name}-loopbar-time"
+          ></span>
+        </div>
       </div>
+      <div
+        id="${config.name}-settings-btn"
+      >${config.svg.settingsSVG}</div>
+      <div
+        id="${config.name}-dc-btn"
+      >
+        ${config.svg.dcSVG}
+      </div>
+      
+      <div
+        id="${config.name}-full-screen-btn"
+      >${config.svg.fullScreenSVG}</div>
     </div>
+    
 
   </div>
   <div id="${config.name}-settings-panel">

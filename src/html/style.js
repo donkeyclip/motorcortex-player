@@ -72,7 +72,7 @@ module.exports = (theme, name, options) => `
 }
 #${name},
 #${name} ::before,
-#${name} ::after,
+#${name} :::after,
 #${name} div,
 #${name} p,
 #${name} span,
@@ -144,16 +144,19 @@ module.exports = (theme, name, options) => `
   bottom: ${theme["controls-bottom"]};
   left: 0px;
   width: 100%;
-  height: 40px;
   z-index:100;
+  height: 44px;
+  border-radius: 6px;
+  display:flex;
+  align-items:center;
 }
 
 #${name}-totalbar {
   width: calc(100% - 20px);
   height: 5px;
   margin: 0px 10px 0px 10px;
-  background-color: #505056;
-  position: relative;
+  background-color: ${theme["totalbar-color"]};
+  position: absolute;
   top: 0px;
   left: 0px;
 }
@@ -167,14 +170,24 @@ module.exports = (theme, name, options) => `
   background-color: ${theme["loopbar-color"]};
 }
 
+.${name}-loop-boundaries::before {
+  ${theme["loopbar-boundaries-style::before"]}
+
+}
 .${name}-loop-boundaries {
   transform:translate(-50%,-37%);
   position:absolute;
   width:18px;
-  background-color:${theme["loopbar-color"]};
+  background-color:${theme["loopbar-boundaries-color"]};
   height:18px;
   border-radius:10px;
   z-index:40;
+  ${theme["loopbar-boundaries-style"]}
+}
+
+.${name}-loop-boundaries::after {
+  ${theme["loopbar-boundaries-style::after"]}
+
 }
 
 #${name}-helperbar {
@@ -206,12 +219,27 @@ module.exports = (theme, name, options) => `
   z-index: 5;
 }
 
-#${name}-left-controls {
-  display:inline-block;
-  width:200px;
-  height:35px;
+#${name}-left-controls,#${name}-right-controls {
+    display: flex;
+    align-items:center;
+    height: 100%;
+    padding: 5px 5px 0px;
 }
-#${name}-time-display {
+#${name}-right-controls {
+  position:absolute;
+  right:0px;
+}
+
+
+#${name}-left-controls > div,#${name}-right-controls > div {
+    display: inline-flex;
+    align-items:center;
+   margin:0 10px 0 10px;
+}
+
+
+
+/*#${name}-time-display {
   display: table;
   text-align: center;
   width: auto;
@@ -222,7 +250,7 @@ module.exports = (theme, name, options) => `
   -moz-transition: left 0.1s ease;
   transition: left 0.1s ease;
 }
-
+*/
 #${name}-time-display span {
   display: table-cell;
   vertical-align: middle;
@@ -230,29 +258,14 @@ module.exports = (theme, name, options) => `
 
 #${name}-status-btn {
   opacity: ${theme["button-opacity"]};
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  width: 40px;
-  height: 25px;
-  position: absolute;
-  overflow:visible;
-  left: 0px;
-  bottom: 0px;
-  margin: 10px 5px 5px 5px;
-  text-align: center;
-  z-index:3;
 }
-
+#${name}-status-btn svg{
+  width:20px;
+  height:18px;
+}
 #${name}-volume {
   opacity: ${theme["button-opacity"]};
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  position: absolute;
-  left: 45px;
-  bottom: 5px;
-  margin: 10px 5px 5px 5px;
-  text-align: center;
-  z-index:3;
+  position: relative;
 }
 #${name}-volume-btn {
   width: 20px;
@@ -263,21 +276,20 @@ module.exports = (theme, name, options) => `
   width: 0px;
   height: 3px;
   background-color: ${theme["loopbar-color"]};
-  position:absolute;
-  left:25px;
-  bottom:6px;
   -webkit-transition: left 0.1s ease;
   -moz-transition: left 0.1s ease;
   transition: left 0.1s ease;
+  position:relative;
+  left:5px;
 }
 
 #${name}-volumebar-helper {
   position: absolute;
-  width: 0px;
-  height: 15px;
-  left:25px;
-  bottom:0px;
-  z-index:10;
+    width: 0px;
+    height: 15px;
+    bottom: 0px;
+    z-index: 10;
+    left: 25px;
 }
 
 #${name}-volumebar-active {
@@ -286,7 +298,6 @@ module.exports = (theme, name, options) => `
   height: 100%;
   background-color: ${theme["color"]};
   position:relative;
-  left:0px;
   bottom:0px;
 }
 
@@ -326,38 +337,21 @@ module.exports = (theme, name, options) => `
 
 #${name}-loop-btn {
   opacity: ${theme["button-opacity"]};
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  width: 15px;
-  height: 15px;
-  margin: 10px 5px 5px 5px;
+  display:flex;
+  align-items:center;
 }
 
 
 #${name}-settings-btn {
   opacity: ${theme["button-opacity"]};
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  width: 15px;
-  height: 15px;
-  margin: 10px 5px 5px 5px;
 }
 
 #${name}-full-screen-btn {
   opacity: ${theme["button-opacity"]};
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  width: 15px;
-  height: 15px;
-  margin: 10px 5px 5px 5px;
 }
 
 .${name}-speed-btn {
-  position: relative;
-  opacity: ${theme["button-opacity"]};
-  width: 10px;
-  height: 10px;
-  display: inline-block;
+  opacity: ${theme["button-opacity"]};  
 }
 
 #${name}-settings-panel {
@@ -376,10 +370,6 @@ module.exports = (theme, name, options) => `
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
-}
-
-.${name}-mc-right-controls {
-  float: right;
 }
 
 .${name}-hide {
@@ -468,10 +458,9 @@ module.exports = (theme, name, options) => `
 
 #${name}-indicator {
   font-size: 8px !important;
-  position: relative;
-  bottom: 15px;
+  position: absolute;
+  bottom: -3px;
   color: ${theme["color"]};
-  white-space: nowrap;
 }
 
 #${name}-speed-settings {
@@ -516,6 +505,8 @@ module.exports = (theme, name, options) => `
 
 #${name}-settings-panel.${name}-settings-speed-panel ul li {
   min-width: 70px;
+  display: flex;
+  height: 32px;
 }
 
 #${name}-settings-panel ul li.no-hover:hover {
@@ -535,6 +526,8 @@ div.${name}-speed-value:hover {
   list-style-type: none;
   margin: 0px;
   padding: 5px;
+  display: flex;
+  height:32px;
 }
 
 #${name}-settings-panel ul li label {
@@ -553,10 +546,11 @@ div.${name}-speed-value:hover {
 }
 
 .settings-switch {
-  float: right;
+  position: absolute;
+  right: 5px;
 }
 
-.settings-switch:after {
+.settings-switch::after {
   clear: both;
 }
 
@@ -665,7 +659,8 @@ input:checked+.slider:before {
 }
 
 #${name}-time-display.${name}-time-width-transition {
-  left: 140px;
+  position:relative;
+  left: 10px;
   -webkit-transition: left 0.3s ease;
   -moz-transition: left 0.3s ease;
   transition: left 0.3s ease;
@@ -708,4 +703,6 @@ input:checked+.slider:before {
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
-}`;
+}
+${theme["theme-style"]}
+`;

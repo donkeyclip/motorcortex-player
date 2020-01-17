@@ -401,7 +401,7 @@ function () {
       var theme = {};
 
       for (var i in this.options.theme.split(" ")) {
-        var confTheme = confThemes(this.options.theme.split(" ")[i]);
+        var confTheme = confThemes(this.options.theme.split(" ")[i], this.name);
 
         for (var q in confTheme || {}) {
           theme[q] = confTheme[q];

@@ -13,15 +13,9 @@ module.exports = function (_this) {
     if (checkbox.checked) {
       checkbox.checked = false;
       _this.elements.indicator.style.visibility = "hidden";
-      _this.elements.statusButton.style.width = "40px";
-      _this.elements.statusButton.style.height = "25px";
-      _this.elements.statusButton.style.bottom = "0px";
     } else {
       checkbox.checked = true;
       _this.elements.indicator.style.visibility = "visible";
-      _this.elements.statusButton.style.width = "35px";
-      _this.elements.statusButton.style.height = "20px";
-      _this.elements.statusButton.style.bottom = "5px";
     }
   };
 
@@ -50,14 +44,7 @@ module.exports = function (_this) {
 
     _this.elements.volumeControl.classList.toggle("".concat(_this.name, "-volume-width-transition"));
 
-    _this.elements.volumeBar.classList.toggle("".concat(_this.name, "-volume-width-transition"));
-
-    _this.elements.volumeBar.classList.toggle("".concat(_this.name, "-hide"));
-
-    _this.elements.volumeBarHelper.classList.toggle("".concat(_this.name, "-volume-width-transition")); // _this.elements.timeDisplay.classList.toggle(
-    //   `${_this.name}-time-width-transition`
-    // );
-
+    _this.elements.volumeControl.classList.toggle("".concat(_this.name, "-hide"));
 
     var checkbox = elid("".concat(_this.name, "-show-volume-checkbox"));
 

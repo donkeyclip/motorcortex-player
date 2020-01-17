@@ -406,10 +406,9 @@ class Player {
     ) {
       this.options.theme += ` position-default`;
     }
-
     const theme = {};
     for (const i in this.options.theme.split(` `)) {
-      const confTheme = confThemes(this.options.theme.split(` `)[i]);
+      const confTheme = confThemes(this.options.theme.split(` `)[i], this.name);
       for (const q in confTheme || {}) {
         theme[q] = confTheme[q];
       }

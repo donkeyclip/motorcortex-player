@@ -84,7 +84,7 @@ window.clip = clip;
 // Add clip to timer
 new Player({
   clip,
-  theme: "transparent",
+  theme: "mc-blue",
   preview: true,
   showVolume: true,
   speedValues: [
@@ -105,7 +105,5 @@ new Player({
     -32,
     1.2
   ],
-  buttons: {
-    donkeyclip: false
-  }
+  buttons: {}
 });

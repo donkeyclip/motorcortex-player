@@ -1,16 +1,17 @@
 const svg = (module.exports = {});
 svg.playSVG = `
-  <svg width="100%" class="svg" height="100%" viewBox="0 0 36 36" >
-    <path id="play-icon" data-state="paused"  d="M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28" />
-  </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 18 20">
+    <path fill="#999" fill-rule="nonzero" d="M16.224 8.515L2.582.245A1.7 1.7 0 0 0 0 1.702V18.24a1.7 1.7 0 0 0 2.582 1.455l13.642-8.27a1.7 1.7 0 0 0 0-2.91z"/>
+</svg>
+
 `;
 svg.dcSVG = `
-  <svg class="svg" width="100%" height="100%" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+  <svg class="svg" style= "transform: scale(1.4);margin-bottom: 5px;margin-left: -1px;" -4px;"width="100%" height="100%" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
    viewBox="0 0 400 400" style="enable-background:new 0 0 286.374 286.374;" xml:space="preserve">
 <path stroke-width="10.00" stroke-linecap="butt" stroke-linejoin="miter" opacity="1" d="M 120.17407989501953 162.04714965820312 L 121.16549682617188 320.6739196777344 Q 279.79229736328125 321.66534423828125 280.78369140625 241.36053466796875 Q 281.77508544921875 161.05572509765625 439.41046142578125 160.06431579589844 L 439.41046142578125 200.71243286132812 Q 281.7751159667969 163.03857421875 280.78369140625 241.36053466796875 Q 279.7922668457031 319.6824951171875 159.8307647705078 281.0172424316406 L 158.83935546875 198.72959899902344 Q 281.7751159667969 161.05572509765625 280.78369140625 241.36053466796875 Q 279.7922668457031 321.66534423828125 440.40185546875 320.6739196777344 L 440.40185546875 280.02581787109375 Q 280.78369140625 321.66534423828125 280.78369140625 241.36053466796875 C 280.78369140625 161.05572509765625 161.8135986328125 161.05572509765625 120.17407989501953 162.04714965820312 Z" selected="true" transform="matrix(1 0 0 1 0 0)"></path></svg>`;
 
 svg.pauseSVG = `
-  <svg class="svg" width="100%" height="100%" viewBox="0 0 36 36" >
+  <svg class="svg" style="transform:scale(1.5)" width="100%" height="100%" viewBox="0 0 36 36" >
     <path id="pause-icon" data-state="playing" d="M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26" />
   </svg>
 `;
@@ -55,117 +56,88 @@ svg.volumeMuteSVG = `
 `;
 
 svg.settingsSVG = `
-  <svg class="svg" width="100%" height="100%" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 268.765 268.765" style="enable-background:new 0 0 268.765 268.765;" xml:space="preserve">
-    <g id="Settings">
-      <g>
-        <path style="fill-rule:evenodd;clip-rule:evenodd;" d="M267.92,119.461c-0.425-3.778-4.83-6.617-8.639-6.617
-          c-12.315,0-23.243-7.231-27.826-18.414c-4.682-11.454-1.663-24.812,7.515-33.231c2.889-2.641,3.24-7.062,0.817-10.133
-          c-6.303-8.004-13.467-15.234-21.289-21.5c-3.063-2.458-7.557-2.116-10.213,0.825c-8.01,8.871-22.398,12.168-33.516,7.529
-          c-11.57-4.867-18.866-16.591-18.152-29.176c0.235-3.953-2.654-7.39-6.595-7.849c-10.038-1.161-20.164-1.197-30.232-0.08
-          c-3.896,0.43-6.785,3.786-6.654,7.689c0.438,12.461-6.946,23.98-18.401,28.672c-10.985,4.487-25.272,1.218-33.266-7.574
-          c-2.642-2.896-7.063-3.252-10.141-0.853c-8.054,6.319-15.379,13.555-21.74,21.493c-2.481,3.086-2.116,7.559,0.802,10.214
-          c9.353,8.47,12.373,21.944,7.514,33.53c-4.639,11.046-16.109,18.165-29.24,18.165c-4.261-0.137-7.296,2.723-7.762,6.597
-          c-1.182,10.096-1.196,20.383-0.058,30.561c0.422,3.794,4.961,6.608,8.812,6.608c11.702-0.299,22.937,6.946,27.65,18.415
-          c4.698,11.454,1.678,24.804-7.514,33.23c-2.875,2.641-3.24,7.055-0.817,10.126c6.244,7.953,13.409,15.19,21.259,21.508
-          c3.079,2.481,7.559,2.131,10.228-0.81c8.04-8.893,22.427-12.184,33.501-7.536c11.599,4.852,18.895,16.575,18.181,29.167
-          c-0.233,3.955,2.67,7.398,6.595,7.85c5.135,0.599,10.301,0.898,15.481,0.898c4.917,0,9.835-0.27,14.752-0.817
-          c3.897-0.43,6.784-3.786,6.653-7.696c-0.451-12.454,6.946-23.973,18.386-28.657c11.059-4.517,25.286-1.211,33.281,7.572
-          c2.657,2.89,7.047,3.239,10.142,0.848c8.039-6.304,15.349-13.534,21.74-21.494c2.48-3.079,2.13-7.559-0.803-10.213
-          c-9.353-8.47-12.388-21.946-7.529-33.524c4.568-10.899,15.612-18.217,27.491-18.217l1.662,0.043
-          c3.853,0.313,7.398-2.655,7.865-6.588C269.044,139.917,269.058,129.639,267.92,119.461z M134.595,179.491
-          c-24.718,0-44.824-20.106-44.824-44.824c0-24.717,20.106-44.824,44.824-44.824c24.717,0,44.823,20.107,44.823,44.824
-          C179.418,159.385,159.312,179.491,134.595,179.491z"/>
-      </g>
-    </g>
-  <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
-  </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">
+    <path fill="#999" fill-rule="nonzero" d="M17.812 7.52h-1.474a7.09 7.09 0 0 0-.604-1.456l1.043-1.042a1.187 1.187 0 0 0 0-1.68l-1.12-1.118a1.188 1.188 0 0 0-1.68 0l-1.043 1.042a7.05 7.05 0 0 0-1.455-.604V1.188C11.48.531 10.948 0 10.292 0H8.708c-.656 0-1.187.532-1.187 1.188v1.474a7.1 7.1 0 0 0-1.456.604L5.022 2.224a1.187 1.187 0 0 0-1.68 0l-1.12 1.12a1.188 1.188 0 0 0 0 1.68l1.044 1.042c-.256.46-.458.949-.604 1.455H1.188C.531 7.52 0 8.052 0 8.708v1.584c0 .656.532 1.187 1.188 1.187h1.474c.146.507.348.995.604 1.456L2.22 13.979a1.188 1.188 0 0 0 0 1.68l1.12 1.119a1.223 1.223 0 0 0 1.68 0l1.043-1.043c.462.255.95.458 1.457.605v1.472c0 .656.531 1.188 1.187 1.188h1.584c.656 0 1.187-.532 1.187-1.188V16.34c.506-.147.995-.35 1.456-.604l1.043 1.043a1.188 1.188 0 0 0 1.68 0l1.119-1.12a1.187 1.187 0 0 0 0-1.679l-1.043-1.043c.256-.461.458-.95.604-1.456h1.474A1.188 1.188 0 0 0 19 10.29V8.709c0-.656-.532-1.187-1.188-1.187zM9.5 13.459a3.958 3.958 0 1 1 0-7.916 3.958 3.958 0 0 1 0 7.916z"/>
+</svg>
+
 `;
 
 svg.arrowRightSVG = `
-  <svg class="svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
+  <svg style="transform:scale(0.5)" class="svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
     <polyline fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" points="0.375,0.375 45.63,38.087 0.375,75.8 "/>
   </svg>
 `;
 
 svg.arrowLeftSVG = `
-  <svg class="svg" class="svg" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
+  <svg class="svg" style="transform:scale(0.5)" class="svg" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
     <polyline fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" points="45.63,75.8 0.375,38.087 45.63,0.375 "/>
   </svg> 
 `;
 
 svg.fullScreenSVG = `
-  <svg class="svg" width="100%" height="100%" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 298.667 298.667" style="enable-background:new 0 0 298.667 298.667;" xml:space="preserve">
-    <g>
-      <g>
-        <g>
-          <polygon points="42.667,192 0,192 0,298.667 106.667,298.667 106.667,256 42.667,256"/>
-          <polygon points="0,106.667 42.667,106.667 42.667,42.667 106.667,42.667 106.667,0 0,0"/>
-          <polygon points="192,0 192,42.667 256,42.667 256,106.667 298.667,106.667 298.667,0"/>
-          <polygon points="256,256 192,256 192,298.667 298.667,298.667 298.667,192 256,192"/>
-        </g>
-      </g>
-    </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
-  </svg>
+ <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">
+    <g fill="#999" fill-rule="nonzero">
+        <path d="M18.802 1.942A1.746 1.746 0 0 0 17.06.2h-4.537a.99.99 0 1 0 0 1.98h4.102c.11 0 .198.088.198.197v2.588a.99.99 0 1 0 1.98 0V1.942zM.198 4.965a.99.99 0 0 0 1.98 0v-2.59a.198.198 0 0 1 .197-.199h4.102a.99.99 0 0 0 0-1.979H1.944C.983.2.204.978.202 1.94L.198 4.965zM18.802 17.056v-3.023a.99.99 0 1 0-1.98 0v2.592c0 .11-.088.198-.197.198h-4.102a.99.99 0 1 0 0 1.98h4.533c.964-.001 1.746-.783 1.746-1.747zM.198 17.056a1.746 1.746 0 0 0 1.746 1.742h4.533a.99.99 0 1 0 0-1.979H2.375a.198.198 0 0 1-.198-.194v-2.592a.99.99 0 1 0-1.98 0v3.023z"/>
+        <rect width="10.651" height="6.117" x="4.174" y="6.441" rx="1.954"/>
+    </g>
+</svg>
+
 `;
 
 svg.loopSVG = `
-<svg class="svg" width="100%" height="100%" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
-  <g>
-    <g id="loop_x5F_alt3">
-      <g>
-        <path d="M28,16v2c0,1.102-0.898,2-2,2H11.996L12,16l-8,6l8,6l-0.004-4H26c3.309,0,6-2.695,6-6v-2H28z"/>
-        <path d="M4,14c0-1.105,0.898-2,2-2h14v4l7.992-6L20,4v4H6c-3.309,0-6,2.688-6,6v2h4V14z"/>
-      </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22">
+    <g fill="#999" fill-rule="nonzero">
+        <path d="M16.773 15.476H16.3a1.25 1.25 0 0 0 0 2.5h.478a6.944 6.944 0 0 0 .98-13.823.251.251 0 0 1-.208-.246V1.93A1.25 1.25 0 0 0 15.584.906l-4.778 3.341a1.25 1.25 0 0 0 .717 2.274h4.764c2.829 0 4.963 1.925 4.963 4.478a4.482 4.482 0 0 1-4.477 4.477zM6.247 17.845c.12.02.208.124.208.246v1.976a1.249 1.249 0 0 0 1.966 1.024l4.773-3.34a1.251 1.251 0 0 0-.717-2.275H7.713c-2.829 0-4.963-1.925-4.963-4.476a4.482 4.482 0 0 1 4.477-4.479h.478a1.25 1.25 0 1 0 0-2.5h-.478a6.945 6.945 0 0 0-.98 13.824z"/>
     </g>
-  </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
-</svg>`;
+</svg>
+`;
 
-svg.loadingSVG = `<svg class="lds-spinner" width="80px"  height="80px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="background: none;"><g transform="rotate(0 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+svg.loadingSVG = `<svg class="lds-spinner" width="200px"  height="200px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="background: none;"><g transform="rotate(0 50 50)">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(30 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(60 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(90 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(120 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(150 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(180 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(210 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(240 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(270 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(300 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite"></animate>
   </rect>
 </g><g transform="rotate(330 50 50)">
-  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#fff">
+  <rect x="47" y="24" rx="9.4" ry="4.8" width="6" height="12" fill="#999">
     <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animate>
   </rect>
 </g></svg>`;
