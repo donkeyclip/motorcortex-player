@@ -6,9 +6,26 @@ svg.playSVG = `
 
 `;
 svg.dcSVG = `
-  <svg class="svg" style= "transform: scale(1.4);margin-bottom: 5px;margin-left: -1px;" -4px;"width="100%" height="100%" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-   viewBox="0 0 400 400" style="enable-background:new 0 0 286.374 286.374;" xml:space="preserve">
-<path stroke-width="10.00" stroke-linecap="butt" stroke-linejoin="miter" d="M 120.17407989501953 162.04714965820312 L 121.16549682617188 320.6739196777344 Q 279.79229736328125 321.66534423828125 280.78369140625 241.36053466796875 Q 281.77508544921875 161.05572509765625 439.41046142578125 160.06431579589844 L 439.41046142578125 200.71243286132812 Q 281.7751159667969 163.03857421875 280.78369140625 241.36053466796875 Q 279.7922668457031 319.6824951171875 159.8307647705078 281.0172424316406 L 158.83935546875 198.72959899902344 Q 281.7751159667969 161.05572509765625 280.78369140625 241.36053466796875 Q 279.7922668457031 321.66534423828125 440.40185546875 320.6739196777344 L 440.40185546875 280.02581787109375 Q 280.78369140625 321.66534423828125 280.78369140625 241.36053466796875 C 280.78369140625 161.05572509765625 161.8135986328125 161.05572509765625 120.17407989501953 162.04714965820312 Z" selected="true" transform="matrix(1 0 0 1 0 0)"></path></svg>`;
+  <svg class="svg" style="transform:scale(0.55)" version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="1705.000000pt" height="1903.000000pt" viewBox="0 0 1705.000000 1903.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by potrace 1.15, written by Peter Selinger 2001-2017
+</metadata>
+<g transform="translate(0.000000,1903.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M0 9515 l0 -9515 1583 0 1582 0 4430 4655 c2437 2561 4457 4687 4490
+4726 33 38 1164 1227 2513 2642 l2452 2572 0 2192 c0 1206 -2 2193 -4 2193 -3
+0 -1597 -1652 -3542 -3671 l-3538 -3671 -31 35 c-16 20 -1497 1683 -3290 3696
+l-3260 3661 -1692 0 -1693 0 0 -9515z m5504 2412 c1253 -1413 2279 -2574 2282
+-2580 3 -9 -3274 -3438 -4597 -4811 -5 -6 -9 1968 -9 4999 l0 5010 24 -25 c13
+-14 1048 -1181 2300 -2593z"/>
+<path d="M13924 7584 c-34 -17 -2029 -2158 -2029 -2178 0 -15 5121 -5400 5141
+-5404 12 -3 14 295 14 2241 l0 2245 -1478 1543 c-813 849 -1490 1550 -1505
+1557 -38 16 -105 15 -143 -4z"/>
+</g>
+</svg>
+`;
 
 svg.pauseSVG = `
   <svg class="svg" style="transform:scale(1.5)" width="100%" height="100%" viewBox="0 0 36 36" >
@@ -63,13 +80,13 @@ svg.settingsSVG = `
 `;
 
 svg.arrowRightSVG = `
-  <svg class="svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
+  <svg class="svg arrow" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
     <polyline fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" points="0.375,0.375 45.63,38.087 0.375,75.8 "/>
   </svg>
 `;
 
 svg.arrowLeftSVG = `
-  <svg class="svg" class="svg" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
+  <svg class="svg arrow" class="svg" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
     <polyline fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" points="45.63,75.8 0.375,38.087 45.63,0.375 "/>
   </svg> 
 `;

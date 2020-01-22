@@ -22,7 +22,10 @@ module.exports = (theme, name, options) => `
 
 .svg, .svg path {
   fill: ${theme["svg-color"]};
-  /*stroke: ${theme["svg-color"]};*/
+}
+
+.svg.arrow {
+  stroke: ${theme["svg-color"]};
 }
 
 .pointer-event-panel {
