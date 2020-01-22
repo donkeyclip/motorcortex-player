@@ -66,9 +66,9 @@ module.exports = _this => {
   _this.elements.volumeBarActive.style.width =
     _this.settings.volume * 100 + `%`;
 
-  _this.elements.currentTime.innerHTML = 0;
+  _this.elements.currentTime.innerHTML = _this.timeFormat(0);
 
-  _this.elements.totalTime.innerHTML = _this.clip.duration;
+  _this.elements.totalTime.innerHTML = _this.timeFormat(_this.clip.duration);
 
   _this.elements.timeSeparator.innerHTML = `/`;
 
@@ -180,8 +180,8 @@ module.exports = _this => {
   if (!_this.options.showVolume) {
     _this.elements.timeDisplay.style.left = `45px`;
     _this.elements.volumeControl.style.visibility = `hidden`;
-    _this.elements.volumeBar.classList.toggle(`${_this.name}-hide`);
-    _this.elements.volumeBar.classList.toggle(
+    _this.elements.volumeControl.classList.toggle(`${_this.name}-hide`);
+    _this.elements.volumeControl.classList.toggle(
       `${_this.name}-volume-width-transition`
     );
   } else {

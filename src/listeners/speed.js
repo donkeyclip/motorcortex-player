@@ -70,8 +70,8 @@ module.exports = _this => {
     //   pe = true;
     //   _this.elements.settingsPointerEvents.click();
     // }
-    _this.elements.listenerHelper.style.pointerEvents = "auto";
 
+    _this.elements.listenerHelper.style.pointerEvents = "auto";
     e.preventDefault();
     onCursorMoveSpeedBar(e);
     addListener(`mouseup`, onMouseUpSpeedBar, false);

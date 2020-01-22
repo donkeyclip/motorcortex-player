@@ -64,8 +64,8 @@ module.exports = function (_this) {
   _this.elements.settingsSpeedButtonShow = elid("".concat(_this.name, "-settings-speed-show"));
   _this.elements.settingsSpeedButtonHide = elid("".concat(_this.name, "-settings-speed-hide"));
   _this.elements.volumeBarActive.style.width = _this.settings.volume * 100 + "%";
-  _this.elements.currentTime.innerHTML = 0;
-  _this.elements.totalTime.innerHTML = _this.clip.duration;
+  _this.elements.currentTime.innerHTML = _this.timeFormat(0);
+  _this.elements.totalTime.innerHTML = _this.timeFormat(_this.clip.duration);
   _this.elements.timeSeparator.innerHTML = "/";
 
   _this.elements.settingsPanel.classList.add("m-fadeOut", "".concat(_this.name, "-hide"));
@@ -135,9 +135,9 @@ module.exports = function (_this) {
     _this.elements.timeDisplay.style.left = "45px";
     _this.elements.volumeControl.style.visibility = "hidden";
 
-    _this.elements.volumeBar.classList.toggle("".concat(_this.name, "-hide"));
+    _this.elements.volumeControl.classList.toggle("".concat(_this.name, "-hide"));
 
-    _this.elements.volumeBar.classList.toggle("".concat(_this.name, "-volume-width-transition"));
+    _this.elements.volumeControl.classList.toggle("".concat(_this.name, "-volume-width-transition"));
   } else {
     _this.elements.timeDisplay.style.left = "";
     _this.elements.volumeControl.style.visibility = "visible";

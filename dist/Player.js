@@ -76,6 +76,7 @@ function () {
     options.theme = options.theme || "transparent on-top";
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
+    options.timeFormat = options.timeFormat || "ss";
 
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
@@ -227,7 +228,7 @@ function () {
       }
 
       this.elements.runningBar.style.width = localMillisecond / localDuration * 100 + "%";
-      this.elements.currentTime.innerHTML = millisecond;
+      this.elements.currentTime.innerHTML = this.timeFormat(millisecond);
 
       if (this.options.onMillisecondChange && executeOnMillisecondChange) {
         this.options.onMillisecondChange(millisecond);
@@ -266,7 +267,7 @@ function () {
           }
         }
       } else if (eventName === "duration-change") {
-        this.elements.totalTime.innerHTML = this.clip.duration;
+        this.elements.totalTime.innerHTML = this.timeFormat(this.clip.duration);
         this.settings.loopEndMillisecond = this.clip.duration;
         this.elements.pointerEventPanel.innerHTML = "";
         this.millisecondChange(this.clip.runTimeInfo.currentMillisecond);
@@ -296,6 +297,21 @@ function () {
       this.settings.journey = timeCapsule.startJourney(this.clip);
     }
   }, {
+    key: "timeFormat",
+    value: function timeFormat(ms) {
+      if (this.options.timeFormat === "ss") {
+        var hours = ms / 1000 / 60 / 60;
+        var minutes = hours % 1 * 60;
+        var seconds = minutes % 1 * 60;
+        var h = ("0" + parseInt(hours)).slice(-2);
+        var m = ("0" + parseInt(minutes)).slice(-2);
+        var s = ("0" + parseInt(seconds)).slice(-2);
+        return "".concat(h === "00" ? "" : h + ":").concat(m, ":").concat(s);
+      } else {
+        return ms;
+      }
+    }
+  }, {
     key: "handleDrag",
     value: function handleDrag(loopBarPositionX) {
       var executeOnMillisecondChange = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
@@ -313,7 +329,7 @@ function () {
           currentTime = _this$elements2.currentTime;
       var totalBarPositionX = loopBarPositionX + loopBar.offsetLeft;
       var millisecond = Math.round(duration * totalBarPositionX / totalBar.offsetWidth);
-      currentTime.innerHTML = millisecond;
+      currentTime.innerHTML = this.timeFormat(millisecond);
       runningBar.style.width = loopBarPositionX / loopBar.offsetWidth * 100 + "%";
       journey.station(millisecond);
 

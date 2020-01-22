@@ -20,9 +20,9 @@ module.exports = (theme, name, options) => `
   bottom: 45px;
 }
 
-.svg {
+.svg, .svg path {
   fill: ${theme["svg-color"]};
-  stroke: ${theme["svg-color"]};
+  /*stroke: ${theme["svg-color"]};*/
 }
 
 .pointer-event-panel {
@@ -98,7 +98,7 @@ module.exports = (theme, name, options) => `
   position: absolute;
   top: 0px;
   left: 0px;
-  
+  color: ${theme["color"]};  
 }
 
 #${name}-settings-speed-hide {
@@ -326,7 +326,6 @@ module.exports = (theme, name, options) => `
 }
 
 #${name}-dc-btn {
-    opacity: 0.8;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 20px;
@@ -351,7 +350,8 @@ module.exports = (theme, name, options) => `
 }
 
 .${name}-speed-btn {
-  opacity: ${theme["button-opacity"]};  
+  opacity: ${theme["button-opacity"]};
+  height: 14px;
 }
 
 #${name}-settings-panel {
@@ -362,9 +362,8 @@ module.exports = (theme, name, options) => `
   background-color: ${theme["settings-background-color"]};
   bottom: ${theme["settings-panel-bottom"]};
   border: ${theme["border"]};
-  right: 5px;
-  width: 164px;
-  height: 175px;
+  right: 8px;
+  width: 167px;
   padding: 5px;
   margin: 0px;
   -webkit-transition: all 0.3s ease;
@@ -392,7 +391,7 @@ module.exports = (theme, name, options) => `
   width: 25px;
   height: ${options.speedValues.length * 16}px;
   float: left;
-  left: -5px;
+  left: 18px;
   z-index:10;
 }
 
@@ -428,6 +427,9 @@ module.exports = (theme, name, options) => `
   border-radius: 5px;
 }
 
+#${name}-time-separator{
+  margin:0 3px;
+}
 #${name}-speed-cursor:hover {
   cursor: pointer;
 }
@@ -463,17 +465,19 @@ module.exports = (theme, name, options) => `
   color: ${theme["color"]};
 }
 
-#${name}-speed-settings {
+/*#${name}-speed-settings {
   height: ${options.speedValues.length * 16 + 32 + 10 - 2}px;
-}
+}*/
 
 #${name}-speed-settings li.no-hover { 
-  height: ${options.speedValues.length * 16 + 10 - 2}px; 
+  height: ${options.speedValues.length * 16 + 10 - 2}px !important; 
 }
 #${name}-settings-panel.${name}-settings-speed-panel {
   overflow: hidden;
-  width: 80px;
-  height: ${options.speedValues.length * 16 + 32 + 20}px;
+  width: 92px;
+  position:absolute;
+  z-index:120;
+  /*height: ${options.speedValues.length * 16 + 32 + 20}px;*/
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -507,6 +511,8 @@ module.exports = (theme, name, options) => `
   min-width: 70px;
   display: flex;
   height: 32px;
+  align-items: center;
+  justify-content:center;
 }
 
 #${name}-settings-panel ul li.no-hover:hover {
@@ -520,14 +526,15 @@ div.${name}-speed-value:hover {
 }
 
 #${name}-settings-panel ul li {
-  position: relative;
+  /*position: relative;
   width: 100%;
-  min-width: 154px;
+  min-width: 154px;*/
   list-style-type: none;
   margin: 0px;
   padding: 5px;
   display: flex;
   height:32px;
+  align-items:center;
 }
 
 #${name}-settings-panel ul li label {
@@ -537,7 +544,7 @@ div.${name}-speed-value:hover {
 .switch {
   position: relative;
   display: inline-block;
-  width: 35px;
+  width: 32px;
   height: 18px;
 }
 
@@ -547,7 +554,7 @@ div.${name}-speed-value:hover {
 
 .settings-switch {
   position: absolute;
-  right: 5px;
+  right: 24px;
 }
 
 .settings-switch::after {

@@ -41,7 +41,7 @@ class Player {
     options.theme = options.theme || `transparent on-top`;
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
-
+    options.timeFormat = options.timeFormat || "ss";
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
     } else {
@@ -231,7 +231,7 @@ class Player {
     this.elements.runningBar.style.width =
       (localMillisecond / localDuration) * 100 + `%`;
 
-    this.elements.currentTime.innerHTML = millisecond;
+    this.elements.currentTime.innerHTML = this.timeFormat(millisecond);
 
     if (this.options.onMillisecondChange && executeOnMillisecondChange) {
       this.options.onMillisecondChange(millisecond);
@@ -287,7 +287,7 @@ class Player {
         }
       }
     } else if (eventName === `duration-change`) {
-      this.elements.totalTime.innerHTML = this.clip.duration;
+      this.elements.totalTime.innerHTML = this.timeFormat(this.clip.duration);
       this.settings.loopEndMillisecond = this.clip.duration;
       this.elements.pointerEventPanel.innerHTML = "";
       this.millisecondChange(this.clip.runTimeInfo.currentMillisecond);
@@ -312,6 +312,22 @@ class Player {
     this.settings.journey = timeCapsule.startJourney(this.clip);
   }
 
+  timeFormat(ms) {
+    if (this.options.timeFormat === "ss") {
+      const hours = ms / 1000 / 60 / 60;
+      const minutes = (hours % 1) * 60;
+      const seconds = (minutes % 1) * 60;
+
+      const h = ("0" + parseInt(hours)).slice(-2);
+      const m = ("0" + parseInt(minutes)).slice(-2);
+      const s = ("0" + parseInt(seconds)).slice(-2);
+
+      return `${h === "00" ? "" : h + ":"}${m}:${s}`;
+    } else {
+      return ms;
+    }
+  }
+
   handleDrag(loopBarPositionX, executeOnMillisecondChange = true) {
     if (!isFinite(loopBarPositionX)) {
       loopBarPositionX = 0;
@@ -326,7 +342,7 @@ class Player {
       (duration * totalBarPositionX) / totalBar.offsetWidth
     );
 
-    currentTime.innerHTML = millisecond;
+    currentTime.innerHTML = this.timeFormat(millisecond);
 
     runningBar.style.width =
       (loopBarPositionX / loopBar.offsetWidth) * 100 + `%`;
