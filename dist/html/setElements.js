@@ -26,7 +26,15 @@ module.exports = function (_this) {
     name: _this.name
   });
 
-  _this.options.host.appendChild(_this.elements.mcPlayer);
+  if (typeof _this.options.host === "string") {
+    var nodelist = document.querySelectorAll(_this.options.host);
+
+    for (var i in nodelist) {
+      nodelist[i].appendChild(_this.elements.mcPlayer);
+    }
+  } else {
+    _this.options.host.appendChild(_this.elements.mcPlayer);
+  }
 
   _this.elements.pointerEventPanel = elid("".concat(_this.name, "-pointer-event-panel"));
   _this.elements.listenerHelper = elid("".concat(_this.name, "-listener-helper"));
@@ -143,14 +151,14 @@ module.exports = function (_this) {
     _this.elements.volumeControl.style.visibility = "visible";
   }
 
-  for (var i in _this.options.speedValues) {
+  for (var _i in _this.options.speedValues) {
     var barDiv = elcreate("div");
     barDiv.className = "".concat(_this.name, "-speed-value-step");
     var valueDiv = elcreate("div");
     valueDiv.className = "".concat(_this.name, "-speed-value");
-    valueDiv.dataset.speedValue = _this.options.speedValues[i];
-    valueDiv.innerHTML = _this.options.speedValues[i];
-    valueDiv.dataset.zone = i;
+    valueDiv.dataset.speedValue = _this.options.speedValues[_i];
+    valueDiv.innerHTML = _this.options.speedValues[_i];
+    valueDiv.dataset.zone = _i;
     elid("".concat(_this.name, "-speed-value")).prepend(valueDiv);
 
     _this.elements.speedBar.prepend(barDiv);

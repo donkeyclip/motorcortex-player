@@ -17,7 +17,14 @@ module.exports = _this => {
   _this.elements.mcPlayer.id = `${_this.name}`;
   _this.elements.mcPlayer.className = `${_this.className}`;
   _this.elements.mcPlayer.innerHTML = playerHTML({ svg, name: _this.name });
-  _this.options.host.appendChild(_this.elements.mcPlayer);
+  if (typeof _this.options.host === "string") {
+    const nodelist = document.querySelectorAll(_this.options.host);
+    for (const i in nodelist) {
+      nodelist[i].appendChild(_this.elements.mcPlayer);
+    }
+  } else {
+    _this.options.host.appendChild(_this.elements.mcPlayer);
+  }
 
   _this.elements.pointerEventPanel = elid(`${_this.name}-pointer-event-panel`);
   _this.elements.listenerHelper = elid(`${_this.name}-listener-helper`);
