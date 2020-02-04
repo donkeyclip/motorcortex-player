@@ -30,7 +30,7 @@ module.exports = function (_this) {
     var nodelist = document.querySelectorAll(_this.options.host);
 
     for (var i in nodelist) {
-      if (i === "length") {
+      if (isNaN(i)) {
         continue;
       }
 
