@@ -20,6 +20,9 @@ module.exports = _this => {
   if (typeof _this.options.host === "string") {
     const nodelist = document.querySelectorAll(_this.options.host);
     for (const i in nodelist) {
+      if (i === "length") {
+        continue;
+      }
       nodelist[i].appendChild(_this.elements.mcPlayer);
     }
   } else {

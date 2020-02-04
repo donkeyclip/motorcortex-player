@@ -30,6 +30,10 @@ module.exports = function (_this) {
     var nodelist = document.querySelectorAll(_this.options.host);
 
     for (var i in nodelist) {
+      if (i === "length") {
+        continue;
+      }
+
       nodelist[i].appendChild(_this.elements.mcPlayer);
     }
   } else {
