@@ -13,7 +13,7 @@ The player can be used with any MotorCortex Clip. Here is an example with the mi
 const TeoPlayer = require('@kissmybutton/motorcortex-player');    
 const player = new TeoPlayer({ clip: MyClip });    
 ```    
-![Player Controls](/kissmybutton/teo-motorcortex-player/raw/master/docs/teo-player-numbers.png)
+![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/teo-player-numbers.png?raw=true)
 ## Controls  
 1. Play / pause button  
 2. Indicator: indicates the status of the Clip  
