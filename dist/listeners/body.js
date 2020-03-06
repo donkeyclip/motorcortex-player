@@ -5,6 +5,42 @@ var _require = require("../helpers"),
     elid = _require.elid;
 
 module.exports = function (_this) {
+  document.addEventListener("fullscreenchange", function () {
+    _this.elements.mcPlayer.classList.toggle("full-screen");
+
+    _this.clip.props.host.classList.toggle("full-screen");
+
+    if (_this.options.preview) {
+      _this.setPreviewDimentions();
+    }
+  });
+  document.addEventListener("webkitfullscreenchange", function () {
+    _this.elements.mcPlayer.classList.toggle("full-screen");
+
+    _this.clip.props.host.classList.toggle("full-screen");
+
+    if (_this.options.preview) {
+      _this.setPreviewDimentions();
+    }
+  });
+  document.addEventListener("mozfullscreenchange", function () {
+    _this.elements.mcPlayer.classList.toggle("full-screen");
+
+    _this.clip.props.host.classList.toggle("full-screen");
+
+    if (_this.options.preview) {
+      _this.setPreviewDimentions();
+    }
+  });
+  document.addEventListener("MSFullscreenChange", function () {
+    _this.elements.mcPlayer.classList.toggle("full-screen");
+
+    _this.clip.props.host.classList.toggle("full-screen");
+
+    if (_this.options.preview) {
+      _this.setPreviewDimentions();
+    }
+  });
   el("body")[0].addEventListener("click", function (e) {
     if (e.target.className === "".concat(_this.name, "-speed-value")) {
       var speedDisplay = e.target.dataset.speedValue - 0;

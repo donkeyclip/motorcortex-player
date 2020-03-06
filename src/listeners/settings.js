@@ -78,7 +78,7 @@ module.exports = _this => {
         return true;
       }
       _this.elements.settingsPanel.classList.toggle(`${_this.name}-hide`);
-
+      elid(`${_this.name}-controls`).classList.toggle(`force-show-controls`);
       _this.elements.settingsPanel.classList.toggle(`m-fadeOut`);
       _this.elements.settingsPanel.classList.toggle(`m-fadeIn`);
       if (_this.elements.settingsPanel.className.includes(`m-fadeOut`)) {

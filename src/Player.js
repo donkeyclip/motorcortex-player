@@ -38,7 +38,7 @@ class Player {
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
     options.showIndicator = options.showIndicator || false;
-    options.theme = options.theme || `transparent on-top`;
+    options.theme = options.theme || `mc-blue on-top`;
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
@@ -385,7 +385,6 @@ class Player {
       this.setPreviewDimentions();
     }
 
-    this.elements.mcPlayer.classList.toggle(`full-screen`);
     if (element.requestFullscreen) {
       element.requestFullscreen();
     } else if (element.mozRequestFullScreen) {
@@ -398,10 +397,6 @@ class Player {
   }
 
   exitFullscreen() {
-    if (this.options.preview) {
-      this.setPreviewDimentions();
-    }
-    this.elements.mcPlayer.classList.toggle(`full-screen`);
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.mozCancelFullScreen) {
@@ -418,9 +413,9 @@ class Player {
 
     if (
       !this.options.theme.includes(`on-top`) &&
-      !this.options.theme.includes(`position-default`)
+      !this.options.theme.includes(`position-bottom`)
     ) {
-      this.options.theme += ` position-default`;
+      this.options.theme += ` on-top`;
     }
     const theme = {};
     for (const i in this.options.theme.split(` `)) {

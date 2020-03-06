@@ -10,9 +10,7 @@ var playerHTML = require("./playerHTML");
 
 module.exports = function (_this) {
   _this.elements = {};
-  var clipIframe = _this.clip.props.host; // console.log(_this.clip);
-  // set _this.clip position to relative
-
+  var clipIframe = _this.clip.props.host;
   clipIframe.style.display = "flex";
   clipIframe.style.justifyContent = "center";
   clipIframe.style.alignItems = "center";

@@ -133,7 +133,7 @@ module.exports = function (theme, name) {
       "hms-background-color": "rgba(0,0,0,0.5)",
       "preview-border": "1px solid rgba(0,0,0,1)",
       color: "#999",
-      "grad-height": "60px",
+      "grad-height": "0px",
       "svg-color": "#999",
       "loopbar-color": "rgba(0,184,139,0.2)",
       "loopbar-boundaries-color": "#00b88b",
@@ -160,7 +160,7 @@ module.exports = function (theme, name) {
       "hms-background-color": "rgba(0,0,0,0.5)",
       "preview-border": "1px solid rgba(0,0,0,1)",
       color: "#999",
-      "grad-height": "60px",
+      "grad-height": "0px",
       "svg-color": "#999",
       "loopbar-color": "rgba(0,153,225,0.2)",
       "loopbar-boundaries-color": "#0099e1",
@@ -188,7 +188,7 @@ module.exports = function (theme, name) {
       "settings-panel-bottom": "48px",
       "controls-position": "0px"
     },
-    "position-default": {
+    "position-bottom": {
       "background-height": "calc(100% - 44px)",
       "pointer-event-panel-height": "calc(100% - 44px)",
       "controls-bottom": "-0px",

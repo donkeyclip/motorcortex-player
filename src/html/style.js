@@ -101,7 +101,32 @@ module.exports = (theme, name, options) => `
   position: absolute;
   top: 0px;
   left: 0px;
-  color: ${theme["color"]};  
+  color: ${theme["color"]};
+  pointer-events:auto !important;
+}
+
+.force-show-controls {
+  height: 44px !important;
+  overflow:unset !important;
+}
+
+${
+  !options.theme.includes(`position-bottom`)
+    ? `#${name}:hover #${name}-controls {
+  height: 44px;
+  overflow:unset;
+}
+`
+    : `
+    #${name}-controls {
+      height: 44px !important;
+      overflow:unset !important;
+    }
+    `
+}
+
+#${name}:hover {
+  pointer-events:none;
 }
 
 #${name}-settings-speed-hide {
@@ -148,10 +173,14 @@ module.exports = (theme, name, options) => `
   left: 0px;
   width: 100%;
   z-index:100;
-  height: 44px;
-  border-radius: 6px;
+  height: 0px;
+  overflow:hidden;
   display:flex;
+  border-radius: 6px;
   align-items:center;
+  -webkit-transition: height 0.2s ease;
+  -moz-transition: height 0.2s ease;
+  transition: height 0.2s ease;
 }
 
 #${name}-totalbar {

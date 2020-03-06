@@ -90,6 +90,8 @@ module.exports = function (_this) {
 
       _this.elements.settingsPanel.classList.toggle("".concat(_this.name, "-hide"));
 
+      elid("".concat(_this.name, "-controls")).classList.toggle("force-show-controls");
+
       _this.elements.settingsPanel.classList.toggle("m-fadeOut");
 
       _this.elements.settingsPanel.classList.toggle("m-fadeIn");

@@ -13,6 +13,5 @@ module.exports = _this => {
     elFullScreen
       ? _this.exitFullscreen()
       : _this.launchIntoFullscreen(_this.clip.props.host);
-    _this.clip.props.host.classList.toggle(`full-screen`);
   });
 };
