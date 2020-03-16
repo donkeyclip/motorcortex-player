@@ -13,8 +13,8 @@ The player can be used with any MotorCortex Clip. Here is an example with the mi
 const TeoPlayer = require('@kissmybutton/motorcortex-player');    
 const player = new TeoPlayer({ clip: MyClip });    
 ```    
+## Controls 
 ![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/teo-player-numbers.png?raw=true)
-## Controls  
 1. Play / pause button  
 2. Indicator: indicates the status of the Clip  
 3. Master volume  
@@ -45,3 +45,13 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 | timeFormat      |   ms    |   This option allows you to set the time units on the Time (#4) of the Player. The default is ms, which means the Time will be presented in the form: < elapsed milliseconds >/< total milliseconds >. In the case you want a representation in the form: mm:ss/mm:ss you can set this option to "ss"  |
 | theme      | "transparent" |   Here you can pick one of the available themes of the player. The available themes are: "transparent", "dark", "whiteGold", "darkGold", "mc-green", "mc-blue". Screenshots of each theme are presented below  |
 ## Themes 
+### dark
+![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/dark.png?raw=true)
+### whiteGold
+![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/whiteGold.png?raw=true)
+### darkGold
+![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/darkGold.png?raw=true)
+### mc-green
+![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/mc-green.png?raw=true)
+### mc-blue
+![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/mc-blue.png?raw=true)
