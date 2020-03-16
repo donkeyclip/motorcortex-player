@@ -1,9 +1,9 @@
 
 # Teo MotorCortex Player  
 ## Installation    
-~ npm install @kissmybutton/motorcortex-player    
+```~ npm install @kissmybutton/motorcortex-player```    
 or    
-~ yarn add @kissmybutton/motorcortex-player    
+```~ yarn add @kissmybutton/motorcortex-player```    
 ## Purpose    
 Teo MotorCortex Player is a video-like player specially designed for MotorCortex Clips.    
 Among other functionality, the player allows the user to play / pause and seek a Clip, control the master volume and the playback speed and more.    
