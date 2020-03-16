@@ -55,3 +55,9 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 ![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/mc-green.png?raw=true)
 ### mc-blue
 ![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/mc-blue.png?raw=true)
+
+## License
+[MIT License](https://opensource.org/licenses/MIT)
+
+  
+[![Kiss My Button](https://presskit.kissmybutton.gr/logos/kissmybutton-logo-small.png)](https://kissmybutton.gr)
