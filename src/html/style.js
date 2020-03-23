@@ -242,6 +242,7 @@ ${
 #${name}-cursor {
   transform:translate(50%,-36%);
   right: 0px;
+  overflow:hidden;
   top: 0px;
   width: 0px;
   height: 0px;
@@ -249,6 +250,14 @@ ${
   background-color: ${theme["cursor-color"]};
   border-radius: 10px;
   z-index: 5;
+}
+
+#${name}-cursor::before {
+  ${theme["cursor-style::before"]}
+}
+
+#${name}-cursor::after {
+  ${theme["cursor-style::after"]}
 }
 
 #${name}-left-controls,#${name}-right-controls {

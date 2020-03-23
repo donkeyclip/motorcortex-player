@@ -82,6 +82,7 @@ module.exports = function (_this) {
 
   _this.elements.settingsButton.onclick = function (e) {
     e.preventDefault();
+    var controlsEl = elid("".concat(_this.name, "-controls"));
 
     var showHideSettings = function showHideSettings(e) {
       if (_this.elements.settingsPanel.contains(e.target)) {
@@ -90,18 +91,22 @@ module.exports = function (_this) {
 
       _this.elements.settingsPanel.classList.toggle("".concat(_this.name, "-hide"));
 
-      elid("".concat(_this.name, "-controls")).classList.toggle("force-show-controls");
-
       _this.elements.settingsPanel.classList.toggle("m-fadeOut");
 
       _this.elements.settingsPanel.classList.toggle("m-fadeIn");
 
       if (_this.elements.settingsPanel.className.includes("m-fadeOut")) {
         removeListener("click", showHideSettings, false);
+
+        _this.eventBroadcast("state-change", _this.state);
       }
     };
 
     if (_this.elements.settingsPanel.className.includes("m-fadeOut")) {
+      if (!controlsEl.classList.value.includes("force-show-controls")) {
+        controlsEl.classList.toggle("force-show-controls");
+      }
+
       addListener("click", showHideSettings, false);
     } else {
       removeListener("click", showHideSettings, false);

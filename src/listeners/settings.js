@@ -72,21 +72,25 @@ module.exports = _this => {
 
   _this.elements.settingsButton.onclick = e => {
     e.preventDefault();
+    const controlsEl = elid(`${_this.name}-controls`);
 
     const showHideSettings = e => {
       if (_this.elements.settingsPanel.contains(e.target)) {
         return true;
       }
       _this.elements.settingsPanel.classList.toggle(`${_this.name}-hide`);
-      elid(`${_this.name}-controls`).classList.toggle(`force-show-controls`);
       _this.elements.settingsPanel.classList.toggle(`m-fadeOut`);
       _this.elements.settingsPanel.classList.toggle(`m-fadeIn`);
       if (_this.elements.settingsPanel.className.includes(`m-fadeOut`)) {
         removeListener(`click`, showHideSettings, false);
+        _this.eventBroadcast("state-change", _this.state);
       }
     };
 
     if (_this.elements.settingsPanel.className.includes(`m-fadeOut`)) {
+      if (!controlsEl.classList.value.includes("force-show-controls")) {
+        controlsEl.classList.toggle("force-show-controls");
+      }
       addListener(`click`, showHideSettings, false);
     } else {
       removeListener(`click`, showHideSettings, false);

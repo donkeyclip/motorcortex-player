@@ -38,7 +38,7 @@ class Player {
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
     options.showIndicator = options.showIndicator || false;
-    options.theme = options.theme || `mc-blue on-top`;
+    options.theme = options.theme || `transparent on-top`;
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
@@ -113,7 +113,7 @@ class Player {
     this.subscribeToTimer();
     this.subscribeToDurationChange();
     this.addEventListeners();
-
+    this.eventBroadcast("state-change", this.state);
     if (this.options.preview) {
       this.createPreviewDisplay();
     }
@@ -239,6 +239,7 @@ class Player {
   }
 
   eventBroadcast(eventName, state) {
+    const controlsEl = elid(`${this.name}-controls`);
     if (eventName === `state-change`) {
       if (
         state === `paused` ||
@@ -247,6 +248,9 @@ class Player {
         state === `armed` ||
         state === `blocked`
       ) {
+        if (!controlsEl.classList.value.includes("force-show-controls")) {
+          controlsEl.classList.toggle("force-show-controls");
+        }
         this.elements.statusButton.innerHTML = svg.playSVG;
         this.elements.statusButton.appendChild(this.elements.indicator);
         this.elements.indicator.innerHTML = `${state.charAt(0).toUpperCase() +
@@ -258,6 +262,9 @@ class Player {
             }</div>`;
         }
       } else {
+        if (controlsEl.classList.value.includes("force-show-controls")) {
+          controlsEl.classList.toggle("force-show-controls");
+        }
         this.elements.statusButton.innerHTML = svg.pauseSVG;
         this.elements.statusButton.appendChild(this.elements.indicator);
         this.elements.indicator.innerHTML = `Playing`;

@@ -105,13 +105,37 @@ module.exports = (theme, name) => {
       "settings-background-color": "rgba(0,0,0,0.5)",
       "hms-background-color": "rgba(0,0,0,0.5)",
       "preview-border": "1px solid rgba(0,0,0,1)",
-      color: "white",
+      color: "#999",
       "grad-height": "60px",
-      "svg-color": "white",
+      "svg-color": "#999",
       "loopbar-color": "#808086",
       "speedbar-color": "#999",
       "runningbar-color": "red",
-      "cursor-color": "red",
+      "cursor-color": "#9e2d11",
+      "cursor-style::before": `
+        box-shadow: 0px 0px 6px 6px red;
+        width: 6px;
+        height: 6px;
+        border-radius: 100%;
+        display: block;
+        content: "";
+        background-color: red;
+        position: relative;
+        left: -2px;
+        top: -2px;
+    `,
+      "cursor-style::after": `
+        width: 6px;
+        height: 6px;
+        border-radius: 100%;
+        box-shadow: 0px 0px 6px 6px red;
+        content: "";
+        display: block;
+        position: absolute;
+        background-color: red;
+        right: -2px;
+        bottom: -2px;
+    `,
       "speedbar-cursor-color": "red",
       "button-opacity": "1",
       "hover-color": "rgba(200, 200, 200, 0.5)",
@@ -120,10 +144,54 @@ module.exports = (theme, name) => {
       border: "1px solid rgba(255,255,255,0.1)",
       "controls-border": "1px solid rgba(255,255,255,0.1)",
       "svg-selected-color": "red",
-      "loopbar-boundaries-style::before": "",
-      "loopbar-boundaries-style::after": "",
-      "theme-style": "",
-      "loopbar-boundaries-color": "#808086"
+      "loopbar-boundaries-style": `
+        transform: translate(-50%,-37%);
+        position: absolute;
+        width: 18px;
+        background-color: #ff0000;
+        height: 18px;
+        border-radius: 10px;
+        z-index: 40;
+        position: absolute;
+        width: 18px;
+        background-color: #ff0000;
+        height: 18px;
+        border-radius: 10px;
+        z-index: 40;
+        width: 18px;
+        height: 9px;
+        border-radius: 100%;
+        top: 1.5px;
+    `,
+      "loopbar-boundaries-style::before": `
+            width: 16px;
+        height: 5px;
+        background: #ff0000;
+        border-radius: 100%;
+        display: block;
+        content: "";
+        position: relative;
+        left: -2px;
+        top: 2px;
+    `,
+      "loopbar-boundaries-style::after": `
+        width: 14px;
+        height: 11px;
+        border-radius: 100%;
+        background: #ff0000;
+        content: "";
+        display: block;
+        position: relative;
+        top: -6px;
+        left: 5px;
+    `,
+      "theme-style": `
+        #${name}-loopbar-start {
+            left: -9px !important;
+            transform: rotate(180deg);
+            top: -2px;
+        }
+    `
     },
     "mc-green": {
       "background-color": "#141416",

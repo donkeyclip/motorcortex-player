@@ -83,7 +83,7 @@ clip.addIncident(animation_3, 120000);
 window.clip = clip;
 // Add clip to timer
 new Player({
-  theme: "mc-blue",
+  // theme: "mc-blue",
   clip,
   preview: true,
   showVolume: true,

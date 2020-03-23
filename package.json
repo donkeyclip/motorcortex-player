@@ -1,6 +1,6 @@
 {
   "name": "@kissmybutton/motorcortex-player",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Player plugin for MotorCortex",
   "main": "./dist/Player.js",
   "author": "KissMyButton PC (kissmybutton.gr) <opensource@kissmybutton.gr>",

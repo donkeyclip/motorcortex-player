@@ -73,7 +73,7 @@ function () {
     options.preview = options.preview || false;
     options.showVolume = options.showVolume || false;
     options.showIndicator = options.showIndicator || false;
-    options.theme = options.theme || "mc-blue on-top";
+    options.theme = options.theme || "transparent on-top";
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
@@ -136,6 +136,7 @@ function () {
     this.subscribeToTimer();
     this.subscribeToDurationChange();
     this.addEventListeners();
+    this.eventBroadcast("state-change", this.state);
 
     if (this.options.preview) {
       this.createPreviewDisplay();
@@ -237,8 +238,14 @@ function () {
   }, {
     key: "eventBroadcast",
     value: function eventBroadcast(eventName, state) {
+      var controlsEl = elid("".concat(this.name, "-controls"));
+
       if (eventName === "state-change") {
         if (state === "paused" || state === "idle" || state === "transitional" || state === "armed" || state === "blocked") {
+          if (!controlsEl.classList.value.includes("force-show-controls")) {
+            controlsEl.classList.toggle("force-show-controls");
+          }
+
           this.elements.statusButton.innerHTML = svg.playSVG;
           this.elements.statusButton.appendChild(this.elements.indicator);
           this.elements.indicator.innerHTML = "".concat(state.charAt(0).toUpperCase() + state.slice(1));
@@ -247,6 +254,10 @@ function () {
             this.elements.pointerEventPanel.innerHTML = "\n            <div style=\"width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;\">".concat(svg.loadingSVG, "</div>");
           }
         } else {
+          if (controlsEl.classList.value.includes("force-show-controls")) {
+            controlsEl.classList.toggle("force-show-controls");
+          }
+
           this.elements.statusButton.innerHTML = svg.pauseSVG;
           this.elements.statusButton.appendChild(this.elements.indicator);
           this.elements.indicator.innerHTML = "Playing";
