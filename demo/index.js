@@ -1,6 +1,6 @@
 const MotorCortex = require("@kissmybutton/motorcortex");
 const TestPluginDefinition = require("./testPlugin/main");
-const Player = require("../src/Player");
+const Player = require("../src/index");
 
 const TestPlugin = MotorCortex.loadPlugin(TestPluginDefinition);
 
