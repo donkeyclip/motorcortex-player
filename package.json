@@ -1,6 +1,6 @@
 {
   "name": "@kissmybutton/motorcortex-player",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Player plugin for MotorCortex",
   "main": "dist/motorcortex-player.cjs.js",
   "module": "dist/motorcortex-player.esm.js",
@@ -22,7 +22,7 @@
     "lint:js": "./node_modules/eslint/bin/eslint.js -c .eslintrc src/**/*.js",
     "lint": "npm run concurrently \"npm run lint:js\" \"npm run lint:styles\"",
     "lint:fix": "npm run concurrently  \"npm run lint:js -- --fix\" \"npm run lint:styles -- --fix\"",
-    "build": "npx babel ./src --out-dir ./dist",
+    "build": "npm run build:lib && npm run build:demo",
     "build:lib": "rollup -c",
     "start": "webpack-dev-server --inline --hot --disableHostCheck --config ./demo/webpack.config.js",
     "build:demo": "webpack --config ./demo/webpack.config.js",
