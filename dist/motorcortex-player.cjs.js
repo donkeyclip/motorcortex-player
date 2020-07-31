@@ -1441,7 +1441,7 @@ var fullscreen = function fullscreen(_this) {
 
 var donkeyclip = function donkeyclip(_this) {
   _this.elements.donkeyclipButton.addEventListener("click", function () {
-    var u = create_UUID();
+    var u = createUID();
     var popupDC = window.open("https://donkeyclip.com?u=".concat(u));
 
     var definition = _this.clip.exportDefinition();
@@ -1461,15 +1461,17 @@ var donkeyclip = function donkeyclip(_this) {
   });
 };
 
-function create_UUID() {
+var createUID = function createUID() {
   var dt = new Date().getTime();
-  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+  var uuid = "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
     var r = (dt + Math.random() * 16) % 16 | 0;
     dt = Math.floor(dt / 16);
-    return (c == "x" ? r : r & 0x3 | 0x8).toString(16);
+    var rand = Math.random() > 0.5;
+    var str = (c == "x" ? r : r & 0x3 | 0x8).toString(16);
+    return rand ? str.toUpperCase() : str;
   });
   return uuid;
-}
+};
 
 var elid$6 = helpers.elid,
     addListener$6 = helpers.addListener,
