@@ -42,6 +42,7 @@ class Player {
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
+    options.backgroundColor = options.backgroundColor || "transparent";
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
     } else {

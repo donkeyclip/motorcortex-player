@@ -1,6 +1,6 @@
 module.exports = (theme, name, options) => `
 .background {
-  background-color: black;
+  background-color: ${options.backgroundColor};
   width:100%;
   height:${theme["background-height"]};;
   position:absolute;
