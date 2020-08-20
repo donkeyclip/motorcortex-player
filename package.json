@@ -1,6 +1,6 @@
 {
   "name": "@kissmybutton/motorcortex-player",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Player plugin for MotorCortex",
   "main": "dist/motorcortex-player.cjs.js",
   "module": "dist/motorcortex-player.esm.js",

@@ -2,7 +2,7 @@ const MC = require(`@kissmybutton/motorcortex`);
 
 const timeCapsule = new MC.TimeCapsule();
 
-const { elid, eltag, elcreate } = require(`./helpers`);
+const { elid, eltag, elcreate, calcClipScale } = require(`./helpers`);
 const svg = require("./html/svg");
 const config = require(`./config`);
 const confStyle = require(`./html/style`);
@@ -42,6 +42,7 @@ class Player {
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
+    options.scaleToFit = options.scaleToFit || false;
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
     } else {
@@ -104,7 +105,8 @@ class Player {
 
     this.functions = {
       millisecondChange: this.millisecondChange,
-      createJourney: this.createJourney
+      createJourney: this.createJourney,
+      createLoop: this.createLoop
     };
     // create the timer controls main div
     setElements(this);
@@ -113,6 +115,7 @@ class Player {
     this.subscribeToTimer();
     this.subscribeToDurationChange();
     this.addEventListeners();
+    this.scaleClipHost();
     this.eventBroadcast("state-change", this.state);
     if (this.options.preview) {
       this.createPreviewDisplay();
@@ -122,6 +125,29 @@ class Player {
         this.setPreviewDimentions();
       }
     });
+  }
+
+  scaleClipHost() {
+    if (this.options.scaleToFit) {
+      const transform = calcClipScale(this.clip.props.containerParams, {
+        width: this.clip.props.host.offsetWidth,
+        height: this.clip.props.host.offsetHeight
+      });
+      this.clip.realClip.rootElement.style.transform = `scale(${
+        transform.scale
+      }`;
+    }
+  }
+  createLoop(msStart, msEnd) {
+    this.settings.loopStartMillisecond = msStart;
+    this.settings.loopEndMillisecond = msEnd;
+    this.elements.loopBar.style.left =
+      (msStart / this.clip.duration) * 100 + "%";
+    this.elements.loopBar.style.width =
+      ((msEnd - msStart) / this.clip.duration) * 100 + "%";
+    this.createJourney(this.clip, msStart);
+    this.elements.runningBar.style.width = "0%";
+    !this.settings.loopActivated && this.activateLoop(false);
   }
 
   createJourney(clip, millisecond, clipCommands = {}) {

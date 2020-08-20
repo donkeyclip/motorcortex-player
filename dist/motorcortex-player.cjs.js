@@ -48,6 +48,101 @@ var helpers = {
     var _document2;
 
     return (_document2 = document).removeEventListener.apply(_document2, arguments);
+  },
+  calcClipScale: function calcClipScale(containerParams, platoDims) {
+    function isNumber(value) {
+      return typeof value === "number" && isFinite(value);
+    }
+
+    var numberPartRegexp = new RegExp("^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)", "gi");
+    var widthAnalysed = null,
+        heightAnalysed = null;
+
+    if (Object.prototype.hasOwnProperty.call(containerParams, "width")) {
+      var widthNumberPart = containerParams.width.match(numberPartRegexp)[0];
+      var widthUnitPart = containerParams.width.substring(widthNumberPart.length);
+
+      if (!isNumber(Number(widthNumberPart)) || widthUnitPart !== "%" && widthUnitPart !== "px") {
+        widthAnalysed = null;
+      } else {
+        widthAnalysed = {
+          number: Number(widthNumberPart),
+          unit: widthUnitPart
+        };
+      }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(containerParams, "height")) {
+      var heightNumberPart = containerParams.height.match(numberPartRegexp)[0];
+      var heightUnitPart = containerParams.height.substring(heightNumberPart.length);
+
+      if (!isNumber(Number(heightNumberPart)) || heightUnitPart !== "%" && heightUnitPart !== "px") {
+        heightAnalysed = null;
+      } else {
+        heightAnalysed = {
+          number: Number(heightNumberPart),
+          unit: heightUnitPart
+        };
+      }
+    } // the only case the Clip needs to be scaled is when any of the two axis of the Clip
+    // is defined in pixels and the value of it is greater than the available space of
+    // the plato
+
+
+    var scaleDifWidth = 1,
+        scaleDifHeight = 1;
+
+    if (widthAnalysed !== null) {
+      if (widthAnalysed.unit === "px") {
+        if (widthAnalysed.number > platoDims.width) {
+          scaleDifWidth = platoDims.width / widthAnalysed.number;
+        }
+      }
+    }
+
+    if (heightAnalysed !== null) {
+      if (heightAnalysed.unit === "px") {
+        if (heightAnalysed.number > platoDims.height) {
+          scaleDifHeight = platoDims.height / heightAnalysed.number;
+        }
+      }
+    }
+
+    var finalScale = 1;
+    scaleDifHeight <= scaleDifWidth ? finalScale = scaleDifHeight : finalScale = scaleDifWidth;
+    var position = {};
+
+    if (widthAnalysed !== null) {
+      var clipWidth;
+
+      if (widthAnalysed.unit === "px") {
+        clipWidth = widthAnalysed.number * finalScale;
+      } else {
+        clipWidth = widthAnalysed.number / 100 * platoDims.width * finalScale;
+      }
+
+      var blankSpace = platoDims.width - clipWidth;
+      position.left = blankSpace / 2;
+    }
+
+    if (widthAnalysed !== null) {
+      var clipHeight;
+
+      if (heightAnalysed.unit === "px") {
+        clipHeight = heightAnalysed.number * finalScale;
+      } else {
+        clipHeight = heightAnalysed.number / 100 * platoDims.height * finalScale;
+      }
+
+      var _blankSpace = platoDims.height - clipHeight;
+
+      position.top = _blankSpace / 2;
+    }
+
+    return {
+      scale: finalScale,
+      position: position
+    };
   }
 };
 
@@ -1302,7 +1397,8 @@ var speed = function speed(_this) {
 var elid$4 = helpers.elid;
 
 var loopBtn = function loopBtn(_this) {
-  _this.elements.loopButton.onclick = function () {
+  _this.elements.loopButton.onclick = _this.activateLoop = function () {
+    var moveRunningBar = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     _this.settings.loopActivated = !_this.settings.loopActivated;
 
     _this.elements.loopButton.classList.toggle("svg-selected");
@@ -1333,7 +1429,7 @@ var loopBtn = function loopBtn(_this) {
       _this.settings.loopEndMillisecond = _this.clip.duration;
       _this.settings.loopLastPositionXPxls = 0;
       _this.settings.loopLastPositionXPercentage = 0;
-      _this.elements.runningBar.style.width = _this.clip.runTimeInfo.currentMillisecond / _this.clip.duration * 100 + "%";
+      moveRunningBar && (_this.elements.runningBar.style.width = _this.clip.runTimeInfo.currentMillisecond / _this.clip.duration * 100 + "%");
     }
   };
 };
@@ -1649,7 +1745,8 @@ var body = function body(_this) {
 var timeCapsule = new motorcortex.TimeCapsule();
 var elid$8 = helpers.elid,
     eltag = helpers.eltag,
-    elcreate$1 = helpers.elcreate;
+    elcreate$1 = helpers.elcreate,
+    calcClipScale = helpers.calcClipScale;
 /**
  * @classdesc
  * Timer's purpose is to provide an interface through which any TimedIncident
@@ -1674,6 +1771,7 @@ function () {
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
+    options.scaleToFit = options.scaleToFit || false;
 
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
@@ -1724,7 +1822,8 @@ function () {
     };
     this.functions = {
       millisecondChange: this.millisecondChange,
-      createJourney: this.createJourney
+      createJourney: this.createJourney,
+      createLoop: this.createLoop
     }; // create the timer controls main div
 
     setElements(this);
@@ -1733,6 +1832,7 @@ function () {
     this.subscribeToTimer();
     this.subscribeToDurationChange();
     this.addEventListeners();
+    this.scaleClipHost();
     this.eventBroadcast("state-change", this.state);
 
     if (this.options.preview) {
@@ -1747,6 +1847,29 @@ function () {
   }
 
   _createClass(Player, [{
+    key: "scaleClipHost",
+    value: function scaleClipHost() {
+      if (this.options.scaleToFit) {
+        var transform = calcClipScale(this.clip.props.containerParams, {
+          width: this.clip.props.host.offsetWidth,
+          height: this.clip.props.host.offsetHeight
+        });
+        console.log(transform);
+        this.clip.realClip.rootElement.style.transform = "scale(".concat(transform.scale);
+      }
+    }
+  }, {
+    key: "createLoop",
+    value: function createLoop(msStart, msEnd) {
+      this.settings.loopStartMillisecond = msStart;
+      this.settings.loopEndMillisecond = msEnd;
+      this.elements.loopBar.style.left = msStart / this.clip.duration * 100 + "%";
+      this.elements.loopBar.style.width = (msEnd - msStart) / this.clip.duration * 100 + "%";
+      this.createJourney(this.clip, msStart);
+      this.elements.runningBar.style.width = "0%";
+      !this.settings.loopActivated && this.activateLoop(false);
+    }
+  }, {
     key: "createJourney",
     value: function createJourney(clip, millisecond) {
       var _this2 = this;

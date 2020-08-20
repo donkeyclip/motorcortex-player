@@ -1,7 +1,9 @@
 const { elid } = require(`../helpers`);
 
 module.exports = _this => {
-  _this.elements.loopButton.onclick = () => {
+  _this.elements.loopButton.onclick = _this.activateLoop = (
+    moveRunningBar = true
+  ) => {
     _this.settings.loopActivated = !_this.settings.loopActivated;
     _this.elements.loopButton.classList.toggle(`svg-selected`);
     _this.elements.loopBarStart.classList.toggle(`m-fadeOut`);
@@ -26,10 +28,11 @@ module.exports = _this => {
       _this.settings.loopEndMillisecond = _this.clip.duration;
       _this.settings.loopLastPositionXPxls = 0;
       _this.settings.loopLastPositionXPercentage = 0;
-      _this.elements.runningBar.style.width =
-        (_this.clip.runTimeInfo.currentMillisecond / _this.clip.duration) *
-          100 +
-        `%`;
+      moveRunningBar &&
+        (_this.elements.runningBar.style.width =
+          (_this.clip.runTimeInfo.currentMillisecond / _this.clip.duration) *
+            100 +
+          `%`);
     }
   };
 };
