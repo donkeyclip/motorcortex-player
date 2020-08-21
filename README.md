@@ -14,7 +14,7 @@ const TeoPlayer = require('@kissmybutton/motorcortex-player');
 const player = new TeoPlayer({ clip: MyClip });    
 ```    
 ## Controls 
-![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/teo-player-numbers.png?raw=true)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/teo-player-numbers.png)
 1. Play / pause button  
 2. Indicator: indicates the status of the Clip  
 3. Master volume  
@@ -46,15 +46,15 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 | theme      | "transparent" |   Here you can pick one of the available themes of the player. The available themes are: "transparent", "dark", "whiteGold", "darkGold", "mc-green", "mc-blue". Screenshots of each theme are presented below  |
 ## Themes 
 ### dark
-![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/dark.png?raw=true)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/dark.png)
 ### whiteGold
-![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/whiteGold.png?raw=true)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/whiteGold.png)
 ### darkGold
-![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/darkGold.png?raw=true)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/darkGold.png)
 ### mc-green
-![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/mc-green.png?raw=true)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/mc-green.png)
 ### mc-blue
-![Player Controls](https://github.com/kissmybutton/teo-motorcortex-player/blob/master/docs/mc-blue.png?raw=true)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/mc-blue.png)
 
 ## License
 [MIT License](https://opensource.org/licenses/MIT)
