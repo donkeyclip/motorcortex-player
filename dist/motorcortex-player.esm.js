@@ -139,6 +139,17 @@ var helpers = {
       scale: finalScale,
       position: position
     };
+  },
+  createUID: function createUID() {
+    var dt = new Date().getTime();
+    var uuid = "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
+      var r = (dt + Math.random() * 16) % 16 | 0;
+      dt = Math.floor(dt / 16);
+      var rand = Math.random() > 0.5;
+      var str = (c == "x" ? r : r & 0x3 | 0x8).toString(16);
+      return rand ? str.toUpperCase() : str;
+    });
+    return uuid;
   }
 };
 
@@ -1531,7 +1542,9 @@ var fullscreen = function fullscreen(_this) {
   });
 };
 
-module.exports = function (_this) {
+var createUID = helpers.createUID;
+
+var donkeyclip = function donkeyclip(_this) {
   _this.elements.donkeyclipButton.addEventListener("click", function () {
     var u = createUID();
     var popupDC = window.open("https://donkeyclip.com?u=".concat(u));
@@ -1552,23 +1565,6 @@ module.exports = function (_this) {
     }
   });
 };
-
-var createUID = function createUID() {
-  var dt = new Date().getTime();
-  var uuid = "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
-    var r = (dt + Math.random() * 16) % 16 | 0;
-    dt = Math.floor(dt / 16);
-    var rand = Math.random() > 0.5;
-    var str = (c == "x" ? r : r & 0x3 | 0x8).toString(16);
-    return rand ? str.toUpperCase() : str;
-  });
-  return uuid;
-};
-
-var donkeyclip = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  createUID: createUID
-});
 
 var elid$6 = helpers.elid,
     addListener$6 = helpers.addListener,
@@ -1842,10 +1838,18 @@ function () {
       this.createPreviewDisplay();
     }
 
+    this.resizeTimeout = setTimeout(function () {}, 20);
     window.addEventListener("resize", function () {
-      if (_this.options.preview) {
-        _this.setPreviewDimentions();
-      }
+      clearTimeout(_this.resizeTimeout);
+      _this.resizeTimeout = setTimeout(function () {
+        if (_this.options.preview) {
+          _this.setPreviewDimentions();
+        }
+
+        if (_this.options.scaleToFit) {
+          _this.scaleClipHost();
+        }
+      }, 20);
     });
   }
 
@@ -1858,6 +1862,8 @@ function () {
           height: this.clip.props.host.offsetHeight
         });
         this.clip.realClip.rootElement.style.transform = "scale(".concat(transform.scale);
+        this.clip.realClip.rootElement.style.left = transform.position.left + "px";
+        this.clip.realClip.rootElement.style.top = transform.position.top + "px";
       }
     }
   }, {
