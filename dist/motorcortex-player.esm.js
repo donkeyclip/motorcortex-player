@@ -190,7 +190,7 @@ var style = function style(theme, name, options) {
 
 var themes = function themes(theme, name) {
   var themes = {
-    default: {
+    "default": {
       "settings-background-color": "whitesmoke",
       "hms-background-color": "whitesmoke",
       "background-color": "whitesmoke",
@@ -1753,9 +1753,7 @@ var elid$8 = helpers.elid,
  * state but also provide an interface for interacting/altering the timing of it
  */
 
-var Player =
-/*#__PURE__*/
-function () {
+var Player = /*#__PURE__*/function () {
   function Player(options) {
     var _this = this;
 

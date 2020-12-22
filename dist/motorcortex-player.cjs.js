@@ -1,8 +1,10 @@
 'use strict';
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+var motorcortex = require('@kissmybutton/motorcortex');
 
-var motorcortex = _interopDefault(require('@kissmybutton/motorcortex'));
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var motorcortex__default = /*#__PURE__*/_interopDefaultLegacy(motorcortex);
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -194,7 +196,7 @@ var style = function style(theme, name, options) {
 
 var themes = function themes(theme, name) {
   var themes = {
-    default: {
+    "default": {
       "settings-background-color": "whitesmoke",
       "hms-background-color": "whitesmoke",
       "background-color": "whitesmoke",
@@ -1745,7 +1747,7 @@ var body = function body(_this) {
   });
 };
 
-var timeCapsule = new motorcortex.TimeCapsule();
+var timeCapsule = new motorcortex__default['default'].TimeCapsule();
 var elid$8 = helpers.elid,
     eltag = helpers.eltag,
     elcreate$1 = helpers.elcreate,
@@ -1757,9 +1759,7 @@ var elid$8 = helpers.elid,
  * state but also provide an interface for interacting/altering the timing of it
  */
 
-var Player =
-/*#__PURE__*/
-function () {
+var Player = /*#__PURE__*/function () {
   function Player(options) {
     var _this = this;
 
