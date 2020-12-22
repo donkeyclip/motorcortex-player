@@ -120,10 +120,17 @@ class Player {
     if (this.options.preview) {
       this.createPreviewDisplay();
     }
+    this.resizeTimeout = setTimeout(() => {}, 20);
     window.addEventListener(`resize`, () => {
-      if (this.options.preview) {
-        this.setPreviewDimentions();
-      }
+      clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = setTimeout(() => {
+        if (this.options.preview) {
+          this.setPreviewDimentions();
+        }
+        if (this.options.scaleToFit) {
+          this.scaleClipHost();
+        }
+      }, 20);
     });
   }
 
@@ -136,6 +143,9 @@ class Player {
       this.clip.realClip.rootElement.style.transform = `scale(${
         transform.scale
       }`;
+      this.clip.realClip.rootElement.style.left =
+        transform.position.left + "px";
+      this.clip.realClip.rootElement.style.top = transform.position.top + "px";
     }
   }
   createLoop(msStart, msEnd) {

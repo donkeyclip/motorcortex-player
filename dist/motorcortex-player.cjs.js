@@ -143,6 +143,17 @@ var helpers = {
       scale: finalScale,
       position: position
     };
+  },
+  createUID: function createUID() {
+    var dt = new Date().getTime();
+    var uuid = "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
+      var r = (dt + Math.random() * 16) % 16 | 0;
+      dt = Math.floor(dt / 16);
+      var rand = Math.random() > 0.5;
+      var str = (c == "x" ? r : r & 0x3 | 0x8).toString(16);
+      return rand ? str.toUpperCase() : str;
+    });
+    return uuid;
   }
 };
 
@@ -1535,9 +1546,11 @@ var fullscreen = function fullscreen(_this) {
   });
 };
 
+var createUID = helpers.createUID;
+
 var donkeyclip = function donkeyclip(_this) {
   _this.elements.donkeyclipButton.addEventListener("click", function () {
-    var u = create_UUID();
+    var u = createUID();
     var popupDC = window.open("https://donkeyclip.com?u=".concat(u));
 
     var definition = _this.clip.exportDefinition();
@@ -1556,16 +1569,6 @@ var donkeyclip = function donkeyclip(_this) {
     }
   });
 };
-
-function create_UUID() {
-  var dt = new Date().getTime();
-  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = (dt + Math.random() * 16) % 16 | 0;
-    dt = Math.floor(dt / 16);
-    return (c == "x" ? r : r & 0x3 | 0x8).toString(16);
-  });
-  return uuid;
-}
 
 var elid$6 = helpers.elid,
     addListener$6 = helpers.addListener,
@@ -1839,10 +1842,18 @@ function () {
       this.createPreviewDisplay();
     }
 
+    this.resizeTimeout = setTimeout(function () {}, 20);
     window.addEventListener("resize", function () {
-      if (_this.options.preview) {
-        _this.setPreviewDimentions();
-      }
+      clearTimeout(_this.resizeTimeout);
+      _this.resizeTimeout = setTimeout(function () {
+        if (_this.options.preview) {
+          _this.setPreviewDimentions();
+        }
+
+        if (_this.options.scaleToFit) {
+          _this.scaleClipHost();
+        }
+      }, 20);
     });
   }
 
@@ -1854,8 +1865,9 @@ function () {
           width: this.clip.props.host.offsetWidth,
           height: this.clip.props.host.offsetHeight
         });
-        console.log(transform);
         this.clip.realClip.rootElement.style.transform = "scale(".concat(transform.scale);
+        this.clip.realClip.rootElement.style.left = transform.position.left + "px";
+        this.clip.realClip.rootElement.style.top = transform.position.top + "px";
       }
     }
   }, {

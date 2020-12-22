@@ -1,6 +1,6 @@
 {
   "name": "@kissmybutton/motorcortex-player",
-  "version": "1.5.7",
+  "version": "1.5.12",
   "description": "Player plugin for MotorCortex",
   "main": "dist/motorcortex-player.cjs.js",
   "module": "dist/motorcortex-player.esm.js",
@@ -71,7 +71,7 @@
     }
   },
   "peerDependencies": {
-    "@kissmybutton/motorcortex": "^3.5.3-rc4"
+    "@kissmybutton/motorcortex": "6.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -79,8 +79,8 @@
     "@babel/preset-env": "^7.1.0",
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.0.1",
-    "@kissmybutton/motorcortex": "^3.5.10",
-    "@kissmybutton/motorcortex-player": "^1.4.6",
+    "@kissmybutton/motorcortex-anime": "2.1.4",
+    "@kissmybutton/motorcortex": "6.1.0",
     "@semantic-release/changelog": "^3.0.2",
     "@semantic-release/git": "^7.0.7",
     "@semantic-release/github": "^5.2.8",
@@ -136,6 +136,8 @@
     }
   },
   "dependencies": {
+    "@kissmybutton/motorcortex-anime": "2.1.4",
+    "@kissmybutton/motorcortex-comets": "0.0.4",
     "rollup": "^2.6.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
