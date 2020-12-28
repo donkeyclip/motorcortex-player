@@ -12,7 +12,6 @@ const trigger = _this => {
   elid(`${_this.name}-loop-time`).classList.toggle(`m-fadeOut`);
   elid(`${_this.name}-loop-time`).classList.toggle(`m-fadeIn`);
   elid(`${_this.name}-loop-time`).classList.toggle(`${_this.name}-hide`);
-
   _this.elements.loopEndTime.innerHTML = _this.settings.loopEndMillisecond;
   _this.elements.loopStartTime.innerHTML = _this.settings.loopStartMillisecond;
   _this.settings.needsUpdate = true;

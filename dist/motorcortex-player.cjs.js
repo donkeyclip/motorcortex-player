@@ -1,10 +1,14 @@
 'use strict';
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+var motorcortex = require('@kissmybutton/motorcortex');
 
-var motorcortex = _interopDefault(require('@kissmybutton/motorcortex'));
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var motorcortex__default = /*#__PURE__*/_interopDefaultLegacy(motorcortex);
 
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -62,6 +66,112 @@ var helpers = {
     var _document2;
 
     return (_document2 = document).removeEventListener.apply(_document2, arguments);
+  },
+  calcClipScale: function calcClipScale(containerParams, platoDims) {
+    function isNumber(value) {
+      return typeof value === "number" && isFinite(value);
+    }
+
+    var numberPartRegexp = new RegExp("^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)", "gi");
+    var widthAnalysed = null,
+        heightAnalysed = null;
+
+    if (Object.prototype.hasOwnProperty.call(containerParams, "width")) {
+      var widthNumberPart = containerParams.width.match(numberPartRegexp)[0];
+      var widthUnitPart = containerParams.width.substring(widthNumberPart.length);
+
+      if (!isNumber(Number(widthNumberPart)) || widthUnitPart !== "%" && widthUnitPart !== "px") {
+        widthAnalysed = null;
+      } else {
+        widthAnalysed = {
+          number: Number(widthNumberPart),
+          unit: widthUnitPart
+        };
+      }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(containerParams, "height")) {
+      var heightNumberPart = containerParams.height.match(numberPartRegexp)[0];
+      var heightUnitPart = containerParams.height.substring(heightNumberPart.length);
+
+      if (!isNumber(Number(heightNumberPart)) || heightUnitPart !== "%" && heightUnitPart !== "px") {
+        heightAnalysed = null;
+      } else {
+        heightAnalysed = {
+          number: Number(heightNumberPart),
+          unit: heightUnitPart
+        };
+      }
+    } // the only case the Clip needs to be scaled is when any of the two axis of the Clip
+    // is defined in pixels and the value of it is greater than the available space of
+    // the plato
+
+
+    var scaleDifWidth = 1,
+        scaleDifHeight = 1;
+
+    if (widthAnalysed !== null) {
+      if (widthAnalysed.unit === "px") {
+        if (widthAnalysed.number > platoDims.width) {
+          scaleDifWidth = platoDims.width / widthAnalysed.number;
+        }
+      }
+    }
+
+    if (heightAnalysed !== null) {
+      if (heightAnalysed.unit === "px") {
+        if (heightAnalysed.number > platoDims.height) {
+          scaleDifHeight = platoDims.height / heightAnalysed.number;
+        }
+      }
+    }
+
+    var finalScale = 1;
+    scaleDifHeight <= scaleDifWidth ? finalScale = scaleDifHeight : finalScale = scaleDifWidth;
+    var position = {};
+
+    if (widthAnalysed !== null) {
+      var clipWidth;
+
+      if (widthAnalysed.unit === "px") {
+        clipWidth = widthAnalysed.number * finalScale;
+      } else {
+        clipWidth = widthAnalysed.number / 100 * platoDims.width * finalScale;
+      }
+
+      var blankSpace = platoDims.width - clipWidth;
+      position.left = blankSpace / 2;
+    }
+
+    if (widthAnalysed !== null) {
+      var clipHeight;
+
+      if (heightAnalysed.unit === "px") {
+        clipHeight = heightAnalysed.number * finalScale;
+      } else {
+        clipHeight = heightAnalysed.number / 100 * platoDims.height * finalScale;
+      }
+
+      var _blankSpace = platoDims.height - clipHeight;
+
+      position.top = _blankSpace / 2;
+    }
+
+    return {
+      scale: finalScale,
+      position: position
+    };
+  },
+  createUID: function createUID() {
+    var dt = new Date().getTime();
+    var uuid = "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
+      var r = (dt + Math.random() * 16) % 16 | 0;
+      dt = Math.floor(dt / 16);
+      var rand = Math.random() > 0.5;
+      var str = (c == "x" ? r : r & 0x3 | 0x8).toString(16);
+      return rand ? str.toUpperCase() : str;
+    });
+    return uuid;
   }
 };
 
@@ -97,12 +207,12 @@ var config = {
 };
 
 var style = function style(theme, name, options) {
-  return "\n.background {\n  background-color: ".concat(options.backgroundColor, ";\n  width:100%;\n  height:").concat(theme["background-height"], ";;\n  position:absolute;\n  top:0px;\n  left:0px;\n  z-index:-2000;\n}\n\n.full-screen #").concat(name, "-controls {\n  position:fixed;\n  left:0px;\n  bottom:0px;\n}\n\n.full-screen #").concat(name, "-settings-panel {\n  position:fixed;\n  bottom: 45px;\n}\n\n.svg, .svg path {\n  fill: ").concat(theme["svg-color"], ";\n}\n\n.svg.arrow {\n  stroke: ").concat(theme["svg-color"], ";\n}\n\n.pointer-event-panel {\n  height: ").concat(theme["pointer-event-panel-height"], ";\n  display:flex;\n  align-items:center;\n  justify-content:center;\n}\n#").concat(name, "-pointer-event-panel{\n  width:100%;\n  position:absolute;\n  z-index:100;\n}\n#").concat(name, "-listener-helper{\n  width:100%;\n  height:calc( 100% - 45px );\n  position:absolute;\n  z-index:110;\n}\n.svg-selected svg{\n  fill: ").concat(theme["svg-selected-color"], ";\n  stroke: ").concat(theme["svg-selected-color"], ";\n}\n#").concat(name, "-hover-display{\n    border: ").concat(theme["preview-border"], ";\n    display: flex;\n    visibility:hidden;\n    opacity:0;\n    overflow:hidden;\n    background-color: black;\n    position: absolute;\n    bottom: 14px;\n    left: 0px;\n    align-items: flex-end;\n    justify-content: center;\n}\n\n#").concat(name, "-hover-millisecond {\n  background-color: ").concat(theme["hms-background-color"], ";\n  padding:3px;\n  height:18px;\n  margin:0px;\n  line-height:12px;\n  font-size:10px;\n  text-align: center;\n  min-width:20px;\n  max-width:100px;\n  z-index:2;\n}\n#").concat(name, ",\n#").concat(name, " ::before,\n#").concat(name, " :::after,\n#").concat(name, " div,\n#").concat(name, " p,\n#").concat(name, " span,\n#").concat(name, " ul,\n#").concat(name, " li {\n  font-weight: 400;\n  line-height: 1.9 !important;\n  color: ").concat(theme["color"], ";\n  font-family: \"Century Gothic\", CenturyGothic, AppleGothic, sans-serif;\n  box-sizing:border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n#").concat(name, " {\n  line-height: 1.9;\n  font-size: 12px;\n  overflow:hidden;\n  height: calc(100% + ").concat(theme["controls-position"], ");\n  width:100%;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  color: ").concat(theme["color"], ";\n  pointer-events:auto !important;\n}\n\n.force-show-controls {\n  opacity:1 !important;\n}\n\n").concat(!options.theme.includes("position-bottom") ? "#".concat(name, ":hover #").concat(name, "-controls {\n  opacity:1 !important;\n}\n") : "\n    #".concat(name, "-controls {\n      opacity:1 !important;\n    }\n    "), "\n\n#").concat(name, ":hover {\n  pointer-events:none;\n}\n\n#").concat(name, "-settings-speed-hide {\n  text-align:right;\n}\n\n.grad {\n  background-image: linear-gradient(\n    rgba(0,0,0,00.01),\n    rgba(0,0,0,00.02),\n    rgba(0,0,0,00.03),\n    rgba(0,0,0,0.04),\n    rgba(0,0,0,0.05),\n    rgba(0,0,0,0.06),\n    rgba(0,0,0,0.07),\n    rgba(0,0,0,0.08),\n    rgba(0,0,0,0.09),\n    rgba(0,0,0,0.1),\n    rgba(0,0,0,0.2),\n    rgba(0,0,0,0.3),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.5),\n    rgba(0,0,0,0.6),\n    rgba(0,0,0,0.7),\n    rgba(0,0,0,0.8),\n    rgba(0,0,0,0.9),\n    rgba(0,0,0,1)\n  );\n  position:absolute;\n  width:100%;\n  height:").concat(theme["grad-height"], ";\n  left:0px;\n  bottom:0px;\n  z-index:-1;\n}\n\n#").concat(name, "-controls {\n  touch-action: none;\n  background-color: ").concat(theme["background-color"], ";\n  border: ").concat(theme["controls-border"], ";\n  position: absolute;\n  bottom: ").concat(theme["controls-bottom"], ";\n  left: 0px;\n  width: 100%;\n  z-index:100;\n  height: 44px;\n  opacity:0;\n  display:flex;\n  border-radius: 6px;\n  align-items:center;\n  -webkit-transition: opacity 0.2s ease;\n  -moz-transition: opacity 0.2s ease;\n  transition: opacity 0.2s ease;\n}\n\n#").concat(name, "-totalbar {\n  width: calc(100% - 20px);\n  height: 5px;\n  margin: 0px 10px 0px 10px;\n  background-color: ").concat(theme["totalbar-color"], ";\n  position: absolute;\n  top: 0px;\n  left: 0px;\n}\n\n#").concat(name, "-loopbar {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0px;\n  left: 0px;\n  background-color: ").concat(theme["loopbar-color"], ";\n}\n\n.").concat(name, "-loop-boundaries::before {\n  ").concat(theme["loopbar-boundaries-style::before"], "\n\n}\n.").concat(name, "-loop-boundaries {\n  transform:translate(-50%,-37%);\n  position:absolute;\n  width:18px;\n  background-color:").concat(theme["loopbar-boundaries-color"], ";\n  height:18px;\n  border-radius:10px;\n  z-index:40;\n  ").concat(theme["loopbar-boundaries-style"], "\n}\n\n.").concat(name, "-loop-boundaries::after {\n  ").concat(theme["loopbar-boundaries-style::after"], "\n\n}\n\n#").concat(name, "-helperbar {\n  position: absolute;\n  height: 20px;\n  top: -10px;\n  left: 0px;\n  right: 0px;\n  z-index:2;\n}\n\n#").concat(name, "-runningbar {\n  position: relative;\n  width: 0px;\n  max-width:100%;\n  height: 100%;\n  background-color: ").concat(theme["runningbar-color"], ";\n}\n\n#").concat(name, "-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  overflow:hidden;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: ").concat(theme["cursor-color"], ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n#").concat(name, "-cursor::before {\n  ").concat(theme["cursor-style::before"], "\n}\n\n#").concat(name, "-cursor::after {\n  ").concat(theme["cursor-style::after"], "\n}\n\n#").concat(name, "-left-controls,#").concat(name, "-right-controls {\n    display: flex;\n    align-items:center;\n    height: 100%;\n    padding: 5px 5px 0px;\n}\n#").concat(name, "-right-controls {\n  position:absolute;\n  right:0px;\n}\n\n\n#").concat(name, "-left-controls > div,#").concat(name, "-right-controls > div {\n    display: inline-flex;\n    align-items:center;\n   margin:0 10px 0 10px;\n}\n\n\n\n/*#").concat(name, "-time-display {\n  display: table;\n  text-align: center;\n  width: auto;\n  height: 34px;\n  position: absolute;\n  left: 90px;\n  -webkit-transition: left 0.1s ease;\n  -moz-transition: left 0.1s ease;\n  transition: left 0.1s ease;\n}\n*/\n#").concat(name, "-time-display span {\n  display: table-cell;\n  vertical-align: middle;\n}\n\n#").concat(name, "-status-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n#").concat(name, "-status-btn svg{\n  width:20px;\n  height:18px;\n}\n#").concat(name, "-volume {\n  opacity: ").concat(theme["button-opacity"], ";\n  position: relative;\n}\n#").concat(name, "-volume-btn {\n  width: 20px;\n  height: 15px;\n}\n\n#").concat(name, "-volumebar {\n  width: 0px;\n  height: 3px;\n  background-color: ").concat(theme["loopbar-color"], ";\n  -webkit-transition: left 0.1s ease;\n  -moz-transition: left 0.1s ease;\n  transition: left 0.1s ease;\n  position:relative;\n  left:5px;\n}\n\n#").concat(name, "-volumebar-helper {\n  position: absolute;\n    width: 0px;\n    height: 15px;\n    bottom: 0px;\n    z-index: 10;\n    left: 25px;\n}\n\n#").concat(name, "-volumebar-active {\n  position: relative;\n  width: 0%;\n  height: 100%;\n  background-color: ").concat(theme["color"], ";\n  position:relative;\n  bottom:0px;\n}\n\n#").concat(name, "-volume-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: ").concat(theme["color"], ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n.").concat(name, "-loopbar-time {\n  width:auto;\n  height:12px;\n  background-color:").concat(theme["background-color"], ";\n  line-height:10px;\n  font-size:10px;\n}\n\n#").concat(name, "-loop-time {\n  margin: 7px;\n}\n\n#").concat(name, "-dc-btn {\n    background-repeat: no-repeat;\n    background-size: 100% 100%;\n    width: 20px;\n    height: 15px;\n    margin: 7px 10px 5px 0px;\n    transform: scale(1.5,1.5);\n}\n\n#").concat(name, "-loop-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n  display:flex;\n  align-items:center;\n}\n\n\n#").concat(name, "-settings-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n\n#").concat(name, "-full-screen-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n\n.").concat(name, "-speed-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n  height: 14px;\n}\n\n#").concat(name, "-settings-panel {\n  touch-action: none;\n  box-sizing: border-box;\n  position: absolute;\n  z-index:101;\n  background-color: ").concat(theme["settings-background-color"], ";\n  bottom: ").concat(theme["settings-panel-bottom"], ";\n  border: ").concat(theme["border"], ";\n  right: 8px;\n  width: 167px;\n  padding: 5px;\n  margin: 0px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n.").concat(name, "-hide {\n  display:none !important;\n}\n\n#").concat(name, "-speed-value-bar {\n  position: relative;\n  width: 5px;\n  background-color: ").concat(theme["speedbar-color"], ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: ").concat(options.speedValues.length * 16, "px;\n  float: left;\n  margin-right:15px;\n}\n\n#").concat(name, "-speed-value-helperbar {\n  position: absolute;\n  width: 25px;\n  height: ").concat(options.speedValues.length * 16, "px;\n  float: left;\n  left: 18px;\n  z-index:10;\n}\n\n\n#").concat(name, "-speed-value-bar:hover,\n#").concat(name, "-speed-value-helperbar {\n  cursor: pointer;\n}\n\n#").concat(name, "-volumebar:hover,\n#").concat(name, "-volumebar-helper:hover,\n#").concat(name, "-volume-btn:hover,\n#").concat(name, "-volumebar:active,\n#").concat(name, "-volumebar-helper:active,\n#").concat(name, "-volume-btn:active {\n  cursor:pointer;\n}\n\n#").concat(name, "-speed-cursor {\n  position: absolute;\n  background-color: ").concat(theme["speedbar-cursor-color"], ";\n  top: 0px;\n  left: 0px;\n}\n\n#").concat(name, "-speed-cursor div {\n  position: absolute;\n  background-color: ").concat(theme["speedbar-cursor-color"], ";\n  left: -2.5px;\n  top: -4px;\n  width: 10px;\n  height: 10px;\n  border-radius: 5px;\n}\n\n#").concat(name, "-time-separator{\n  margin:0 3px;\n}\n#").concat(name, "-speed-cursor:hover {\n  cursor: pointer;\n}\n\n.").concat(name, "-speed-value-step {\n  width: 16px;\n  background-color: ").concat(theme["speedbar-color"], ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: 2px;\n  margin-top: 7px;\n  margin-bottom: 7px;\n  float: left;\n}\n\n#").concat(name, "-speed-value {\n  display: inline-block;\n  box-sizing: border-box;\n  height: ").concat(options.speedValues.length * 16, "px;\n  text-align: left;\n}\n\n.").concat(name, "-speed-value {\n  box-sizing: border-box;\n  height: 16px;\n  font-size: 12px;\n}\n\n#").concat(name, "-indicator {\n  font-size: 8px !important;\n  position: absolute;\n  bottom: -3px;\n  color: ").concat(theme["color"], ";\n}\n\n/*#").concat(name, "-speed-settings {\n  height: ").concat(options.speedValues.length * 16 + 32 + 10 - 2, "px;\n}*/\n\n#").concat(name, "-speed-settings li.no-hover { \n  height: ").concat(options.speedValues.length * 16 + 10 - 2, "px !important; \n}\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel {\n  overflow: hidden;\n  width: 92px;\n  position:absolute;\n  z-index:120;\n  /*height: ").concat(options.speedValues.length * 16 + 32 + 20, "px;*/\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel .").concat(name, "-speed-btn {\n  float: left;\n}\n\n.").concat(name, "-settings-speed-panel ul:first-child {\n  text-align: right;\n}\n\n#").concat(name, "-speed-current {\n  float: right;\n  padding-right: 10px\n}\n\n#").concat(name, "-settings-panel .").concat(name, "-speed-btn {\n  float: right;\n}\n\n#").concat(name, "-settings-panel ul {\n  width: 100%;\n  margin: 0px;\n  padding: 0px;\n  overflow: hidden;\n}\n\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel ul li {\n  min-width: 70px;\n  display: flex;\n  height: 32px;\n  align-items: center;\n  justify-content:center;\n}\n\n#").concat(name, "-settings-panel ul li.no-hover:hover {\n  background-color: transparent;\n  cursor: default;\n}\n\ndiv.").concat(name, "-speed-value:hover {\n  background-color: ").concat(theme["hover-color"], ";\n  cursor: pointer;\n}\n\n#").concat(name, "-settings-panel ul li {\n  /*position: relative;\n  width: 100%;\n  min-width: 154px;*/\n  list-style-type: none;\n  margin: 0px;\n  padding: 5px;\n  display: flex;\n  height:32px;\n  align-items:center;\n}\n\n#").concat(name, "-settings-panel ul li label {\n  margin: 0px;\n}\n\n.switch {\n  position: relative;\n  display: inline-block;\n  width: 32px;\n  height: 18px;\n}\n\n.switch input {\n  display: none;\n}\n\n.settings-switch {\n  position: absolute;\n  right: 24px;\n}\n\n.settings-switch::after {\n  clear: both;\n}\n\n.slider {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: ").concat(theme["slider-off-color"], ";\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\n.slider:before {\n  position: absolute;\n  content: \"\";\n  height: 16px;\n  width: 16px;\n  left: 1px;\n  bottom: 1px;\n  background-color: white;\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\ninput:checked+.slider {\n  background-color: ").concat(theme["slider-on-color"], ";\n}\n\ninput:focus+.slider {\n  box-shadow: 0 0 1px ").concat(theme["slider-on-color"], ";\n}\n\ninput:checked+.slider:before {\n  -webkit-transform: translateX(16px);\n  -ms-transform: translateX(16px);\n  transform: translateX(16px);\n}\n\n\n/* Rounded sliders */\n\n.slider.round {\n  border-radius: 34px;\n}\n\n.slider.round:before {\n  border-radius: 50%;\n}\n\n\n.m-fadeOut {\n  visibility: hidden !important;\n  opacity: 0 !important;\n}\n\n.m-fadeIn {\n  visibility: visible !important;\n  opacity: 1 !important;\n}\n\n#").concat(name, "-settings-panel ul li:hover {\n  background-color: ").concat(theme["hover-color"], ";\n  cursor: pointer;\n}\n\n#").concat(name, "-settings-panel ul li label:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-loopbar:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-status-btn:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-controls:active #").concat(name, "-cursor,\n#").concat(name, "-controls:hover #").concat(name, "-cursor  {\n  width: 16px;\n  height: 16px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-volume .").concat(name, "-volume-cursor-transition {\n  width: 12px;\n  height: 12px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-volume .").concat(name, "-volume-width-transition\n {\n  width: 50px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-time-display.").concat(name, "-time-width-transition {\n  position:relative;\n  left: 10px;\n  -webkit-transition: left 0.3s ease;\n  -moz-transition: left 0.3s ease;\n  transition: left 0.3s ease;\n}\n\n#").concat(name, "-settings-speed:hover .").concat(name, "-speed-btn {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-status-btn:hover {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-loop-btn:hover,\n#").concat(name, "-dc-btn:hover\n {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n#").concat(name, "-settings-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-full-screen-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n").concat(theme["theme-style"], "\n");
+  return "\n.background {\n  background-color: ".concat(options.backgroundColor, ";\n  width:100%;\n  height:").concat(theme["background-height"], ";;\n  position:absolute;\n  top:0px;\n  left:0px;\n  z-index:-2000;\n}\n\n.full-screen #").concat(name, "-controls {\n  position:fixed;\n  left:0px;\n  bottom:0px;\n}\n\n.full-screen #").concat(name, "-settings-panel {\n  position:fixed;\n  bottom: 45px;\n}\n\n.svg, .svg *,svg, svg *  {\n  fill: ").concat(theme["svg-color"], ";\n}\n\n.svg.arrow {\n  stroke: ").concat(theme["svg-color"], ";\n}\n\n.pointer-event-panel {\n  height: ").concat(theme["pointer-event-panel-height"], ";\n  display:flex;\n  align-items:center;\n  justify-content:center;\n}\n#").concat(name, "-pointer-event-panel{\n  width:100%;\n  position:absolute;\n  z-index:100;\n}\n#").concat(name, "-listener-helper{\n  width:100%;\n  height:calc( 100% - 45px );\n  position:absolute;\n  z-index:110;\n}\n.svg-selected svg{\n  fill: ").concat(theme["svg-selected-color"], ";\n  stroke: ").concat(theme["svg-selected-color"], ";\n}\n#").concat(name, "-hover-display{\n    border: ").concat(theme["preview-border"], ";\n    display: flex;\n    visibility:hidden;\n    opacity:0;\n    overflow:hidden;\n    background-color: black;\n    position: absolute;\n    bottom: 14px;\n    left: 0px;\n    align-items: flex-end;\n    justify-content: center;\n}\n\n#").concat(name, "-hover-millisecond {\n  background-color: ").concat(theme["hms-background-color"], ";\n  padding:3px;\n  height:18px;\n  margin:0px;\n  line-height:12px;\n  font-size:10px;\n  text-align: center;\n  min-width:20px;\n  max-width:100px;\n  z-index:2;\n}\n#").concat(name, ",\n#").concat(name, " ::before,\n#").concat(name, " :::after,\n#").concat(name, " div,\n#").concat(name, " p,\n#").concat(name, " span,\n#").concat(name, " ul,\n#").concat(name, " li {\n  font-weight: 400;\n  line-height: 1.9 !important;\n  color: ").concat(theme["color"], ";\n  font-family: \"Century Gothic\", CenturyGothic, AppleGothic, sans-serif;\n  box-sizing:border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n#").concat(name, " {\n  line-height: 1.9;\n  font-size: 12px;\n  overflow:hidden;\n  height: calc(100% + ").concat(theme["controls-position"], ");\n  width:100%;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  color: ").concat(theme["color"], ";\n  pointer-events:auto !important;\n}\n\n.force-show-controls {\n  opacity:1 !important;\n}\n\n").concat(!options.theme.includes("position-bottom") ? "#".concat(name, ":hover #").concat(name, "-controls {\n  opacity:1 !important;\n}\n") : "\n    #".concat(name, "-controls {\n      opacity:1 !important;\n    }\n    "), "\n\n#").concat(name, ":hover {\n  pointer-events:none;\n}\n\n#").concat(name, "-settings-speed-hide {\n  text-align:right;\n}\n\n.grad {\n  background-image: linear-gradient(\n    rgba(0,0,0,00.01),\n    rgba(0,0,0,00.02),\n    rgba(0,0,0,00.03),\n    rgba(0,0,0,0.04),\n    rgba(0,0,0,0.05),\n    rgba(0,0,0,0.06),\n    rgba(0,0,0,0.07),\n    rgba(0,0,0,0.08),\n    rgba(0,0,0,0.09),\n    rgba(0,0,0,0.1),\n    rgba(0,0,0,0.2),\n    rgba(0,0,0,0.3),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.5),\n    rgba(0,0,0,0.6),\n    rgba(0,0,0,0.7),\n    rgba(0,0,0,0.8),\n    rgba(0,0,0,0.9),\n    rgba(0,0,0,1)\n  );\n  position:absolute;\n  width:100%;\n  height:").concat(theme["grad-height"], ";\n  left:0px;\n  bottom:0px;\n  z-index:-1;\n}\n\n#").concat(name, "-controls {\n  touch-action: none;\n  background-color: ").concat(theme["background-color"], ";\n  border: ").concat(theme["controls-border"], ";\n  position: absolute;\n  bottom: ").concat(theme["controls-bottom"], ";\n  left: 0px;\n  width: 100%;\n  z-index:100;\n  height: 44px;\n  opacity:0;\n  display:flex;\n  border-radius: 6px;\n  align-items:center;\n  -webkit-transition: opacity 0.2s ease;\n  -moz-transition: opacity 0.2s ease;\n  transition: opacity 0.2s ease;\n}\n\n#").concat(name, "-totalbar {\n  width: calc(100% - 20px);\n  height: 5px;\n  margin: 0px 10px 0px 10px;\n  background-color: ").concat(theme["totalbar-color"], ";\n  position: absolute;\n  top: 0px;\n  left: 0px;\n}\n\n#").concat(name, "-loopbar {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0px;\n  left: 0px;\n  background-color: ").concat(theme["loopbar-color"], ";\n}\n\n.").concat(name, "-loop-boundaries::before {\n  ").concat(theme["loopbar-boundaries-style::before"], "\n\n}\n.").concat(name, "-loop-boundaries {\n  transform:translate(-50%,-37%);\n  position:absolute;\n  width:18px;\n  background-color:").concat(theme["loopbar-boundaries-color"], ";\n  height:18px;\n  border-radius:10px;\n  z-index:40;\n  ").concat(theme["loopbar-boundaries-style"], "\n}\n\n.").concat(name, "-loop-boundaries::after {\n  ").concat(theme["loopbar-boundaries-style::after"], "\n\n}\n\n#").concat(name, "-helperbar {\n  position: absolute;\n  height: 20px;\n  top: -10px;\n  left: 0px;\n  right: 0px;\n  z-index:2;\n}\n\n#").concat(name, "-runningbar {\n  position: relative;\n  width: 0px;\n  max-width:100%;\n  height: 100%;\n  background-color: ").concat(theme["runningbar-color"], ";\n}\n\n#").concat(name, "-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  overflow:hidden;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: ").concat(theme["cursor-color"], ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n#").concat(name, "-cursor::before {\n  ").concat(theme["cursor-style::before"], "\n}\n\n#").concat(name, "-cursor::after {\n  ").concat(theme["cursor-style::after"], "\n}\n\n#").concat(name, "-left-controls,#").concat(name, "-right-controls {\n    display: flex;\n    align-items:center;\n    height: 100%;\n    padding: 5px 5px 0px;\n}\n#").concat(name, "-right-controls {\n  position:absolute;\n  right:0px;\n}\n\n\n#").concat(name, "-left-controls > div,#").concat(name, "-right-controls > div {\n    display: inline-flex;\n    align-items:center;\n   margin:0 10px 0 10px;\n}\n\n\n\n/*#").concat(name, "-time-display {\n  display: table;\n  text-align: center;\n  width: auto;\n  height: 34px;\n  position: absolute;\n  left: 90px;\n  -webkit-transition: left 0.1s ease;\n  -moz-transition: left 0.1s ease;\n  transition: left 0.1s ease;\n}\n*/\n#").concat(name, "-time-display span {\n  display: table-cell;\n  vertical-align: middle;\n}\n\n#").concat(name, "-status-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n#").concat(name, "-status-btn svg{\n  width:20px;\n  height:18px;\n}\n#").concat(name, "-volume {\n  opacity: ").concat(theme["button-opacity"], ";\n  position: relative;\n}\n#").concat(name, "-volume-btn {\n  width: 20px;\n  height: 15px;\n}\n\n#").concat(name, "-volumebar {\n  width: 0px;\n  height: 3px;\n  background-color: ").concat(theme["loopbar-color"], ";\n  -webkit-transition: left 0.1s ease;\n  -moz-transition: left 0.1s ease;\n  transition: left 0.1s ease;\n  position:relative;\n  left:5px;\n}\n\n#").concat(name, "-volumebar-helper {\n  position: absolute;\n    width: 0px;\n    height: 15px;\n    bottom: 0px;\n    z-index: 10;\n    left: 25px;\n}\n\n#").concat(name, "-volumebar-active {\n  position: relative;\n  width: 0%;\n  height: 100%;\n  background-color: ").concat(theme["color"], ";\n  position:relative;\n  bottom:0px;\n}\n\n#").concat(name, "-volume-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: ").concat(theme["color"], ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n.").concat(name, "-loopbar-time {\n  width:auto;\n  height:12px;\n  background-color:").concat(theme["background-color"], ";\n  line-height:10px;\n  font-size:10px;\n}\n\n#").concat(name, "-loop-time {\n  margin: 7px;\n}\n\n#").concat(name, "-dc-btn {\n    background-repeat: no-repeat;\n    background-size: 100% 100%;\n    width: 20px;\n    height: 15px;\n    margin: 7px 10px 5px 0px;\n    transform: scale(1.5,1.5);\n}\n\n#").concat(name, "-loop-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n  display:flex;\n  align-items:center;\n}\n\n\n#").concat(name, "-settings-btn {\n  overflow:hidden;\n  opacity: ").concat(theme["button-opacity"], ";\n}\n\n#").concat(name, "-full-screen-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n\n.").concat(name, "-speed-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n  height: 14px;\n}\n\n#").concat(name, "-settings-panel {\n  touch-action: none;\n  box-sizing: border-box;\n  position: absolute;\n  z-index:101;\n  background-color: ").concat(theme["settings-background-color"], ";\n  bottom: ").concat(theme["settings-panel-bottom"], ";\n  border: ").concat(theme["border"], ";\n  right: 8px;\n  width: 167px;\n  padding: 5px;\n  margin: 0px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n.").concat(name, "-hide {\n  display:none !important;\n}\n\n#").concat(name, "-speed-value-bar {\n  position: relative;\n  width: 5px;\n  background-color: ").concat(theme["speedbar-color"], ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: ").concat(options.speedValues.length * 16, "px;\n  float: left;\n  margin-right:15px;\n}\n\n#").concat(name, "-speed-value-helperbar {\n  position: absolute;\n  width: 25px;\n  height: ").concat(options.speedValues.length * 16, "px;\n  float: left;\n  left: 18px;\n  z-index:10;\n}\n\n\n#").concat(name, "-speed-value-bar:hover,\n#").concat(name, "-speed-value-helperbar {\n  cursor: pointer;\n}\n\n#").concat(name, "-volumebar:hover,\n#").concat(name, "-volumebar-helper:hover,\n#").concat(name, "-volume-btn:hover,\n#").concat(name, "-volumebar:active,\n#").concat(name, "-volumebar-helper:active,\n#").concat(name, "-volume-btn:active {\n  cursor:pointer;\n}\n\n#").concat(name, "-speed-cursor {\n  position: absolute;\n  background-color: ").concat(theme["speedbar-cursor-color"], ";\n  top: 0px;\n  left: 0px;\n}\n\n#").concat(name, "-speed-cursor div {\n  position: absolute;\n  background-color: ").concat(theme["speedbar-cursor-color"], ";\n  left: -2.5px;\n  top: -4px;\n  width: 10px;\n  height: 10px;\n  border-radius: 5px;\n}\n\n#").concat(name, "-time-separator{\n  margin:0 3px;\n}\n#").concat(name, "-speed-cursor:hover {\n  cursor: pointer;\n}\n\n.").concat(name, "-speed-value-step {\n  width: 16px;\n  background-color: ").concat(theme["speedbar-color"], ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: 2px;\n  margin-top: 7px;\n  margin-bottom: 7px;\n  float: left;\n}\n\n#").concat(name, "-speed-value {\n  display: inline-block;\n  box-sizing: border-box;\n  height: ").concat(options.speedValues.length * 16, "px;\n  text-align: left;\n}\n\n.").concat(name, "-speed-value {\n  box-sizing: border-box;\n  height: 16px;\n  font-size: 12px;\n}\n\n#").concat(name, "-indicator {\n  font-size: 8px !important;\n  position: absolute;\n  bottom: -3px;\n  color: ").concat(theme["color"], ";\n}\n\n/*#").concat(name, "-speed-settings {\n  height: ").concat(options.speedValues.length * 16 + 32 + 10 - 2, "px;\n}*/\n\n#").concat(name, "-speed-settings li.no-hover { \n  height: ").concat(options.speedValues.length * 16 + 10 - 2, "px !important; \n}\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel {\n  overflow: hidden;\n  width: 92px;\n  position:absolute;\n  z-index:120;\n  /*height: ").concat(options.speedValues.length * 16 + 32 + 20, "px;*/\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel .").concat(name, "-speed-btn {\n  float: left;\n}\n\n.").concat(name, "-settings-speed-panel ul:first-child {\n  text-align: right;\n}\n\n#").concat(name, "-speed-current {\n  float: right;\n  padding-right: 10px\n}\n\n#").concat(name, "-settings-panel .").concat(name, "-speed-btn {\n  float: right;\n}\n\n#").concat(name, "-settings-panel ul {\n  width: 100%;\n  margin: 0px;\n  padding: 0px;\n  overflow: hidden;\n}\n\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel ul li {\n  min-width: 70px;\n  display: flex;\n  height: 32px;\n  align-items: center;\n  justify-content:center;\n}\n\n#").concat(name, "-settings-panel ul li.no-hover:hover {\n  background-color: transparent;\n  cursor: default;\n}\n\ndiv.").concat(name, "-speed-value:hover {\n  background-color: ").concat(theme["hover-color"], ";\n  cursor: pointer;\n}\n\n#").concat(name, "-settings-panel ul li {\n  /*position: relative;\n  width: 100%;\n  min-width: 154px;*/\n  list-style-type: none;\n  margin: 0px;\n  padding: 5px;\n  display: flex;\n  height:32px;\n  align-items:center;\n}\n\n#").concat(name, "-settings-panel ul li label {\n  margin: 0px;\n}\n\n.switch {\n  position: relative;\n  display: inline-block;\n  width: 32px;\n  height: 18px;\n}\n\n.switch input {\n  display: none;\n}\n\n.settings-switch {\n  position: absolute;\n  right: 24px;\n}\n\n.settings-switch::after {\n  clear: both;\n}\n\n.slider {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: ").concat(theme["slider-off-color"], ";\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\n.slider:before {\n  position: absolute;\n  content: \"\";\n  height: 16px;\n  width: 16px;\n  left: 1px;\n  bottom: 1px;\n  background-color: white;\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\ninput:checked+.slider {\n  background-color: ").concat(theme["slider-on-color"], ";\n}\n\ninput:focus+.slider {\n  box-shadow: 0 0 1px ").concat(theme["slider-on-color"], ";\n}\n\ninput:checked+.slider:before {\n  -webkit-transform: translateX(16px);\n  -ms-transform: translateX(16px);\n  transform: translateX(16px);\n}\n\n\n/* Rounded sliders */\n\n.slider.round {\n  border-radius: 34px;\n}\n\n.slider.round:before {\n  border-radius: 50%;\n}\n\n\n.m-fadeOut {\n  visibility: hidden !important;\n  opacity: 0 !important;\n}\n\n.m-fadeIn {\n  visibility: visible !important;\n  opacity: 1 !important;\n}\n\n#").concat(name, "-settings-panel ul li:hover {\n  background-color: ").concat(theme["hover-color"], ";\n  cursor: pointer;\n}\n\n#").concat(name, "-settings-panel ul li label:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-loopbar:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-status-btn:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-controls:active #").concat(name, "-cursor,\n#").concat(name, "-controls:hover #").concat(name, "-cursor  {\n  width: 16px;\n  height: 16px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-volume .").concat(name, "-volume-cursor-transition {\n  width: 12px;\n  height: 12px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-volume .").concat(name, "-volume-width-transition\n {\n  width: 50px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-time-display.").concat(name, "-time-width-transition {\n  position:relative;\n  left: 10px;\n  -webkit-transition: left 0.3s ease;\n  -moz-transition: left 0.3s ease;\n  transition: left 0.3s ease;\n}\n\n#").concat(name, "-settings-speed:hover .").concat(name, "-speed-btn {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-status-btn:hover {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-loop-btn:hover,\n#").concat(name, "-dc-btn:hover\n {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n#").concat(name, "-settings-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-full-screen-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n").concat(theme["theme-style"], "\n");
 };
 
 var themes = function themes(theme, name) {
   var themes = {
-    default: {
+    "default": {
       "settings-background-color": "whitesmoke",
       "hms-background-color": "whitesmoke",
       "background-color": "whitesmoke",
@@ -207,10 +317,11 @@ var themes = function themes(theme, name) {
       "settings-background-color": "rgba(0,0,0,0.5)",
       "hms-background-color": "rgba(0,0,0,0.5)",
       "preview-border": "1px solid rgba(0,0,0,1)",
-      color: "#999",
+      color: "#e8eaeb",
       "grad-height": "100px",
-      "svg-color": "#999",
+      "svg-color": "#e8eaeb",
       "loopbar-color": "#808086",
+      "totalbar-color": "#b0bbc5",
       "speedbar-color": "#999",
       "runningbar-color": "red",
       "cursor-color": "#9e2d11",
@@ -1514,6 +1625,8 @@ var fullscreen = function fullscreen(_this) {
   });
 };
 
+var createUID = helpers.createUID;
+
 var donkeyclip = function donkeyclip(_this) {
   _this.elements.donkeyclipButton.addEventListener("click", function () {
     var u = createUID();
@@ -1534,18 +1647,6 @@ var donkeyclip = function donkeyclip(_this) {
       }
     }
   });
-};
-
-var createUID = function createUID() {
-  var dt = new Date().getTime();
-  var uuid = "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
-    var r = (dt + Math.random() * 16) % 16 | 0;
-    dt = Math.floor(dt / 16);
-    var rand = Math.random() > 0.5;
-    var str = (c == "x" ? r : r & 0x3 | 0x8).toString(16);
-    return rand ? str.toUpperCase() : str;
-  });
-  return uuid;
 };
 
 var elid$6 = helpers.elid,
@@ -1723,10 +1824,11 @@ var body = function body(_this) {
   });
 };
 
-var timeCapsule = new motorcortex.TimeCapsule();
+var timeCapsule = new motorcortex__default['default'].TimeCapsule();
 var elid$8 = helpers.elid,
     eltag = helpers.eltag,
-    elcreate$1 = helpers.elcreate;
+    elcreate$1 = helpers.elcreate,
+    calcClipScale = helpers.calcClipScale;
 /**
  * @classdesc
  * Timer's purpose is to provide an interface through which any TimedIncident
@@ -1734,9 +1836,7 @@ var elid$8 = helpers.elid,
  * state but also provide an interface for interacting/altering the timing of it
  */
 
-var Player =
-/*#__PURE__*/
-function () {
+var Player = /*#__PURE__*/function () {
   function Player(options) {
     var _this = this;
 
@@ -1752,6 +1852,7 @@ function () {
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
     options.backgroundColor = options.backgroundColor || "transparent";
+    options.scaleToFit = options.scaleToFit || false;
 
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
@@ -1808,7 +1909,8 @@ function () {
     this.functions = {
       millisecondChange: this.millisecondChange,
       createJourney: this.createJourney,
-      changeSettings: this.changeSettings
+      changeSettings: this.changeSettings,
+      createLoop: this.createLoop
     }; // create the timer controls main div
 
     setElements(this);
@@ -1817,16 +1919,25 @@ function () {
     this.subscribeToTimer();
     this.subscribeToDurationChange();
     this.addEventListeners();
+    this.scaleClipHost();
     this.eventBroadcast("state-change", this.state);
 
     if (this.options.preview) {
       this.createPreviewDisplay();
     }
 
+    this.resizeTimeout = setTimeout(function () {}, 20);
     window.addEventListener("resize", function () {
-      if (_this.options.preview) {
-        _this.setPreviewDimentions();
-      }
+      clearTimeout(_this.resizeTimeout);
+      _this.resizeTimeout = setTimeout(function () {
+        if (_this.options.preview) {
+          _this.setPreviewDimentions();
+        }
+
+        if (_this.options.scaleToFit) {
+          _this.scaleClipHost();
+        }
+      }, 20);
     });
     this.changeSettings(options, true);
   }
@@ -1872,19 +1983,31 @@ function () {
 
       if (_typeof(newSettings.volume) !== undefined && this.settings.volume !== newSettings.volume) {
         volume.trigger(this, newSettings.volume, undefined);
-      } // progressBarListener.add(this);
-      // loopBarStartListener.add(this);
-      // loopStartEndListener.add(this);
-      // volumeListener.add(this);
-      // statusBtnListener.add(this);
-      // settingsListener.add(this);
-      // speedListener.add(this);
-      // controlsListener.add(this);
-      // fullscreenListener.add(this);
-      // donkeyclipListener.add(this);
-      // previewListener.add(this);
-      // bodyListener.add(this);
-
+      }
+    }
+  }, {
+    key: "scaleClipHost",
+    value: function scaleClipHost() {
+      if (this.options.scaleToFit) {
+        var transform = calcClipScale(this.clip.props.containerParams, {
+          width: this.clip.props.host.offsetWidth,
+          height: this.clip.props.host.offsetHeight
+        });
+        this.clip.realClip.rootElement.style.transform = "scale(".concat(transform.scale);
+        this.clip.realClip.rootElement.style.left = transform.position.left + "px";
+        this.clip.realClip.rootElement.style.top = transform.position.top + "px";
+      }
+    }
+  }, {
+    key: "createLoop",
+    value: function createLoop(msStart, msEnd) {
+      this.settings.loopStartMillisecond = msStart;
+      this.settings.loopEndMillisecond = msEnd;
+      this.elements.loopBar.style.left = msStart / this.clip.duration * 100 + "%";
+      this.elements.loopBar.style.width = (msEnd - msStart) / this.clip.duration * 100 + "%";
+      this.createJourney(this.clip, msStart);
+      this.elements.runningBar.style.width = "0%";
+      !this.settings.loopActivated && this.activateLoop(false);
     }
   }, {
     key: "createJourney",

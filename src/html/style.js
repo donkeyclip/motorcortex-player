@@ -20,7 +20,7 @@ module.exports = (theme, name, options) => `
   bottom: 45px;
 }
 
-.svg, .svg path {
+.svg, .svg *,svg, svg *  {
   fill: ${theme["svg-color"]};
 }
 
@@ -382,6 +382,7 @@ ${
 
 
 #${name}-settings-btn {
+  overflow:hidden;
   opacity: ${theme["button-opacity"]};
 }
 
