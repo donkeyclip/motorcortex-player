@@ -55,7 +55,7 @@ class Player {
     options.mute = options.mute || false;
     options.controls = options.controls == false ? false : true;
     options.loop = options.loop || false;
-    options.volume = typeof options.volume !== undefined ? options.volume : 1;
+    options.volume = typeof options.volume !== "undefined" ? options.volume : 1;
     // remove strings
     for (const i in options.speedValues) {
       if (!isFinite(options.speedValues[i])) {
@@ -144,7 +144,7 @@ class Player {
         loopBtnListener.trigger(this);
       }
 
-      if (typeof newSettings.volume !== undefined) {
+      if (typeof newSettings.volume !== "undefined") {
         volumeListener.trigger(this, newSettings.volume, undefined);
       }
       if (newSettings.mute === true) {
@@ -155,30 +155,31 @@ class Player {
 
     if (newSettings.controls === false) {
       elid(this.name).style.display = "none";
-    } else if (this.settings.controls === true) {
+    } else if (newSettings.controls === true) {
       elid(this.name).style.display = "unset";
     }
 
     if (
-      typeof newSettings.loop !== undefined &&
+      typeof newSettings.loop !== "undefined" &&
       this.settings.loop !== newSettings.loop
     ) {
       loopBtnListener.trigger(this);
     }
 
     if (
-      typeof newSettings.mute !== undefined &&
+      typeof newSettings.mute !== "undefined" &&
       this.settings.mute !== newSettings.mute
     ) {
       volumeListener.trigger(this, undefined, newSettings.mute);
     }
     if (
-      typeof newSettings.volume !== undefined &&
+      typeof newSettings.volume !== "undefined" &&
       this.settings.volume !== newSettings.volume
     ) {
       volumeListener.trigger(this, newSettings.volume, undefined);
     }
   }
+
   scaleClipHost() {
     if (this.options.scaleToFit) {
       const transform = calcClipScale(this.clip.props.containerParams, {

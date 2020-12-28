@@ -1859,7 +1859,7 @@ var Player = /*#__PURE__*/function () {
     options.mute = options.mute || false;
     options.controls = options.controls == false ? false : true;
     options.loop = options.loop || false;
-    options.volume = _typeof(options.volume) !== undefined ? options.volume : 1; // remove strings
+    options.volume = typeof options.volume !== "undefined" ? options.volume : 1; // remove strings
 
     for (var i in options.speedValues) {
       if (!isFinite(options.speedValues[i])) {
@@ -1950,7 +1950,7 @@ var Player = /*#__PURE__*/function () {
           loopBtn.trigger(this);
         }
 
-        if (_typeof(newSettings.volume) !== undefined) {
+        if (typeof newSettings.volume !== "undefined") {
           volume.trigger(this, newSettings.volume, undefined);
         }
 
@@ -1963,19 +1963,19 @@ var Player = /*#__PURE__*/function () {
 
       if (newSettings.controls === false) {
         elid$8(this.name).style.display = "none";
-      } else if (this.settings.controls === true) {
+      } else if (newSettings.controls === true) {
         elid$8(this.name).style.display = "unset";
       }
 
-      if (_typeof(newSettings.loop) !== undefined && this.settings.loop !== newSettings.loop) {
+      if (typeof newSettings.loop !== "undefined" && this.settings.loop !== newSettings.loop) {
         loopBtn.trigger(this);
       }
 
-      if (_typeof(newSettings.mute) !== undefined && this.settings.mute !== newSettings.mute) {
+      if (typeof newSettings.mute !== "undefined" && this.settings.mute !== newSettings.mute) {
         volume.trigger(this, undefined, newSettings.mute);
       }
 
-      if (_typeof(newSettings.volume) !== undefined && this.settings.volume !== newSettings.volume) {
+      if (typeof newSettings.volume !== "undefined" && this.settings.volume !== newSettings.volume) {
         volume.trigger(this, newSettings.volume, undefined);
       }
     }
