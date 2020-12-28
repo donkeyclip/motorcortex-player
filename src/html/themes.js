@@ -106,7 +106,7 @@ module.exports = (theme, name) => {
       "hms-background-color": "rgba(0,0,0,0.5)",
       "preview-border": "1px solid rgba(0,0,0,1)",
       color: "#999",
-      "grad-height": "60px",
+      "grad-height": "100px",
       "svg-color": "#999",
       "loopbar-color": "#808086",
       "speedbar-color": "#999",
@@ -142,7 +142,6 @@ module.exports = (theme, name) => {
       "slider-off-color": "#ccc",
       "slider-on-color": "red",
       border: "1px solid rgba(255,255,255,0.1)",
-      "controls-border": "1px solid rgba(255,255,255,0.1)",
       "svg-selected-color": "red",
       "loopbar-boundaries-style": `
         transform: translate(-50%,-37%);

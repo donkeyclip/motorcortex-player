@@ -11,8 +11,8 @@ module.exports = _this => {
       if (!_this.options.preview) {
         return;
       }
-      elid(`${_this.name}-hover-display`).classList.toggle(`m-fadeOut`);
       elid(`${_this.name}-hover-display`).classList.toggle(`m-fadeIn`);
+      elid(`${_this.name}-hover-display`).classList.toggle(`m-fadeOut`);
       // elid(`${_this.name}-hover-display`).classList.toggle(
       //   `${_this.name}-hide`
       // );

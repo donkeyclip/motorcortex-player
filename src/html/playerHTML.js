@@ -7,9 +7,9 @@ module.exports = config => `
     class="pointer-event-panel"
     id="${config.name}-listener-helper"
   ></div>
-  <div class="grad"></div>
   <div class="background"></div>
   <div id="${config.name}-controls">
+    <div class="grad"></div>
     <div id="${config.name}-totalbar">
       <div id="${config.name}-hover-display">
         <div id="${config.name}-hover-millisecond"></div>

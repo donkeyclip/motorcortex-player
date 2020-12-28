@@ -4,6 +4,20 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var motorcortex = _interopDefault(require('@kissmybutton/motorcortex'));
 
+function _typeof(obj) {
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -83,7 +97,7 @@ var config = {
 };
 
 var style = function style(theme, name, options) {
-  return "\n.background {\n  background-color: ".concat(options.backgroundColor, ";\n  width:100%;\n  height:").concat(theme["background-height"], ";;\n  position:absolute;\n  top:0px;\n  left:0px;\n  z-index:-2000;\n}\n\n.full-screen #").concat(name, "-controls {\n  position:fixed;\n  left:0px;\n  bottom:0px;\n}\n\n.full-screen #").concat(name, "-settings-panel {\n  position:fixed;\n  bottom: 45px;\n}\n\n.svg, .svg path {\n  fill: ").concat(theme["svg-color"], ";\n}\n\n.svg.arrow {\n  stroke: ").concat(theme["svg-color"], ";\n}\n\n.pointer-event-panel {\n  height: ").concat(theme["pointer-event-panel-height"], ";\n  display:flex;\n  align-items:center;\n  justify-content:center;\n}\n#").concat(name, "-pointer-event-panel{\n  width:100%;\n  position:absolute;\n  z-index:100;\n}\n#").concat(name, "-listener-helper{\n  width:100%;\n  height:calc( 100% - 45px );\n  position:absolute;\n  z-index:110;\n}\n.svg-selected svg{\n  fill: ").concat(theme["svg-selected-color"], ";\n  stroke: ").concat(theme["svg-selected-color"], ";\n}\n#").concat(name, "-hover-display{\n    border: ").concat(theme["preview-border"], ";\n    display: flex;\n    overflow:hidden;\n    background-color: black;\n    position: absolute;\n    bottom: 14px;\n    left: 0px;\n    align-items: flex-end;\n    justify-content: center;\n}\n\n#").concat(name, "-hover-millisecond {\n  background-color: ").concat(theme["hms-background-color"], ";\n  padding:3px;\n  height:18px;\n  margin:0px;\n  line-height:12px;\n  font-size:10px;\n  text-align: center;\n  min-width:20px;\n  max-width:100px;\n  z-index:2;\n}\n#").concat(name, ",\n#").concat(name, " ::before,\n#").concat(name, " :::after,\n#").concat(name, " div,\n#").concat(name, " p,\n#").concat(name, " span,\n#").concat(name, " ul,\n#").concat(name, " li {\n  font-weight: 400;\n  line-height: 1.9 !important;\n  color: ").concat(theme["color"], ";\n  font-family: \"Century Gothic\", CenturyGothic, AppleGothic, sans-serif;\n  box-sizing:border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n#").concat(name, " {\n  line-height: 1.9;\n  font-size: 12px;\n  overflow:hidden;\n  height: calc(100% + ").concat(theme["controls-position"], ");\n  width:100%;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  color: ").concat(theme["color"], ";\n  pointer-events:auto !important;\n}\n\n.force-show-controls {\n  height: 44px !important;\n  overflow:unset !important;\n}\n\n").concat(!options.theme.includes("position-bottom") ? "#".concat(name, ":hover #").concat(name, "-controls {\n  height: 44px;\n  overflow:unset;\n}\n") : "\n    #".concat(name, "-controls {\n      height: 44px !important;\n      overflow:unset !important;\n    }\n    "), "\n\n#").concat(name, ":hover {\n  pointer-events:none;\n}\n\n#").concat(name, "-settings-speed-hide {\n  text-align:right;\n}\n\n.grad {\n  background-image: linear-gradient(\n    rgba(100,100,100,00.01),\n    rgba(100,100,100,00.02),\n    rgba(100,100,100,00.03),\n    rgba(100,100,100,0.04),\n    rgba(100,100,100,0.05),\n    rgba(0,0,0,0.06),\n    rgba(0,0,0,0.07),\n    rgba(0,0,0,0.08),\n    rgba(0,0,0,0.09),\n    rgba(0,0,0,0.1),\n    rgba(0,0,0,0.2),\n    rgba(0,0,0,0.3),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.5),\n    rgba(0,0,0,0.6),\n    rgba(0,0,0,0.7),\n    rgba(0,0,0,0.8),\n    rgba(0,0,0,0.9),\n    rgba(0,0,0,1)\n  );\n  position:absolute;\n  width:100%;\n  height:").concat(theme["grad-height"], ";\n  left:0px;\n  bottom:0px;\n  z-index:100;\n}\n\n#").concat(name, "-controls {\n  touch-action: none;\n  background-color: ").concat(theme["background-color"], ";\n  border: ").concat(theme["controls-border"], ";\n  position: absolute;\n  bottom: ").concat(theme["controls-bottom"], ";\n  left: 0px;\n  width: 100%;\n  z-index:100;\n  height: 0px;\n  overflow:hidden;\n  display:flex;\n  border-radius: 6px;\n  align-items:center;\n  -webkit-transition: height 0.2s ease;\n  -moz-transition: height 0.2s ease;\n  transition: height 0.2s ease;\n}\n\n#").concat(name, "-totalbar {\n  width: calc(100% - 20px);\n  height: 5px;\n  margin: 0px 10px 0px 10px;\n  background-color: ").concat(theme["totalbar-color"], ";\n  position: absolute;\n  top: 0px;\n  left: 0px;\n}\n\n#").concat(name, "-loopbar {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0px;\n  left: 0px;\n  background-color: ").concat(theme["loopbar-color"], ";\n}\n\n.").concat(name, "-loop-boundaries::before {\n  ").concat(theme["loopbar-boundaries-style::before"], "\n\n}\n.").concat(name, "-loop-boundaries {\n  transform:translate(-50%,-37%);\n  position:absolute;\n  width:18px;\n  background-color:").concat(theme["loopbar-boundaries-color"], ";\n  height:18px;\n  border-radius:10px;\n  z-index:40;\n  ").concat(theme["loopbar-boundaries-style"], "\n}\n\n.").concat(name, "-loop-boundaries::after {\n  ").concat(theme["loopbar-boundaries-style::after"], "\n\n}\n\n#").concat(name, "-helperbar {\n  position: absolute;\n  height: 20px;\n  top: -10px;\n  left: 0px;\n  right: 0px;\n  z-index:2;\n}\n\n#").concat(name, "-runningbar {\n  position: relative;\n  width: 0px;\n  max-width:100%;\n  height: 100%;\n  background-color: ").concat(theme["runningbar-color"], ";\n}\n\n#").concat(name, "-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  overflow:hidden;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: ").concat(theme["cursor-color"], ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n#").concat(name, "-cursor::before {\n  ").concat(theme["cursor-style::before"], "\n}\n\n#").concat(name, "-cursor::after {\n  ").concat(theme["cursor-style::after"], "\n}\n\n#").concat(name, "-left-controls,#").concat(name, "-right-controls {\n    display: flex;\n    align-items:center;\n    height: 100%;\n    padding: 5px 5px 0px;\n}\n#").concat(name, "-right-controls {\n  position:absolute;\n  right:0px;\n}\n\n\n#").concat(name, "-left-controls > div,#").concat(name, "-right-controls > div {\n    display: inline-flex;\n    align-items:center;\n   margin:0 10px 0 10px;\n}\n\n\n\n/*#").concat(name, "-time-display {\n  display: table;\n  text-align: center;\n  width: auto;\n  height: 34px;\n  position: absolute;\n  left: 90px;\n  -webkit-transition: left 0.1s ease;\n  -moz-transition: left 0.1s ease;\n  transition: left 0.1s ease;\n}\n*/\n#").concat(name, "-time-display span {\n  display: table-cell;\n  vertical-align: middle;\n}\n\n#").concat(name, "-status-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n#").concat(name, "-status-btn svg{\n  width:20px;\n  height:18px;\n}\n#").concat(name, "-volume {\n  opacity: ").concat(theme["button-opacity"], ";\n  position: relative;\n}\n#").concat(name, "-volume-btn {\n  width: 20px;\n  height: 15px;\n}\n\n#").concat(name, "-volumebar {\n  width: 0px;\n  height: 3px;\n  background-color: ").concat(theme["loopbar-color"], ";\n  -webkit-transition: left 0.1s ease;\n  -moz-transition: left 0.1s ease;\n  transition: left 0.1s ease;\n  position:relative;\n  left:5px;\n}\n\n#").concat(name, "-volumebar-helper {\n  position: absolute;\n    width: 0px;\n    height: 15px;\n    bottom: 0px;\n    z-index: 10;\n    left: 25px;\n}\n\n#").concat(name, "-volumebar-active {\n  position: relative;\n  width: 0%;\n  height: 100%;\n  background-color: ").concat(theme["color"], ";\n  position:relative;\n  bottom:0px;\n}\n\n#").concat(name, "-volume-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: ").concat(theme["color"], ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n.").concat(name, "-loopbar-time {\n  width:auto;\n  height:12px;\n  background-color:").concat(theme["background-color"], ";\n  line-height:10px;\n  font-size:10px;\n}\n\n#").concat(name, "-loop-time {\n  margin: 7px;\n}\n\n#").concat(name, "-dc-btn {\n    background-repeat: no-repeat;\n    background-size: 100% 100%;\n    width: 20px;\n    height: 15px;\n    margin: 7px 10px 5px 0px;\n    transform: scale(1.5,1.5);\n}\n\n#").concat(name, "-loop-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n  display:flex;\n  align-items:center;\n}\n\n\n#").concat(name, "-settings-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n\n#").concat(name, "-full-screen-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n\n.").concat(name, "-speed-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n  height: 14px;\n}\n\n#").concat(name, "-settings-panel {\n  touch-action: none;\n  box-sizing: border-box;\n  position: absolute;\n  z-index:101;\n  background-color: ").concat(theme["settings-background-color"], ";\n  bottom: ").concat(theme["settings-panel-bottom"], ";\n  border: ").concat(theme["border"], ";\n  right: 8px;\n  width: 167px;\n  padding: 5px;\n  margin: 0px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n.").concat(name, "-hide {\n  display:none !important;\n}\n\n#").concat(name, "-speed-value-bar {\n  position: relative;\n  width: 5px;\n  background-color: ").concat(theme["speedbar-color"], ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: ").concat(options.speedValues.length * 16, "px;\n  float: left;\n  margin-right:15px;\n}\n\n#").concat(name, "-speed-value-helperbar {\n  position: absolute;\n  width: 25px;\n  height: ").concat(options.speedValues.length * 16, "px;\n  float: left;\n  left: 18px;\n  z-index:10;\n}\n\n\n#").concat(name, "-speed-value-bar:hover,\n#").concat(name, "-speed-value-helperbar {\n  cursor: pointer;\n}\n\n#").concat(name, "-volumebar:hover,\n#").concat(name, "-volumebar-helper:hover,\n#").concat(name, "-volume-btn:hover,\n#").concat(name, "-volumebar:active,\n#").concat(name, "-volumebar-helper:active,\n#").concat(name, "-volume-btn:active {\n  cursor:pointer;\n}\n\n#").concat(name, "-speed-cursor {\n  position: absolute;\n  background-color: ").concat(theme["speedbar-cursor-color"], ";\n  top: 0px;\n  left: 0px;\n}\n\n#").concat(name, "-speed-cursor div {\n  position: absolute;\n  background-color: ").concat(theme["speedbar-cursor-color"], ";\n  left: -2.5px;\n  top: -4px;\n  width: 10px;\n  height: 10px;\n  border-radius: 5px;\n}\n\n#").concat(name, "-time-separator{\n  margin:0 3px;\n}\n#").concat(name, "-speed-cursor:hover {\n  cursor: pointer;\n}\n\n.").concat(name, "-speed-value-step {\n  width: 16px;\n  background-color: ").concat(theme["speedbar-color"], ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: 2px;\n  margin-top: 7px;\n  margin-bottom: 7px;\n  float: left;\n}\n\n#").concat(name, "-speed-value {\n  display: inline-block;\n  box-sizing: border-box;\n  height: ").concat(options.speedValues.length * 16, "px;\n  text-align: left;\n}\n\n.").concat(name, "-speed-value {\n  box-sizing: border-box;\n  height: 16px;\n  font-size: 12px;\n}\n\n#").concat(name, "-indicator {\n  font-size: 8px !important;\n  position: absolute;\n  bottom: -3px;\n  color: ").concat(theme["color"], ";\n}\n\n/*#").concat(name, "-speed-settings {\n  height: ").concat(options.speedValues.length * 16 + 32 + 10 - 2, "px;\n}*/\n\n#").concat(name, "-speed-settings li.no-hover { \n  height: ").concat(options.speedValues.length * 16 + 10 - 2, "px !important; \n}\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel {\n  overflow: hidden;\n  width: 92px;\n  position:absolute;\n  z-index:120;\n  /*height: ").concat(options.speedValues.length * 16 + 32 + 20, "px;*/\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel .").concat(name, "-speed-btn {\n  float: left;\n}\n\n.").concat(name, "-settings-speed-panel ul:first-child {\n  text-align: right;\n}\n\n#").concat(name, "-speed-current {\n  float: right;\n  padding-right: 10px\n}\n\n#").concat(name, "-settings-panel .").concat(name, "-speed-btn {\n  float: right;\n}\n\n#").concat(name, "-settings-panel ul {\n  width: 100%;\n  margin: 0px;\n  padding: 0px;\n  overflow: hidden;\n}\n\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel ul li {\n  min-width: 70px;\n  display: flex;\n  height: 32px;\n  align-items: center;\n  justify-content:center;\n}\n\n#").concat(name, "-settings-panel ul li.no-hover:hover {\n  background-color: transparent;\n  cursor: default;\n}\n\ndiv.").concat(name, "-speed-value:hover {\n  background-color: ").concat(theme["hover-color"], ";\n  cursor: pointer;\n}\n\n#").concat(name, "-settings-panel ul li {\n  /*position: relative;\n  width: 100%;\n  min-width: 154px;*/\n  list-style-type: none;\n  margin: 0px;\n  padding: 5px;\n  display: flex;\n  height:32px;\n  align-items:center;\n}\n\n#").concat(name, "-settings-panel ul li label {\n  margin: 0px;\n}\n\n.switch {\n  position: relative;\n  display: inline-block;\n  width: 32px;\n  height: 18px;\n}\n\n.switch input {\n  display: none;\n}\n\n.settings-switch {\n  position: absolute;\n  right: 24px;\n}\n\n.settings-switch::after {\n  clear: both;\n}\n\n.slider {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: ").concat(theme["slider-off-color"], ";\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\n.slider:before {\n  position: absolute;\n  content: \"\";\n  height: 16px;\n  width: 16px;\n  left: 1px;\n  bottom: 1px;\n  background-color: white;\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\ninput:checked+.slider {\n  background-color: ").concat(theme["slider-on-color"], ";\n}\n\ninput:focus+.slider {\n  box-shadow: 0 0 1px ").concat(theme["slider-on-color"], ";\n}\n\ninput:checked+.slider:before {\n  -webkit-transform: translateX(16px);\n  -ms-transform: translateX(16px);\n  transform: translateX(16px);\n}\n\n\n/* Rounded sliders */\n\n.slider.round {\n  border-radius: 34px;\n}\n\n.slider.round:before {\n  border-radius: 50%;\n}\n\n\n.m-fadeOut {\n  visibility: hidden;\n  opacity: 0;\n  transition: visibility 0s linear 300ms, opacity 300ms;\n}\n\n.m-fadeIn {\n  visibility: visible;\n  opacity: 1;\n  transition: visibility 0s linear 0s, opacity 300ms;\n}\n\n#").concat(name, "-settings-panel ul li:hover {\n  background-color: ").concat(theme["hover-color"], ";\n  cursor: pointer;\n}\n\n#").concat(name, "-settings-panel ul li label:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-loopbar:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-status-btn:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-controls:active #").concat(name, "-cursor,\n#").concat(name, "-controls:hover #").concat(name, "-cursor  {\n  width: 16px;\n  height: 16px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-volume .").concat(name, "-volume-cursor-transition {\n  width: 12px;\n  height: 12px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-volume .").concat(name, "-volume-width-transition\n {\n  width: 50px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-time-display.").concat(name, "-time-width-transition {\n  position:relative;\n  left: 10px;\n  -webkit-transition: left 0.3s ease;\n  -moz-transition: left 0.3s ease;\n  transition: left 0.3s ease;\n}\n\n#").concat(name, "-settings-speed:hover .").concat(name, "-speed-btn {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-status-btn:hover {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-loop-btn:hover,\n#").concat(name, "-dc-btn:hover\n {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n#").concat(name, "-settings-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-full-screen-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n").concat(theme["theme-style"], "\n");
+  return "\n.background {\n  background-color: ".concat(options.backgroundColor, ";\n  width:100%;\n  height:").concat(theme["background-height"], ";;\n  position:absolute;\n  top:0px;\n  left:0px;\n  z-index:-2000;\n}\n\n.full-screen #").concat(name, "-controls {\n  position:fixed;\n  left:0px;\n  bottom:0px;\n}\n\n.full-screen #").concat(name, "-settings-panel {\n  position:fixed;\n  bottom: 45px;\n}\n\n.svg, .svg path {\n  fill: ").concat(theme["svg-color"], ";\n}\n\n.svg.arrow {\n  stroke: ").concat(theme["svg-color"], ";\n}\n\n.pointer-event-panel {\n  height: ").concat(theme["pointer-event-panel-height"], ";\n  display:flex;\n  align-items:center;\n  justify-content:center;\n}\n#").concat(name, "-pointer-event-panel{\n  width:100%;\n  position:absolute;\n  z-index:100;\n}\n#").concat(name, "-listener-helper{\n  width:100%;\n  height:calc( 100% - 45px );\n  position:absolute;\n  z-index:110;\n}\n.svg-selected svg{\n  fill: ").concat(theme["svg-selected-color"], ";\n  stroke: ").concat(theme["svg-selected-color"], ";\n}\n#").concat(name, "-hover-display{\n    border: ").concat(theme["preview-border"], ";\n    display: flex;\n    visibility:hidden;\n    opacity:0;\n    overflow:hidden;\n    background-color: black;\n    position: absolute;\n    bottom: 14px;\n    left: 0px;\n    align-items: flex-end;\n    justify-content: center;\n}\n\n#").concat(name, "-hover-millisecond {\n  background-color: ").concat(theme["hms-background-color"], ";\n  padding:3px;\n  height:18px;\n  margin:0px;\n  line-height:12px;\n  font-size:10px;\n  text-align: center;\n  min-width:20px;\n  max-width:100px;\n  z-index:2;\n}\n#").concat(name, ",\n#").concat(name, " ::before,\n#").concat(name, " :::after,\n#").concat(name, " div,\n#").concat(name, " p,\n#").concat(name, " span,\n#").concat(name, " ul,\n#").concat(name, " li {\n  font-weight: 400;\n  line-height: 1.9 !important;\n  color: ").concat(theme["color"], ";\n  font-family: \"Century Gothic\", CenturyGothic, AppleGothic, sans-serif;\n  box-sizing:border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n#").concat(name, " {\n  line-height: 1.9;\n  font-size: 12px;\n  overflow:hidden;\n  height: calc(100% + ").concat(theme["controls-position"], ");\n  width:100%;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  color: ").concat(theme["color"], ";\n  pointer-events:auto !important;\n}\n\n.force-show-controls {\n  opacity:1 !important;\n}\n\n").concat(!options.theme.includes("position-bottom") ? "#".concat(name, ":hover #").concat(name, "-controls {\n  opacity:1 !important;\n}\n") : "\n    #".concat(name, "-controls {\n      opacity:1 !important;\n    }\n    "), "\n\n#").concat(name, ":hover {\n  pointer-events:none;\n}\n\n#").concat(name, "-settings-speed-hide {\n  text-align:right;\n}\n\n.grad {\n  background-image: linear-gradient(\n    rgba(0,0,0,00.01),\n    rgba(0,0,0,00.02),\n    rgba(0,0,0,00.03),\n    rgba(0,0,0,0.04),\n    rgba(0,0,0,0.05),\n    rgba(0,0,0,0.06),\n    rgba(0,0,0,0.07),\n    rgba(0,0,0,0.08),\n    rgba(0,0,0,0.09),\n    rgba(0,0,0,0.1),\n    rgba(0,0,0,0.2),\n    rgba(0,0,0,0.3),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.4),\n    rgba(0,0,0,0.5),\n    rgba(0,0,0,0.6),\n    rgba(0,0,0,0.7),\n    rgba(0,0,0,0.8),\n    rgba(0,0,0,0.9),\n    rgba(0,0,0,1)\n  );\n  position:absolute;\n  width:100%;\n  height:").concat(theme["grad-height"], ";\n  left:0px;\n  bottom:0px;\n  z-index:-1;\n}\n\n#").concat(name, "-controls {\n  touch-action: none;\n  background-color: ").concat(theme["background-color"], ";\n  border: ").concat(theme["controls-border"], ";\n  position: absolute;\n  bottom: ").concat(theme["controls-bottom"], ";\n  left: 0px;\n  width: 100%;\n  z-index:100;\n  height: 44px;\n  opacity:0;\n  display:flex;\n  border-radius: 6px;\n  align-items:center;\n  -webkit-transition: opacity 0.2s ease;\n  -moz-transition: opacity 0.2s ease;\n  transition: opacity 0.2s ease;\n}\n\n#").concat(name, "-totalbar {\n  width: calc(100% - 20px);\n  height: 5px;\n  margin: 0px 10px 0px 10px;\n  background-color: ").concat(theme["totalbar-color"], ";\n  position: absolute;\n  top: 0px;\n  left: 0px;\n}\n\n#").concat(name, "-loopbar {\n  position: absolute;\n  height: 100%;\n  width: 100%;\n  top: 0px;\n  left: 0px;\n  background-color: ").concat(theme["loopbar-color"], ";\n}\n\n.").concat(name, "-loop-boundaries::before {\n  ").concat(theme["loopbar-boundaries-style::before"], "\n\n}\n.").concat(name, "-loop-boundaries {\n  transform:translate(-50%,-37%);\n  position:absolute;\n  width:18px;\n  background-color:").concat(theme["loopbar-boundaries-color"], ";\n  height:18px;\n  border-radius:10px;\n  z-index:40;\n  ").concat(theme["loopbar-boundaries-style"], "\n}\n\n.").concat(name, "-loop-boundaries::after {\n  ").concat(theme["loopbar-boundaries-style::after"], "\n\n}\n\n#").concat(name, "-helperbar {\n  position: absolute;\n  height: 20px;\n  top: -10px;\n  left: 0px;\n  right: 0px;\n  z-index:2;\n}\n\n#").concat(name, "-runningbar {\n  position: relative;\n  width: 0px;\n  max-width:100%;\n  height: 100%;\n  background-color: ").concat(theme["runningbar-color"], ";\n}\n\n#").concat(name, "-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  overflow:hidden;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: ").concat(theme["cursor-color"], ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n#").concat(name, "-cursor::before {\n  ").concat(theme["cursor-style::before"], "\n}\n\n#").concat(name, "-cursor::after {\n  ").concat(theme["cursor-style::after"], "\n}\n\n#").concat(name, "-left-controls,#").concat(name, "-right-controls {\n    display: flex;\n    align-items:center;\n    height: 100%;\n    padding: 5px 5px 0px;\n}\n#").concat(name, "-right-controls {\n  position:absolute;\n  right:0px;\n}\n\n\n#").concat(name, "-left-controls > div,#").concat(name, "-right-controls > div {\n    display: inline-flex;\n    align-items:center;\n   margin:0 10px 0 10px;\n}\n\n\n\n/*#").concat(name, "-time-display {\n  display: table;\n  text-align: center;\n  width: auto;\n  height: 34px;\n  position: absolute;\n  left: 90px;\n  -webkit-transition: left 0.1s ease;\n  -moz-transition: left 0.1s ease;\n  transition: left 0.1s ease;\n}\n*/\n#").concat(name, "-time-display span {\n  display: table-cell;\n  vertical-align: middle;\n}\n\n#").concat(name, "-status-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n#").concat(name, "-status-btn svg{\n  width:20px;\n  height:18px;\n}\n#").concat(name, "-volume {\n  opacity: ").concat(theme["button-opacity"], ";\n  position: relative;\n}\n#").concat(name, "-volume-btn {\n  width: 20px;\n  height: 15px;\n}\n\n#").concat(name, "-volumebar {\n  width: 0px;\n  height: 3px;\n  background-color: ").concat(theme["loopbar-color"], ";\n  -webkit-transition: left 0.1s ease;\n  -moz-transition: left 0.1s ease;\n  transition: left 0.1s ease;\n  position:relative;\n  left:5px;\n}\n\n#").concat(name, "-volumebar-helper {\n  position: absolute;\n    width: 0px;\n    height: 15px;\n    bottom: 0px;\n    z-index: 10;\n    left: 25px;\n}\n\n#").concat(name, "-volumebar-active {\n  position: relative;\n  width: 0%;\n  height: 100%;\n  background-color: ").concat(theme["color"], ";\n  position:relative;\n  bottom:0px;\n}\n\n#").concat(name, "-volume-cursor {\n  transform:translate(50%,-36%);\n  right: 0px;\n  top: 0px;\n  width: 0px;\n  height: 0px;\n  position: absolute;\n  background-color: ").concat(theme["color"], ";\n  border-radius: 10px;\n  z-index: 5;\n}\n\n.").concat(name, "-loopbar-time {\n  width:auto;\n  height:12px;\n  background-color:").concat(theme["background-color"], ";\n  line-height:10px;\n  font-size:10px;\n}\n\n#").concat(name, "-loop-time {\n  margin: 7px;\n}\n\n#").concat(name, "-dc-btn {\n    background-repeat: no-repeat;\n    background-size: 100% 100%;\n    width: 20px;\n    height: 15px;\n    margin: 7px 10px 5px 0px;\n    transform: scale(1.5,1.5);\n}\n\n#").concat(name, "-loop-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n  display:flex;\n  align-items:center;\n}\n\n\n#").concat(name, "-settings-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n\n#").concat(name, "-full-screen-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n}\n\n.").concat(name, "-speed-btn {\n  opacity: ").concat(theme["button-opacity"], ";\n  height: 14px;\n}\n\n#").concat(name, "-settings-panel {\n  touch-action: none;\n  box-sizing: border-box;\n  position: absolute;\n  z-index:101;\n  background-color: ").concat(theme["settings-background-color"], ";\n  bottom: ").concat(theme["settings-panel-bottom"], ";\n  border: ").concat(theme["border"], ";\n  right: 8px;\n  width: 167px;\n  padding: 5px;\n  margin: 0px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n.").concat(name, "-hide {\n  display:none !important;\n}\n\n#").concat(name, "-speed-value-bar {\n  position: relative;\n  width: 5px;\n  background-color: ").concat(theme["speedbar-color"], ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: ").concat(options.speedValues.length * 16, "px;\n  float: left;\n  margin-right:15px;\n}\n\n#").concat(name, "-speed-value-helperbar {\n  position: absolute;\n  width: 25px;\n  height: ").concat(options.speedValues.length * 16, "px;\n  float: left;\n  left: 18px;\n  z-index:10;\n}\n\n\n#").concat(name, "-speed-value-bar:hover,\n#").concat(name, "-speed-value-helperbar {\n  cursor: pointer;\n}\n\n#").concat(name, "-volumebar:hover,\n#").concat(name, "-volumebar-helper:hover,\n#").concat(name, "-volume-btn:hover,\n#").concat(name, "-volumebar:active,\n#").concat(name, "-volumebar-helper:active,\n#").concat(name, "-volume-btn:active {\n  cursor:pointer;\n}\n\n#").concat(name, "-speed-cursor {\n  position: absolute;\n  background-color: ").concat(theme["speedbar-cursor-color"], ";\n  top: 0px;\n  left: 0px;\n}\n\n#").concat(name, "-speed-cursor div {\n  position: absolute;\n  background-color: ").concat(theme["speedbar-cursor-color"], ";\n  left: -2.5px;\n  top: -4px;\n  width: 10px;\n  height: 10px;\n  border-radius: 5px;\n}\n\n#").concat(name, "-time-separator{\n  margin:0 3px;\n}\n#").concat(name, "-speed-cursor:hover {\n  cursor: pointer;\n}\n\n.").concat(name, "-speed-value-step {\n  width: 16px;\n  background-color: ").concat(theme["speedbar-color"], ";\n  display: inline-block;\n  box-sizing: border-box;\n  height: 2px;\n  margin-top: 7px;\n  margin-bottom: 7px;\n  float: left;\n}\n\n#").concat(name, "-speed-value {\n  display: inline-block;\n  box-sizing: border-box;\n  height: ").concat(options.speedValues.length * 16, "px;\n  text-align: left;\n}\n\n.").concat(name, "-speed-value {\n  box-sizing: border-box;\n  height: 16px;\n  font-size: 12px;\n}\n\n#").concat(name, "-indicator {\n  font-size: 8px !important;\n  position: absolute;\n  bottom: -3px;\n  color: ").concat(theme["color"], ";\n}\n\n/*#").concat(name, "-speed-settings {\n  height: ").concat(options.speedValues.length * 16 + 32 + 10 - 2, "px;\n}*/\n\n#").concat(name, "-speed-settings li.no-hover { \n  height: ").concat(options.speedValues.length * 16 + 10 - 2, "px !important; \n}\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel {\n  overflow: hidden;\n  width: 92px;\n  position:absolute;\n  z-index:120;\n  /*height: ").concat(options.speedValues.length * 16 + 32 + 20, "px;*/\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel .").concat(name, "-speed-btn {\n  float: left;\n}\n\n.").concat(name, "-settings-speed-panel ul:first-child {\n  text-align: right;\n}\n\n#").concat(name, "-speed-current {\n  float: right;\n  padding-right: 10px\n}\n\n#").concat(name, "-settings-panel .").concat(name, "-speed-btn {\n  float: right;\n}\n\n#").concat(name, "-settings-panel ul {\n  width: 100%;\n  margin: 0px;\n  padding: 0px;\n  overflow: hidden;\n}\n\n#").concat(name, "-settings-panel.").concat(name, "-settings-speed-panel ul li {\n  min-width: 70px;\n  display: flex;\n  height: 32px;\n  align-items: center;\n  justify-content:center;\n}\n\n#").concat(name, "-settings-panel ul li.no-hover:hover {\n  background-color: transparent;\n  cursor: default;\n}\n\ndiv.").concat(name, "-speed-value:hover {\n  background-color: ").concat(theme["hover-color"], ";\n  cursor: pointer;\n}\n\n#").concat(name, "-settings-panel ul li {\n  /*position: relative;\n  width: 100%;\n  min-width: 154px;*/\n  list-style-type: none;\n  margin: 0px;\n  padding: 5px;\n  display: flex;\n  height:32px;\n  align-items:center;\n}\n\n#").concat(name, "-settings-panel ul li label {\n  margin: 0px;\n}\n\n.switch {\n  position: relative;\n  display: inline-block;\n  width: 32px;\n  height: 18px;\n}\n\n.switch input {\n  display: none;\n}\n\n.settings-switch {\n  position: absolute;\n  right: 24px;\n}\n\n.settings-switch::after {\n  clear: both;\n}\n\n.slider {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: ").concat(theme["slider-off-color"], ";\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\n.slider:before {\n  position: absolute;\n  content: \"\";\n  height: 16px;\n  width: 16px;\n  left: 1px;\n  bottom: 1px;\n  background-color: white;\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\ninput:checked+.slider {\n  background-color: ").concat(theme["slider-on-color"], ";\n}\n\ninput:focus+.slider {\n  box-shadow: 0 0 1px ").concat(theme["slider-on-color"], ";\n}\n\ninput:checked+.slider:before {\n  -webkit-transform: translateX(16px);\n  -ms-transform: translateX(16px);\n  transform: translateX(16px);\n}\n\n\n/* Rounded sliders */\n\n.slider.round {\n  border-radius: 34px;\n}\n\n.slider.round:before {\n  border-radius: 50%;\n}\n\n\n.m-fadeOut {\n  visibility: hidden !important;\n  opacity: 0 !important;\n}\n\n.m-fadeIn {\n  visibility: visible !important;\n  opacity: 1 !important;\n}\n\n#").concat(name, "-settings-panel ul li:hover {\n  background-color: ").concat(theme["hover-color"], ";\n  cursor: pointer;\n}\n\n#").concat(name, "-settings-panel ul li label:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-loopbar:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-status-btn:hover {\n  cursor: pointer;\n}\n\n#").concat(name, "-controls:active #").concat(name, "-cursor,\n#").concat(name, "-controls:hover #").concat(name, "-cursor  {\n  width: 16px;\n  height: 16px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-volume .").concat(name, "-volume-cursor-transition {\n  width: 12px;\n  height: 12px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-volume .").concat(name, "-volume-width-transition\n {\n  width: 50px;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-time-display.").concat(name, "-time-width-transition {\n  position:relative;\n  left: 10px;\n  -webkit-transition: left 0.3s ease;\n  -moz-transition: left 0.3s ease;\n  transition: left 0.3s ease;\n}\n\n#").concat(name, "-settings-speed:hover .").concat(name, "-speed-btn {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-status-btn:hover {\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-loop-btn:hover,\n#").concat(name, "-dc-btn:hover\n {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n#").concat(name, "-settings-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n\n#").concat(name, "-full-screen-btn:hover {\n  cursor: pointer;\n  opacity: 1;\n  -webkit-transition: all 0.3s ease;\n  -moz-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n").concat(theme["theme-style"], "\n");
 };
 
 var themes = function themes(theme, name) {
@@ -194,7 +208,7 @@ var themes = function themes(theme, name) {
       "hms-background-color": "rgba(0,0,0,0.5)",
       "preview-border": "1px solid rgba(0,0,0,1)",
       color: "#999",
-      "grad-height": "60px",
+      "grad-height": "100px",
       "svg-color": "#999",
       "loopbar-color": "#808086",
       "speedbar-color": "#999",
@@ -208,7 +222,6 @@ var themes = function themes(theme, name) {
       "slider-off-color": "#ccc",
       "slider-on-color": "red",
       border: "1px solid rgba(255,255,255,0.1)",
-      "controls-border": "1px solid rgba(255,255,255,0.1)",
       "svg-selected-color": "red",
       "loopbar-boundaries-style": "\n        transform: translate(-50%,-37%);\n        position: absolute;\n        width: 18px;\n        background-color: #ff0000;\n        height: 18px;\n        border-radius: 10px;\n        z-index: 40;\n        position: absolute;\n        width: 18px;\n        background-color: #ff0000;\n        height: 18px;\n        border-radius: 10px;\n        z-index: 40;\n        width: 18px;\n        height: 9px;\n        border-radius: 100%;\n        top: 1.5px;\n    ",
       "loopbar-boundaries-style::before": "\n            width: 16px;\n        height: 5px;\n        background: #ff0000;\n        border-radius: 100%;\n        display: block;\n        content: \"\";\n        position: relative;\n        left: -2px;\n        top: 2px;\n    ",
@@ -288,7 +301,7 @@ var themes = function themes(theme, name) {
 };
 
 var playerHTML = function playerHTML(config) {
-  return "\n  <div\n    class=\"pointer-event-panel\"\n    id=\"".concat(config.name, "-pointer-event-panel\"\n  ></div>\n  <div\n    class=\"pointer-event-panel\"\n    id=\"").concat(config.name, "-listener-helper\"\n  ></div>\n  <div class=\"grad\"></div>\n  <div class=\"background\"></div>\n  <div id=\"").concat(config.name, "-controls\">\n    <div id=\"").concat(config.name, "-totalbar\">\n      <div id=\"").concat(config.name, "-hover-display\">\n        <div id=\"").concat(config.name, "-hover-millisecond\"></div>\n      </div>\n      <div id=\"").concat(config.name, "-loopbar\">\n        <div\n          class=\"").concat(config.name, "-loop-boundaries\"\n          id=\"").concat(config.name, "-loopbar-start\"\n        ></div>\n        <div\n          class=\"").concat(config.name, "-loop-boundaries\"\n          id=\"").concat(config.name, "-loopbar-end\"\n        ></div>\n        <div id=\"").concat(config.name, "-helperbar\"></div>\n        <div id=\"").concat(config.name, "-runningbar\">\n          <div id=\"").concat(config.name, "-cursor\"></div>\n        </div>\n      </div>\n    </div>\n    <div id=\"").concat(config.name, "-left-controls\">\n      <div id=\"").concat(config.name, "-status-btn\">\n        ").concat(config.svg.playSVG, "\n        <span id=\"").concat(config.name, "-indicator\"></span>\n      </div>\n      <div id=\"").concat(config.name, "-volume\">\n        <div id=\"").concat(config.name, "-volume-btn\">\n          ").concat(config.svg.volumeSVG, "\n        </div>\n        <div id=\"").concat(config.name, "-volumebar-helper\"></div>\n        <div id=\"").concat(config.name, "-volumebar\">\n            <div id=\"").concat(config.name, "-volumebar-active\">\n              <div id=\"").concat(config.name, "-volume-cursor\"></div>\n            </div>\n        </div>\n      </div>\n      <div id=\"").concat(config.name, "-time-display\">\n        <span id=\"").concat(config.name, "-time-current\"></span>\n        <span id=\"").concat(config.name, "-time-separator\"></span>\n        <span id=\"").concat(config.name, "-time-total\"></span>\n      </div>\n    </div>\n    <div id=\"").concat(config.name, "-right-controls\">\n      <div\n        id=\"").concat(config.name, "-loop-btn-container\"\n      >\n        <div\n          id=\"").concat(config.name, "-loop-btn\"\n        >").concat(config.svg.loopSVG, "</div>\n        <div\n          id=\"").concat(config.name, "-loop-time\"\n        >\n          <span\n            id=\"").concat(config.name, "-loopbar-start-time\"\n            class=\"").concat(config.name, "-loopbar-time\"\n          ></span>\n          <span>:</span>\n          <span\n            id=\"").concat(config.name, "-loopbar-end-time\"\n            class=\"").concat(config.name, "-loopbar-time\"\n          ></span>\n        </div>\n      </div>\n      <div\n        id=\"").concat(config.name, "-settings-btn\"\n      >").concat(config.svg.settingsSVG, "</div>\n      <div\n        id=\"").concat(config.name, "-dc-btn\"\n      >\n        ").concat(config.svg.dcSVG, "\n      </div>\n      \n      <div\n        id=\"").concat(config.name, "-full-screen-btn\"\n      >").concat(config.svg.fullScreenSVG, "</div>\n    </div>\n    \n\n  </div>\n  <div id=\"").concat(config.name, "-settings-panel\">\n    <ul id=\"").concat(config.name, "-main-settings\">\n      <li id=\"").concat(config.name, "-settings-pointer-events\">\n        <label>Pointer Events</label>\n        <label class=\"switch settings-switch\">\n          <input id=\"").concat(config.name, "-pointer-events-checkbox\" type=\"checkbox\">\n          <span class=\"slider round\"></span>\n        </label>\n      </li>\n      <li id=\"").concat(config.name, "-settings-preview\">\n        <label>Show Preview</label>\n        <label class=\"switch settings-switch\">\n          <input id=\"").concat(config.name, "-show-preview-checkbox\" type=\"checkbox\">\n          <span class=\"slider round\"></span>\n        </label>\n      </li>\n      <li id=\"").concat(config.name, "-settings-indicator\">\n        <label>Show Indicator</label>\n        <label class=\"switch settings-switch\">\n          <input id=\"").concat(config.name, "-show-indicator-checkbox\" type=\"checkbox\">\n          <span class=\"slider round\"></span>\n        </label>\n      </li>\n      <li id=\"").concat(config.name, "-settings-volume\">\n        <label>Show Volume</label>\n        <label class=\"switch settings-switch\">\n          <input id=\"").concat(config.name, "-show-volume-checkbox\" type=\"checkbox\">\n          <span class=\"slider round\"></span>\n        </label>\n      </li>\n      <li id=\"").concat(config.name, "-settings-speed-show\">\n        <label>Speed</label>\n        <div class=\"").concat(config.name, "-speed-btn\">").concat(config.svg.arrowRightSVG, "</div>\n        <span id=\"").concat(config.name, "-speed-current\"></span>\n      </li>\n    </ul>\n    <ul id=\"").concat(config.name, "-speed-settings\">\n      <li id=\"").concat(config.name, "-settings-speed-hide\">\n        <div class=\"").concat(config.name, "-speed-btn\">").concat(config.svg.arrowLeftSVG, "</div>\n        <label id=").concat(config.name, "-speed-runtime>Speed</label>\n      </li>\n      <li>\n        <div id=\"").concat(config.name, "-speed-value-helperbar\"></div>\n        <div id=\"").concat(config.name, "-speed-value-bar\">\n          <div\n            class=\"").concat(config.name, "-speed-value-step\"\n            id=\"").concat(config.name, "-speed-cursor\"\n          >\n            <div></div>\n          </div>\n        </div>\n        <div id=\"").concat(config.name, "-speed-value\">\n        </div>\n      </li>\n    </ul>\n  </div>\n");
+  return "\n  <div\n    class=\"pointer-event-panel\"\n    id=\"".concat(config.name, "-pointer-event-panel\"\n  ></div>\n  <div\n    class=\"pointer-event-panel\"\n    id=\"").concat(config.name, "-listener-helper\"\n  ></div>\n  <div class=\"background\"></div>\n  <div id=\"").concat(config.name, "-controls\">\n    <div class=\"grad\"></div>\n    <div id=\"").concat(config.name, "-totalbar\">\n      <div id=\"").concat(config.name, "-hover-display\">\n        <div id=\"").concat(config.name, "-hover-millisecond\"></div>\n      </div>\n      <div id=\"").concat(config.name, "-loopbar\">\n        <div\n          class=\"").concat(config.name, "-loop-boundaries\"\n          id=\"").concat(config.name, "-loopbar-start\"\n        ></div>\n        <div\n          class=\"").concat(config.name, "-loop-boundaries\"\n          id=\"").concat(config.name, "-loopbar-end\"\n        ></div>\n        <div id=\"").concat(config.name, "-helperbar\"></div>\n        <div id=\"").concat(config.name, "-runningbar\">\n          <div id=\"").concat(config.name, "-cursor\"></div>\n        </div>\n      </div>\n    </div>\n    <div id=\"").concat(config.name, "-left-controls\">\n      <div id=\"").concat(config.name, "-status-btn\">\n        ").concat(config.svg.playSVG, "\n        <span id=\"").concat(config.name, "-indicator\"></span>\n      </div>\n      <div id=\"").concat(config.name, "-volume\">\n        <div id=\"").concat(config.name, "-volume-btn\">\n          ").concat(config.svg.volumeSVG, "\n        </div>\n        <div id=\"").concat(config.name, "-volumebar-helper\"></div>\n        <div id=\"").concat(config.name, "-volumebar\">\n            <div id=\"").concat(config.name, "-volumebar-active\">\n              <div id=\"").concat(config.name, "-volume-cursor\"></div>\n            </div>\n        </div>\n      </div>\n      <div id=\"").concat(config.name, "-time-display\">\n        <span id=\"").concat(config.name, "-time-current\"></span>\n        <span id=\"").concat(config.name, "-time-separator\"></span>\n        <span id=\"").concat(config.name, "-time-total\"></span>\n      </div>\n    </div>\n    <div id=\"").concat(config.name, "-right-controls\">\n      <div\n        id=\"").concat(config.name, "-loop-btn-container\"\n      >\n        <div\n          id=\"").concat(config.name, "-loop-btn\"\n        >").concat(config.svg.loopSVG, "</div>\n        <div\n          id=\"").concat(config.name, "-loop-time\"\n        >\n          <span\n            id=\"").concat(config.name, "-loopbar-start-time\"\n            class=\"").concat(config.name, "-loopbar-time\"\n          ></span>\n          <span>:</span>\n          <span\n            id=\"").concat(config.name, "-loopbar-end-time\"\n            class=\"").concat(config.name, "-loopbar-time\"\n          ></span>\n        </div>\n      </div>\n      <div\n        id=\"").concat(config.name, "-settings-btn\"\n      >").concat(config.svg.settingsSVG, "</div>\n      <div\n        id=\"").concat(config.name, "-dc-btn\"\n      >\n        ").concat(config.svg.dcSVG, "\n      </div>\n      \n      <div\n        id=\"").concat(config.name, "-full-screen-btn\"\n      >").concat(config.svg.fullScreenSVG, "</div>\n    </div>\n    \n\n  </div>\n  <div id=\"").concat(config.name, "-settings-panel\">\n    <ul id=\"").concat(config.name, "-main-settings\">\n      <li id=\"").concat(config.name, "-settings-pointer-events\">\n        <label>Pointer Events</label>\n        <label class=\"switch settings-switch\">\n          <input id=\"").concat(config.name, "-pointer-events-checkbox\" type=\"checkbox\">\n          <span class=\"slider round\"></span>\n        </label>\n      </li>\n      <li id=\"").concat(config.name, "-settings-preview\">\n        <label>Show Preview</label>\n        <label class=\"switch settings-switch\">\n          <input id=\"").concat(config.name, "-show-preview-checkbox\" type=\"checkbox\">\n          <span class=\"slider round\"></span>\n        </label>\n      </li>\n      <li id=\"").concat(config.name, "-settings-indicator\">\n        <label>Show Indicator</label>\n        <label class=\"switch settings-switch\">\n          <input id=\"").concat(config.name, "-show-indicator-checkbox\" type=\"checkbox\">\n          <span class=\"slider round\"></span>\n        </label>\n      </li>\n      <li id=\"").concat(config.name, "-settings-volume\">\n        <label>Show Volume</label>\n        <label class=\"switch settings-switch\">\n          <input id=\"").concat(config.name, "-show-volume-checkbox\" type=\"checkbox\">\n          <span class=\"slider round\"></span>\n        </label>\n      </li>\n      <li id=\"").concat(config.name, "-settings-speed-show\">\n        <label>Speed</label>\n        <div class=\"").concat(config.name, "-speed-btn\">").concat(config.svg.arrowRightSVG, "</div>\n        <span id=\"").concat(config.name, "-speed-current\"></span>\n      </li>\n    </ul>\n    <ul id=\"").concat(config.name, "-speed-settings\">\n      <li id=\"").concat(config.name, "-settings-speed-hide\">\n        <div class=\"").concat(config.name, "-speed-btn\">").concat(config.svg.arrowLeftSVG, "</div>\n        <label id=").concat(config.name, "-speed-runtime>Speed</label>\n      </li>\n      <li>\n        <div id=\"").concat(config.name, "-speed-value-helperbar\"></div>\n        <div id=\"").concat(config.name, "-speed-value-bar\">\n          <div\n            class=\"").concat(config.name, "-speed-value-step\"\n            id=\"").concat(config.name, "-speed-cursor\"\n          >\n            <div></div>\n          </div>\n        </div>\n        <div id=\"").concat(config.name, "-speed-value\">\n        </div>\n      </li>\n    </ul>\n  </div>\n");
 };
 
 var elid = helpers.elid,
@@ -473,13 +486,9 @@ var setElements = function setElements(_this) {
 var addListener = helpers.addListener,
     removeListener = helpers.removeListener,
     elid$1 = helpers.elid;
-
-var volume = function volume(_this) {
-  // let pe = false;
-  var volumeDrag = false;
-
-  _this.elements.volumeBtn.onclick = function () {
-    if (_this.settings.volumeMute) {
+var volume = {
+  trigger: function trigger(_this, volume, mute) {
+    if (mute === false) {
       _this.elements.volumeBarActive.style.width = _this.settings.previousVolume * 100 + "%";
 
       _this.clip.setVolume(_this.settings.previousVolume);
@@ -489,7 +498,7 @@ var volume = function volume(_this) {
       SVG.innerHTML = svg_1.volumeSVG;
 
       _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
-    } else {
+    } else if (mute === true) {
       _this.settings.volumeMute = true;
       _this.elements.volumeBarActive.style.width = "0%";
 
@@ -501,126 +510,185 @@ var volume = function volume(_this) {
 
       _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(_SVG);
     }
-  };
 
-  var volumeOpen = false;
+    if (_typeof(volume) !== undefined) {
+      _this.settings.volume = volume;
 
-  _this.elements.volumeBtn.onmouseover = function () {
-    volumeOpen = true;
+      if (_this.settings.volume > 0) {
+        _this.settings.previousVolume = volume;
+      }
 
-    _this.elements.volumeCursor.classList.add("".concat(_this.name, "-volume-cursor-transition"));
+      _this.elements.volumeBarActive.style.width = _this.settings.volume * 100 + "%";
 
-    _this.elements.volumeBar.classList.add("".concat(_this.name, "-volume-width-transition"));
+      _this.clip.setVolume(_this.settings.volume);
 
-    _this.elements.volumeBarHelper.classList.add("".concat(_this.name, "-volume-width-transition"));
+      if (_this.settings.volume > 0) {
+        _this.settings.volumeMute = false;
 
-    _this.elements.timeDisplay.classList.add("".concat(_this.name, "-time-width-transition"));
-  };
+        var _SVG2 = document.createElement("span");
 
-  elid$1("".concat(_this.name, "-left-controls")).onmouseout = function () {
-    if (!volumeOpen || volumeDrag) {
-      return;
+        _SVG2.innerHTML = svg_1.volumeSVG;
+
+        _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(_SVG2);
+      } else if (_this.settings.volume === 0) {
+        _this.settings.volumeMute = true;
+
+        var _SVG3 = document.createElement("span");
+
+        _SVG3.innerHTML = svg_1.volumeMuteSVG;
+
+        _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(_SVG3);
+      }
     }
+  },
+  add: function add(_this) {
+    // let pe = false;
+    var volumeDrag = false;
 
-    var e = event.toElement || event.relatedTarget || event.target;
+    _this.elements.volumeBtn.onclick = function () {
+      if (_this.settings.volumeMute) {
+        _this.elements.volumeBarActive.style.width = _this.settings.previousVolume * 100 + "%";
 
-    if (isDescendant(elid$1("".concat(_this.name, "-left-controls")), e) || e === elid$1("".concat(_this.name, "-left-controls"))) {
-      return;
-    }
+        _this.clip.setVolume(_this.settings.previousVolume);
 
-    volumeOpen = false;
+        _this.settings.volumeMute = false;
+        var SVG = document.createElement("span");
+        SVG.innerHTML = svg_1.volumeSVG;
 
-    _this.elements.volumeCursor.classList.remove("".concat(_this.name, "-volume-cursor-transition"));
+        _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      } else {
+        _this.settings.volumeMute = true;
+        _this.elements.volumeBarActive.style.width = "0%";
 
-    _this.elements.volumeBar.classList.remove("".concat(_this.name, "-volume-width-transition"));
+        _this.clip.setVolume(0);
 
-    _this.elements.volumeBarHelper.classList.remove("".concat(_this.name, "-volume-width-transition"));
+        var _SVG4 = document.createElement("span");
 
-    _this.elements.timeDisplay.classList.remove("".concat(_this.name, "-time-width-transition"));
-  };
+        _SVG4.innerHTML = svg_1.volumeMuteSVG;
 
-  _this.listeners.onCursorMoveVolumeBar = function (e) {
-    e.preventDefault();
-    var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
+        _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(_SVG4);
+      }
+    };
 
-    var viewportOffset = _this.elements.volumeBarHelper.getBoundingClientRect();
+    var volumeOpen = false;
 
-    var positionX = clientX - viewportOffset.left;
+    _this.elements.volumeBtn.onmouseover = function () {
+      volumeOpen = true;
 
-    if (positionX < 0) {
-      positionX = 0;
-    } else if (positionX > _this.elements.volumeBarHelper.offsetWidth) {
-      positionX = _this.elements.volumeBarHelper.offsetWidth;
-    }
+      _this.elements.volumeCursor.classList.add("".concat(_this.name, "-volume-cursor-transition"));
 
-    _this.settings.volume = Number((positionX / _this.elements.volumeBarHelper.offsetWidth).toFixed(2));
-    _this.elements.volumeBarActive.style.width = _this.settings.volume * 100 + "%";
+      _this.elements.volumeBar.classList.add("".concat(_this.name, "-volume-width-transition"));
 
-    _this.clip.setVolume(_this.settings.volume);
+      _this.elements.volumeBarHelper.classList.add("".concat(_this.name, "-volume-width-transition"));
 
-    if (_this.settings.volume > 0) {
-      _this.settings.volumeMute = false;
-      var SVG = document.createElement("span");
-      SVG.innerHTML = svg_1.volumeSVG;
+      _this.elements.timeDisplay.classList.add("".concat(_this.name, "-time-width-transition"));
+    };
 
-      _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
-    } else if (_this.settings.volume === 0) {
-      _this.settings.volumeMute = true;
+    elid$1("".concat(_this.name, "-left-controls")).onmouseout = function () {
+      if (!volumeOpen || volumeDrag) {
+        return;
+      }
 
-      var _SVG2 = document.createElement("span");
+      var e = event.toElement || event.relatedTarget || event.target;
 
-      _SVG2.innerHTML = svg_1.volumeMuteSVG;
+      if (isDescendant(elid$1("".concat(_this.name, "-left-controls")), e) || e === elid$1("".concat(_this.name, "-left-controls"))) {
+        return;
+      }
 
-      _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(_SVG2);
-    }
-  };
+      volumeOpen = false;
 
-  _this.listeners.onMouseUpVolumeBar = function (e) {
-    volumeDrag = false; // if (pe) {
-    //   _this.elements.settingsPointerEvents.click();
-    // }
+      _this.elements.volumeCursor.classList.remove("".concat(_this.name, "-volume-cursor-transition"));
 
-    _this.elements.listenerHelper.style.pointerEvents = "none";
-    e.preventDefault();
+      _this.elements.volumeBar.classList.remove("".concat(_this.name, "-volume-width-transition"));
 
-    if (_this.settings.volume > 0) {
-      _this.settings.previousVolume = _this.settings.volume;
-    }
+      _this.elements.volumeBarHelper.classList.remove("".concat(_this.name, "-volume-width-transition"));
 
-    removeListener("mouseup", _this.listeners.onMouseUpVolumeBar, false);
-    removeListener("touchend", _this.listeners.onMouseUpVolumeBar, false);
-    removeListener("mousemove", _this.listeners.onCursorMoveVolumeBar, false);
-    removeListener("touchmove", _this.listeners.onCursorMoveVolumeBar, false);
-  };
+      _this.elements.timeDisplay.classList.remove("".concat(_this.name, "-time-width-transition"));
+    };
 
-  _this.listeners.onMouseDownVolumeBar = function (e) {
-    volumeDrag = true; // if (!_this.options.pointerEvents) {
-    //   pe = true;
-    //   _this.elements.settingsPointerEvents.click();
-    // }
+    _this.listeners.onCursorMoveVolumeBar = function (e) {
+      e.preventDefault();
+      var clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
 
-    _this.elements.listenerHelper.style.pointerEvents = "auto";
-    e.preventDefault();
+      var viewportOffset = _this.elements.volumeBarHelper.getBoundingClientRect();
 
-    _this.listeners.onCursorMoveVolumeBar(e);
+      var positionX = clientX - viewportOffset.left;
 
-    addListener("mouseup", _this.listeners.onMouseUpVolumeBar, false);
-    addListener("touchend", _this.listeners.onMouseUpVolumeBar, false);
-    addListener("mousemove", _this.listeners.onCursorMoveVolumeBar, false);
-    addListener("touchmove", _this.listeners.onCursorMoveVolumeBar, false);
-  };
+      if (positionX < 0) {
+        positionX = 0;
+      } else if (positionX > _this.elements.volumeBarHelper.offsetWidth) {
+        positionX = _this.elements.volumeBarHelper.offsetWidth;
+      }
 
-  _this.elements.volumeBarHelper.addEventListener("mousedown", _this.listeners.onMouseDownVolumeBar, false);
+      _this.settings.volume = Number((positionX / _this.elements.volumeBarHelper.offsetWidth).toFixed(2));
+      _this.elements.volumeBarActive.style.width = _this.settings.volume * 100 + "%";
 
-  _this.elements.volumeCursor.addEventListener("mousedown", _this.listeners.onMouseDownVolumeBar, false);
+      _this.clip.setVolume(_this.settings.volume);
 
-  _this.elements.volumeBarHelper.addEventListener("touchstart", _this.listeners.onMouseDownVolumeBar, {
-    passive: false
-  }, false);
+      if (_this.settings.volume > 0) {
+        _this.settings.volumeMute = false;
+        var SVG = document.createElement("span");
+        SVG.innerHTML = svg_1.volumeSVG;
 
-  _this.elements.volumeCursor.addEventListener("touchstart", _this.listeners.onMouseDownVolumeBar, {
-    passive: false
-  }, false);
+        _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      } else if (_this.settings.volume === 0) {
+        _this.settings.volumeMute = true;
+
+        var _SVG5 = document.createElement("span");
+
+        _SVG5.innerHTML = svg_1.volumeMuteSVG;
+
+        _this.elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(_SVG5);
+      }
+    };
+
+    _this.listeners.onMouseUpVolumeBar = function (e) {
+      volumeDrag = false; // if (pe) {
+      //   _this.elements.settingsPointerEvents.click();
+      // }
+
+      _this.elements.listenerHelper.style.pointerEvents = "none";
+      e.preventDefault();
+
+      if (_this.settings.volume > 0) {
+        _this.settings.previousVolume = _this.settings.volume;
+      }
+
+      removeListener("mouseup", _this.listeners.onMouseUpVolumeBar, false);
+      removeListener("touchend", _this.listeners.onMouseUpVolumeBar, false);
+      removeListener("mousemove", _this.listeners.onCursorMoveVolumeBar, false);
+      removeListener("touchmove", _this.listeners.onCursorMoveVolumeBar, false);
+    };
+
+    _this.listeners.onMouseDownVolumeBar = function (e) {
+      volumeDrag = true; // if (!_this.options.pointerEvents) {
+      //   pe = true;
+      //   _this.elements.settingsPointerEvents.click();
+      // }
+
+      _this.elements.listenerHelper.style.pointerEvents = "auto";
+      e.preventDefault();
+
+      _this.listeners.onCursorMoveVolumeBar(e);
+
+      addListener("mouseup", _this.listeners.onMouseUpVolumeBar, false);
+      addListener("touchend", _this.listeners.onMouseUpVolumeBar, false);
+      addListener("mousemove", _this.listeners.onCursorMoveVolumeBar, false);
+      addListener("touchmove", _this.listeners.onCursorMoveVolumeBar, false);
+    };
+
+    _this.elements.volumeBarHelper.addEventListener("mousedown", _this.listeners.onMouseDownVolumeBar, false);
+
+    _this.elements.volumeCursor.addEventListener("mousedown", _this.listeners.onMouseDownVolumeBar, false);
+
+    _this.elements.volumeBarHelper.addEventListener("touchstart", _this.listeners.onMouseDownVolumeBar, {
+      passive: false
+    }, false);
+
+    _this.elements.volumeCursor.addEventListener("touchstart", _this.listeners.onMouseDownVolumeBar, {
+      passive: false
+    }, false);
+  }
 };
 
 function isDescendant(parent, child) {
@@ -1301,41 +1369,48 @@ var speed = function speed(_this) {
 
 var elid$4 = helpers.elid;
 
-var loopBtn = function loopBtn(_this) {
-  _this.elements.loopButton.onclick = function () {
-    _this.settings.loopActivated = !_this.settings.loopActivated;
+var trigger = function trigger(_this) {
+  _this.settings.loopActivated = !_this.settings.loopActivated;
 
-    _this.elements.loopButton.classList.toggle("svg-selected");
+  _this.elements.loopButton.classList.toggle("svg-selected");
 
-    _this.elements.loopBarStart.classList.toggle("m-fadeOut");
+  _this.elements.loopBarStart.classList.toggle("m-fadeOut");
 
-    _this.elements.loopBarEnd.classList.toggle("m-fadeOut");
+  _this.elements.loopBarEnd.classList.toggle("m-fadeOut");
 
-    _this.elements.loopBarStart.classList.toggle("m-fadeIn");
+  _this.elements.loopBarStart.classList.toggle("m-fadeIn");
 
-    _this.elements.loopBarStart.classList.toggle("".concat(_this.name, "-hide"));
+  _this.elements.loopBarStart.classList.toggle("".concat(_this.name, "-hide"));
 
-    _this.elements.loopBarEnd.classList.toggle("m-fadeIn");
+  _this.elements.loopBarEnd.classList.toggle("m-fadeIn");
 
-    _this.elements.loopBarEnd.classList.toggle("".concat(_this.name, "-hide"));
+  _this.elements.loopBarEnd.classList.toggle("".concat(_this.name, "-hide"));
 
-    elid$4("".concat(_this.name, "-loop-time")).classList.toggle("m-fadeOut");
-    elid$4("".concat(_this.name, "-loop-time")).classList.toggle("m-fadeIn");
-    elid$4("".concat(_this.name, "-loop-time")).classList.toggle("".concat(_this.name, "-hide"));
-    _this.elements.loopEndTime.innerHTML = _this.settings.loopEndMillisecond;
-    _this.elements.loopStartTime.innerHTML = _this.settings.loopStartMillisecond;
-    _this.settings.needsUpdate = true;
+  elid$4("".concat(_this.name, "-loop-time")).classList.toggle("m-fadeOut");
+  elid$4("".concat(_this.name, "-loop-time")).classList.toggle("m-fadeIn");
+  elid$4("".concat(_this.name, "-loop-time")).classList.toggle("".concat(_this.name, "-hide"));
+  _this.elements.loopEndTime.innerHTML = _this.settings.loopEndMillisecond;
+  _this.elements.loopStartTime.innerHTML = _this.settings.loopStartMillisecond;
+  _this.settings.needsUpdate = true;
 
-    if (!_this.settings.loopActivated) {
-      _this.elements.loopBar.style.left = "0%";
-      _this.elements.loopBar.style.width = "100%";
-      _this.settings.loopStartMillisecond = 0;
-      _this.settings.loopEndMillisecond = _this.clip.duration;
-      _this.settings.loopLastPositionXPxls = 0;
-      _this.settings.loopLastPositionXPercentage = 0;
-      _this.elements.runningBar.style.width = _this.clip.runTimeInfo.currentMillisecond / _this.clip.duration * 100 + "%";
-    }
-  };
+  if (!_this.settings.loopActivated) {
+    _this.elements.loopBar.style.left = "0%";
+    _this.elements.loopBar.style.width = "100%";
+    _this.settings.loopStartMillisecond = 0;
+    _this.settings.loopEndMillisecond = _this.clip.duration;
+    _this.settings.loopLastPositionXPxls = 0;
+    _this.settings.loopLastPositionXPercentage = 0;
+    _this.elements.runningBar.style.width = _this.clip.runTimeInfo.currentMillisecond / _this.clip.duration * 100 + "%";
+  }
+};
+
+var loopBtn = {
+  trigger: trigger,
+  add: function add(_this) {
+    _this.elements.loopButton.onclick = function () {
+      return trigger(_this);
+    };
+  }
 };
 
 var elid$5 = helpers.elid;
@@ -1485,8 +1560,8 @@ var preview = function preview(_this) {
         return;
       }
 
-      elid$6("".concat(_this.name, "-hover-display")).classList.toggle("m-fadeOut");
-      elid$6("".concat(_this.name, "-hover-display")).classList.toggle("m-fadeIn"); // elid(`${_this.name}-hover-display`).classList.toggle(
+      elid$6("".concat(_this.name, "-hover-display")).classList.toggle("m-fadeIn");
+      elid$6("".concat(_this.name, "-hover-display")).classList.toggle("m-fadeOut"); // elid(`${_this.name}-hover-display`).classList.toggle(
       //   `${_this.name}-hide`
       // );
       // if (elid(`${_this.name}-hover-display`).className.includes(`m-fadeIn`)) {
@@ -1685,7 +1760,11 @@ function () {
     }
 
     options.onMillisecondChange = options.onMillisecondChange || null;
-    options.speedValues = options.speedValues || [-4, -2, -1, -0.5, 0, 0.5, 1, 2, 4]; // remove strings
+    options.speedValues = options.speedValues || [-2, -1, -0.5, 0, 0.5, 1, 2];
+    options.mute = options.mute || false;
+    options.controls = options.controls == false ? false : true;
+    options.loop = options.loop || false;
+    options.volume = _typeof(options.volume) !== undefined ? options.volume : 1; // remove strings
 
     for (var i in options.speedValues) {
       if (!isFinite(options.speedValues[i])) {
@@ -1723,11 +1802,13 @@ function () {
       loopStartMillisecond: 0,
       loopLastPositionXPxls: 0,
       loopLastPositionXPercentage: 0,
-      loopEndMillisecond: this.clip.duration
+      loopEndMillisecond: this.clip.duration,
+      controls: true
     };
     this.functions = {
       millisecondChange: this.millisecondChange,
-      createJourney: this.createJourney
+      createJourney: this.createJourney,
+      changeSettings: this.changeSettings
     }; // create the timer controls main div
 
     setElements(this);
@@ -1747,9 +1828,65 @@ function () {
         _this.setPreviewDimentions();
       }
     });
+    this.changeSettings(options, true);
   }
 
   _createClass(Player, [{
+    key: "changeSettings",
+    value: function changeSettings(newSettings, initial) {
+      if (initial) {
+        if (newSettings.controls === false) {
+          elid$8(this.name).style.display = "none";
+        } else if (this.settings.controls === true) {
+          elid$8(this.name).style.display = "unset";
+        }
+
+        if (newSettings.loop === true) {
+          loopBtn.trigger(this);
+        }
+
+        if (_typeof(newSettings.volume) !== undefined) {
+          volume.trigger(this, newSettings.volume, undefined);
+        }
+
+        if (newSettings.mute === true) {
+          volume.trigger(this, undefined, newSettings.mute);
+        }
+
+        return true;
+      }
+
+      if (newSettings.controls === false) {
+        elid$8(this.name).style.display = "none";
+      } else if (this.settings.controls === true) {
+        elid$8(this.name).style.display = "unset";
+      }
+
+      if (_typeof(newSettings.loop) !== undefined && this.settings.loop !== newSettings.loop) {
+        loopBtn.trigger(this);
+      }
+
+      if (_typeof(newSettings.mute) !== undefined && this.settings.mute !== newSettings.mute) {
+        volume.trigger(this, undefined, newSettings.mute);
+      }
+
+      if (_typeof(newSettings.volume) !== undefined && this.settings.volume !== newSettings.volume) {
+        volume.trigger(this, newSettings.volume, undefined);
+      } // progressBarListener.add(this);
+      // loopBarStartListener.add(this);
+      // loopStartEndListener.add(this);
+      // volumeListener.add(this);
+      // statusBtnListener.add(this);
+      // settingsListener.add(this);
+      // speedListener.add(this);
+      // controlsListener.add(this);
+      // fullscreenListener.add(this);
+      // donkeyclipListener.add(this);
+      // previewListener.add(this);
+      // bodyListener.add(this);
+
+    }
+  }, {
     key: "createJourney",
     value: function createJourney(clip, millisecond) {
       var _this2 = this;
@@ -1967,11 +2104,11 @@ function () {
       progressBar(this);
       loopBarStart(this);
       loopStartEnd(this);
-      volume(this);
+      volume.add(this);
       statusBtn(this);
       settings(this);
       speed(this);
-      loopBtn(this);
+      loopBtn.add(this);
       controls(this);
       fullscreen(this);
       donkeyclip(this);

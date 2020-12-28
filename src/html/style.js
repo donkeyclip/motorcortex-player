@@ -52,6 +52,8 @@ module.exports = (theme, name, options) => `
 #${name}-hover-display{
     border: ${theme["preview-border"]};
     display: flex;
+    visibility:hidden;
+    opacity:0;
     overflow:hidden;
     background-color: black;
     position: absolute;
@@ -106,21 +108,18 @@ module.exports = (theme, name, options) => `
 }
 
 .force-show-controls {
-  height: 44px !important;
-  overflow:unset !important;
+  opacity:1 !important;
 }
 
 ${
   !options.theme.includes(`position-bottom`)
     ? `#${name}:hover #${name}-controls {
-  height: 44px;
-  overflow:unset;
+  opacity:1 !important;
 }
 `
     : `
     #${name}-controls {
-      height: 44px !important;
-      overflow:unset !important;
+      opacity:1 !important;
     }
     `
 }
@@ -135,11 +134,11 @@ ${
 
 .grad {
   background-image: linear-gradient(
-    rgba(100,100,100,00.01),
-    rgba(100,100,100,00.02),
-    rgba(100,100,100,00.03),
-    rgba(100,100,100,0.04),
-    rgba(100,100,100,0.05),
+    rgba(0,0,0,00.01),
+    rgba(0,0,0,00.02),
+    rgba(0,0,0,00.03),
+    rgba(0,0,0,0.04),
+    rgba(0,0,0,0.05),
     rgba(0,0,0,0.06),
     rgba(0,0,0,0.07),
     rgba(0,0,0,0.08),
@@ -161,7 +160,7 @@ ${
   height:${theme["grad-height"]};
   left:0px;
   bottom:0px;
-  z-index:100;
+  z-index:-1;
 }
 
 #${name}-controls {
@@ -173,14 +172,14 @@ ${
   left: 0px;
   width: 100%;
   z-index:100;
-  height: 0px;
-  overflow:hidden;
+  height: 44px;
+  opacity:0;
   display:flex;
   border-radius: 6px;
   align-items:center;
-  -webkit-transition: height 0.2s ease;
-  -moz-transition: height 0.2s ease;
-  transition: height 0.2s ease;
+  -webkit-transition: opacity 0.2s ease;
+  -moz-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 #${name}-totalbar {
@@ -653,15 +652,13 @@ input:checked+.slider:before {
 
 
 .m-fadeOut {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s linear 300ms, opacity 300ms;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
 .m-fadeIn {
-  visibility: visible;
-  opacity: 1;
-  transition: visibility 0s linear 0s, opacity 300ms;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 #${name}-settings-panel ul li:hover {

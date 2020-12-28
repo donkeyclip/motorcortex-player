@@ -49,17 +49,12 @@ class Player {
       options.pointerEvents = Boolean(options.pointerEvents);
     }
     options.onMillisecondChange = options.onMillisecondChange || null;
-    options.speedValues = options.speedValues || [
-      -4,
-      -2,
-      -1,
-      -0.5,
-      0,
-      0.5,
-      1,
-      2,
-      4
-    ];
+    options.speedValues = options.speedValues || [-2, -1, -0.5, 0, 0.5, 1, 2];
+
+    options.mute = options.mute || false;
+    options.controls = options.controls == false ? false : true;
+    options.loop = options.loop || false;
+    options.volume = typeof options.volume !== undefined ? options.volume : 1;
     // remove strings
     for (const i in options.speedValues) {
       if (!isFinite(options.speedValues[i])) {
@@ -100,12 +95,14 @@ class Player {
       loopStartMillisecond: 0,
       loopLastPositionXPxls: 0,
       loopLastPositionXPercentage: 0,
-      loopEndMillisecond: this.clip.duration
+      loopEndMillisecond: this.clip.duration,
+      controls: true
     };
 
     this.functions = {
       millisecondChange: this.millisecondChange,
-      createJourney: this.createJourney
+      createJourney: this.createJourney,
+      changeSettings: this.changeSettings
     };
     // create the timer controls main div
     setElements(this);
@@ -123,8 +120,68 @@ class Player {
         this.setPreviewDimentions();
       }
     });
+    this.changeSettings(options, true);
   }
+  changeSettings(newSettings, initial) {
+    if (initial) {
+      if (newSettings.controls === false) {
+        elid(this.name).style.display = "none";
+      } else if (this.settings.controls === true) {
+        elid(this.name).style.display = "unset";
+      }
 
+      if (newSettings.loop === true) {
+        loopBtnListener.trigger(this);
+      }
+
+      if (typeof newSettings.volume !== undefined) {
+        volumeListener.trigger(this, newSettings.volume, undefined);
+      }
+      if (newSettings.mute === true) {
+        volumeListener.trigger(this, undefined, newSettings.mute);
+      }
+      return true;
+    }
+
+    if (newSettings.controls === false) {
+      elid(this.name).style.display = "none";
+    } else if (this.settings.controls === true) {
+      elid(this.name).style.display = "unset";
+    }
+
+    if (
+      typeof newSettings.loop !== undefined &&
+      this.settings.loop !== newSettings.loop
+    ) {
+      loopBtnListener.trigger(this);
+    }
+
+    if (
+      typeof newSettings.mute !== undefined &&
+      this.settings.mute !== newSettings.mute
+    ) {
+      volumeListener.trigger(this, undefined, newSettings.mute);
+    }
+    if (
+      typeof newSettings.volume !== undefined &&
+      this.settings.volume !== newSettings.volume
+    ) {
+      volumeListener.trigger(this, newSettings.volume, undefined);
+    }
+
+    // progressBarListener.add(this);
+    // loopBarStartListener.add(this);
+    // loopStartEndListener.add(this);
+    // volumeListener.add(this);
+    // statusBtnListener.add(this);
+    // settingsListener.add(this);
+    // speedListener.add(this);
+    // controlsListener.add(this);
+    // fullscreenListener.add(this);
+    // donkeyclipListener.add(this);
+    // previewListener.add(this);
+    // bodyListener.add(this);
+  }
   createJourney(clip, millisecond, clipCommands = {}) {
     setTimeout(() => {
       const def = null;
@@ -376,11 +433,11 @@ class Player {
     progressBarListener(this);
     loopBarStartListener(this);
     loopStartEndListener(this);
-    volumeListener(this);
+    volumeListener.add(this);
     statusBtnListener(this);
     settingsListener(this);
     speedListener(this);
-    loopBtnListener(this);
+    loopBtnListener.add(this);
     controlsListener(this);
     fullscreenListener(this);
     donkeyclipListener(this);

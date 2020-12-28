@@ -82,9 +82,13 @@ clip.addIncident(animation_2, 60000);
 clip.addIncident(animation_3, 120000);
 window.clip = clip;
 // Add clip to timer
-new Player({
-  // theme: "mc-blue",
+window.p = new Player({
+  theme: "mc-blue",
   clip,
+  loop: false,
+  mute: true,
+  controls: true,
+  volume: 0.3,
   preview: true,
   showVolume: true,
   speedValues: [
