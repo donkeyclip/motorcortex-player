@@ -52,10 +52,11 @@ class Player {
     options.onMillisecondChange = options.onMillisecondChange || null;
     options.speedValues = options.speedValues || [-2, -1, -0.5, 0, 0.5, 1, 2];
 
-    options.mute = options.mute || false;
+    options.muted = options.muted || false;
     options.controls = options.controls == false ? false : true;
     options.loop = options.loop || false;
     options.volume = typeof options.volume !== "undefined" ? options.volume : 1;
+    options.currentScript = options.currentScript || null;
     // remove strings
     for (const i in options.speedValues) {
       if (!isFinite(options.speedValues[i])) {
@@ -132,52 +133,64 @@ class Player {
     });
     this.changeSettings(options, true);
   }
-  changeSettings(newSettings, initial) {
-    if (initial) {
-      if (newSettings.controls === false) {
-        elid(this.name).style.display = "none";
-      } else if (this.settings.controls === true) {
-        elid(this.name).style.display = "unset";
-      }
+  changeSettings(newOptions, initial) {
+    // if (newOptions.controls === false) {
+    //   elid(this.name).style.display = "none";
+    // } else if (this.options.controls === true) {
+    //   elid(this.name).style.display = "unset";
+    // }
 
-      if (newSettings.loop === true) {
-        loopBtnListener.trigger(this);
-      }
+    // if (typeof newOptions.volume !== "undefined") {
+    //   volumeListener.trigger(this, newOptions.volume, undefined);
+    // }
+    // if (newOptions.muted === true) {
+    //   volumeListener.trigger(this, undefined, newOptions.muted);
+    // }
 
-      if (typeof newSettings.volume !== "undefined") {
-        volumeListener.trigger(this, newSettings.volume, undefined);
-      }
-      if (newSettings.mute === true) {
-        volumeListener.trigger(this, undefined, newSettings.mute);
-      }
-      return true;
-    }
-
-    if (newSettings.controls === false) {
+    if (newOptions.controls === false) {
       elid(this.name).style.display = "none";
-    } else if (newSettings.controls === true) {
+    } else if (newOptions.controls === true) {
       elid(this.name).style.display = "unset";
     }
 
     if (
-      typeof newSettings.loop !== "undefined" &&
-      this.settings.loop !== newSettings.loop
+      typeof newOptions.loop !== "undefined" &&
+      (this.options.loop !== newOptions.loop || (initial && this.options.loop))
     ) {
       loopBtnListener.trigger(this);
     }
 
     if (
-      typeof newSettings.mute !== "undefined" &&
-      this.settings.mute !== newSettings.mute
+      typeof newOptions.muted !== "undefined" &&
+      (this.options.muted !== newOptions.muted ||
+        (initial && this.options.muted))
     ) {
-      volumeListener.trigger(this, undefined, newSettings.mute);
+      volumeListener.trigger(this, undefined, newOptions.mute);
     }
     if (
-      typeof newSettings.volume !== "undefined" &&
-      this.settings.volume !== newSettings.volume
+      typeof newOptions.volume !== "undefined" &&
+      (this.options.volume !== newOptions.volume ||
+        (initial && this.options.volume))
     ) {
-      volumeListener.trigger(this, newSettings.volume, undefined);
+      volumeListener.trigger(this, newOptions.volume, undefined);
     }
+
+    if (
+      typeof newOptions.speed !== "undefined" &&
+      (this.options.speed !== newOptions.speed ||
+        (initial && this.options.speed))
+    ) {
+      speedListener.trigger(this, newOptions.speed);
+    }
+
+    if (
+      typeof newOptions.scaleToFit !== "undefined" &&
+      (this.options.scaleToFit !== newOptions.scaleToFit ||
+        (initial && this.options.scaleToFit))
+    ) {
+      this.scaleClipHost();
+    }
+    this.options = { ...this.options, ...newOptions };
   }
 
   scaleClipHost() {
@@ -190,7 +203,12 @@ class Player {
       this.clip.realClip.rootElement.style.left =
         transform.position.left + "px";
       this.clip.realClip.rootElement.style.top = transform.position.top + "px";
+    } else {
+      this.clip.realClip.rootElement.style.transform = `scale(1)`;
+      this.clip.realClip.rootElement.style.left = "0px";
+      this.clip.realClip.rootElement.style.top = "0px";
     }
+    this.eventBroadcast("scale-change", this.options.scaleToFit);
   }
   createLoop(msStart, msEnd) {
     this.settings.loopStartMillisecond = msStart;
@@ -227,6 +245,7 @@ class Player {
       this.state = state;
       this.eventBroadcast("state-change", state);
     }
+
     if (!this.settings.needsUpdate) {
       this.clip.pause();
       return 1;
@@ -321,6 +340,9 @@ class Player {
   eventBroadcast(eventName, state) {
     const controlsEl = elid(`${this.name}-controls`);
     if (eventName === `state-change`) {
+      if (this.options.currentScript) {
+        this.options.currentScript.dataset.status = state;
+      }
       if (
         state === `paused` ||
         state === `idle` ||
@@ -376,6 +398,38 @@ class Player {
       this.settings.loopEndMillisecond = this.clip.duration;
       this.elements.pointerEventPanel.innerHTML = "";
       this.millisecondChange(this.clip.runTimeInfo.currentMillisecond);
+    } else if (this.options.currentScript) {
+      if (eventName === "volume-change") {
+        this.options.volume = state;
+        this.options.currentScript.dataset.volume = state;
+      } else if (eventName === "speed-change") {
+        this.options.speed = state;
+        this.options.currentScript.dataset.speed = state;
+      } else if (eventName === "mute-change") {
+        if (state) {
+          this.options.muted = true;
+          this.options.currentScript.dataset.muted = "";
+        } else {
+          this.options.muted = false;
+          delete this.options.currentScript.dataset.muted;
+        }
+      } else if (eventName === "loop-change") {
+        if (state) {
+          this.options.loop = true;
+          this.options.currentScript.dataset.loop = "";
+        } else {
+          this.options.loop = false;
+          delete this.options.currentScript.dataset.loop;
+        }
+      } else if (eventName === "scale-change") {
+        if (state) {
+          this.options.scaleToFit = true;
+          this.options.currentScript.dataset["scale-to-fit"] = "";
+        } else {
+          this.options.scaleToFit = false;
+          delete this.options.currentScript.dataset["scale-to-fit"];
+        }
+      }
     }
   }
 
@@ -456,7 +510,7 @@ class Player {
     volumeListener.add(this);
     statusBtnListener(this);
     settingsListener(this);
-    speedListener(this);
+    speedListener.add(this);
     loopBtnListener.add(this);
     controlsListener(this);
     fullscreenListener(this);

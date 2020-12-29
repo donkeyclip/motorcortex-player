@@ -1,5 +1,8 @@
 module.exports = (theme, name, options) => `
-.background {
+#${name}, #${name} *{
+  font-family:'Ubuntu' !important;
+}
+#${name} .background {
   background-color: ${options.backgroundColor};
   width:100%;
   height:${theme["background-height"]};;
@@ -9,26 +12,26 @@ module.exports = (theme, name, options) => `
   z-index:-2000;
 }
 
-.full-screen #${name}-controls {
+#${name} .full-screen #${name}-controls {
   position:fixed;
   left:0px;
   bottom:0px;
 }
 
-.full-screen #${name}-settings-panel {
+#${name} .full-screen #${name}-settings-panel {
   position:fixed;
   bottom: 45px;
 }
 
-.svg, .svg *,svg, svg *  {
+#${name} .svg, .svg *,svg, svg *  {
   fill: ${theme["svg-color"]};
 }
 
-.svg.arrow {
+#${name} .svg.arrow {
   stroke: ${theme["svg-color"]};
 }
 
-.pointer-event-panel {
+#${name} .pointer-event-panel {
   height: ${theme["pointer-event-panel-height"]};
   display:flex;
   align-items:center;
@@ -45,7 +48,7 @@ module.exports = (theme, name, options) => `
   position:absolute;
   z-index:110;
 }
-.svg-selected svg{
+#${name} .svg-selected svg{
   fill: ${theme["svg-selected-color"]};
   stroke: ${theme["svg-selected-color"]};
 }
@@ -107,7 +110,7 @@ module.exports = (theme, name, options) => `
   pointer-events:auto !important;
 }
 
-.force-show-controls {
+#${name} .force-show-controls {
   opacity:1 !important;
 }
 
@@ -132,7 +135,7 @@ ${
   text-align:right;
 }
 
-.grad {
+#${name} .grad {
   background-image: linear-gradient(
     rgba(0,0,0,00.01),
     rgba(0,0,0,00.02),
@@ -144,16 +147,21 @@ ${
     rgba(0,0,0,0.08),
     rgba(0,0,0,0.09),
     rgba(0,0,0,0.1),
+    rgba(0,0,0,0.15),
     rgba(0,0,0,0.2),
+    rgba(0,0,0,0.25),
     rgba(0,0,0,0.3),
+    rgba(0,0,0,0.35),
     rgba(0,0,0,0.4),
-    rgba(0,0,0,0.4),
+    rgba(0,0,0,0.45),
     rgba(0,0,0,0.5),
+    rgba(0,0,0,0.55),
     rgba(0,0,0,0.6),
+    rgba(0,0,0,0.65),
     rgba(0,0,0,0.7),
+    rgba(0,0,0,0.75),
     rgba(0,0,0,0.8),
-    rgba(0,0,0,0.9),
-    rgba(0,0,0,1)
+    rgba(0,0,0,0.88)
   );
   position:absolute;
   width:100%;
@@ -163,7 +171,7 @@ ${
   z-index:-1;
 }
 
-#${name}-controls {
+#${name} #${name}-controls {
   touch-action: none;
   background-color: ${theme["background-color"]};
   border: ${theme["controls-border"]};
@@ -182,7 +190,7 @@ ${
   transition: opacity 0.2s ease;
 }
 
-#${name}-totalbar {
+#${name} #${name}-totalbar {
   width: calc(100% - 20px);
   height: 5px;
   margin: 0px 10px 0px 10px;
@@ -192,7 +200,7 @@ ${
   left: 0px;
 }
 
-#${name}-loopbar {
+#${name} #${name}-loopbar {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -201,11 +209,11 @@ ${
   background-color: ${theme["loopbar-color"]};
 }
 
-.${name}-loop-boundaries::before {
+#${name} .${name}-loop-boundaries::before {
   ${theme["loopbar-boundaries-style::before"]}
 
 }
-.${name}-loop-boundaries {
+#${name} .${name}-loop-boundaries {
   transform:translate(-50%,-37%);
   position:absolute;
   width:18px;
@@ -216,12 +224,12 @@ ${
   ${theme["loopbar-boundaries-style"]}
 }
 
-.${name}-loop-boundaries::after {
+#${name} .${name}-loop-boundaries::after {
   ${theme["loopbar-boundaries-style::after"]}
 
 }
 
-#${name}-helperbar {
+#${name} #${name}-helperbar {
   position: absolute;
   height: 20px;
   top: -10px;
@@ -230,7 +238,7 @@ ${
   z-index:2;
 }
 
-#${name}-runningbar {
+#${name} #${name}-runningbar {
   position: relative;
   width: 0px;
   max-width:100%;
@@ -238,7 +246,7 @@ ${
   background-color: ${theme["runningbar-color"]};
 }
 
-#${name}-cursor {
+#${name} #${name}-cursor {
   transform:translate(50%,-36%);
   right: 0px;
   overflow:hidden;
@@ -251,27 +259,27 @@ ${
   z-index: 5;
 }
 
-#${name}-cursor::before {
+#${name} #${name}-cursor::before {
   ${theme["cursor-style::before"]}
 }
 
-#${name}-cursor::after {
+#${name} #${name}-cursor::after {
   ${theme["cursor-style::after"]}
 }
 
-#${name}-left-controls,#${name}-right-controls {
+#${name} #${name}-left-controls,#${name} #${name}-right-controls {
     display: flex;
     align-items:center;
     height: 100%;
     padding: 5px 5px 0px;
 }
-#${name}-right-controls {
+#${name} #${name}-right-controls {
   position:absolute;
   right:0px;
 }
 
 
-#${name}-left-controls > div,#${name}-right-controls > div {
+#${name} #${name}-left-controls > div,#${name} #${name}-right-controls > div {
     display: inline-flex;
     align-items:center;
    margin:0 10px 0 10px;
@@ -291,28 +299,28 @@ ${
   transition: left 0.1s ease;
 }
 */
-#${name}-time-display span {
+#${name} #${name}-time-display span {
   display: table-cell;
   vertical-align: middle;
 }
 
-#${name}-status-btn {
+#${name} #${name}-status-btn {
   opacity: ${theme["button-opacity"]};
 }
-#${name}-status-btn svg{
+#${name} #${name}-status-btn svg{
   width:20px;
   height:18px;
 }
-#${name}-volume {
+#${name} #${name}-volume {
   opacity: ${theme["button-opacity"]};
   position: relative;
 }
-#${name}-volume-btn {
+#${name} #${name}-volume-btn {
   width: 20px;
   height: 15px;
 }
 
-#${name}-volumebar {
+#${name} #${name}-volumebar {
   width: 0px;
   height: 3px;
   background-color: ${theme["loopbar-color"]};
@@ -323,7 +331,7 @@ ${
   left:5px;
 }
 
-#${name}-volumebar-helper {
+#${name} #${name}-volumebar-helper {
   position: absolute;
     width: 0px;
     height: 15px;
@@ -332,7 +340,7 @@ ${
     left: 25px;
 }
 
-#${name}-volumebar-active {
+#${name} #${name}-volumebar-active {
   position: relative;
   width: 0%;
   height: 100%;
@@ -341,7 +349,7 @@ ${
   bottom:0px;
 }
 
-#${name}-volume-cursor {
+#${name} #${name}-volume-cursor {
   transform:translate(50%,-36%);
   right: 0px;
   top: 0px;
@@ -353,7 +361,7 @@ ${
   z-index: 5;
 }
 
-.${name}-loopbar-time {
+#${name} .${name}-loopbar-time {
   width:auto;
   height:12px;
   background-color:${theme["background-color"]};
@@ -361,11 +369,11 @@ ${
   font-size:10px;
 }
 
-#${name}-loop-time {
+#${name} #${name}-loop-time {
   margin: 7px;
 }
 
-#${name}-dc-btn {
+#${name} #${name}-dc-btn {
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 20px;
@@ -374,32 +382,32 @@ ${
     transform: scale(1.5,1.5);
 }
 
-#${name}-loop-btn {
+#${name} #${name}-loop-btn {
   opacity: ${theme["button-opacity"]};
   display:flex;
   align-items:center;
 }
 
 
-#${name}-settings-btn {
+#${name} #${name}-settings-btn {
   overflow:hidden;
   opacity: ${theme["button-opacity"]};
 }
 
-#${name}-full-screen-btn {
+#${name} #${name}-full-screen-btn {
   opacity: ${theme["button-opacity"]};
 }
 
-.${name}-speed-btn {
+#${name} .${name}-speed-btn {
   opacity: ${theme["button-opacity"]};
   height: 14px;
 }
 
-#${name}-settings-panel {
+#${name} #${name}-settings-panel {
   touch-action: none;
   box-sizing: border-box;
   position: absolute;
-  z-index:101;
+  z-index:102;
   background-color: ${theme["settings-background-color"]};
   bottom: ${theme["settings-panel-bottom"]};
   border: ${theme["border"]};
@@ -412,11 +420,11 @@ ${
   transition: all 0.3s ease;
 }
 
-.${name}-hide {
+#${name} .${name}-hide {
   display:none !important;
 }
 
-#${name}-speed-value-bar {
+#${name} #${name}-speed-value-bar {
   position: relative;
   width: 5px;
   background-color: ${theme["speedbar-color"]};
@@ -427,7 +435,7 @@ ${
   margin-right:15px;
 }
 
-#${name}-speed-value-helperbar {
+#${name} #${name}-speed-value-helperbar {
   position: absolute;
   width: 25px;
   height: ${options.speedValues.length * 16}px;
@@ -437,28 +445,28 @@ ${
 }
 
 
-#${name}-speed-value-bar:hover,
-#${name}-speed-value-helperbar {
+#${name} #${name}-speed-value-bar:hover,
+#${name} #${name}-speed-value-helperbar {
   cursor: pointer;
 }
 
-#${name}-volumebar:hover,
-#${name}-volumebar-helper:hover,
-#${name}-volume-btn:hover,
-#${name}-volumebar:active,
-#${name}-volumebar-helper:active,
-#${name}-volume-btn:active {
+#${name} #${name}-volumebar:hover,
+#${name} #${name}-volumebar-helper:hover,
+#${name} #${name}-volume-btn:hover,
+#${name} #${name}-volumebar:active,
+#${name} #${name}-volumebar-helper:active,
+#${name} #${name}-volume-btn:active {
   cursor:pointer;
 }
 
-#${name}-speed-cursor {
+#${name} #${name}-speed-cursor {
   position: absolute;
   background-color: ${theme["speedbar-cursor-color"]};
   top: 0px;
   left: 0px;
 }
 
-#${name}-speed-cursor div {
+#${name} #${name}-speed-cursor div {
   position: absolute;
   background-color: ${theme["speedbar-cursor-color"]};
   left: -2.5px;
@@ -468,14 +476,14 @@ ${
   border-radius: 5px;
 }
 
-#${name}-time-separator{
+#${name} #${name}-time-separator{
   margin:0 3px;
 }
-#${name}-speed-cursor:hover {
+#${name} #${name}-speed-cursor:hover {
   cursor: pointer;
 }
 
-.${name}-speed-value-step {
+#${name} .${name}-speed-value-step {
   width: 16px;
   background-color: ${theme["speedbar-color"]};
   display: inline-block;
@@ -486,20 +494,20 @@ ${
   float: left;
 }
 
-#${name}-speed-value {
+#${name} #${name}-speed-value {
   display: inline-block;
   box-sizing: border-box;
   height: ${options.speedValues.length * 16}px;
   text-align: left;
 }
 
-.${name}-speed-value {
+#${name} .${name}-speed-value {
   box-sizing: border-box;
   height: 16px;
   font-size: 12px;
 }
 
-#${name}-indicator {
+#${name} #${name}-indicator {
   font-size: 8px !important;
   position: absolute;
   bottom: -3px;
@@ -510,10 +518,10 @@ ${
   height: ${options.speedValues.length * 16 + 32 + 10 - 2}px;
 }*/
 
-#${name}-speed-settings li.no-hover { 
+#${name} #${name}-speed-settings li.no-hover { 
   height: ${options.speedValues.length * 16 + 10 - 2}px !important; 
 }
-#${name}-settings-panel.${name}-settings-speed-panel {
+#${name} #${name}-settings-panel.${name}-settings-speed-panel {
   overflow: hidden;
   width: 92px;
   position:absolute;
@@ -524,31 +532,31 @@ ${
   transition: all 0.3s ease;
 }
 
-#${name}-settings-panel.${name}-settings-speed-panel .${name}-speed-btn {
+#${name} #${name}-settings-panel.${name}-settings-speed-panel .${name}-speed-btn {
   float: left;
 }
 
-.${name}-settings-speed-panel ul:first-child {
+#${name} .${name}-settings-speed-panel ul:first-child {
   text-align: right;
 }
 
-#${name}-speed-current {
+#${name} #${name}-speed-current {
   float: right;
   padding-right: 10px
 }
 
-#${name}-settings-panel .${name}-speed-btn {
+#${name} #${name}-settings-panel .${name}-speed-btn {
   float: right;
 }
 
-#${name}-settings-panel ul {
+#${name} #${name}-settings-panel ul {
   width: 100%;
   margin: 0px;
   padding: 0px;
   overflow: hidden;
 }
 
-#${name}-settings-panel.${name}-settings-speed-panel ul li {
+#${name} #${name}-settings-panel.${name}-settings-speed-panel ul li {
   min-width: 70px;
   display: flex;
   height: 32px;
@@ -556,17 +564,17 @@ ${
   justify-content:center;
 }
 
-#${name}-settings-panel ul li.no-hover:hover {
+#${name} #${name}-settings-panel ul li.no-hover:hover {
   background-color: transparent;
   cursor: default;
 }
 
-div.${name}-speed-value:hover {
+#${name} div.${name}-speed-value:hover {
   background-color: ${theme["hover-color"]};
   cursor: pointer;
 }
 
-#${name}-settings-panel ul li {
+#${name} #${name}-settings-panel ul li {
   /*position: relative;
   width: 100%;
   min-width: 154px;*/
@@ -578,31 +586,31 @@ div.${name}-speed-value:hover {
   align-items:center;
 }
 
-#${name}-settings-panel ul li label {
+#${name} #${name}-settings-panel ul li label {
   margin: 0px;
 }
 
-.switch {
+#${name} .switch {
   position: relative;
   display: inline-block;
   width: 32px;
   height: 18px;
 }
 
-.switch input {
+#${name} .switch input {
   display: none;
 }
 
-.settings-switch {
+#${name} .settings-switch {
   position: absolute;
   right: 24px;
 }
 
-.settings-switch::after {
+#${name} .settings-switch::after {
   clear: both;
 }
 
-.slider {
+#${name} .slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -614,7 +622,7 @@ div.${name}-speed-value:hover {
   transition: .4s;
 }
 
-.slider:before {
+#${name} .slider:before {
   position: absolute;
   content: "";
   height: 16px;
@@ -626,15 +634,15 @@ div.${name}-speed-value:hover {
   transition: .4s;
 }
 
-input:checked+.slider {
+#${name} input:checked+.slider {
   background-color: ${theme["slider-on-color"]};
 }
 
-input:focus+.slider {
+#${name} input:focus+.slider {
   box-shadow: 0 0 1px ${theme["slider-on-color"]};
 }
 
-input:checked+.slider:before {
+#${name} input:checked+.slider:before {
   -webkit-transform: translateX(16px);
   -ms-transform: translateX(16px);
   transform: translateX(16px);
@@ -643,44 +651,44 @@ input:checked+.slider:before {
 
 /* Rounded sliders */
 
-.slider.round {
+#${name} .slider.round {
   border-radius: 34px;
 }
 
-.slider.round:before {
+#${name} .slider.round:before {
   border-radius: 50%;
 }
 
 
-.m-fadeOut {
+#${name} .m-fadeOut {
   visibility: hidden !important;
   opacity: 0 !important;
 }
 
-.m-fadeIn {
+#${name} .m-fadeIn {
   visibility: visible !important;
   opacity: 1 !important;
 }
 
-#${name}-settings-panel ul li:hover {
+#${name} #${name}-settings-panel ul li:hover {
   background-color: ${theme["hover-color"]};
   cursor: pointer;
 }
 
-#${name}-settings-panel ul li label:hover {
+#${name} #${name}-settings-panel ul li label:hover {
   cursor: pointer;
 }
 
-#${name}-loopbar:hover {
+#${name} #${name}-loopbar:hover {
   cursor: pointer;
 }
 
-#${name}-status-btn:hover {
+#${name} #${name}-status-btn:hover {
   cursor: pointer;
 }
 
-#${name}-controls:active #${name}-cursor,
-#${name}-controls:hover #${name}-cursor  {
+#${name} #${name}-controls:active #${name}-cursor,
+#${name} #${name}-controls:hover #${name}-cursor  {
   width: 16px;
   height: 16px;
   -webkit-transition: all 0.3s ease;
@@ -688,7 +696,7 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#${name}-volume .${name}-volume-cursor-transition {
+#${name} #${name}-volume .${name}-volume-cursor-transition {
   width: 12px;
   height: 12px;
   -webkit-transition: all 0.3s ease;
@@ -696,7 +704,7 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#${name}-volume .${name}-volume-width-transition
+#${name} #${name}-volume .${name}-volume-width-transition
  {
   width: 50px;
   -webkit-transition: all 0.3s ease;
@@ -704,7 +712,7 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#${name}-time-display.${name}-time-width-transition {
+#${name} #${name}-time-display.${name}-time-width-transition {
   position:relative;
   left: 10px;
   -webkit-transition: left 0.3s ease;
@@ -712,22 +720,22 @@ input:checked+.slider:before {
   transition: left 0.3s ease;
 }
 
-#${name}-settings-speed:hover .${name}-speed-btn {
+#${name} #${name}-settings-speed:hover .${name}-speed-btn {
   opacity: 1;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
 
-#${name}-status-btn:hover {
+#${name} #${name}-status-btn:hover {
   opacity: 1;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
 
-#${name}-loop-btn:hover,
-#${name}-dc-btn:hover
+#${name} #${name}-loop-btn:hover,
+#${name} #${name}-dc-btn:hover
  {
   cursor: pointer;
   opacity: 1;
@@ -735,7 +743,7 @@ input:checked+.slider:before {
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-#${name}-settings-btn:hover {
+#${name} #${name}-settings-btn:hover {
   cursor: pointer;
   opacity: 1;
   -webkit-transition: all 0.3s ease;
@@ -743,7 +751,7 @@ input:checked+.slider:before {
   transition: all 0.3s ease;
 }
 
-#${name}-full-screen-btn:hover {
+#${name} #${name}-full-screen-btn:hover {
   cursor: pointer;
   opacity: 1;
   -webkit-transition: all 0.3s ease;

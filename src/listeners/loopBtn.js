@@ -2,6 +2,9 @@ const { elid } = require(`../helpers`);
 
 const trigger = _this => {
   _this.settings.loopActivated = !_this.settings.loopActivated;
+
+  _this.eventBroadcast("loop-change", _this.settings.loopActivated);
+
   _this.elements.loopButton.classList.toggle(`svg-selected`);
   _this.elements.loopBarStart.classList.toggle(`m-fadeOut`);
   _this.elements.loopBarEnd.classList.toggle(`m-fadeOut`);

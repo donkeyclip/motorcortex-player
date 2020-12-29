@@ -4,22 +4,31 @@ const svg = require("../html/svg");
 
 module.exports = {
   trigger: (_this, volume, mute) => {
-    if (mute === false) {
-      _this.elements.volumeBarActive.style.width =
-        _this.settings.previousVolume * 100 + `%`;
-      _this.clip.setVolume(_this.settings.previousVolume);
-      _this.settings.volumeMute = false;
-      const SVG = document.createElement(`span`);
-      SVG.innerHTML = svg.volumeSVG;
-      _this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
-    } else if (mute === true) {
-      _this.settings.volumeMute = true;
-      _this.elements.volumeBarActive.style.width = `0%`;
-      _this.clip.setVolume(0);
-      const SVG = document.createElement(`span`);
-      SVG.innerHTML = svg.volumeMuteSVG;
-      _this.elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
+    if (typeof mute !== undefined) {
+      if (mute === false) {
+        _this.elements.volumeBarActive.style.width =
+          _this.settings.previousVolume * 100 + `%`;
+        _this.clip.setVolume(_this.settings.previousVolume);
+        _this.settings.volumeMute = false;
+        const SVG = document.createElement(`span`);
+        SVG.innerHTML = svg.volumeSVG;
+        _this.elements.volumeBtn
+          .getElementsByTagName(`svg`)[0]
+          .replaceWith(SVG);
+      } else if (mute === true) {
+        _this.settings.volumeMute = true;
+        _this.elements.volumeBarActive.style.width = `0%`;
+        _this.clip.setVolume(0);
+        const SVG = document.createElement(`span`);
+        SVG.innerHTML = svg.volumeMuteSVG;
+        _this.elements.volumeBtn
+          .getElementsByTagName(`svg`)[0]
+          .replaceWith(SVG);
+      }
+      _this.options.muted = _this.settings.volumeMute;
+      _this.eventBroadcast("mute-change", _this.settings.volumeMute);
     }
+
     if (typeof volume !== undefined) {
       _this.settings.volume = volume;
       if (_this.settings.volume > 0) {
@@ -45,6 +54,10 @@ module.exports = {
           .getElementsByTagName(`svg`)[0]
           .replaceWith(SVG);
       }
+
+      _this.options.volume = _this.settings.volume;
+      _this.eventBroadcast("volume-change", _this.settings.volume);
+      _this.eventBroadcast("mute-change", _this.settings.volumeMute);
     }
   },
   add: _this => {
@@ -71,6 +84,8 @@ module.exports = {
           .getElementsByTagName(`svg`)[0]
           .replaceWith(SVG);
       }
+      _this.eventBroadcast("volume-change", _this.settings.previousVolume);
+      _this.eventBroadcast("mute-change", _this.settings.volumeMute);
     };
     let volumeOpen = false;
     _this.elements.volumeBtn.onmouseover = () => {
@@ -150,6 +165,8 @@ module.exports = {
           .getElementsByTagName(`svg`)[0]
           .replaceWith(SVG);
       }
+      _this.eventBroadcast("volume-change", _this.settings.volume);
+      _this.eventBroadcast("mute-change", _this.settings.volumeMute);
     };
 
     _this.listeners.onMouseUpVolumeBar = e => {
