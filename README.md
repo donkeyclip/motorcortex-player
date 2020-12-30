@@ -99,7 +99,7 @@ By using the mc_analyzer features you can create a bundle of a clip witch includ
 ```
 All of the properties can be manipulated after the initialization and on-the-fly will update the player control settings status, witch practically means that the developer can manipulate the Clip through the scrip element. With this feature you can delete the `data-controls` attribute from the script and create your own player controls if that's what you want. The minimum properties for a plug-n-play clip via the script method are
 ```html
-<script src="https://staging-api.donkeyclip.com/embed/xxxxxxxx-xxxx/" scale-to-fit/>
+<script src="https://staging-api.donkeyclip.com/embed/xxxxxxxx-xxxx/" data-scale-to-fit/>
 ```
 ## Themes 
 ### dark
