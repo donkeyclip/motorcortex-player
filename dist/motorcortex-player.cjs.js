@@ -1352,113 +1352,150 @@ var elid$2 = helpers.elid,
     addListener$4 = helpers.addListener,
     removeListener$4 = helpers.removeListener;
 
-var settings = function settings(_this) {
-  _this.elements.settingsShowIndicator.onclick = function (e) {
-    e.preventDefault();
-    var checkbox = elid$2("".concat(_this.name, "-show-indicator-checkbox"));
+var showIndicator = function showIndicator(_this, e) {
+  e && e.preventDefault();
+  var checkbox = elid$2("".concat(_this.name, "-show-indicator-checkbox"));
 
-    if (checkbox.checked) {
-      checkbox.checked = false;
-      _this.elements.indicator.style.visibility = "hidden";
-    } else {
-      checkbox.checked = true;
-      _this.elements.indicator.style.visibility = "visible";
+  if (checkbox.checked) {
+    checkbox.checked = false;
+    _this.elements.indicator.style.visibility = "hidden";
+  } else {
+    checkbox.checked = true;
+    _this.elements.indicator.style.visibility = "visible";
+  }
+
+  _this.eventBroadcast("show-indicator-change", checkbox.checked);
+};
+
+var showPointerEvents = function showPointerEvents(_this, e) {
+  e && e.preventDefault();
+  var checkbox = elid$2("".concat(_this.name, "-pointer-events-checkbox"));
+
+  if (checkbox.checked) {
+    checkbox.checked = false;
+    _this.options.pointerEvents = false;
+    _this.elements.mcPlayer.style.pointerEvents = "none";
+    _this.elements.pointerEventPanel.style.pointerEvents = "none";
+    elid$2("".concat(_this.name, "-controls")).style.pointerEvents = "auto";
+    _this.elements.settingsPanel.style.pointerEvents = "auto";
+  } else {
+    checkbox.checked = true;
+    _this.elements.mcPlayer.style.pointerEvents = "none";
+    _this.elements.pointerEventPanel.style.pointerEvents = "auto";
+    elid$2("".concat(_this.name, "-controls")).style.pointerEvents = "auto";
+    _this.elements.settingsPanel.style.pointerEvents = "auto";
+  }
+
+  _this.eventBroadcast("show-pointer-events-change", checkbox.checked);
+};
+
+var showVolume = function showVolume(_this, e) {
+  e && e.preventDefault();
+
+  _this.elements.volumeControl.classList.toggle("".concat(_this.name, "-volume-width-transition"));
+
+  _this.elements.volumeControl.classList.toggle("".concat(_this.name, "-hide"));
+
+  var checkbox = elid$2("".concat(_this.name, "-show-volume-checkbox"));
+
+  if (checkbox.checked) {
+    checkbox.checked = false;
+    _this.elements.volumeControl.style.visibility = "hidden";
+    _this.elements.timeDisplay.style.left = "45px";
+  } else {
+    checkbox.checked = true;
+    _this.elements.volumeControl.style.visibility = "visible";
+    _this.elements.timeDisplay.style.left = "";
+  }
+
+  _this.eventBroadcast("show-volume-change", checkbox.checked);
+};
+
+var showPreview = function showPreview(_this, e) {
+  e && e.preventDefault();
+  var checkbox = elid$2("".concat(_this.name, "-show-preview-checkbox"));
+
+  if (checkbox.checked) {
+    checkbox.checked = false;
+    elid$2("".concat(_this.name, "-hover-display")).style.visibility = "hidden";
+    elid$2("".concat(_this.name, "-hover-display")).style.display = "none";
+    _this.options.preview = false;
+  } else {
+    if (!_this.previewClip) {
+      _this.createPreviewDisplay();
     }
-  };
 
-  _this.elements.settingsPointerEvents.onclick = function (e) {
-    e.preventDefault();
-    var checkbox = elid$2("".concat(_this.name, "-pointer-events-checkbox"));
+    checkbox.checked = true;
+    elid$2("".concat(_this.name, "-hover-display")).style.visibility = "visible";
+    elid$2("".concat(_this.name, "-hover-display")).style.display = "flex";
+    _this.options.preview = true;
+  }
 
-    if (checkbox.checked) {
-      checkbox.checked = false;
-      _this.options.pointerEvents = false;
-      _this.elements.mcPlayer.style.pointerEvents = "none";
-      _this.elements.pointerEventPanel.style.pointerEvents = "none";
-      elid$2("".concat(_this.name, "-controls")).style.pointerEvents = "auto";
-      _this.elements.settingsPanel.style.pointerEvents = "auto";
-    } else {
-      checkbox.checked = true;
-      _this.elements.mcPlayer.style.pointerEvents = "none";
-      _this.elements.pointerEventPanel.style.pointerEvents = "auto";
-      elid$2("".concat(_this.name, "-controls")).style.pointerEvents = "auto";
-      _this.elements.settingsPanel.style.pointerEvents = "auto";
-    }
-  };
+  _this.eventBroadcast("show-preview-change", checkbox.checked);
+};
 
-  _this.elements.settingsShowVolume.onclick = function (e) {
-    e.preventDefault();
-
-    _this.elements.volumeControl.classList.toggle("".concat(_this.name, "-volume-width-transition"));
-
-    _this.elements.volumeControl.classList.toggle("".concat(_this.name, "-hide"));
-
-    var checkbox = elid$2("".concat(_this.name, "-show-volume-checkbox"));
-
-    if (checkbox.checked) {
-      checkbox.checked = false;
-      _this.elements.volumeControl.style.visibility = "hidden";
-      _this.elements.timeDisplay.style.left = "45px";
-    } else {
-      checkbox.checked = true;
-      _this.elements.volumeControl.style.visibility = "visible";
-      _this.elements.timeDisplay.style.left = "";
-    }
-  };
-
-  _this.elements.settingsShowPreview.onclick = function (e) {
-    e.preventDefault();
-    var checkbox = elid$2("".concat(_this.name, "-show-preview-checkbox"));
-
-    if (checkbox.checked) {
-      checkbox.checked = false;
-      elid$2("".concat(_this.name, "-hover-display")).style.visibility = "hidden";
-      elid$2("".concat(_this.name, "-hover-display")).style.display = "none";
-      _this.options.preview = false;
-    } else {
-      if (!_this.previewClip) {
-        _this.createPreviewDisplay();
-      }
-
-      checkbox.checked = true;
-      elid$2("".concat(_this.name, "-hover-display")).style.visibility = "visible";
-      elid$2("".concat(_this.name, "-hover-display")).style.display = "flex";
-      _this.options.preview = true;
-    }
-  };
-
-  _this.elements.settingsButton.onclick = function (e) {
-    e.preventDefault();
-    var controlsEl = elid$2("".concat(_this.name, "-controls"));
-
-    var showHideSettings = function showHideSettings(e) {
-      if (_this.elements.settingsPanel.contains(e.target)) {
-        return true;
-      }
-
-      _this.elements.settingsPanel.classList.toggle("".concat(_this.name, "-hide"));
-
-      _this.elements.settingsPanel.classList.toggle("m-fadeOut");
-
-      _this.elements.settingsPanel.classList.toggle("m-fadeIn");
-
-      if (_this.elements.settingsPanel.className.includes("m-fadeOut")) {
-        removeListener$4("click", showHideSettings, false);
-
-        _this.eventBroadcast("state-change", _this.state);
-      }
+var settings = {
+  add: function add(_this) {
+    _this.elements.settingsShowIndicator.onclick = function (e) {
+      return showIndicator(_this, e);
     };
 
-    if (_this.elements.settingsPanel.className.includes("m-fadeOut")) {
-      if (!controlsEl.classList.value.includes("force-show-controls")) {
-        controlsEl.classList.toggle("force-show-controls");
-      }
+    _this.elements.settingsPointerEvents.onclick = function (e) {
+      return showPointerEvents(_this, e);
+    };
 
-      addListener$4("click", showHideSettings, false);
-    } else {
-      removeListener$4("click", showHideSettings, false);
+    _this.elements.settingsShowVolume.onclick = function (e) {
+      return showVolume(_this, e);
+    };
+
+    _this.elements.settingsShowPreview.onclick = function (e) {
+      return showPreview(_this, e);
+    };
+
+    _this.elements.settingsButton.onclick = function (e) {
+      e.preventDefault();
+      var controlsEl = elid$2("".concat(_this.name, "-controls"));
+
+      var showHideSettings = function showHideSettings(e) {
+        if (_this.elements.settingsPanel.contains(e.target)) {
+          return true;
+        }
+
+        _this.elements.settingsPanel.classList.toggle("".concat(_this.name, "-hide"));
+
+        _this.elements.settingsPanel.classList.toggle("m-fadeOut");
+
+        _this.elements.settingsPanel.classList.toggle("m-fadeIn");
+
+        if (_this.elements.settingsPanel.className.includes("m-fadeOut")) {
+          removeListener$4("click", showHideSettings, false);
+
+          _this.eventBroadcast("state-change", _this.state);
+        }
+      };
+
+      if (_this.elements.settingsPanel.className.includes("m-fadeOut")) {
+        if (!controlsEl.classList.value.includes("force-show-controls")) {
+          controlsEl.classList.toggle("force-show-controls");
+        }
+
+        addListener$4("click", showHideSettings, false);
+      } else {
+        removeListener$4("click", showHideSettings, false);
+      }
+    };
+  },
+  trigger: function trigger(_this, setting) {
+    if (setting === "showIndicator") {
+      showIndicator(_this);
+    } else if (setting === "showPointerEvents") {
+      showPointerEvents(_this);
+    } else if (setting === "showVolume") {
+      showVolume(_this);
+    } else if (setting === "showPreview") {
+      showPreview(_this);
     }
-  };
+  }
 };
 
 var elid$3 = helpers.elid,
@@ -2041,6 +2078,11 @@ var Player = /*#__PURE__*/function () {
       // if (newOptions.muted === true) {
       //   volumeListener.trigger(this, undefined, newOptions.muted);
       // }
+      //set defaults
+      newOptions.theme = newOptions.theme || "transparent on-top";
+      newOptions.speed = newOptions.speed || 1;
+      newOptions.volume = newOptions.volume || 1;
+
       if (newOptions.controls === false) {
         elid$8(this.name).style.display = "none";
       } else if (newOptions.controls === true) {
@@ -2064,7 +2106,22 @@ var Player = /*#__PURE__*/function () {
       }
 
       if (typeof newOptions.scaleToFit !== "undefined" && (this.options.scaleToFit !== newOptions.scaleToFit || initial && this.options.scaleToFit)) {
+        //this is to prevent infinite loop
+        this.options.scaleToFit = newOptions.scaleToFit;
         this.scaleClipHost();
+      }
+
+      if (typeof newOptions.showVolume !== "undefined" && this.options.showVolume !== newOptions.showVolume) {
+        settings.trigger(this, "showVolume");
+      }
+
+      if (typeof newOptions.preview !== "undefined" && this.options.preview !== newOptions.preview) {
+        settings.trigger(this, "showPreview");
+      }
+
+      if (typeof newOptions.theme !== "undefined" && this.options.theme !== newOptions.theme) {
+        this.options.theme = newOptions.theme;
+        this.setTheme();
       }
 
       this.options = _objectSpread2(_objectSpread2({}, this.options), newOptions);
@@ -2262,10 +2319,26 @@ var Player = /*#__PURE__*/function () {
         } else if (eventName === "scale-change") {
           if (state) {
             this.options.scaleToFit = true;
-            this.options.currentScript.dataset["scale-to-fit"] = "";
+            this.options.currentScript.dataset.scaleToFit = "";
           } else {
             this.options.scaleToFit = false;
-            delete this.options.currentScript.dataset["scale-to-fit"];
+            delete this.options.currentScript.dataset.scaleToFit;
+          }
+        } else if (eventName === "show-volume-change") {
+          if (state) {
+            this.options.showVolume = true;
+            this.options.currentScript.dataset.showVolume = "";
+          } else {
+            this.options.showVolume = false;
+            delete this.options.currentScript.dataset.showVolume;
+          }
+        } else if (eventName === "show-preview-change") {
+          if (state) {
+            this.options.preview = true;
+            this.options.currentScript.dataset.preview = "";
+          } else {
+            this.options.preview = false;
+            delete this.options.currentScript.dataset.preview;
           }
         }
       }
@@ -2355,7 +2428,7 @@ var Player = /*#__PURE__*/function () {
       loopStartEnd(this);
       volume.add(this);
       statusBtn(this);
-      settings(this);
+      settings.add(this);
       speed.add(this);
       loopBtn.add(this);
       controls(this);
@@ -2395,7 +2468,9 @@ var Player = /*#__PURE__*/function () {
   }, {
     key: "setTheme",
     value: function setTheme() {
-      // replace multiple spaces with one space
+      //remove previous style if exists
+      elid$8(this.name + "-style") && eltag("head")[0].removeChild(elid$8(this.name + "-style")); // replace multiple spaces with one space
+
       this.options.theme.replace(/\s\s+/g, " ");
       this.options.theme.trim();
 
@@ -2415,9 +2490,11 @@ var Player = /*#__PURE__*/function () {
 
       var css = style(theme, this.name, this.options);
       var style$1 = elcreate$1("style");
+      style$1.id = this.name + "-style";
       style$1.styleSheet ? style$1.styleSheet.cssText = css : style$1.appendChild(document.createTextNode(css)); // append player style to document
 
       eltag("head")[0].appendChild(style$1);
+      this.eventBroadcast("theme-change", this.options.theme);
     }
   }, {
     key: "setSpeed",

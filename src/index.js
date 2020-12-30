@@ -147,6 +147,11 @@ class Player {
     //   volumeListener.trigger(this, undefined, newOptions.muted);
     // }
 
+    //set defaults
+    newOptions.theme = newOptions.theme || `transparent on-top`;
+    newOptions.speed = newOptions.speed || 1;
+    newOptions.volume = newOptions.volume || 1;
+
     if (newOptions.controls === false) {
       elid(this.name).style.display = "none";
     } else if (newOptions.controls === true) {
@@ -188,8 +193,32 @@ class Player {
       (this.options.scaleToFit !== newOptions.scaleToFit ||
         (initial && this.options.scaleToFit))
     ) {
+      //this is to prevent infinite loop
+      this.options.scaleToFit = newOptions.scaleToFit;
       this.scaleClipHost();
     }
+
+    if (
+      typeof newOptions.showVolume !== "undefined" &&
+      this.options.showVolume !== newOptions.showVolume
+    ) {
+      settingsListener.trigger(this, "showVolume");
+    }
+
+    if (
+      typeof newOptions.preview !== "undefined" &&
+      this.options.preview !== newOptions.preview
+    ) {
+      settingsListener.trigger(this, "showPreview");
+    }
+    if (
+      typeof newOptions.theme !== "undefined" &&
+      this.options.theme !== newOptions.theme
+    ) {
+      this.options.theme = newOptions.theme;
+      this.setTheme();
+    }
+
     this.options = { ...this.options, ...newOptions };
   }
 
@@ -424,10 +453,26 @@ class Player {
       } else if (eventName === "scale-change") {
         if (state) {
           this.options.scaleToFit = true;
-          this.options.currentScript.dataset["scale-to-fit"] = "";
+          this.options.currentScript.dataset.scaleToFit = "";
         } else {
           this.options.scaleToFit = false;
-          delete this.options.currentScript.dataset["scale-to-fit"];
+          delete this.options.currentScript.dataset.scaleToFit;
+        }
+      } else if (eventName === "show-volume-change") {
+        if (state) {
+          this.options.showVolume = true;
+          this.options.currentScript.dataset.showVolume = "";
+        } else {
+          this.options.showVolume = false;
+          delete this.options.currentScript.dataset.showVolume;
+        }
+      } else if (eventName === "show-preview-change") {
+        if (state) {
+          this.options.preview = true;
+          this.options.currentScript.dataset.preview = "";
+        } else {
+          this.options.preview = false;
+          delete this.options.currentScript.dataset.preview;
         }
       }
     }
@@ -509,7 +554,7 @@ class Player {
     loopStartEndListener(this);
     volumeListener.add(this);
     statusBtnListener(this);
-    settingsListener(this);
+    settingsListener.add(this);
     speedListener.add(this);
     loopBtnListener.add(this);
     controlsListener(this);
@@ -546,6 +591,10 @@ class Player {
   }
 
   setTheme() {
+    //remove previous style if exists
+    elid(this.name + "-style") &&
+      eltag(`head`)[0].removeChild(elid(this.name + "-style"));
+
     // replace multiple spaces with one space
     this.options.theme.replace(/\s\s+/g, ` `);
     this.options.theme.trim();
@@ -565,13 +614,14 @@ class Player {
     }
     const css = confStyle(theme, this.name, this.options);
     const style = elcreate(`style`);
-
+    style.id = this.name + "-style";
     style.styleSheet
       ? (style.styleSheet.cssText = css)
       : style.appendChild(document.createTextNode(css));
 
     // append player style to document
     eltag(`head`)[0].appendChild(style);
+    this.eventBroadcast("theme-change", this.options.theme);
   }
 
   setSpeed() {

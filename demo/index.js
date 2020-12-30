@@ -285,7 +285,6 @@ new Player({
   preview: true,
   showVolume: true,
   scaleToFit: true,
-  contros: false,
   speedValues: [
     8,
     3,
