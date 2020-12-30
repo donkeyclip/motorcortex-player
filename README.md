@@ -58,6 +58,8 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 |currentScript| <script></script>| If the clip will be loaded from a script with an external source where the player will be included, you can provide the script element refernce and use all the available control properties as data-* attributes of the script (eg currentScript=document.currentScript)|
 
 ## Methods
+| Name        | Arguments           | Description  |    
+| ------------- |:-------------:| -----|   
 |onMillisecondChange|function(millisecond)|A function callback to be called after every millisecond change of the clip|
 |createJourney|function(clip, millisecond, clipCommands = {})| A function from witch you can create a journey over the clips timeline. The clipCommands accepts the properties 'before' and 'after', from where you can for example pause the clip before the journey and 'play' it after (eg clipCommands={before:'pause',after:'play'}|
 |createLoop|function(msStart, msEnd)| With this method your can define a loop with boundaries. The loop option must be set to true for this to work|
