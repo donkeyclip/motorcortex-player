@@ -278,7 +278,7 @@ clip.addIncident(motionPath, 0);
 
 clip.addIncident(svg, 9500);
 window.clip = clip;
-new Player({
+window.player = new Player({
   // theme: "mc-blue",
   clip,
   loop: false,
