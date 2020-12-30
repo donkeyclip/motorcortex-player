@@ -44,21 +44,11 @@ module.exports = _this => {
       return;
     }
 
-    _this.elements.volumeControl.className = `${
-      _this.name
-    }-volume-width-transition`;
-    _this.elements.volumeBar.className = `${
-      _this.name
-    }-volume-width-transition`;
-    _this.elements.volumeBarHelper.className = `${
-      _this.name
-    }-volume-width-transition`;
-    _this.elements.timeDisplay.className = `${
-      _this.name
-    }-time-width-transition`;
-    _this.elements.volumeCursor.className = `${
-      _this.name
-    }-volume-cursor-transition`;
+    _this.elements.volumeControl.className = `${_this.name}-volume-width-transition`;
+    _this.elements.volumeBar.className = `${_this.name}-volume-width-transition`;
+    _this.elements.volumeBarHelper.className = `${_this.name}-volume-width-transition`;
+    _this.elements.timeDisplay.className = `${_this.name}-time-width-transition`;
+    _this.elements.volumeCursor.className = `${_this.name}-volume-cursor-transition`;
     twt = true;
   };
 
