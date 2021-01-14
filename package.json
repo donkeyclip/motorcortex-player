@@ -1,6 +1,6 @@
 {
   "name": "@kissmybutton/motorcortex-player",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "Player plugin for MotorCortex",
   "main": "dist/motorcortex-player.cjs.js",
   "module": "dist/motorcortex-player.esm.js",
@@ -55,7 +55,7 @@
     }
   },
   "peerDependencies": {
-    "@kissmybutton/motorcortex": "6.1.3"
+    "@kissmybutton/motorcortex": "^6.1.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
