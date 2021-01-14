@@ -36,22 +36,6 @@
     "motorcortex",
     "player"
   ],
-  "lint-staged": {
-    "linters": {
-      "*.json": [
-        "prettier --write",
-        "git add"
-      ],
-      "*.{css,scss}": [
-        "stylelint  \"src/**.css\" \"src/**/*.scss\" --config .stylelintrc.json --fix",
-        "git add"
-      ],
-      "*.{js,jsx}": [
-        "eslint --fix",
-        "git add"
-      ]
-    }
-  },
   "release": {
     "verifyConditions": [
       "@semantic-release/changelog",

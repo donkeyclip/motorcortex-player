@@ -23,7 +23,7 @@ module.exports = (theme, name) => {
       "loopbar-boundaries-style::before": "",
       "loopbar-boundaries-style::after": "",
       "theme-style": "",
-      "loopbar-boundaries-color": "#808086"
+      "loopbar-boundaries-color": "#808086",
     },
     dark: {
       "settings-background-color": "black",
@@ -48,7 +48,7 @@ module.exports = (theme, name) => {
       "loopbar-boundaries-style::before": "",
       "loopbar-boundaries-style::after": "",
       "theme-style": "",
-      "loopbar-boundaries-color": "#808086"
+      "loopbar-boundaries-color": "#808086",
     },
     whiteGold: {
       "settings-background-color": "white",
@@ -73,7 +73,7 @@ module.exports = (theme, name) => {
       "loopbar-boundaries-style::before": "",
       "loopbar-boundaries-style::after": "",
       "theme-style": "",
-      "loopbar-boundaries-color": "#808086"
+      "loopbar-boundaries-color": "#808086",
     },
     darkGold: {
       "settings-background-color": "black",
@@ -98,7 +98,7 @@ module.exports = (theme, name) => {
       "loopbar-boundaries-style::before": "",
       "loopbar-boundaries-style::after": "",
       "theme-style": "",
-      "loopbar-boundaries-color": "#808086"
+      "loopbar-boundaries-color": "#808086",
     },
     transparent: {
       "background-color": "transparent",
@@ -191,7 +191,7 @@ module.exports = (theme, name) => {
             transform: rotate(180deg);
             top: -2px;
         }
-    `
+    `,
     },
     "mc-green": {
       "background-color": "#141416",
@@ -262,7 +262,7 @@ module.exports = (theme, name) => {
             transform: rotate(180deg);
             top: -2px;
         }
-    `
+    `,
     },
     "mc-blue": {
       "background-color": "#141416",
@@ -333,22 +333,22 @@ module.exports = (theme, name) => {
             transform: rotate(180deg);
             top: -2px;
         }
-    `
+    `,
     },
     "on-top": {
       "background-height": "100%",
       "pointer-event-panel-height": "calc(100% - 44px)",
       "controls-bottom": "0px",
       "settings-panel-bottom": "48px",
-      "controls-position": "0px"
+      "controls-position": "0px",
     },
     "position-bottom": {
       "background-height": "calc(100% - 44px)",
       "pointer-event-panel-height": "calc(100% - 44px)",
       "controls-bottom": "-0px",
       "settings-panel-bottom": "48px",
-      "controls-position": "40px"
-    }
+      "controls-position": "40px",
+    },
   };
 
   return themes[theme];
