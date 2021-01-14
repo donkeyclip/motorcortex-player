@@ -5,6 +5,13 @@ const playerHTML = require("./playerHTML");
 module.exports = _this => {
   _this.elements = {};
   const clipIframe = _this.clip.props.host;
+  if (!clipIframe.style.width || !clipIframe.style.height) {
+    clipIframe.style.width =
+      clipIframe.style.width || _this.clip.props.containerParams.width;
+    clipIframe.style.height =
+      clipIframe.style.height || _this.clip.props.containerParams.height;
+  }
+
   clipIframe.style.display = `flex`;
   clipIframe.style.justifyContent = `center`;
   clipIframe.style.alignItems = `center`;

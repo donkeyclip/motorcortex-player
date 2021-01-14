@@ -1,7 +1,8 @@
-const Player = require("../src/index");
-import { HTMLClip, Group, loadPlugin } from "@kissmybutton/motorcortex/";
+import MC from "@kissmybutton/motorcortex";
 import AnimeDefinition from "@kissmybutton/motorcortex-anime";
-const Anime = loadPlugin(AnimeDefinition);
+const Anime = MC.loadPlugin(AnimeDefinition);
+const Player = require("../src/index");
+console.log(MC);
 
 const css = `
 .wrapper {
@@ -133,14 +134,14 @@ const html = `
 </div>
 </div>`;
 
-const host = document.getElementById("clip");
+const host = document.getElementById("app");
 
 const containerParams = {
   width: "612px",
   height: "800px"
 };
 
-const clip = new HTMLClip({
+const clip = new MC.HTMLClip({
   css,
   html,
   host,
@@ -265,8 +266,8 @@ const svg = new Anime.Anime(
   }
 );
 
-const myGroup = new Group();
-const gp2 = new Group();
+const myGroup = new MC.Group();
+const gp2 = new MC.Group();
 gp2.addIncident(boxMove, 5100);
 myGroup.addIncident(boxColor, 0);
 myGroup.addIncident(boxRotate, 3400);
@@ -279,29 +280,6 @@ clip.addIncident(motionPath, 0);
 clip.addIncident(svg, 9500);
 window.clip = clip;
 window.player = new Player({
-  // theme: "mc-blue",
   clip,
-  loop: false,
-  preview: true,
-  showVolume: true,
-  scaleToFit: true,
-  speedValues: [
-    8,
-    3,
-    "d",
-    -4,
-    -2,
-    -1,
-    "dd",
-    -0.5,
-    0,
-    0.5,
-    1,
-    2,
-    4,
-    32,
-    -32,
-    1.2
-  ],
-  buttons: {}
+  controls: true
 });

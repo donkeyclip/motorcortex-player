@@ -464,6 +464,12 @@ var elid = helpers.elid,
 var setElements = function setElements(_this) {
   _this.elements = {};
   var clipIframe = _this.clip.props.host;
+
+  if (!clipIframe.style.width || !clipIframe.style.height) {
+    clipIframe.style.width = clipIframe.style.width || _this.clip.props.containerParams.width;
+    clipIframe.style.height = clipIframe.style.height || _this.clip.props.containerParams.height;
+  }
+
   clipIframe.style.display = "flex";
   clipIframe.style.justifyContent = "center";
   clipIframe.style.alignItems = "center";
@@ -1685,9 +1691,12 @@ var controls = function controls(_this) {
       return;
     }
 
-    _this.elements.volumeControl.className = "".concat(_this.name, "-volume-width-transition");
-    _this.elements.volumeBar.className = "".concat(_this.name, "-volume-width-transition");
-    _this.elements.volumeBarHelper.className = "".concat(_this.name, "-volume-width-transition");
+    if (_this.elements.settings.showVolume) {
+      _this.elements.volumeControl.className = "".concat(_this.name, "-volume-width-transition");
+      _this.elements.volumeBar.className = "".concat(_this.name, "-volume-width-transition");
+      _this.elements.volumeBarHelper.className = "".concat(_this.name, "-volume-width-transition");
+    }
+
     _this.elements.timeDisplay.className = "".concat(_this.name, "-time-width-transition");
     _this.elements.volumeCursor.className = "".concat(_this.name, "-volume-cursor-transition");
     twt = true;
