@@ -1,12 +1,12 @@
 module.exports = {
-  el: selector => document.querySelectorAll(selector),
-  elid: id => document.getElementById(id),
-  eltag: tag => document.getElementsByTagName(tag),
-  elcreate: tag => document.createElement(tag),
-  addListener: function() {
+  el: (selector) => document.querySelectorAll(selector),
+  elid: (id) => document.getElementById(id),
+  eltag: (tag) => document.getElementsByTagName(tag),
+  elcreate: (tag) => document.createElement(tag),
+  addListener: function () {
     return document.addEventListener(...arguments);
   },
-  removeListener: function() {
+  removeListener: function () {
     return document.removeEventListener(...arguments);
   },
   calcClipScale: (containerParams, platoDims) => {
@@ -33,7 +33,7 @@ module.exports = {
       } else {
         widthAnalysed = {
           number: Number(widthNumberPart),
-          unit: widthUnitPart
+          unit: widthUnitPart,
         };
       }
     }
@@ -52,7 +52,7 @@ module.exports = {
       } else {
         heightAnalysed = {
           number: Number(heightNumberPart),
-          unit: heightUnitPart
+          unit: heightUnitPart,
         };
       }
     }
@@ -63,14 +63,14 @@ module.exports = {
       scaleDifHeight = 1;
     if (widthAnalysed !== null) {
       if (widthAnalysed.unit === "px") {
-        if (widthAnalysed.number > platoDims.width) {
+        if (widthAnalysed.number !== platoDims.width) {
           scaleDifWidth = platoDims.width / widthAnalysed.number;
         }
       }
     }
     if (heightAnalysed !== null) {
       if (heightAnalysed.unit === "px") {
-        if (heightAnalysed.number > platoDims.height) {
+        if (heightAnalysed.number !== platoDims.height) {
           scaleDifHeight = platoDims.height / heightAnalysed.number;
         }
       }
@@ -103,12 +103,12 @@ module.exports = {
     }
     return {
       scale: finalScale,
-      position: position
+      position: position,
     };
   },
   createUID: () => {
     let dt = new Date().getTime();
-    const uuid = "xxxxxxxx-xxxx".replace(/[xy]/g, function(c) {
+    const uuid = "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
       const r = (dt + Math.random() * 16) % 16 | 0;
       dt = Math.floor(dt / 16);
       const rand = Math.random() > 0.5;
@@ -116,5 +116,5 @@ module.exports = {
       return rand ? str.toUpperCase() : str;
     });
     return uuid;
-  }
+  },
 };

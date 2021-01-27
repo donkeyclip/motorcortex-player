@@ -155,7 +155,7 @@ var helpers = {
 
     if (widthAnalysed !== null) {
       if (widthAnalysed.unit === "px") {
-        if (widthAnalysed.number > platoDims.width) {
+        if (widthAnalysed.number !== platoDims.width) {
           scaleDifWidth = platoDims.width / widthAnalysed.number;
         }
       }
@@ -163,7 +163,7 @@ var helpers = {
 
     if (heightAnalysed !== null) {
       if (heightAnalysed.unit === "px") {
-        if (heightAnalysed.number > platoDims.height) {
+        if (heightAnalysed.number !== platoDims.height) {
           scaleDifHeight = platoDims.height / heightAnalysed.number;
         }
       }
