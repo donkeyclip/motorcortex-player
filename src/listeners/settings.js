@@ -15,15 +15,15 @@ const showIndicator = (_this, e) => {
 const showPointerEvents = (_this, e) => {
   e && e.preventDefault();
   const checkbox = elid(`${_this.name}-pointer-events-checkbox`);
-  if (checkbox.checked) {
-    checkbox.checked = false;
+  if (!checkbox.checked) {
+    checkbox.checked = true;
     _this.options.pointerEvents = false;
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "none";
     elid(`${_this.name}-controls`).style.pointerEvents = "auto";
     _this.elements.settingsPanel.style.pointerEvents = "auto";
   } else {
-    checkbox.checked = true;
+    checkbox.checked = false;
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "auto";
     elid(`${_this.name}-controls`).style.pointerEvents = "auto";
@@ -70,21 +70,22 @@ const showPreview = (_this, e) => {
   _this.eventBroadcast("show-preview-change", checkbox.checked);
 };
 module.exports = {
-  add: _this => {
-    _this.elements.settingsShowIndicator.onclick = e => showIndicator(_this, e);
+  add: (_this) => {
+    _this.elements.settingsShowIndicator.onclick = (e) =>
+      showIndicator(_this, e);
 
-    _this.elements.settingsPointerEvents.onclick = e =>
+    _this.elements.settingsPointerEvents.onclick = (e) =>
       showPointerEvents(_this, e);
 
-    _this.elements.settingsShowVolume.onclick = e => showVolume(_this, e);
+    _this.elements.settingsShowVolume.onclick = (e) => showVolume(_this, e);
 
-    _this.elements.settingsShowPreview.onclick = e => showPreview(_this, e);
+    _this.elements.settingsShowPreview.onclick = (e) => showPreview(_this, e);
 
-    _this.elements.settingsButton.onclick = e => {
+    _this.elements.settingsButton.onclick = (e) => {
       e.preventDefault();
       const controlsEl = elid(`${_this.name}-controls`);
 
-      const showHideSettings = e => {
+      const showHideSettings = (e) => {
         if (_this.elements.settingsPanel.contains(e.target)) {
           return true;
         }
@@ -117,5 +118,5 @@ module.exports = {
     } else if (setting === "showPreview") {
       showPreview(_this);
     }
-  }
+  },
 };

@@ -191,10 +191,17 @@ module.exports = (_this) => {
     _this.options.pointerEvents;
 
   if (_this.options.pointerEvents) {
+    _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "none";
+    elid(`${_this.name}-controls`).style.pointerEvents = "auto";
+    _this.elements.settingsPanel.style.pointerEvents = "auto";
   } else {
-    _this.elements.pointerEventPanel.style.pointerEvents = "none";
+    _this.elements.mcPlayer.style.pointerEvents = "none";
+    _this.elements.pointerEventPanel.style.pointerEvents = "auto";
+    elid(`${_this.name}-controls`).style.pointerEvents = "auto";
+    _this.elements.settingsPanel.style.pointerEvents = "auto";
   }
+  _this.elements.listenerHelper.style.pointerEvents = "none";
 
   if (!_this.options.showVolume) {
     _this.elements.timeDisplay.style.left = `45px`;

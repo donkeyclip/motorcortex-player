@@ -281,4 +281,5 @@ window.clip = clip;
 window.player = new Player({
   clip,
   controls: true,
+  scaleToFit: true,
 });
