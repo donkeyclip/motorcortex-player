@@ -27,8 +27,9 @@ module.exports = (theme, name, options) => `
   fill: ${theme["svg-color"]};
 }
 
-#${name} .svg.arrow {
+#${name} .svg.arrow * {
   stroke: ${theme["svg-color"]};
+  fill: transparent;
 }
 
 #${name} .pointer-event-panel {
@@ -107,7 +108,7 @@ module.exports = (theme, name, options) => `
   top: 0px;
   left: 0px;
   color: ${theme["color"]};
-  pointer-events:auto !important;
+  pointer-events:auto;
 }
 
 #${name} .force-show-controls {
@@ -135,20 +136,15 @@ ${
   text-align:right;
 }
 
-
 #${name} .grad {
+  pointer-events:none !important;
   background-image: linear-gradient(
+    rgba(0,0,0,00.001),
+    rgba(0,0,0,00.004),
+    rgba(0,0,0,00.007),
     rgba(0,0,0,00.01),
-    rgba(0,0,0,00.01),
-    rgba(0,0,0,00.01),
-    rgba(0,0,0,00.02),
-    rgba(0,0,0,00.03),
     rgba(0,0,0,0.04),
-    rgba(0,0,0,0.05),
-    rgba(0,0,0,0.06),
     rgba(0,0,0,0.07),
-    rgba(0,0,0,0.08),
-    rgba(0,0,0,0.09),
     rgba(0,0,0,0.1),
     rgba(0,0,0,0.15),
     rgba(0,0,0,0.2),
@@ -289,19 +285,6 @@ ${
 }
 
 
-
-/*#${name}-time-display {
-  display: table;
-  text-align: center;
-  width: auto;
-  height: 34px;
-  position: absolute;
-  left: 90px;
-  -webkit-transition: left 0.1s ease;
-  -moz-transition: left 0.1s ease;
-  transition: left 0.1s ease;
-}
-*/
 #${name} #${name}-time-display span {
   display: table-cell;
   vertical-align: middle;
@@ -517,13 +500,11 @@ ${
   color: ${theme["color"]};
 }
 
-/*#${name}-speed-settings {
-  height: ${options.speedValues.length * 16 + 32 + 10 - 2}px;
-}*/
 
 #${name} #${name}-speed-settings li.no-hover { 
   height: ${options.speedValues.length * 16 + 10 - 2}px !important; 
 }
+
 #${name} #${name}-settings-panel.${name}-settings-speed-panel {
   overflow: hidden;
   width: 92px;
