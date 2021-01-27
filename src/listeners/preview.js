@@ -1,6 +1,6 @@
 const { elid, addListener, removeListener } = require(`../helpers`);
 
-module.exports = _this => {
+module.exports = (_this) => {
   // only on desctop devices
   if (
     !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -63,7 +63,7 @@ module.exports = _this => {
       _this.elements.loopBar.onmousemove = loopBarMouseMove;
     };
 
-    const loopBarMouseMove = e => {
+    const loopBarMouseMove = (e) => {
       const clientX = e.clientX;
       const viewportOffset = _this.elements.loopBar.getBoundingClientRect();
 
@@ -99,18 +99,7 @@ module.exports = _this => {
       const clipWidth = elid(`${_this.name}-hover-display`).offsetWidth;
       const halfClipWidth = clipWidth / 2;
 
-      // console.log(
-      //   elid(`${_this.name}-hover-display`).offsetWidth,
-      //   _this.previewScale,
-      //   positionX,
-      //   clipWidth,
-      //   halfClipWidth,
-      //   previewWidth,
-      //   halfPreviewWidth
-      // );
-
       let left = positionX - halfClipWidth;
-      // console.log(left, halfClipWidth);
       if (positionX - halfPreviewWidth < 0) {
         left = 0 - (previewWidth + halfPreviewWidth);
       } else if (

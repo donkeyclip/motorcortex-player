@@ -2,7 +2,6 @@ import MC from "@kissmybutton/motorcortex";
 import AnimeDefinition from "@kissmybutton/motorcortex-anime";
 const Anime = MC.loadPlugin(AnimeDefinition);
 const Player = require("../src/index");
-console.log(MC);
 
 const css = `
 .wrapper {
@@ -138,7 +137,7 @@ const host = document.getElementById("app");
 
 const containerParams = {
   width: "612px",
-  height: "800px"
+  height: "800px",
 };
 
 const clip = new MC.HTMLClip({
@@ -148,53 +147,53 @@ const clip = new MC.HTMLClip({
   fonts: [
     {
       type: `google-font`,
-      src: `https://fonts.googleapis.com/css?family=Montserrat:100,300,400,700,900&display=swap`
-    }
+      src: `https://fonts.googleapis.com/css?family=Montserrat:100,300,400,700,900&display=swap`,
+    },
   ],
-  containerParams
+  containerParams,
 });
 
 const motionPath = new Anime.MotionPath(
   {
     animatedAttrs: {
       positionOn: {
-        pathElement: "path"
-      }
-    }
+        pathElement: "path",
+      },
+    },
   },
   {
     selector: ".demoPath",
     duration: 3000,
-    repeats: 5
+    repeats: 5,
   }
 );
 
 const boxWidth = new Anime.Anime(
   {
     animatedAttrs: {
-      width: "250px"
-    }
+      width: "250px",
+    },
   },
   {
     duration: 1700,
     selector: `.boxWidth`,
-    easing: "easeOutQuad"
+    easing: "easeOutQuad",
   }
 );
 
 const boxColor = new Anime.Anime(
   {
     animatedAttrs: {
-      background: "rgb(255, 0, 85)"
+      background: "rgb(255, 0, 85)",
     },
     initialValues: {
-      background: "rgb(37, 32, 86)"
-    }
+      background: "rgb(37, 32, 86)",
+    },
   },
   {
     duration: 1700,
     selector: ".boxColor",
-    easing: "easeOutQuad"
+    easing: "easeOutQuad",
   }
 );
 
@@ -203,66 +202,66 @@ const boxRotate = new Anime.Anime(
     animatedAttrs: {
       width: "30px",
       transform: {
-        rotate: "360deg"
-      }
+        rotate: "360deg",
+      },
     },
     initialValues: {
       width: "30cm",
       transform: {
-        rotate: "0deg"
-      }
-    }
+        rotate: "0deg",
+      },
+    },
   },
   {
     duration: 1700,
     selector: ".boxRotate",
-    easing: "easeOutQuad"
+    easing: "easeOutQuad",
   }
 );
 
 const boxMove = new Anime.Anime(
   {
     animatedAttrs: {
-      left: "220px"
+      left: "220px",
     },
     initialValues: {
-      left: "0px"
-    }
+      left: "0px",
+    },
   },
   {
     duration: 1700,
     selector: ".boxMove",
-    easing: "easeOutBounce"
+    easing: "easeOutBounce",
   }
 );
 
 const boxBorder = new Anime.Anime(
   {
     animatedAttrs: {
-      borderRadius: "50%"
+      borderRadius: "50%",
     },
     initialValues: {
-      borderRadius: "0%"
-    }
+      borderRadius: "0%",
+    },
   },
   {
     duration: 1700,
-    selector: ".boxBorder"
+    selector: ".boxBorder",
   }
 );
 
 const svg = new Anime.Anime(
   {
     animatedAttrs: {
-      strokeDashoffset: 0
+      strokeDashoffset: 0,
     },
     initialValues: {
-      strokeDashoffset: 6000
-    }
+      strokeDashoffset: 6000,
+    },
   },
   {
     duration: 3000,
-    selector: ".cls-1"
+    selector: ".cls-1",
   }
 );
 
@@ -281,5 +280,5 @@ clip.addIncident(svg, 9500);
 window.clip = clip;
 window.player = new Player({
   clip,
-  controls: true
+  controls: true,
 });
