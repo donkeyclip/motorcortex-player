@@ -2,16 +2,27 @@ const { elid, elcreate } = require("../helpers");
 const svg = require("./svg");
 const playerHTML = require("./playerHTML");
 
-module.exports = _this => {
+module.exports = (_this) => {
   _this.elements = {};
   const clipIframe = _this.clip.props.host;
-  if (!clipIframe.style.width || !clipIframe.style.height) {
-    clipIframe.style.width =
-      clipIframe.style.width || _this.clip.props.containerParams.width;
-    clipIframe.style.height =
-      clipIframe.style.height || _this.clip.props.containerParams.height;
+  if (!clipIframe.style.offsetWidth) {
+    clipIframe.style.width = _this.clip.props.containerParams.width;
   }
+  if (!clipIframe.style.offsetHeight) {
+    clipIframe.style.height = _this.clip.props.containerParams.height;
+  }
+  //load ubuntu font
 
+  const linkPreconnect = document.createElement("link");
+  linkPreconnect.rel = "preconnect";
+  linkPreconnect.href = "https://fonts.gstatic.com";
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href =
+    "https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap";
+  const head = document.getElementsByTagName("head")[0];
+  head.appendChild(linkPreconnect);
+  head.appendChild(link);
   clipIframe.style.display = `flex`;
   clipIframe.style.justifyContent = `center`;
   clipIframe.style.alignItems = `center`;
@@ -180,17 +191,10 @@ module.exports = _this => {
     _this.options.pointerEvents;
 
   if (_this.options.pointerEvents) {
-    _this.elements.mcPlayer.style.pointerEvents = "none";
-    _this.elements.pointerEventPanel.style.pointerEvents = "auto";
-    elid(`${_this.name}-controls`).style.pointerEvents = "auto";
-    _this.elements.settingsPanel.style.pointerEvents = "auto";
-  } else {
-    _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "none";
-    elid(`${_this.name}-controls`).style.pointerEvents = "auto";
-    _this.elements.settingsPanel.style.pointerEvents = "auto";
+  } else {
+    _this.elements.pointerEventPanel.style.pointerEvents = "none";
   }
-  _this.elements.listenerHelper.style.pointerEvents = "none";
 
   if (!_this.options.showVolume) {
     _this.elements.timeDisplay.style.left = `45px`;

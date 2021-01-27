@@ -23,7 +23,7 @@ module.exports = (theme, name, options) => `
   bottom: 45px;
 }
 
-#${name} .svg, .svg *,svg, svg *  {
+#${name} .svg,#${name} .svg *,#${name} svg,#${name} svg *  {
   fill: ${theme["svg-color"]};
 }
 
@@ -135,8 +135,11 @@ ${
   text-align:right;
 }
 
+
 #${name} .grad {
   background-image: linear-gradient(
+    rgba(0,0,0,00.01),
+    rgba(0,0,0,00.01),
     rgba(0,0,0,00.01),
     rgba(0,0,0,00.02),
     rgba(0,0,0,00.03),
