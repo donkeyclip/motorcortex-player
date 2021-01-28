@@ -465,11 +465,11 @@ var setElements = function setElements(_this) {
   _this.elements = {};
   var clipIframe = _this.clip.props.host;
 
-  if (!clipIframe.style.offsetWidth) {
+  if (!clipIframe.offsetWidth) {
     clipIframe.style.width = _this.clip.props.containerParams.width;
   }
 
-  if (!clipIframe.style.offsetHeight) {
+  if (!clipIframe.offsetHeight) {
     clipIframe.style.height = _this.clip.props.containerParams.height;
   } //load ubuntu font
 
@@ -1936,7 +1936,8 @@ var elid$8 = helpers.elid,
 
 var Player = /*#__PURE__*/function () {
   function Player(options) {
-    var _this = this;
+    var _options$scaleToFit,
+        _this = this;
 
     _classCallCheck(this, Player);
 
@@ -1950,7 +1951,7 @@ var Player = /*#__PURE__*/function () {
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
     options.backgroundColor = options.backgroundColor || "transparent";
-    options.scaleToFit = options.scaleToFit || false;
+    options.scaleToFit = (_options$scaleToFit = options.scaleToFit) !== null && _options$scaleToFit !== void 0 ? _options$scaleToFit : true;
 
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;

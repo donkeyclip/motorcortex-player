@@ -43,7 +43,7 @@ class Player {
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
     options.backgroundColor = options.backgroundColor || "transparent";
-    options.scaleToFit = options.scaleToFit || false;
+    options.scaleToFit = options.scaleToFit ?? true;
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = true;
     } else {

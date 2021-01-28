@@ -50,7 +50,7 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 |loop|false| A boolean indicator whether the clip will initalize with the loop option on|
 |autoplay|false| With this option you can auto-start the clip when the loading is complete|
 |controls|true| This option allows you to select if the player controls will be visible, therefore availble to the users|
-|scaleToFit|false| A property to define if the clip will be auto-scaled to fit to its' host element or not|
+|scaleToFit|true| A property to define if the clip will be auto-scaled to fit to its' host element or not|
 |pointerEvents|true| This options adds a transparent div element on top of the clip in order to prevent user events (eg selection) on the clip element|
 |backgroundColor|'transparent'| A css color value to define the players background|
 |speedValues|  [-2, -1, -0.5, 0, 0.5, 1, 2] | An array of number values to provide as supported options on the speed setting panel. This option will not prevent the player to change the clip speed if programmatically the user change the speed to another value not provided in the speedValues property|

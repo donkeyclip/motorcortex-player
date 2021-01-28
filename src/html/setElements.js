@@ -5,10 +5,10 @@ const playerHTML = require("./playerHTML");
 module.exports = (_this) => {
   _this.elements = {};
   const clipIframe = _this.clip.props.host;
-  if (!clipIframe.style.offsetWidth) {
+  if (!clipIframe.offsetWidth) {
     clipIframe.style.width = _this.clip.props.containerParams.width;
   }
-  if (!clipIframe.style.offsetHeight) {
+  if (!clipIframe.offsetHeight) {
     clipIframe.style.height = _this.clip.props.containerParams.height;
   }
   //load ubuntu font
