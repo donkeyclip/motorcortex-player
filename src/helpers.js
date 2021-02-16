@@ -9,7 +9,7 @@ module.exports = {
   removeListener: function () {
     return document.removeEventListener(...arguments);
   },
-  calcClipScale: (containerParams, platoDims) => {
+  calcClipScale: (containerParams, platoDims,cover=false) => {
     function isNumber(value) {
       return typeof value === "number" && isFinite(value);
     }
@@ -76,9 +76,16 @@ module.exports = {
       }
     }
     let finalScale = 1;
-    scaleDifHeight <= scaleDifWidth
+    if (!cover) {
+      scaleDifHeight <= scaleDifWidth 
       ? (finalScale = scaleDifHeight)
-      : (finalScale = scaleDifWidth);
+      : (finalScale = scaleDifWidth);  
+    } else {
+      scaleDifHeight > scaleDifWidth 
+      ? (finalScale = scaleDifHeight)
+      : (finalScale = scaleDifWidth);  
+    }
+    
     const position = {};
     if (widthAnalysed !== null) {
       let clipWidth;

@@ -12,6 +12,8 @@ module.exports = config => `
     <div class="grad"></div>
     <div id="${config.name}-totalbar">
       <div id="${config.name}-hover-display">
+        <div id="${config.name}-hover-display-border"> </div>
+        <div id="${config.name}-hover-display-clip"> </div>
         <div id="${config.name}-hover-millisecond"></div>
       </div>
       <div id="${config.name}-loopbar">

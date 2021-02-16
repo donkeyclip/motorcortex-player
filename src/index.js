@@ -42,10 +42,10 @@ class Player {
     options.host = options.host || options.clip.props.host;
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
-    options.backgroundColor = options.backgroundColor || "transparent";
+    options.backgroundColor = options.backgroundColor || "black";
     options.scaleToFit = options.scaleToFit ?? true;
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
-      options.pointerEvents = true;
+      options.pointerEvents = false;
     } else {
       options.pointerEvents = Boolean(options.pointerEvents);
     }
@@ -101,12 +101,7 @@ class Player {
       controls: true
     };
 
-    this.functions = {
-      millisecondChange: this.millisecondChange,
-      createJourney: this.createJourney,
-      changeSettings: this.changeSettings,
-      createLoop: this.createLoop
-    };
+   
     // create the timer controls main div
     setElements(this);
     this.setTheme();
@@ -151,7 +146,13 @@ class Player {
     newOptions.theme = newOptions.theme || `transparent on-top`;
     newOptions.speed = newOptions.speed || 1;
     newOptions.volume = newOptions.volume || 1;
+    newOptions.clip = newOptions.clip || this.clip;
 
+    if(newOptions.clip !== this.options.clip){
+      initial = true;
+      this.clip=newOptions.clip;
+      this.options.clip = newOptions.clip;
+    }
     if (newOptions.controls === false) {
       elid(this.name).style.display = "none";
     } else if (newOptions.controls === true) {
@@ -224,10 +225,14 @@ class Player {
 
   scaleClipHost() {
     if (this.options.scaleToFit) {
-      const transform = calcClipScale(this.clip.props.containerParams, {
+      const width = this.clip.props.containerParams.width;
+      const height = this.clip.props.containerParams.height;
+
+      const transform = calcClipScale({width,height}, {
         width: this.clip.props.host.offsetWidth,
         height: this.clip.props.host.offsetHeight
-      });
+      },this.options.scaleToFit === "cover");
+
       this.clip.realClip.rootElement.style.transform = `scale(${transform.scale}`;
       this.clip.realClip.rootElement.style.left =
         transform.position.left + "px";
@@ -246,12 +251,13 @@ class Player {
       (msStart / this.clip.duration) * 100 + "%";
     this.elements.loopBar.style.width =
       ((msEnd - msStart) / this.clip.duration) * 100 + "%";
-    this.createJourney(this.clip, msStart);
+    this.createJourney(msStart);
     this.elements.runningBar.style.width = "0%";
     !this.settings.loopActivated && this.activateLoop(false);
   }
 
-  createJourney(clip, millisecond, clipCommands = {}) {
+  createJourney(millisecond, clipCommands = {}) {
+    const clip = this.clip;
     setTimeout(() => {
       const def = null;
       const { before = def, after = def } = clipCommands;
@@ -280,8 +286,6 @@ class Player {
       return 1;
     }
 
-    const { clip } = this;
-
     const {
       loopActivated,
       loopEndMillisecond,
@@ -302,7 +306,7 @@ class Player {
       loopActivated &&
       this.clip.speed >= 0
     ) {
-      this.createJourney(clip, loopStartMillisecond + 1, {
+      this.createJourney( loopStartMillisecond + 1, {
         after:
           this.settings.playAfterResize ||
           this.clip.runTimeInfo.state == "playing"
@@ -315,7 +319,7 @@ class Player {
       loopActivated &&
       this.clip.speed < 0
     ) {
-      this.createJourney(clip, loopEndMillisecond - 1, {
+      this.createJourney( loopEndMillisecond - 1, {
         after:
           this.settings.playAfterResize ||
           this.clip.runTimeInfo.state == "playing"
@@ -328,7 +332,7 @@ class Player {
       loopActivated &&
       this.clip.speed >= 0
     ) {
-      this.createJourney(clip, loopStartMillisecond + 1, {
+      this.createJourney(loopStartMillisecond + 1, {
         after:
           this.settings.playAfterResize ||
           this.clip.runTimeInfo.state == "playing"
@@ -341,7 +345,7 @@ class Player {
       loopActivated &&
       this.clip.speed < 0
     ) {
-      this.createJourney(clip, loopEndMillisecond - 1, {
+      this.createJourney(loopEndMillisecond - 1, {
         after:
           this.settings.playAfterResize ||
           this.clip.runTimeInfo.state == "playing"
@@ -352,7 +356,7 @@ class Player {
     }
 
     if (makeJouney) {
-      this.createJourney(clip, millisecond, {
+      this.createJourney( millisecond, {
         after: this.settings.playAfterResize ? "play" : null
       });
     }
@@ -403,13 +407,13 @@ class Player {
           this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
           this.clip.speed >= 0
         ) {
-          this.createJourney(this.clip, 1, { after: "play" });
+          this.createJourney( 1, { after: "play" });
         } else if (
           state === `playing` &&
           this.clip.runTimeInfo.currentMillisecond === 0 &&
           this.clip.speed < 0
         ) {
-          this.createJourney(this.clip, this.clip.duration - 1, {
+          this.createJourney( this.clip.duration - 1, {
             after: "play"
           });
         } else if (
@@ -417,7 +421,7 @@ class Player {
           this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
           this.clip.speed < 0
         ) {
-          this.createJourney(this.clip, this.clip.duration - 1, {
+          this.createJourney( this.clip.duration - 1, {
             after: "play"
           });
         }
@@ -680,12 +684,12 @@ class Player {
   }
 
   createPreviewDisplay() {
-    this.previewClip = this.clip.paste(elid(`${this.name}-hover-display`));
+    this.previewClip = this.clip.paste(elid(`${this.name}-hover-display-clip`));
     const previewClip = elid(`${this.name}-hover-display`);
     window.previewClip = this.previewClip;
 
     previewClip.style.position = `absolute`;
-
+    previewClip.style.background = this.options.backgroundColor;
     previewClip.style.zIndex = 1;
     this.setPreviewDimentions();
   }
@@ -700,18 +704,24 @@ class Player {
 
     // max width is 300
     if (previewWidth > 300) {
-      // previewWidth = parseFloat(
-      //   elid(`${this.name}-hover-display`).style.maxWidth
-      // );
       previewWidth = 300;
       this.previewScale = previewWidth / clipWidth;
     }
+    const width = clipWidth * this.previewScale;
+    const height = clipHeight * this.previewScale;
+    const transform = calcClipScale({width:this.clip.props.containerParams.width,height:this.clip.props.containerParams.height}, {
+      width:width,
+      height: height
+    },this.options.scaleToFit === "cover");
+    
+    this.previewClip.ownClip.rootElement.style.transform = `scale(${transform.scale}`;
+    this.previewClip.ownClip.rootElement.style.left =
+      transform.position.left + "px";
+    this.previewClip.ownClip.rootElement.style.top = transform.position.top + "px";
 
-    elid(`${this.name}-hover-display`).style.width = clipWidth + `px`;
-    elid(`${this.name}-hover-display`).style.height = clipHeight + `px`;
+    elid(`${this.name}-hover-display`).style.width = width + `px`;
+    elid(`${this.name}-hover-display`).style.height = height + `px`;
 
-    previewClip.style.transform = `scale(${this.previewScale})`;
-    previewClip.style.transformOrigin = `center bottom`;
     previewClip.style.boxSizing = `border-box`;
   }
 }

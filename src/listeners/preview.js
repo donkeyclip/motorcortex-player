@@ -74,14 +74,14 @@ module.exports = (_this) => {
         !_this.settings.resizeLoop
       ) {
         elid(`${_this.name}-hover-millisecond`).innerHTML =
-          _this.settings.loopEndMillisecond;
+          _this.timeFormat(_this.settings.loopEndMillisecond);
         return;
       } else if (
         clientX - viewportOffset.left < 0 &&
         !_this.settings.resizeLoop
       ) {
         elid(`${_this.name}-hover-millisecond`).innerHTML =
-          _this.settings.loopStartMillisecond;
+          _this.timeFormat(_this.settings.loopStartMillisecond);
         return;
       }
 
@@ -92,16 +92,15 @@ module.exports = (_this) => {
         positionX = 0;
       }
       const previewWidth =
-        elid(`${_this.name}-hover-display`).offsetWidth * _this.previewScale;
+        elid(`${_this.name}-hover-display`).offsetWidth;
 
       const halfPreviewWidth = previewWidth / 2;
-
       const clipWidth = elid(`${_this.name}-hover-display`).offsetWidth;
       const halfClipWidth = clipWidth / 2;
 
       let left = positionX - halfClipWidth;
       if (positionX - halfPreviewWidth < 0) {
-        left = 0 - (previewWidth + halfPreviewWidth);
+        left = 0 ;
       } else if (
         positionX + halfPreviewWidth >
         _this.elements.totalBar.offsetWidth
@@ -119,8 +118,7 @@ module.exports = (_this) => {
         const fraction = ms / _this.clip.duration;
         _this.previewClip.onProgress(fraction, ms);
       }
-
-      elid(`${_this.name}-hover-millisecond`).innerHTML = ms;
+      elid(`${_this.name}-hover-millisecond`).innerHTML = _this.timeFormat(ms);
       elid(`${_this.name}-hover-display`).style.left = left + `px`;
     };
   }

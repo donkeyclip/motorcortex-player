@@ -26,6 +26,7 @@ module.exports = (_this) => {
   clipIframe.style.display = `flex`;
   clipIframe.style.justifyContent = `center`;
   clipIframe.style.alignItems = `center`;
+  clipIframe.style.overflow = "hidden";
   _this.clip.props.host.style.position = `relative`;
   _this.clip.props.host.style.zIndex = `0`;
   _this.elements.mcPlayer = elcreate(`div`);

@@ -281,5 +281,7 @@ window.clip = clip;
 window.player = new Player({
   clip,
   controls: true,
-  scaleToFit: true,
+  scaleToFit: "cover",
+  preview:true,
+  theme:"mc-blue position-bottom"
 });

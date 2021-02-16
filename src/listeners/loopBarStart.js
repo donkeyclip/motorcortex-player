@@ -121,7 +121,7 @@ module.exports = _this => {
           loopms = _this.settings.loopEndMillisecond - 1;
         }
         _this.settings.needsUpdate = true;
-        _this.createJourney(_this.clip, loopms, {
+        _this.createJourney(loopms, {
           before: "pause",
           after: "play"
         });

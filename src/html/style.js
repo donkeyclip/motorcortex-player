@@ -54,21 +54,32 @@ module.exports = (theme, name, options) => `
   stroke: ${theme["svg-selected-color"]};
 }
 #${name}-hover-display{
-    border: ${theme["preview-border"]};
-    display: flex;
-    visibility:hidden;
-    opacity:0;
-    overflow:hidden;
-    background-color: black;
-    position: absolute;
-    bottom: 14px;
-    left: 0px;
-    align-items: flex-end;
-    justify-content: center;
+  display: flex;
+  visibility:hidden;
+  opacity:0;
+  background-color: black;
+  position: absolute;
+  bottom: 30px;
+  left: 0px;
+  align-items: flex-end;
+  justify-content: center;
+}
+#${name}-hover-display-clip{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  position:relative;
+}
+#${name}-hover-display-border{
+  border: ${theme["preview-border"]};
+  position:absolute;
+  width:calc(100% - 4px);
+  height:calc(100% - 4px);
+  z-index:2;
 }
 
 #${name}-hover-millisecond {
-  background-color: ${theme["hms-background-color"]};
+  font-weight:bold;
   padding:3px;
   height:18px;
   margin:0px;
@@ -78,6 +89,8 @@ module.exports = (theme, name, options) => `
   min-width:20px;
   max-width:100px;
   z-index:2;
+  position:absolute;
+  bottom:-25px;
 }
 #${name},
 #${name} ::before,
