@@ -253,7 +253,7 @@ class Player {
       ((msEnd - msStart) / this.clip.duration) * 100 + "%";
     this.createJourney(msStart);
     this.elements.runningBar.style.width = "0%";
-    !this.settings.loopActivated && this.activateLoop(false);
+    !this.settings.loopActivated && loopBtnListener.trigger(this);
   }
 
   createJourney(millisecond, clipCommands = {}) {

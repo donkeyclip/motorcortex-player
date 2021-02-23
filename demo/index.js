@@ -283,5 +283,7 @@ window.player = new Player({
   controls: true,
   scaleToFit: "cover",
   preview:true,
-  theme:"mc-blue position-bottom"
+  theme:"mc-blue"
 });
+
+window.player.createLoop(0,1000);
