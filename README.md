@@ -78,7 +78,8 @@ player.createLoop(1000,3000)
 
 
 ## Script Usage
-By using the mc_analyzer features you can create a bundle of a clip witch includes a player. This bundle can be used as a source to a script element and can be placed anywhere inside an html code. 
+By the use of the embeddable scripts of DonkeyClip you can create a bundle of a clip on a portable <script> that can be placed anywhere inside any html page. This script not only builds the clip but also wrapps it, out of the box, with this player. 
+Here's a typical use of an embeddable script, with all of the supported attrs present:
 ```html
 <script src="https://staging-api.donkeyclip.com/embed/xxxxxxxx-xxxx/"
     data-width="100%"
@@ -97,7 +98,7 @@ By using the mc_analyzer features you can create a bundle of a clip witch includ
     data-volume="0.8"
 ></script>
 ```
-All of the properties can be manipulated after the initialization and on-the-fly will update the player control settings status, witch practically means that the developer can manipulate the Clip through the scrip element. With this feature you can delete the `data-controls` attribute from the script and create your own player controls if that's what you want. The minimum properties for a plug-n-play clip via the script method are
+All of the data attrs can be manipulated after the initialization and on-the-fly will update the player control settings status, witch practically means that the developer can manipulate the Clip through the scrip element. With this feature you can delete the `data-controls` attribute from the script and create your own player controls if that's what you want. The minimum properties for a plug-n-play clip via the script method are
 ```html
 <script src="https://staging-api.donkeyclip.com/embed/xxxxxxxx-xxxx/" data-scale-to-fit/>
 ```
