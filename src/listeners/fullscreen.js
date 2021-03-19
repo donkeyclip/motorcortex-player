@@ -1,5 +1,5 @@
-module.exports = _this => {
-  _this.elements.fullScreenButton.addEventListener(`click`, () => {
+
+const trigger = _this => {
     const elFullScreen = _this.clip.props.host.className.includes(
       `full-screen`
     );
@@ -13,5 +13,10 @@ module.exports = _this => {
     elFullScreen
       ? _this.exitFullscreen()
       : _this.launchIntoFullscreen(_this.clip.props.host);
-  });
+};
+module.exports = {
+  trigger,
+  add: _this => {
+    _this.elements.fullScreenButton.onclick = () => trigger(_this);
+  }
 };

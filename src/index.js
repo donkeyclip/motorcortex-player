@@ -43,6 +43,7 @@ class Player {
     options.buttons = options.buttons || {};
     options.timeFormat = options.timeFormat || "ss";
     options.backgroundColor = options.backgroundColor || "black";
+    options.fullscreen = options.fullscreen || false;
     options.scaleToFit = options.scaleToFit ?? true;
     if (options.pointerEvents === undefined || options.pointerEvents === null) {
       options.pointerEvents = false;
@@ -164,6 +165,13 @@ class Player {
       (this.options.loop !== newOptions.loop || (initial && this.options.loop))
     ) {
       loopBtnListener.trigger(this);
+    }
+  
+    if (
+      typeof newOptions.fullscreen !== "undefined" &&
+      (this.options.fullscreen !== newOptions.fullscreen || (initial && this.options.fullscreen))
+    ) {
+      fullscreenListener.trigger(this);
     }
 
     if (
@@ -393,6 +401,8 @@ class Player {
         if (state === `blocked`) {
           this.elements.pointerEventPanel.innerHTML = `
             <div style="width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">${svg.loadingSVG}</div>`;
+        } else{
+          this.elements.pointerEventPanel.innerHTML = "";
         }
       } else {
         if (controlsEl.classList.value.includes("force-show-controls")) {
@@ -562,7 +572,7 @@ class Player {
     speedListener.add(this);
     loopBtnListener.add(this);
     controlsListener(this);
-    fullscreenListener(this);
+    fullscreenListener.add(this);
     donkeyclipListener(this);
     previewListener(this);
     bodyListener(this);
