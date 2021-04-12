@@ -16,99 +16,88 @@ export function addListener() {
 export function removeListener() {
   return document.removeEventListener(...arguments);
 }
-export function calcClipScale(containerParams, platoDims, cover = false) {
-  function isNumber(value) {
-    return typeof value === "number" && isFinite(value);
+
+function isNumber(value) {
+  return typeof value === "number" && isFinite(value);
+}
+
+const numberPartRegexp = new RegExp(
+  "^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)",
+  "gi"
+);
+
+function calculateDimension(dimensionToMatch) {
+  const widthNumberPart = dimensionToMatch.match(numberPartRegexp)[0];
+  const widthUnitPart = dimensionToMatch.substring(widthNumberPart.length);
+
+  if (
+    isNumber(Number(widthNumberPart)) &&
+    (widthUnitPart !== "%" || widthUnitPart !== "px")
+  ) {
+    return {
+      number: Number(widthNumberPart),
+      unit: widthUnitPart,
+    };
   }
-  const numberPartRegexp = new RegExp(
-    "^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)",
-    "gi"
-  );
-  let widthAnalysed = null,
-    heightAnalysed = null;
+}
+
+export function calcClipScale(containerParams, platoDims, cover = false) {
+  let widthAnalysed, heightAnalysed;
 
   if (Object.prototype.hasOwnProperty.call(containerParams, "width")) {
-    const widthNumberPart = containerParams.width.match(numberPartRegexp)[0];
-    const widthUnitPart = containerParams.width.substring(
-      widthNumberPart.length
-    );
-    if (
-      isNumber(Number(widthNumberPart)) &&
-      (widthUnitPart !== "%" || widthUnitPart !== "px")
-    ) {
-      widthAnalysed = {
-        number: Number(widthNumberPart),
-        unit: widthUnitPart,
-      };
-    }
+    widthAnalysed = calculateDimension(containerParams.width);
   }
+
   if (Object.prototype.hasOwnProperty.call(containerParams, "height")) {
-    const heightNumberPart = containerParams.height.match(numberPartRegexp)[0];
-    const heightUnitPart = containerParams.height.substring(
-      heightNumberPart.length
-    );
-    if (
-      isNumber(Number(heightNumberPart)) &&
-      (heightUnitPart !== "%" || heightUnitPart !== "px")
-    ) {
-      heightAnalysed = {
-        number: Number(heightNumberPart),
-        unit: heightUnitPart,
-      };
-    }
+    heightAnalysed = calculateDimension(containerParams.height);
   }
+
   // the only case the Clip needs to be scaled is when any of the two axis of the Clip
   // is defined in pixels and the value of it is greater than the available space of
   // the plato
   let scaleDifWidth = 1,
     scaleDifHeight = 1;
-  if (widthAnalysed !== null) {
-    if (widthAnalysed.unit === "px") {
-      if (widthAnalysed.number !== platoDims.width) {
-        scaleDifWidth = platoDims.width / widthAnalysed.number;
-      }
-    }
+  if (
+    widthAnalysed?.unit === "px" &&
+    widthAnalysed.number !== platoDims.width
+  ) {
+    scaleDifWidth = platoDims.width / widthAnalysed.number;
   }
-  if (heightAnalysed !== null) {
-    if (heightAnalysed.unit === "px") {
-      if (heightAnalysed.number !== platoDims.height) {
-        scaleDifHeight = platoDims.height / heightAnalysed.number;
-      }
-    }
+
+  if (
+    heightAnalysed?.unit === "px" &&
+    heightAnalysed.number !== platoDims.height
+  ) {
+    scaleDifHeight = platoDims.height / heightAnalysed.number;
   }
-  let finalScale = 1;
-  if (!cover) {
-    scaleDifHeight <= scaleDifWidth
-      ? (finalScale = scaleDifHeight)
-      : (finalScale = scaleDifWidth);
-  } else {
-    scaleDifHeight > scaleDifWidth
-      ? (finalScale = scaleDifHeight)
-      : (finalScale = scaleDifWidth);
-  }
+
+  const boundaryToUse = cover
+    ? scaleDifHeight > scaleDifWidth
+    : scaleDifHeight <= scaleDifWidth;
+
+  const finalScale = boundaryToUse ? scaleDifHeight : scaleDifWidth;
 
   const position = {};
   if (widthAnalysed !== null) {
-    let clipWidth;
-    if (widthAnalysed.unit === "px") {
-      clipWidth = widthAnalysed.number * finalScale;
-    } else {
-      clipWidth = (widthAnalysed.number / 100) * platoDims.width * finalScale;
+    let clipWidth = widthAnalysed.number * finalScale;
+    if (widthAnalysed.unit !== "px") {
+      clipWidth *= platoDims.width / 100;
     }
+
     const blankSpace = platoDims.width - clipWidth;
     position.left = blankSpace / 2;
   }
+
   if (widthAnalysed !== null) {
-    let clipHeight;
-    if (heightAnalysed.unit === "px") {
-      clipHeight = heightAnalysed.number * finalScale;
-    } else {
-      clipHeight =
-        (heightAnalysed.number / 100) * platoDims.height * finalScale;
+    let clipHeight = heightAnalysed.number * finalScale;
+    if (heightAnalysed.unit !== "px") {
+      clipHeight *= platoDims.height / 100;
     }
+
     const blankSpace = platoDims.height - clipHeight;
     position.top = blankSpace / 2;
   }
+
   return {
     scale: finalScale,
     position: position,
@@ -116,14 +105,13 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
 }
 export function createUID() {
   let dt = new Date().getTime();
-  const uuid = "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
+  return "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
     const r = (dt + Math.random() * 16) % 16 | 0;
     dt = Math.floor(dt / 16);
     const rand = Math.random() > 0.5;
     const str = (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
     return rand ? str.toUpperCase() : str;
   });
-  return uuid;
 }
 
 // FIXME: This is a super unreliable way of testing, we need to update this
