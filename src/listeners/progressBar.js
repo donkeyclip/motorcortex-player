@@ -1,9 +1,9 @@
-const { addListener, removeListener } = require(`../helpers`);
+import { addListener, removeListener } from "../helpers";
 
-module.exports = _this => {
+export default (_this) => {
   // let pe = false;
 
-  _this.listeners.onCursorMove = e => {
+  _this.listeners.onCursorMove = (e) => {
     e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.loopBar.getBoundingClientRect();
@@ -26,7 +26,7 @@ module.exports = _this => {
     _this.handleDragEnd(_this.settings);
   };
 
-  _this.listeners.onMouseDown = e => {
+  _this.listeners.onMouseDown = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "auto";
 
     if (_this.clip.runTimeInfo.state === `playing`) {
@@ -49,7 +49,7 @@ module.exports = _this => {
     `touchstart`,
     _this.listeners.onMouseDown,
     {
-      passive: false
+      passive: false,
     },
     false
   );

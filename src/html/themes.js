@@ -1,4 +1,4 @@
-module.exports = (theme, name) => {
+export default (theme, name) => {
   const themes = {
     default: {
       "settings-background-color": "whitesmoke",

@@ -1,6 +1,6 @@
-const { el, elid } = require(`../helpers`);
+import { el, elid } from "../helpers";
 
-module.exports = _this => {
+export default (_this) => {
   document.addEventListener("fullscreenchange", () => {
     _this.elements.mcPlayer.classList.toggle(`full-screen`);
     _this.clip.props.host.classList.toggle(`full-screen`);
@@ -29,9 +29,9 @@ module.exports = _this => {
       _this.setPreviewDimentions();
     }
   });
-  el(`body`)[0].addEventListener(`click`, e => {
+  el(`body`)[0].addEventListener(`click`, (e) => {
     if (e.target.className === `${_this.name}-speed-value`) {
-      let speedDisplay = e.target.dataset.speedValue - 0;
+      let speedDisplay;
       _this.clip.executionSpeed = e.target.dataset.speedValue;
       _this.clip.speed == 1
         ? (speedDisplay = `Normal`)
