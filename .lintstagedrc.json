@@ -1,4 +1,0 @@
-{
-  "*.{json,md,yml,yamo}": ["prettier --write"],
-  "*.{js,jsx}": ["eslint --fix"]
-}

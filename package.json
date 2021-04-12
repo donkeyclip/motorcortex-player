@@ -50,6 +50,15 @@
       "path": "cz-conventional-changelog"
     }
   },
+  "lint-staged": {
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ],
+    "*.{js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
   "peerDependencies": {
     "@kissmybutton/motorcortex": "^6.4.1"
   },
