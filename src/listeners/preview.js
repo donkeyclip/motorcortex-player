@@ -1,4 +1,9 @@
-import { addListener, elid, isMobile, removeListener } from "../helpers";
+import {
+  addMouseUpAndMoveListeners,
+  elid,
+  isMobile,
+  removeMouseUpAndMoveListeners,
+} from "../helpers";
 
 export default (_this) => {
   // only on desktop devices
@@ -24,10 +29,7 @@ export default (_this) => {
     loopBarMouseInOut();
     _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout = loopBarMouseInOut;
     _this.elements.loopBar.onmousemove = loopBarMouseMove;
-    removeListener("mouseup", loopBarAddListeners, false);
-    removeListener("touchend", loopBarAddListeners, false);
-    removeListener("mousemove", loopBarMouseMove, false);
-    removeListener("touchmove", loopBarMouseMove, false);
+    removeMouseUpAndMoveListeners(loopBarAddListeners, loopBarMouseMove);
   };
 
   _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout = loopBarMouseInOut;
@@ -38,19 +40,15 @@ export default (_this) => {
     }
     _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout = null;
     _this.elements.loopBar.onmousemove = null;
-    addListener("mouseup", loopBarAddListeners, false);
-    addListener("touchend", loopBarAddListeners, false);
-    addListener("mousemove", loopBarMouseMove, false);
-    addListener("touchmove", loopBarMouseMove, false);
+
+    addMouseUpAndMoveListeners(loopBarAddListeners, loopBarMouseMove);
   };
   _this.elements.loopBar.onmouseup = () => {
     if (!_this.options.preview) {
       return;
     }
-    removeListener("mouseup", loopBarAddListeners, false);
-    removeListener("touchend", loopBarAddListeners, false);
-    removeListener("mousemove", loopBarMouseMove, false);
-    removeListener("touchmove", loopBarMouseMove, false);
+
+    removeMouseUpAndMoveListeners(loopBarAddListeners, loopBarMouseMove);
     _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout = loopBarMouseInOut;
     _this.elements.loopBar.onmousemove = loopBarMouseMove;
   };
