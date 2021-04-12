@@ -1,6 +1,6 @@
-const { elid, addListener, removeListener } = require(`../helpers`);
+import { addListener, elid, removeListener } from "../helpers";
 
-module.exports = (_this) => {
+export default (_this) => {
   // only on desctop devices
   if (
     !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -73,15 +73,17 @@ module.exports = (_this) => {
             _this.elements.loopBar.offsetWidth &&
         !_this.settings.resizeLoop
       ) {
-        elid(`${_this.name}-hover-millisecond`).innerHTML =
-          _this.timeFormat(_this.settings.loopEndMillisecond);
+        elid(`${_this.name}-hover-millisecond`).innerHTML = _this.timeFormat(
+          _this.settings.loopEndMillisecond
+        );
         return;
       } else if (
         clientX - viewportOffset.left < 0 &&
         !_this.settings.resizeLoop
       ) {
-        elid(`${_this.name}-hover-millisecond`).innerHTML =
-          _this.timeFormat(_this.settings.loopStartMillisecond);
+        elid(`${_this.name}-hover-millisecond`).innerHTML = _this.timeFormat(
+          _this.settings.loopStartMillisecond
+        );
         return;
       }
 
@@ -91,8 +93,7 @@ module.exports = (_this) => {
       if (positionX < 0) {
         positionX = 0;
       }
-      const previewWidth =
-        elid(`${_this.name}-hover-display`).offsetWidth;
+      const previewWidth = elid(`${_this.name}-hover-display`).offsetWidth;
 
       const halfPreviewWidth = previewWidth / 2;
       const clipWidth = elid(`${_this.name}-hover-display`).offsetWidth;
@@ -100,7 +101,7 @@ module.exports = (_this) => {
 
       let left = positionX - halfClipWidth;
       if (positionX - halfPreviewWidth < 0) {
-        left = 0 ;
+        left = 0;
       } else if (
         positionX + halfPreviewWidth >
         _this.elements.totalBar.offsetWidth

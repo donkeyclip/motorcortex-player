@@ -1,4 +1,4 @@
-module.exports = _this => {
+export default (_this) => {
   _this.listeners.editableLoopStartTime = () => {
     _this.elements.editableLoopStartTime.value =
       _this.elements.loopStartTime.innerHTML;
@@ -15,7 +15,9 @@ module.exports = _this => {
     _this.elements.editableLoopEndTime.focus();
   };
 
-  _this.elements.editableLoopEndTime.onkeydown = _this.elements.editableLoopStartTime.onkeydown = e => {
+  _this.elements.editableLoopEndTime.onkeydown = _this.elements.editableLoopStartTime.onkeydown = (
+    e
+  ) => {
     e.preventDefault();
     if (e.keyCode === 13) {
       _this.elements.editableLoopStartTime.onfocusout();
@@ -45,7 +47,7 @@ module.exports = _this => {
         clientX:
           (_this.elements.totalBar.offsetWidth / _this.clip.duration) *
             e.target.value +
-          viewportOffset.left
+          viewportOffset.left,
       };
       _this.listeners.onMouseDownLoopStart(event);
       _this.listeners.onCursorMoveLoopStart(event);
@@ -57,7 +59,7 @@ module.exports = _this => {
         clientX:
           (_this.elements.totalBar.offsetWidth / _this.clip.duration) *
             e.target.value +
-          viewportOffset.left
+          viewportOffset.left,
       };
       _this.listeners.onMouseDownLoopEnd(event);
       _this.listeners.onCursorMoveLoopEnd(event);

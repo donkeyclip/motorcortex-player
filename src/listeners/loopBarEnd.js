@@ -1,8 +1,8 @@
-const { addListener, removeListener } = require(`../helpers`);
+import { addListener, removeListener } from "../helpers";
 
-module.exports = _this => {
+export default (_this) => {
   // let pe = false;
-  _this.listeners.onCursorMoveLoopEnd = e => {
+  _this.listeners.onCursorMoveLoopEnd = (e) => {
     e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.totalBar.getBoundingClientRect();
@@ -56,7 +56,7 @@ module.exports = _this => {
       _this.settings.loopStartMillisecond;
   };
 
-  _this.listeners.onMouseUpLoopEnd = e => {
+  _this.listeners.onMouseUpLoopEnd = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "none";
 
     // if (pe) {
@@ -100,7 +100,7 @@ module.exports = _this => {
       `touchstart`,
       _this.listeners.onMouseDown,
       {
-        passive: true
+        passive: true,
       },
       false
     );
@@ -114,9 +114,9 @@ module.exports = _this => {
           loopms = _this.settings.loopEndMillisecond - 1;
         }
         _this.settings.needsUpdate = true;
-        _this.createJourney( loopms, {
+        _this.createJourney(loopms, {
           before: "pause",
-          after: "play"
+          after: "play",
         });
       } else if (_this.clip.runTimeInfo.state === `completed`) {
         let loopms;
@@ -126,9 +126,9 @@ module.exports = _this => {
           loopms = _this.settings.loopEndMillisecond - 1;
         }
         _this.settings.needsUpdate = true;
-        _this.createJourney( loopms, {
+        _this.createJourney(loopms, {
           before: "pause",
-          after: "play"
+          after: "play",
         });
       } else {
         _this.clip.play();
@@ -137,7 +137,7 @@ module.exports = _this => {
     }
   };
 
-  _this.listeners.onMouseDownLoopEnd = e => {
+  _this.listeners.onMouseDownLoopEnd = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "auto";
 
     // if (!_this.options.pointerEvents) {
@@ -186,7 +186,7 @@ module.exports = _this => {
     `touchstart`,
     _this.listeners.onMouseDownLoopEnd,
     {
-      passive: false
+      passive: false,
     },
     false
   );

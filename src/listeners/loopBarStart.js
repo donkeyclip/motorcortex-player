@@ -1,8 +1,7 @@
-const { addListener, removeListener } = require(`../helpers`);
+import { addListener, removeListener } from "../helpers";
 
-module.exports = _this => {
-  // let pe = false;
-  _this.listeners.onCursorMoveLoopStart = e => {
+export default (_this) => {
+  _this.listeners.onCursorMoveLoopStart = (e) => {
     e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.totalBar.getBoundingClientRect();
@@ -57,7 +56,7 @@ module.exports = _this => {
     }
   };
 
-  _this.listeners.onMouseUpLoopStart = e => {
+  _this.listeners.onMouseUpLoopStart = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "none";
 
     // if (pe) {
@@ -107,7 +106,7 @@ module.exports = _this => {
       `touchstart`,
       _this.listeners.onMouseDown,
       {
-        passive: true
+        passive: true,
       },
       false
     );
@@ -123,7 +122,7 @@ module.exports = _this => {
         _this.settings.needsUpdate = true;
         _this.createJourney(loopms, {
           before: "pause",
-          after: "play"
+          after: "play",
         });
       } else {
         _this.clip.play();
@@ -132,7 +131,7 @@ module.exports = _this => {
     }
   };
 
-  _this.listeners.onMouseDownLoopStart = e => {
+  _this.listeners.onMouseDownLoopStart = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "auto";
 
     // if (!_this.options.pointerEvents) {
@@ -176,7 +175,7 @@ module.exports = _this => {
     `touchstart`,
     _this.listeners.onMouseDownLoopStart,
     {
-      passive: false
+      passive: false,
     },
     false
   );

@@ -1,6 +1,6 @@
-const { elid } = require(`../helpers`);
+import { elid } from "../helpers";
 
-const trigger = _this => {
+export function trigger(_this) {
   _this.settings.loopActivated = !_this.settings.loopActivated;
 
   _this.eventBroadcast("loop-change", _this.settings.loopActivated);
@@ -30,10 +30,8 @@ const trigger = _this => {
       (_this.clip.runTimeInfo.currentMillisecond / _this.clip.duration) * 100 +
       `%`;
   }
-};
-module.exports = {
-  trigger,
-  add: _this => {
-    _this.elements.loopButton.onclick = () => trigger(_this);
-  }
-};
+}
+
+export function add(_this) {
+  _this.elements.loopButton.onclick = () => trigger(_this);
+}

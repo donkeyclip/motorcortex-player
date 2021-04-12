@@ -1,5 +1,5 @@
-const { createUID } = require("../helpers");
-module.exports = _this => {
+import { createUID } from "../helpers";
+export default (_this) => {
   _this.elements.donkeyclipButton.addEventListener(`click`, () => {
     const u = createUID();
     const popupDC = window.open(`https://donkeyclip.com?u=${u}`);

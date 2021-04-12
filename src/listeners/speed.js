@@ -1,9 +1,11 @@
-const { elid, addListener, removeListener } = require(`../helpers`);
+const { elid, addListener, removeListener } = require("../helpers");
 
 module.exports = {
-  add: _this => {
+  add: (_this) => {
     // const pe = false;
-    _this.elements.settingsSpeedButtonShow.onclick = _this.elements.settingsSpeedButtonHide.onclick = e => {
+    _this.elements.settingsSpeedButtonShow.onclick = _this.elements.settingsSpeedButtonHide.onclick = (
+      e
+    ) => {
       e.preventDefault();
       _this.elements.settingsPanel.classList.toggle(
         `${_this.name}-settings-speed-panel`
@@ -12,15 +14,15 @@ module.exports = {
         `${_this.name}-settings-speed-panel`
       );
       if (includesClass) {
-        _this.elements.settingsMainPanel.style.display = `none`;
-        _this.elements.settingsSpeedPanel.style.display = `block`;
+        _this.elements.settingsMainPanel.style.display = "none";
+        _this.elements.settingsSpeedPanel.style.display = "block";
       } else {
-        _this.elements.settingsSpeedPanel.style.display = `none`;
-        _this.elements.settingsMainPanel.style.display = `block`;
+        _this.elements.settingsSpeedPanel.style.display = "none";
+        _this.elements.settingsMainPanel.style.display = "block";
       }
     };
 
-    const onCursorMoveSpeedBar = e => {
+    const onCursorMoveSpeedBar = (e) => {
       e.preventDefault();
       const viewportOffset = _this.elements.speedBar.getBoundingClientRect();
       const clientY = e.clientY || ((e.touches || [])[0] || {}).clientY;
@@ -42,16 +44,13 @@ module.exports = {
         _this.options.speedValues,
         percentage
       );
-      elid(`${_this.name}-speed-runtime`).innerHTML = speed + `0`;
-      elid(`${_this.name}-speed-cursor`).style.top = positionY + `px`;
+      elid(`${_this.name}-speed-runtime`).innerHTML = `${speed}0`;
+      elid(`${_this.name}-speed-cursor`).style.top = `${positionY}px`;
       _this.clip.executionSpeed = speed;
       _this.eventBroadcast("speed-change", _this.clip.executionSpeed);
     };
 
-    const onMouseUpSpeedBar = e => {
-      // if (pe) {
-      //   _this.elements.settingsPointerEvents.click();
-      // }
+    const onMouseUpSpeedBar = (e) => {
       _this.elements.listenerHelper.style.pointerEvents = "none";
 
       e.preventDefault();
@@ -67,12 +66,7 @@ module.exports = {
 
       _this.elements.speedCurrent.innerHTML = speedDisplay;
     };
-    const onMouseDownSpeedBar = e => {
-      // if (!_this.options.pointerEvents) {
-      //   pe = true;
-      //   _this.elements.settingsPointerEvents.click();
-      // }
-
+    const onMouseDownSpeedBar = (e) => {
       _this.elements.listenerHelper.style.pointerEvents = "auto";
       e.preventDefault();
       onCursorMoveSpeedBar(e);
@@ -91,7 +85,7 @@ module.exports = {
       `touchstart`,
       onMouseDownSpeedBar,
       {
-        passive: false
+        passive: false,
       },
       false
     );
@@ -103,5 +97,5 @@ module.exports = {
     speed == 1 ? (speedDisplay = `Normal`) : (speedDisplay = speed);
     _this.clip.executionSpeed = speed;
     _this.elements.speedCurrent.innerHTML = speedDisplay;
-  }
+  },
 };

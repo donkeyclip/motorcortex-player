@@ -1,8 +1,8 @@
-const { elid, elcreate } = require("../helpers");
-const svg = require("./svg");
-const playerHTML = require("./playerHTML");
+import { elcreate, elid } from "../helpers";
+import playerHTML from "./playerHTML";
+import svg from "./svg";
 
-module.exports = (_this) => {
+export default (_this) => {
   _this.elements = {};
   const clipIframe = _this.clip.props.host;
   if (!clipIframe.offsetWidth) {
@@ -90,46 +90,47 @@ module.exports = (_this) => {
     `${_this.name}-settings-speed-hide`
   );
 
-  _this.elements.volumeBarActive.style.width =
-    _this.settings.volume * 100 + `%`;
+  _this.elements.volumeBarActive.style.width = `${
+    _this.settings.volume * 100
+  }%`;
 
   _this.elements.currentTime.innerHTML = _this.timeFormat(0);
 
   _this.elements.totalTime.innerHTML = _this.timeFormat(_this.clip.duration);
 
-  _this.elements.timeSeparator.innerHTML = `/`;
+  _this.elements.timeSeparator.innerHTML = "/";
 
-  _this.elements.settingsPanel.classList.add(`m-fadeOut`, `${_this.name}-hide`);
+  _this.elements.settingsPanel.classList.add("m-fadeOut", `${_this.name}-hide`);
 
   if (!_this.options.showIndicator) {
-    _this.elements.indicator.style.visibility = `hidden`;
+    _this.elements.indicator.style.visibility = "hidden";
   } else {
-    _this.elements.indicator.style.visibility = `visible`;
-    _this.elements.statusButton.style.width = `35px`;
-    _this.elements.statusButton.style.height = `20px`;
-    _this.elements.statusButton.style.bottom = `5px`;
+    _this.elements.indicator.style.visibility = "visible";
+    _this.elements.statusButton.style.width = "35px";
+    _this.elements.statusButton.style.height = "20px";
+    _this.elements.statusButton.style.bottom = "5px";
   }
   _this.elements.indicator.innerHTML = _this.clip.runTimeInfo.state;
 
-  _this.elements.settingsSpeedPanel.style.display = `none`;
+  _this.elements.settingsSpeedPanel.style.display = "none";
 
   _this.elements.settingsSpeedPanel
-    .getElementsByTagName(`li`)[1]
-    .classList.add(`no-hover`);
+    .getElementsByTagName("li")[1]
+    .classList.add("no-hover");
 
-  _this.elements.loopBarStart.style.left = `0%`;
-  _this.elements.loopBarStart.classList.add(`m-fadeOut`, `${_this.name}-hide`);
+  _this.elements.loopBarStart.style.left = "0%";
+  _this.elements.loopBarStart.classList.add("m-fadeOut", `${_this.name}-hide`);
 
-  _this.elements.loopBarEnd.style.left = `100%`;
-  _this.elements.loopBarEnd.classList.add(`m-fadeOut`, `${_this.name}-hide`);
+  _this.elements.loopBarEnd.style.left = "100%";
+  _this.elements.loopBarEnd.classList.add("m-fadeOut", `${_this.name}-hide`);
 
   _this.elements.loopStartTime = elid(`${_this.name}-loopbar-start-time`);
 
   _this.elements.loopEndTime = elid(`${_this.name}-loopbar-end-time`);
 
-  _this.elements.editableLoopStartTime = document.createElement(`input`);
+  _this.elements.editableLoopStartTime = document.createElement("input");
 
-  _this.elements.editableLoopStartTime.type = `text`;
+  _this.elements.editableLoopStartTime.type = "text";
 
   _this.elements.editableLoopStartTime.size =
     elid(`${_this.name}-time-total`).innerHTML.length + 1;
@@ -146,11 +147,11 @@ module.exports = (_this) => {
     `${_this.name}-loopbar-start-time`
   ).innerHTML;
 
-  _this.elements.editableLoopStartTime.style.fontSize = `8px`;
+  _this.elements.editableLoopStartTime.style.fontSize = "8px";
 
-  _this.elements.editableLoopEndTime = document.createElement(`input`);
+  _this.elements.editableLoopEndTime = document.createElement("input");
 
-  _this.elements.editableLoopEndTime.type = `text`;
+  _this.elements.editableLoopEndTime.type = "text";
 
   _this.elements.editableLoopEndTime.size =
     elid(`${_this.name}-time-total`).innerHTML.length + 1;
@@ -167,19 +168,16 @@ module.exports = (_this) => {
     `${_this.name}-loopbar-start-time`
   ).innerHTML;
 
-  _this.elements.editableLoopEndTime.pattern = `d*`;
+  _this.elements.editableLoopEndTime.pattern = "d*";
 
-  _this.elements.editableLoopEndTime.style.fontSize = `8px`;
+  _this.elements.editableLoopEndTime.style.fontSize = "8px";
 
   elid(`${_this.name}-loop-time`).classList.add(
-    `m-fadeOut`,
+    "m-fadeOut",
     `${_this.name}-hide`
   );
 
-  elid(`${_this.name}-hover-display`).classList.add(
-    `m-fadeOut`
-    // `${_this.name}-hide`
-  );
+  elid(`${_this.name}-hover-display`).classList.add("m-fadeOut");
 
   elid(`${_this.name}-show-volume-checkbox`).checked = _this.options.showVolume;
 
@@ -205,15 +203,15 @@ module.exports = (_this) => {
   _this.elements.listenerHelper.style.pointerEvents = "none";
 
   if (!_this.options.showVolume) {
-    _this.elements.timeDisplay.style.left = `45px`;
-    _this.elements.volumeControl.style.visibility = `hidden`;
+    _this.elements.timeDisplay.style.left = "45px";
+    _this.elements.volumeControl.style.visibility = "hidden";
     _this.elements.volumeControl.classList.toggle(`${_this.name}-hide`);
     _this.elements.volumeControl.classList.toggle(
       `${_this.name}-volume-width-transition`
     );
   } else {
-    _this.elements.timeDisplay.style.left = ``;
-    _this.elements.volumeControl.style.visibility = `visible`;
+    _this.elements.timeDisplay.style.left = "";
+    _this.elements.volumeControl.style.visibility = "visible";
   }
 
   for (const i in _this.options.speedValues) {

@@ -1,4 +1,5 @@
-module.exports = (theme, name, options) => `
+export default function (theme, name, options) {
+  return `
 #${name}, #${name} *{
   font-family:'Ubuntu' !important;
 }
@@ -515,8 +516,8 @@ ${
 }
 
 
-#${name} #${name}-speed-settings li.no-hover { 
-  height: ${options.speedValues.length * 16 + 10 - 2}px !important; 
+#${name} #${name}-speed-settings li.no-hover {
+  height: ${options.speedValues.length * 16 + 10 - 2}px !important;
 }
 
 #${name} #${name}-settings-panel.${name}-settings-speed-panel {
@@ -758,3 +759,4 @@ ${
 }
 ${theme["theme-style"]}
 `;
+}
