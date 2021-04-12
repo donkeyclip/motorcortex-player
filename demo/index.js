@@ -286,4 +286,4 @@ window.player = new Player({
   theme:"mc-blue"
 });
 
-window.player.createLoop(0,1000);
+// window.player.createLoop(0,1000);
