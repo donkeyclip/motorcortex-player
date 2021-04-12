@@ -1,3 +1,12 @@
+import {
+  mousedown,
+  mousemove,
+  mouseup,
+  touchend,
+  touchmove,
+  touchstart,
+} from "./listeners/events";
+
 export function el(selector) {
   return document.querySelectorAll(selector);
 }
@@ -119,4 +128,32 @@ export function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
+}
+
+export function addMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
+  document.addEventListener(mouseup, callbackForUp, false);
+  document.addEventListener(touchend, callbackForUp, false);
+  document.addEventListener(mousemove, callbackForMove, false);
+  document.addEventListener(touchmove, callbackForMove, false);
+}
+
+export function removeMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
+  document.removeEventListener(mouseup, callbackForUp, false);
+  document.removeEventListener(touchend, callbackForUp, false);
+  document.removeEventListener(mousemove, callbackForMove, false);
+  document.removeEventListener(touchmove, callbackForMove, false);
+}
+
+export function addStartListeners(
+  callback,
+  element = document,
+  passive = false
+) {
+  element.addEventListener(mousedown, callback, { passive }, false);
+  element.addEventListener(touchstart, callback, { passive }, false);
+}
+
+export function removeStartListeners(callback, element = document) {
+  element.removeEventListener(mousedown, callback, false);
+  element.removeEventListener(touchstart, callback, false);
 }

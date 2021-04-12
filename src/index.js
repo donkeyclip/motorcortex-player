@@ -8,6 +8,18 @@ import confThemes from "./html/themes";
 import bodyListener from "./listeners/body";
 import controlsListener from "./listeners/controls";
 import donkeyclipListener from "./listeners/donkeyclip";
+import { PLAYING, showControls } from "./listeners/enums";
+import {
+  DURATION_CHANGE,
+  LOOP_CHANGE,
+  MUTE_CHANGE,
+  SCALE_CHANGE,
+  SHOW_PREVIEW_CHANGE,
+  SHOW_VOLUME_CHANGE,
+  SPEED_CHANGE,
+  STATE_CHANGE,
+  VOLUME_CHANGE,
+} from "./listeners/events";
 import {
   add as fullscreenAdd,
   trigger as fullscreenTrigger,
@@ -53,7 +65,7 @@ class Player {
     options.speedValues ||= [-2, -1, -0.5, 0, 0.5, 1, 2];
 
     options.muted ||= false;
-    options.controls = options.controls == false ? false : true;
+    options.controls = !!options.controls;
     options.loop ||= false;
     options.volume = typeof options.volume !== "undefined" ? options.volume : 1;
     options.currentScript ||= null;
@@ -109,7 +121,7 @@ class Player {
     this.subscribeToDurationChange();
     this.addEventListeners();
     this.scaleClipHost();
-    this.eventBroadcast("state-change", this.state);
+    this.eventBroadcast(STATE_CHANGE, this.state);
     if (this.options.preview) {
       this.createPreviewDisplay();
     }
@@ -127,12 +139,13 @@ class Player {
     });
     this.changeSettings(options, true);
   }
+
   changeSettings(newOptions, initial) {
     //set defaults
-    newOptions.theme = newOptions.theme || "transparent on-top";
-    newOptions.speed = newOptions.speed || 1;
-    newOptions.volume = newOptions.volume || 1;
-    newOptions.clip = newOptions.clip || this.clip;
+    newOptions.theme ||= "transparent on-top";
+    newOptions.speed ||= 1;
+    newOptions.volume ||= 1;
+    newOptions.clip ||= this.clip;
 
     if (newOptions.clip !== this.options.clip) {
       initial = true;
@@ -219,8 +232,7 @@ class Player {
 
   scaleClipHost() {
     if (this.options.scaleToFit) {
-      const width = this.clip.props.containerParams.width;
-      const height = this.clip.props.containerParams.height;
+      const { width, height } = this.clip.props.containerParams;
 
       const transform = calcClipScale(
         { width, height },
@@ -232,15 +244,14 @@ class Player {
       );
 
       this.clip.realClip.rootElement.style.transform = `scale(${transform.scale}`;
-      this.clip.realClip.rootElement.style.left =
-        transform.position.left + "px";
-      this.clip.realClip.rootElement.style.top = transform.position.top + "px";
+      this.clip.realClip.rootElement.style.left = `${transform.position.left}px`;
+      this.clip.realClip.rootElement.style.top = `${transform.position.top}px`;
     } else {
-      this.clip.realClip.rootElement.style.transform = `scale(1)`;
+      this.clip.realClip.rootElement.style.transform = "scale(1)";
       this.clip.realClip.rootElement.style.left = "0px";
       this.clip.realClip.rootElement.style.top = "0px";
     }
-    this.eventBroadcast("scale-change", this.options.scaleToFit);
+    this.eventBroadcast(SCALE_CHANGE, this.options.scaleToFit);
   }
 
   createLoop(msStart, msEnd) {
@@ -279,7 +290,7 @@ class Player {
   ) {
     if (this.state !== state) {
       this.state = state;
-      this.eventBroadcast("state-change", state);
+      this.eventBroadcast(STATE_CHANGE, state);
     }
 
     if (!this.settings.needsUpdate) {
@@ -310,7 +321,7 @@ class Player {
       this.createJourney(loopStartMillisecond + 1, {
         after:
           this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == "playing"
+          this.clip.runTimeInfo.state == PLAYING
             ? "play"
             : null,
       });
@@ -323,7 +334,7 @@ class Player {
       this.createJourney(loopEndMillisecond - 1, {
         after:
           this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == "playing"
+          this.clip.runTimeInfo.state == PLAYING
             ? "play"
             : null,
       });
@@ -333,23 +344,10 @@ class Player {
       loopActivated &&
       this.clip.speed >= 0
     ) {
-      this.createJourney(loopStartMillisecond + 1, {
+      this.createJourney(loopStartMillisecond + this.clip.speed >= 0 ? 1 : -1, {
         after:
           this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == "playing"
-            ? "play"
-            : null,
-      });
-      return 1;
-    } else if (
-      millisecond <= loopStartMillisecond &&
-      loopActivated &&
-      this.clip.speed < 0
-    ) {
-      this.createJourney(loopEndMillisecond - 1, {
-        after:
-          this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == "playing"
+          this.clip.runTimeInfo.state == PLAYING
             ? "play"
             : null,
       });
@@ -373,56 +371,51 @@ class Player {
 
   eventBroadcast(eventName, state) {
     const controlsEl = elid(`${this.name}-controls`);
-    if (eventName === `state-change`) {
+    if (eventName === STATE_CHANGE) {
       if (this.options.currentScript) {
         this.options.currentScript.dataset.status = state;
       }
       if (
-        state === `paused` ||
-        state === `idle` ||
-        state === `transitional` ||
-        state === `armed` ||
-        state === `blocked`
+        state === "paused" ||
+        state === "idle" ||
+        state === "transitional" ||
+        state === "armed" ||
+        state === "blocked"
       ) {
-        if (!controlsEl.classList.value.includes("force-show-controls")) {
-          controlsEl.classList.toggle("force-show-controls");
+        if (!controlsEl.classList.value.includes(showControls)) {
+          controlsEl.classList.toggle(showControls);
         }
         this.elements.statusButton.innerHTML = playSVG;
         this.elements.statusButton.appendChild(this.elements.indicator);
         this.elements.indicator.innerHTML = `${
           state.charAt(0).toUpperCase() + state.slice(1)
         }`;
-        if (state === `blocked`) {
+        if (state === "blocked") {
           this.elements.pointerEventPanel.innerHTML = `
             <div style="width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">${loadingSVG}</div>`;
         } else {
           this.elements.pointerEventPanel.innerHTML = "";
         }
       } else {
-        if (controlsEl.classList.value.includes("force-show-controls")) {
-          controlsEl.classList.toggle("force-show-controls");
+        if (controlsEl.classList.value.includes(showControls)) {
+          controlsEl.classList.toggle(showControls);
         }
         this.elements.statusButton.innerHTML = pauseSVG;
         this.elements.statusButton.appendChild(this.elements.indicator);
-        this.elements.indicator.innerHTML = `Playing`;
+        this.elements.indicator.innerHTML = "Playing";
         this.elements.pointerEventPanel.innerHTML = "";
+        if (state !== PLAYING) {
+          return;
+        }
+
         if (
-          state === `playing` &&
           this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
           this.clip.speed >= 0
         ) {
           this.createJourney(1, { after: "play" });
         } else if (
-          state === `playing` &&
-          this.clip.runTimeInfo.currentMillisecond === 0 &&
-          this.clip.speed < 0
-        ) {
-          this.createJourney(this.clip.duration - 1, {
-            after: "play",
-          });
-        } else if (
-          state === `playing` &&
-          this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
+          (this.clip.runTimeInfo.currentMillisecond === this.clip.duration ||
+            this.clip.runTimeInfo.currentMillisecond === 0) &&
           this.clip.speed < 0
         ) {
           this.createJourney(this.clip.duration - 1, {
@@ -430,19 +423,19 @@ class Player {
           });
         }
       }
-    } else if (eventName === `duration-change`) {
+    } else if (eventName === DURATION_CHANGE) {
       this.elements.totalTime.innerHTML = this.timeFormat(this.clip.duration);
       this.settings.loopEndMillisecond = this.clip.duration;
       this.elements.pointerEventPanel.innerHTML = "";
       this.millisecondChange(this.clip.runTimeInfo.currentMillisecond);
     } else if (this.options.currentScript) {
-      if (eventName === "volume-change") {
+      if (eventName === VOLUME_CHANGE) {
         this.options.volume = state;
         this.options.currentScript.dataset.volume = state;
-      } else if (eventName === "speed-change") {
+      } else if (eventName === SPEED_CHANGE) {
         this.options.speed = state;
         this.options.currentScript.dataset.speed = state;
-      } else if (eventName === "mute-change") {
+      } else if (eventName === MUTE_CHANGE) {
         if (state) {
           this.options.muted = true;
           this.options.currentScript.dataset.muted = "";
@@ -450,7 +443,7 @@ class Player {
           this.options.muted = false;
           delete this.options.currentScript.dataset.muted;
         }
-      } else if (eventName === "loop-change") {
+      } else if (eventName === LOOP_CHANGE) {
         if (state) {
           this.options.loop = true;
           this.options.currentScript.dataset.loop = "";
@@ -458,7 +451,7 @@ class Player {
           this.options.loop = false;
           delete this.options.currentScript.dataset.loop;
         }
-      } else if (eventName === "scale-change") {
+      } else if (eventName === SCALE_CHANGE) {
         if (state) {
           this.options.scaleToFit = true;
           this.options.currentScript.dataset.scaleToFit = "";
@@ -466,7 +459,7 @@ class Player {
           this.options.scaleToFit = false;
           delete this.options.currentScript.dataset.scaleToFit;
         }
-      } else if (eventName === "show-volume-change") {
+      } else if (eventName === SHOW_VOLUME_CHANGE) {
         if (state) {
           this.options.showVolume = true;
           this.options.currentScript.dataset.showVolume = "";
@@ -474,7 +467,7 @@ class Player {
           this.options.showVolume = false;
           delete this.options.currentScript.dataset.showVolume;
         }
-      } else if (eventName === "show-preview-change") {
+      } else if (eventName === SHOW_PREVIEW_CHANGE) {
         if (state) {
           this.options.preview = true;
           this.options.currentScript.dataset.preview = "";
@@ -491,8 +484,8 @@ class Player {
       this.subscribeToDurationChangeCallback.bind(this)
     );
   }
-  subscribeToDurationChangeCallback(/*newDuration*/) {
-    this.eventBroadcast("duration-change");
+  subscribeToDurationChangeCallback() {
+    this.eventBroadcast(DURATION_CHANGE);
   }
 
   subscribeToTimer() {
@@ -608,10 +601,10 @@ class Player {
     this.options.theme.trim();
 
     if (
-      !this.options.theme.includes(`on-top`) &&
-      !this.options.theme.includes(`position-bottom`)
+      !this.options.theme.includes("on-top") &&
+      !this.options.theme.includes("position-bottom")
     ) {
-      this.options.theme += ` on-top`;
+      this.options.theme += " on-top";
     }
     const theme = {};
     for (const i in this.options.theme.split(` `)) {
@@ -621,22 +614,19 @@ class Player {
       }
     }
     const css = confStyle(theme, this.name, this.options);
-    const style = elcreate(`style`);
+    const style = elcreate("style");
     style.id = this.name + "-style";
     style.styleSheet
       ? (style.styleSheet.cssText = css)
       : style.appendChild(document.createTextNode(css));
 
     // append player style to document
-    eltag(`head`)[0].appendChild(style);
+    eltag("head")[0].appendChild(style);
     this.eventBroadcast("theme-change", this.options.theme);
   }
 
   setSpeed() {
-    let currentSpeed;
-    this.clip.speed == 1
-      ? (currentSpeed = `Normal`)
-      : (currentSpeed = this.clip.speed);
+    const currentSpeed = this.clip.speed == 1 ? "Normal" : this.clip.speed;
     this.elements.speedCurrent.innerHTML = currentSpeed;
 
     const targetZone = (() => {
@@ -659,9 +649,9 @@ class Player {
     const step = 1 / (this.options.speedValues.length - 1);
 
     const positionY =
-      (targetZone * step - 1) * -1 * (this.options.speedValues.length - 1) * 16;
+      (targetZone * step - 1) * (this.options.speedValues.length - 1) * -16;
 
-    elid(`${this.name}-speed-cursor`).style.top = positionY + `px`;
+    elid(`${this.name}-speed-cursor`).style.top = `${positionY}px`;
   }
 
   calculateSpeed(step, arrayOfValues, currentPercentage) {
@@ -732,7 +722,7 @@ class Player {
     elid(`${this.name}-hover-display`).style.width = `${width}px`;
     elid(`${this.name}-hover-display`).style.height = `${height}px`;
 
-    previewClip.style.boxSizing = `border-box`;
+    previewClip.style.boxSizing = "border-box";
   }
 }
 

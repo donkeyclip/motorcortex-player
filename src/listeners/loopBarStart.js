@@ -1,4 +1,9 @@
-import { addListener, removeListener } from "../helpers";
+import {
+  addMouseUpAndMoveListeners,
+  addStartListeners,
+  removeMouseUpAndMoveListeners,
+  removeStartListeners,
+} from "../helpers";
 
 export default (_this) => {
   _this.listeners.onCursorMoveLoopStart = (e) => {
@@ -40,8 +45,8 @@ export default (_this) => {
       _this.settings.loopEndMillisecond < _this.settings.loopStartMillisecond
     ) {
       _this.settings.loopEndMillisecond = _this.settings.loopStartMillisecond;
-      _this.elements.loopBar.style.width = `0px`;
-      _this.elements.runningBar.style.width = `0px`;
+      _this.elements.loopBar.style.width = "0px";
+      _this.elements.runningBar.style.width = "0px";
     }
 
     _this.elements.loopEndTime.innerHTML = _this.settings.loopEndMillisecond;
@@ -59,9 +64,6 @@ export default (_this) => {
   _this.listeners.onMouseUpLoopStart = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "none";
 
-    // if (pe) {
-    //   _this.elements.settingsPointerEvents.click();
-    // }
     _this.settings.resizeLoop = false;
 
     e.preventDefault();
@@ -93,22 +95,15 @@ export default (_this) => {
         100 +
       `%`;
 
-    removeListener(`mouseup`, _this.listeners.onMouseUpLoopStart, false);
-    removeListener(`touchend`, _this.listeners.onMouseUpLoopStart, false);
-    removeListener(`mousemove`, _this.listeners.onCursorMoveLoopStart, false);
-    removeListener(`touchmove`, _this.listeners.onCursorMoveLoopStart, false);
-    _this.elements.loopBar.addEventListener(
-      `mousedown`,
-      _this.listeners.onMouseDown,
-      false
+    removeMouseUpAndMoveListeners(
+      _this.listeners.onMouseUpLoopStart,
+      _this.listeners.onCursorMoveLoopStart
     );
-    _this.elements.loopBar.addEventListener(
-      `touchstart`,
+
+    addStartListeners(
       _this.listeners.onMouseDown,
-      {
-        passive: true,
-      },
-      false
+      _this.elements.loopBar,
+      true
     );
 
     if (_this.settings.playAfterResize) {
@@ -134,11 +129,6 @@ export default (_this) => {
   _this.listeners.onMouseDownLoopStart = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "auto";
 
-    // if (!_this.options.pointerEvents) {
-    //   pe = true;
-    //   _this.elements.settingsPointerEvents.click();
-    // }
-
     _this.settings.resizeLoop = true;
 
     e.preventDefault();
@@ -149,34 +139,15 @@ export default (_this) => {
       _this.settings.playAfterResize = true;
     }
 
-    _this.elements.loopBar.removeEventListener(
-      `mousedown`,
-      _this.listeners.onMouseDown,
-      false
-    );
-    _this.elements.loopBar.removeEventListener(
-      `touchstart`,
-      _this.listeners.onMouseDown,
-      false
-    );
+    removeStartListeners(_this.listeners.onMouseDown, _this.elements.loopBar);
     _this.listeners.onCursorMoveLoopStart(e);
-    addListener(`mouseup`, _this.listeners.onMouseUpLoopStart, false);
-    addListener(`touchend`, _this.listeners.onMouseUpLoopStart, false);
-    addListener(`mousemove`, _this.listeners.onCursorMoveLoopStart, false);
-    addListener(`touchmove`, _this.listeners.onCursorMoveLoopStart, false);
+    addMouseUpAndMoveListeners(
+      _this.listeners.onMouseUpLoopStart,
+      _this.listeners.onCursorMoveLoopStart
+    );
   };
-
-  _this.elements.loopBarStart.addEventListener(
-    `mousedown`,
+  addStartListeners(
     _this.listeners.onMouseDownLoopStart,
-    false
-  );
-  _this.elements.loopBarStart.addEventListener(
-    `touchstart`,
-    _this.listeners.onMouseDownLoopStart,
-    {
-      passive: false,
-    },
-    false
+    _this.elements.loopBarStart
   );
 };

@@ -1,14 +1,15 @@
 import { elid } from "../helpers";
+import { touchstart } from "./events";
 
 export default (_this) => {
   elid(`${_this.name}-controls`).onmouseover = () => {
     if (!_this.settings.loopActivated) {
       return;
     }
-    _this.elements.loopBarStart.classList.remove(`m-fadeOut`);
-    _this.elements.loopBarEnd.classList.remove(`m-fadeOut`);
-    _this.elements.loopBarStart.classList.add(`m-fadeIn`);
-    _this.elements.loopBarEnd.classList.add(`m-fadeIn`);
+    _this.elements.loopBarStart.classList.remove("m-fadeOut");
+    _this.elements.loopBarEnd.classList.remove("m-fadeOut");
+    _this.elements.loopBarStart.classList.add("m-fadeIn");
+    _this.elements.loopBarEnd.classList.add("m-fadeIn");
   };
 
   elid(`${_this.name}-controls`).onmouseout = function (event) {
@@ -20,10 +21,10 @@ export default (_this) => {
     if (!_this.settings.loopActivated) {
       return;
     }
-    _this.elements.loopBarStart.classList.add(`m-fadeOut`);
-    _this.elements.loopBarEnd.classList.add(`m-fadeOut`);
-    _this.elements.loopBarStart.classList.remove(`m-fadeIn`);
-    _this.elements.loopBarEnd.classList.remove(`m-fadeIn`);
+    _this.elements.loopBarStart.classList.add("m-fadeOut");
+    _this.elements.loopBarEnd.classList.add("m-fadeOut");
+    _this.elements.loopBarStart.classList.remove("m-fadeIn");
+    _this.elements.loopBarEnd.classList.remove("m-fadeIn");
   };
 
   let twt = false;
@@ -54,7 +55,7 @@ export default (_this) => {
     twt = true;
   };
 
-  window.addEventListener("touchstart", function (event) {
+  window.addEventListener(touchstart, function (event) {
     const e = event.toElement || event.relatedTarget || event.target;
     if (
       isDescendant(elid(`${_this.name}-controls`), e) ||
