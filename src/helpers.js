@@ -33,11 +33,9 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
       widthNumberPart.length
     );
     if (
-      !isNumber(Number(widthNumberPart)) ||
-      (widthUnitPart !== "%" && widthUnitPart !== "px")
+      isNumber(Number(widthNumberPart)) &&
+      (widthUnitPart !== "%" || widthUnitPart !== "px")
     ) {
-      widthAnalysed = null;
-    } else {
       widthAnalysed = {
         number: Number(widthNumberPart),
         unit: widthUnitPart,
@@ -50,11 +48,9 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
       heightNumberPart.length
     );
     if (
-      !isNumber(Number(heightNumberPart)) ||
-      (heightUnitPart !== "%" && heightUnitPart !== "px")
+      isNumber(Number(heightNumberPart)) &&
+      (heightUnitPart !== "%" || heightUnitPart !== "px")
     ) {
-      heightAnalysed = null;
-    } else {
       heightAnalysed = {
         number: Number(heightNumberPart),
         unit: heightUnitPart,
@@ -128,4 +124,11 @@ export function createUID() {
     return rand ? str.toUpperCase() : str;
   });
   return uuid;
+}
+
+// FIXME: This is a super unreliable way of testing, we need to update this
+export function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
 }
