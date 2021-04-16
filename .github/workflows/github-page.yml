@@ -1,0 +1,26 @@
+##############################################
+# FILE GENERATED AUTOMATICALLY FROM TERRAFORM
+# THIS FILE SHOULD NOT BE EDITED BY HAND
+##############################################
+
+name: Build and Deploy
+
+on: master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+      - name: Setup node ⚙️
+        uses: actions/setup-node@v2
+      - name: Install ⚙️️
+        run: npm ci
+      - name: Build 🔧
+        run: npm run build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages
+          folder: "."
