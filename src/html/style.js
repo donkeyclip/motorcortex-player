@@ -1,4 +1,6 @@
-module.exports = (theme, name, options) => `
+export default function (theme, name, options) {
+  const buttonOpacity = `opacity: ${theme["button-opacity"]};`;
+  return `
 #${name}, #${name} *{
   font-family:'Ubuntu' !important;
 }
@@ -305,14 +307,14 @@ ${
 }
 
 #${name} #${name}-status-btn {
-  opacity: ${theme["button-opacity"]};
+  ${buttonOpacity}
 }
 #${name} #${name}-status-btn svg{
   width:20px;
   height:18px;
 }
 #${name} #${name}-volume {
-  opacity: ${theme["button-opacity"]};
+  ${buttonOpacity}
   position: relative;
 }
 #${name} #${name}-volume-btn {
@@ -383,7 +385,7 @@ ${
 }
 
 #${name} #${name}-loop-btn {
-  opacity: ${theme["button-opacity"]};
+  ${buttonOpacity}
   display:flex;
   align-items:center;
 }
@@ -391,15 +393,15 @@ ${
 
 #${name} #${name}-settings-btn {
   overflow:hidden;
-  opacity: ${theme["button-opacity"]};
+  ${buttonOpacity}
 }
 
 #${name} #${name}-full-screen-btn {
-  opacity: ${theme["button-opacity"]};
+  ${buttonOpacity}
 }
 
 #${name} .${name}-speed-btn {
-  opacity: ${theme["button-opacity"]};
+  ${buttonOpacity}
   height: 14px;
 }
 
@@ -515,8 +517,8 @@ ${
 }
 
 
-#${name} #${name}-speed-settings li.no-hover { 
-  height: ${options.speedValues.length * 16 + 10 - 2}px !important; 
+#${name} #${name}-speed-settings li.no-hover {
+  height: ${options.speedValues.length * 16 + 10 - 2}px !important;
 }
 
 #${name} #${name}-settings-panel.${name}-settings-speed-panel {
@@ -758,3 +760,4 @@ ${
 }
 ${theme["theme-style"]}
 `;
+}

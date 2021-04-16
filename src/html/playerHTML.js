@@ -1,4 +1,4 @@
-module.exports = config => `
+export default (config) => `
   <div
     class="pointer-event-panel"
     id="${config.name}-pointer-event-panel"
@@ -82,13 +82,10 @@ module.exports = config => `
       >
         ${config.svg.dcSVG}
       </div>
-      
       <div
         id="${config.name}-full-screen-btn"
       >${config.svg.fullScreenSVG}</div>
     </div>
-    
-
   </div>
   <div id="${config.name}-settings-panel">
     <ul id="${config.name}-main-settings">

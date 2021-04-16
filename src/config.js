@@ -1,9 +1,7 @@
-module.exports = {
-  // the players start name
-  name: "mc-player",
+// the players start name
+export let name = "mc-player";
 
-  // set the players total name
-  set playerName(name) {
-    this.name += "-" + name;
-  }
-};
+// set the players total name
+export function updateName(nameToAdd) {
+  name += `-${nameToAdd}`;
+}

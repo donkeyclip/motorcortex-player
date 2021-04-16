@@ -1,8 +1,12 @@
-const { addListener, removeListener } = require(`../helpers`);
+import {
+  addMouseUpAndMoveListeners,
+  addStartListeners,
+  removeMouseUpAndMoveListeners,
+  removeStartListeners,
+} from "../helpers";
 
-module.exports = _this => {
-  // let pe = false;
-  _this.listeners.onCursorMoveLoopEnd = e => {
+export default (_this) => {
+  _this.listeners.onCursorMoveLoopEnd = (e) => {
     e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.totalBar.getBoundingClientRect();
@@ -56,138 +60,87 @@ module.exports = _this => {
       _this.settings.loopStartMillisecond;
   };
 
-  _this.listeners.onMouseUpLoopEnd = e => {
+  _this.listeners.onMouseUpLoopEnd = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "none";
-
-    // if (pe) {
-    //   _this.elements.settingsPointerEvents.click();
-    // }
     _this.settings.resizeLoop = false;
     e.preventDefault();
-    _this.elements.runningBar.style.width =
-      (_this.elements.runningBar.offsetWidth /
-        _this.elements.loopBar.offsetWidth) *
-        100 +
-      `%`;
+    const { loopBar, totalBar, runningBar } = _this.elements;
 
-    _this.elements.loopBar.style.left =
-      (_this.elements.loopBar.offsetLeft /
-        _this.elements.totalBar.offsetWidth) *
-        100 +
-      `%`;
+    runningBar.style.width =
+      (runningBar.offsetWidth / loopBar.offsetWidth) * 100 + `%`;
 
-    _this.elements.loopBar.style.width =
-      (_this.elements.loopBar.offsetWidth /
-        _this.elements.totalBar.offsetWidth) *
-        100 +
-      `%`;
+    loopBar.style.left = `${
+      (loopBar.offsetLeft / totalBar.offsetWidth) * 100
+    }%`;
+
+    loopBar.style.width = `${
+      (loopBar.offsetWidth / totalBar.offsetWidth) * 100
+    }%`;
 
     if (_this.settings.loopJourney) {
-      _this.createProgressDrag(_this.elements.runningBar.offsetWidth);
+      _this.createProgressDrag(runningBar.offsetWidth);
       _this.settings.loopJourney = false;
     }
-
-    removeListener(`mouseup`, _this.listeners.onMouseUpLoopEnd, false);
-    removeListener(`touchend`, _this.listeners.onMouseUpLoopEnd, false);
-    removeListener(`mousemove`, _this.listeners.onCursorMoveLoopEnd, false);
-    removeListener(`touchmove`, _this.listeners.onCursorMoveLoopEnd, false);
-    _this.elements.loopBar.addEventListener(
-      `mousedown`,
-      _this.listeners.onMouseDown,
-      false
-    );
-    _this.elements.loopBar.addEventListener(
-      `touchstart`,
-      _this.listeners.onMouseDown,
-      {
-        passive: true
-      },
-      false
+    removeMouseUpAndMoveListeners(
+      _this.listeners.onMouseUpLoopEnd,
+      _this.listeners.onCursorMoveLoopEnd
     );
 
-    if (_this.settings.playAfterResize) {
-      if (_this.clip.runTimeInfo.state === `idle`) {
-        let loopms;
-        if (_this.clip.speed >= 0) {
-          loopms = _this.settings.loopStartMillisecond + 1;
-        } else {
-          loopms = _this.settings.loopEndMillisecond - 1;
-        }
-        _this.settings.needsUpdate = true;
-        _this.createJourney( loopms, {
-          before: "pause",
-          after: "play"
-        });
-      } else if (_this.clip.runTimeInfo.state === `completed`) {
-        let loopms;
-        if (_this.clip.speed >= 0) {
-          loopms = _this.settings.loopStartMillisecond + 1;
-        } else {
-          loopms = _this.settings.loopEndMillisecond - 1;
-        }
-        _this.settings.needsUpdate = true;
-        _this.createJourney( loopms, {
-          before: "pause",
-          after: "play"
-        });
-      } else {
-        _this.clip.play();
-      }
-      _this.settings.playAfterResize = false;
+    addStartListeners(_this.listeners.onMouseDown, loopBar, true);
+
+    if (!_this.settings.playAfterResize) {
+      return;
     }
+    if (
+      _this.clip.runTimeInfo.state === "idle" ||
+      _this.clip.runTimeInfo.state === "completed"
+    ) {
+      let loopms;
+      if (_this.clip.speed >= 0) {
+        loopms = _this.settings.loopStartMillisecond + 1;
+      } else {
+        loopms = _this.settings.loopEndMillisecond - 1;
+      }
+      _this.settings.needsUpdate = true;
+      _this.createJourney(loopms, {
+        before: "pause",
+        after: "play",
+      });
+    } else {
+      _this.clip.play();
+    }
+    _this.settings.playAfterResize = false;
   };
 
-  _this.listeners.onMouseDownLoopEnd = e => {
+  _this.listeners.onMouseDownLoopEnd = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "auto";
 
-    // if (!_this.options.pointerEvents) {
-    //   pe = true;
-    //   _this.elements.settingsPointerEvents.click();
-    // }
     _this.settings.resizeLoop = true;
     _this.settings.needsUpdate = true;
 
-    if (_this.clip.runTimeInfo.state === `playing`) {
+    if (_this.clip.runTimeInfo.state === "playing") {
       _this.clip.pause();
       _this.settings.playAfterResize = true;
     }
     e.preventDefault();
-    _this.elements.runningBar.style.width =
-      _this.elements.runningBar.offsetWidth + `px`;
+    _this.elements.runningBar.style.width = `${_this.elements.runningBar.offsetWidth}px`;
 
-    _this.elements.loopBar.style.left =
-      _this.elements.loopBar.offsetLeft + `px`;
+    const loopBar = _this.elements.loopBar;
+    loopBar.style.left = `${loopBar.offsetLeft}px`;
+    loopBar.style.width = `${loopBar.offsetWidth}px`;
 
-    _this.elements.loopBar.style.width =
-      _this.elements.loopBar.offsetWidth + `px`;
-    _this.elements.loopBar.removeEventListener(
-      `mousedown`,
-      _this.listeners.onMouseDown,
-      false
-    );
-    _this.elements.loopBar.removeEventListener(
-      `touchstart`,
-      _this.listeners.onMouseDown,
-      false
-    );
+    removeStartListeners(_this.listeners.onMouseDown, loopBar);
+
     _this.listeners.onCursorMoveLoopEnd(e);
-    addListener(`mouseup`, _this.listeners.onMouseUpLoopEnd, false);
-    addListener(`touchend`, _this.listeners.onMouseUpLoopEnd, false);
-    addListener(`mousemove`, _this.listeners.onCursorMoveLoopEnd, false);
-    addListener(`touchmove`, _this.listeners.onCursorMoveLoopEnd, false);
+    addMouseUpAndMoveListeners(
+      _this.listeners.onMouseUpLoopEnd,
+      _this.listeners.onCursorMoveLoopEnd
+    );
   };
 
-  _this.elements.loopBarEnd.addEventListener(
-    `mousedown`,
+  addStartListeners(
     _this.listeners.onMouseDownLoopEnd,
-    false
-  );
-  _this.elements.loopBarEnd.addEventListener(
-    `touchstart`,
-    _this.listeners.onMouseDownLoopEnd,
-    {
-      passive: false
-    },
+    _this.elements.loopBarEnd,
     false
   );
 };
