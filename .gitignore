@@ -1,5 +1,6 @@
 #build
 dist
+bundle.js
 
 # Node modules
 node_modules
