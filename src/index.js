@@ -9,6 +9,8 @@ import bodyListener from "./listeners/body";
 import controlsListener from "./listeners/controls";
 import donkeyclipListener from "./listeners/donkeyclip";
 import { PLAYING, showControls } from "./listeners/enums";
+import css from  "./html/style.css";
+
 import {
   DURATION_CHANGE,
   LOOP_CHANGE,
@@ -53,7 +55,7 @@ class Player {
     options.preview ||= false;
     options.showVolume ||= false;
     options.showIndicator ||= false;
-    options.theme ||= "transparent on-top";
+    options.theme ||= "transparent position-ontop";
     options.host ||= options.clip.props.host;
     options.buttons ||= {};
     options.timeFormat ||= "ss";
@@ -390,7 +392,7 @@ class Player {
         this.elements.indicator.innerHTML = `${
           state.charAt(0).toUpperCase() + state.slice(1)
         }`;
-        if (state === "blocked") {
+        if (state == "blocked") {
           this.elements.pointerEventPanel.innerHTML = `
             <div style="width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">${loadingSVG}</div>`;
         } else {
@@ -592,19 +594,28 @@ class Player {
   }
 
   setTheme() {
-    //remove previous style if exists
-    elid(this.name + "-style") &&
-      eltag(`head`)[0].removeChild(elid(this.name + "-style"));
+    // //remove previous style if exists
+    // elid(this.name + "-style") &&
+    //   eltag(`head`)[0].removeChild(elid(this.name + "-style"));
 
     // replace multiple spaces with one space
     this.options.theme.replace(/\s\s+/g, ` `);
     this.options.theme.trim();
-
+    debugger;
     if (
-      !this.options.theme.includes("on-top") &&
+      !this.options.theme.includes("position-ontop") &&
       !this.options.theme.includes("position-bottom")
     ) {
-      this.options.theme += " on-top";
+      this.options.theme += " position-ontop";
+    }
+    if (this.options.theme.includes("position-ontop")){
+      this.elements.mcPlayer.classList.add("position-ontop");
+    } else {
+      this.elements.mcPlayer.classList.add("position-bottom");
+    }
+
+    if (this.options.theme.includes("default")){
+      this.elements.mcPlayer.classList.add("theme-default");
     }
     const theme = {};
     for (const i in this.options.theme.split(` `)) {
@@ -613,15 +624,20 @@ class Player {
         theme[q] = confTheme[q];
       }
     }
-    const css = confStyle(theme, this.name, this.options);
-    const style = elcreate("style");
-    style.id = this.name + "-style";
-    style.styleSheet
-      ? (style.styleSheet.cssText = css)
-      : style.appendChild(document.createTextNode(css));
-
-    // append player style to document
-    eltag("head")[0].appendChild(style);
+    if (!elid("--mc-player-style")){
+      // const css = import("./html/style.css");
+      console.log(css);
+      // const css = confStyle(theme, this.name, this.options);
+      const style = elcreate("style");
+      style.id = "--mc-player-style";
+      style.styleSheet
+        ? (style.styleSheet.cssText = css)
+        : style.appendChild(document.createTextNode(css));
+  
+      // append player style to document
+      eltag("head")[0].appendChild(style);
+    }
+    
     this.eventBroadcast("theme-change", this.options.theme);
   }
 

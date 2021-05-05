@@ -1,6 +1,6 @@
 import MC from "@kissmybutton/motorcortex";
 import AnimeDefinition from "@kissmybutton/motorcortex-anime";
-import Player from "../src/index";
+import Player from "../dist/motorcortex-player.umd";
 const Anime = MC.loadPlugin(AnimeDefinition);
 
 const css = `
@@ -281,7 +281,6 @@ window.clip = clip;
 window.player = new Player({
   clip,
   controls: true,
-  scaleToFit: "cover",
   preview: true,
-  theme: "mc-blue",
+  theme:"default position-ontop"
 });

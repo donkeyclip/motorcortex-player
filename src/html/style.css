@@ -1,0 +1,786 @@
+/* Themes DEFAULT*/
+.--mc-player.theme-default{
+  --backgroundColor:black;
+  --settingsBackgroundColor: #d452f2;
+  --backgroundColor:whitesmoke;
+  --gradHeight:0px;
+  --color: black;
+  --svgColor:black;
+  --loopbarColor:#808086;
+  --speedbarColor:#999;
+  --runningbarColor:red;
+  --cursorColor:red;
+  --speedbarCursorColor:red;
+  --buttonOpacity:1;
+  --hoverColor:rgba(200, 200, 200, 0.5);
+  --sliderOffColor:#ccc;
+  --sliderOnColor:red;
+  --previewBorder:2px solid #fff;
+  --border:1px solid rgba(255,255,255,.2);
+  --controlsBorder:none;
+  --svgSelectedColor:red;
+  --loopBarBoundariesColor:#808086
+}
+
+.--mc-player.position-ontop{
+  --backgroundHeight:100%;
+  --pointerEventPanelHeight:calc(100% - 44px);
+  --controlsBottom:0px;
+  --settingsPanelBottom:48px;
+  --controlsPosition:calc(100% + 0px);
+  
+}
+.--mc-player.position-ontop:hover .--mc-player-controls {
+  opacity:1 !important;
+}
+
+  .--mc-player, .--mc-player *{
+    font-family:'Ubuntu' !important;
+  }
+  .--mc-player .background {
+    background-color: var(--backgroundColor);
+    width:100%;
+    height:var(--backgroundHeight);
+    position:absolute;
+    top:0px;
+    left:0px;
+    z-index:-2000;
+  }
+  
+  .--mc-player .full-screen .--mc-player-controls {
+    position:fixed;
+    left:0px;
+    bottom:0px;
+  }
+  
+  .--mc-player .full-screen .--mc-player-settings-panel {
+    position:fixed;
+    bottom: 45px;
+  }
+  
+  .--mc-player .svg,.--mc-player .svg *,.--mc-player svg,.--mc-player svg *  {
+    fill: var(--svgColor);
+  }
+  
+  .--mc-player .svg.arrow * {
+    stroke: var(--svgColor);
+    fill: transparent;
+  }
+  
+  .--mc-player .pointer-event-panel {
+    height: var(--pointerEventPanelHeight);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .--mc-player-pointer-event-panel{
+    width:100%;
+    position:absolute;
+    z-index:100;
+  }
+  .--mc-player-listener-helper{
+    width:100%;
+    height:calc( 100% - 45px );
+    position:absolute;
+    z-index:110;
+  }
+  .--mc-player .svg-selected svg{
+    fill: var(--svgSelectedColor);
+    stroke: var(--svgSelectedColor);
+  }
+  .--mc-player-hover-display{
+    display: flex;
+    visibility:hidden;
+    opacity:0;
+    background-color: black;
+    position: absolute;
+    bottom: 30px;
+    left: 0px;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .--mc-player-hover-display-clip{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    position:relative;
+  }
+  .--mc-player-hover-display-border{
+    border: var(--previewBorder);
+    position:absolute;
+    width:calc(100% - 4px);
+    height:calc(100% - 4px);
+    z-index:2;
+  }
+  
+  .--mc-player-hover-millisecond {
+    font-weight:bold;
+    padding:3px;
+    height:18px;
+    margin:0px;
+    line-height:12px;
+    font-size:10px;
+    text-align: center;
+    min-width:20px;
+    max-width:100px;
+    z-index:2;
+    position:absolute;
+    bottom:-25px;
+  }
+  .--mc-player,
+  .--mc-player ::before,
+  .--mc-player :::after,
+  .--mc-player div,
+  .--mc-player p,
+  .--mc-player span,
+  .--mc-player ul,
+  .--mc-player li {
+    font-weight: 400;
+    line-height: 1.9 !important;
+    color: var(--color);
+    font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    box-sizing:border-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .--mc-player {
+    line-height: 1.9;
+    font-size: 12px;
+    overflow:hidden;
+    height: var(--controlsPosition);
+    width:100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    color: var(--color);
+    pointer-events:auto;
+  }
+  
+  .--mc-player .force-show-controls {
+    opacity:1 !important;
+  }
+  .--mc-player .--mc-player-controls {
+    opacity:1;
+  }
+  
+  .--mc-player:hover {
+    pointer-events:none;
+  }
+  
+  .--mc-player-settings-speed-hide {
+    text-align:right;
+  }
+  
+  .--mc-player .grad {
+    pointer-events:none !important;
+    background-image: linear-gradient(
+      rgba(0,0,0,00.001),
+      rgba(0,0,0,00.004),
+      rgba(0,0,0,00.007),
+      rgba(0,0,0,00.01),
+      rgba(0,0,0,0.04),
+      rgba(0,0,0,0.07),
+      rgba(0,0,0,0.1),
+      rgba(0,0,0,0.15),
+      rgba(0,0,0,0.2),
+      rgba(0,0,0,0.25),
+      rgba(0,0,0,0.3),
+      rgba(0,0,0,0.35),
+      rgba(0,0,0,0.4),
+      rgba(0,0,0,0.45),
+      rgba(0,0,0,0.5),
+      rgba(0,0,0,0.55),
+      rgba(0,0,0,0.6),
+      rgba(0,0,0,0.65),
+      rgba(0,0,0,0.7),
+      rgba(0,0,0,0.75),
+      rgba(0,0,0,0.8),
+      rgba(0,0,0,0.88)
+    );
+    position:absolute;
+    width:100%;
+    height:var(--gradHeight);
+    left:0px;
+    bottom:0px;
+    z-index:-1;
+  }
+  
+  .--mc-player .--mc-player-controls {
+    touch-action: none;
+    background-color: var(--backgroundColor);
+    border: var(--controldBorder);
+    position: absolute;
+    bottom: var(--controlsBottom);
+    left: 0px;
+    width: 100%;
+    z-index:100;
+    height: 44px;
+    opacity:0;
+    display:flex;
+    border-radius: 6px;
+    align-items:center;
+    -webkit-transition: opacity 0.2s ease;
+    -moz-transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease;
+  }
+  
+  .--mc-player .--mc-player-totalbar {
+    width: calc(100% - 20px);
+    height: 5px;
+    margin: 0px 10px 0px 10px;
+    background-color: var(--totalbarControl);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+  
+  .--mc-player .--mc-player-loopbar {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    background-color: var(--loopbarColor);
+  }
+  
+ /*  .--mc-player .--mc-player-loop-boundaries::before {
+    ${theme["loopbar-boundaries-style::before"]}
+  
+  } */
+
+  .--mc-player .--mc-player-loop-boundaries {
+    transform:translate(-50%,-37%);
+    position:absolute;
+    width:18px;
+    background-color:var(--loopbarBoundariesColor);
+    height:18px;
+    border-radius:10px;
+    z-index:40;
+    /* ${theme["loopbar-boundaries-style"]} */
+  }
+  
+ /*  .--mc-player .--mc-player-loop-boundaries::after {
+    ${theme["loopbar-boundaries-style::after"]}
+  
+  } */
+  
+  .--mc-player .--mc-player-helperbar {
+    position: absolute;
+    height: 20px;
+    top: -10px;
+    left: 0px;
+    right: 0px;
+    z-index:2;
+  }
+  
+  .--mc-player .--mc-player-runningbar {
+    position: relative;
+    width: 0px;
+    max-width:100%;
+    height: 100%;
+    background-color: var(--runningbarColor);
+  }
+  
+  .--mc-player .--mc-player-cursor {
+    transform:translate(50%,-36%);
+    right: 0px;
+    overflow:hidden;
+    top: 0px;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    background-color: var(--cursorColor);
+    border-radius: 10px;
+    z-index: 5;
+  }
+  
+  /* .--mc-player .--mc-player-cursor::before {
+    ${theme["cursor-style::before"]}
+  } */
+  
+  /* .--mc-player .--mc-player-cursor::after {
+    ${theme["cursor-style::after"]}
+  } */
+  
+  .--mc-player .--mc-player-left-controls,.--mc-player .--mc-player-right-controls {
+      display: flex;
+      align-items:center;
+      height: 100%;
+      padding: 5px 5px 0px;
+  }
+  .--mc-player .--mc-player-right-controls {
+    position:absolute;
+    right:0px;
+  }
+  
+  
+  .--mc-player .--mc-player-left-controls > div,.--mc-player .--mc-player-right-controls > div {
+    display: inline-flex;
+    align-items:center;
+    margin:0 10px 0 10px;
+    overflow:hidden;
+  }
+  
+  
+  .--mc-player .--mc-player-time-display span {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  
+  .--mc-player .--mc-player-status-btn {
+    opacity:var(--buttonOpacity);
+  }
+  .--mc-player .--mc-player-status-btn svg{
+    width:20px;
+    height:18px;
+  }
+  .--mc-player .--mc-player-volume {
+    opacity:var(--buttonOpacity);
+    position: relative;
+  }
+  .--mc-player .--mc-player-volume-btn {
+    width: 20px;
+    height: 15px;
+  }
+  
+  .--mc-player .--mc-player-volumebar {
+    width: 0px;
+    height: 3px;
+    background-color: var(--loopbarColor);
+    -webkit-transition: left 0.1s ease;
+    -moz-transition: left 0.1s ease;
+    transition: left 0.1s ease;
+    position:relative;
+    left:5px;
+  }
+  
+  .--mc-player .--mc-player-volumebar-helper {
+    position: absolute;
+      width: 0px;
+      height: 15px;
+      bottom: 0px;
+      z-index: 10;
+      left: 25px;
+  }
+  
+  .--mc-player .--mc-player-volumebar-active {
+    position: relative;
+    width: 0%;
+    height: 100%;
+    background-color: var(--color);
+    position:relative;
+    bottom:0px;
+  }
+  
+  .--mc-player .--mc-player-volume-cursor {
+    transform:translate(50%,-36%);
+    right: 0px;
+    top: 0px;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    background-color: var(--color);
+    border-radius: 10px;
+    z-index: 5;
+  }
+  
+  .--mc-player .--mc-player-loopbar-time {
+    width:auto;
+    height:12px;
+    background-color:var(--backgroundColor);
+    line-height:10px;
+    font-size:10px;
+  }
+  
+  .--mc-player .--mc-player-loop-time {
+    margin: 7px;
+  }
+  
+  .--mc-player .--mc-player-dc-btn {
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      width: 20px;
+      height: 15px;
+      margin: 7px 10px 5px 0px;
+      transform: scale(1.5,1.5);
+  }
+  
+  .--mc-player .--mc-player-loop-btn {
+    opacity:var(--buttonOpacity);
+    display:flex;
+    align-items:center;
+  }
+  
+  
+  .--mc-player .--mc-player-settings-btn {
+    overflow:hidden;
+    opacity:var(--buttonOpacity);
+  }
+  
+  .--mc-player .--mc-player-full-screen-btn {
+    opacity:var(--buttonOpacity);
+  }
+  
+  .--mc-player .--mc-player-speed-btn {
+    opacity:var(--buttonOpacity);
+    height: 14px;
+  }
+  
+  .--mc-player .--mc-player-settings-panel {
+    touch-action: none;
+    box-sizing: border-box;
+    position: absolute;
+    z-index:102;
+    background-color: var(--settingsBackgroundColor);
+    bottom: var(--settingsPanelBottom);
+    border: var(--themeBorder);
+    right: 8px;
+    width: 167px;
+    padding: 5px;
+    margin: 0px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  
+  .--mc-player .--mc-player-hide {
+    display:none !important;
+  }
+  
+  .--mc-player .--mc-player-speed-value-bar {
+    position: relative;
+    width: 5px;
+    background-color: var(--speedbarColor);
+    display: inline-block;
+    box-sizing: border-box;
+    /* height: ${options.speedValues.length * 16}px; */
+    height: 200px;
+    margin-right:15px;
+  }
+  
+  .--mc-player .--mc-player-speed-value-helperbar {
+    position: absolute;
+    width: 25px;
+    /* height: ${options.speedValues.length * 16}px; */
+    height: 200px;
+    float: left;
+    left: 18px;
+    z-index:10;
+  }
+  
+  
+  .--mc-player .--mc-player-speed-value-bar:hover,
+  .--mc-player .--mc-player-speed-value-helperbar {
+    cursor: pointer;
+  }
+  
+  .--mc-player .--mc-player-volumebar:hover,
+  .--mc-player .--mc-player-volumebar-helper:hover,
+  .--mc-player .--mc-player-volume-btn:hover,
+  .--mc-player .--mc-player-volumebar:active,
+  .--mc-player .--mc-player-volumebar-helper:active,
+  .--mc-player .--mc-player-volume-btn:active {
+    cursor:pointer;
+  }
+  
+  .--mc-player .--mc-player-speed-cursor {
+    position: absolute;
+    background-color: var(--speedbarCursorColor);
+    top: 0px;
+    left: 0px;
+  }
+  
+  .--mc-player .--mc-player-speed-cursor div {
+    position: absolute;
+    background-color: var(--speedbarCursorColor);
+    left: -2.5px;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+  }
+  
+  .--mc-player .--mc-player-time-separator{
+    margin:0 3px;
+  }
+  .--mc-player .--mc-player-speed-cursor:hover {
+    cursor: pointer;
+  }
+  
+  .--mc-player .--mc-player-speed-value-step {
+    width: 16px;
+    background-color: var(--speedbarColor);
+    box-sizing: border-box;
+    height: 2px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    float: left;
+  }
+  
+  .--mc-player .--mc-player-speed-value {
+    display: inline-block;
+    box-sizing: border-box;
+    /* height: ${options.speedValues.length * 16}px; */
+    height: 200px;
+    text-align: left;
+  }
+  
+  .--mc-player .--mc-player-speed-value {
+    box-sizing: border-box;
+    height: 16px;
+    font-size: 12px;
+  }
+  
+  .--mc-player .--mc-player-indicator {
+    font-size: 8px !important;
+    position: absolute;
+    bottom: -3px;
+    color: var(--color);
+  }
+  
+  
+  .--mc-player .--mc-player-speed-settings li.no-hover {
+    /* height: ${options.speedValues.length * 16 + 10 - 2}px !important; */
+    height:200px
+  }
+  
+  .--mc-player .--mc-player-settings-panel.--mc-player-settings-speed-panel {
+    overflow: hidden;
+    width: 92px;
+    position:absolute;
+    z-index:120;
+    /*height: ${options.speedValues.length * 16 + 32 + 20}px;*/
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  
+  .--mc-player .--mc-player-settings-panel.--mc-player-settings-speed-panel .--mc-player-speed-btn {
+    float: left;
+  }
+  
+  .--mc-player .--mc-player-settings-speed-panel ul:first-child {
+    text-align: right;
+  }
+  
+  .--mc-player .--mc-player-speed-current {
+    float: right;
+    padding-right: 10px
+  }
+  
+  .--mc-player .--mc-player-settings-panel .--mc-player-speed-btn {
+    float: right;
+  }
+  
+  .--mc-player .--mc-player-settings-panel ul {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+  }
+  
+  .--mc-player .--mc-player-settings-panel.--mc-player-settings-speed-panel ul li {
+    min-width: 70px;
+    display: flex;
+    height: 32px;
+    align-items: center;
+    justify-content:center;
+  }
+  
+  .--mc-player .--mc-player-settings-panel ul li.no-hover:hover {
+    background-color: transparent;
+    cursor: default;
+  }
+  
+  .--mc-player div.--mc-player-speed-value:hover {
+    background-color: var(--hoverColor);
+    cursor: pointer;
+  }
+  
+  .--mc-player .--mc-player-settings-panel ul li {
+    list-style-type: none;
+    margin: 0px;
+    padding: 5px;
+    display: flex;
+    height:32px;
+    align-items:center;
+  }
+  
+  .--mc-player .--mc-player-settings-panel ul li label {
+    margin: 0px;
+  }
+  
+  .--mc-player .switch {
+    position: relative;
+    display: inline-block;
+    width: 32px;
+    height: 18px;
+  }
+  
+  .--mc-player .switch input {
+    display: none;
+  }
+  
+  .--mc-player .settings-switch {
+    position: absolute;
+    right: 24px;
+  }
+  
+  .--mc-player .settings-switch::after {
+    clear: both;
+  }
+  
+  .--mc-player .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--sliderOffColor);
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .--mc-player .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .--mc-player input:checked+.slider {
+    background-color: var(--sliderOnColor);
+  }
+  
+  .--mc-player input:focus+.slider {
+    box-shadow: 0 0 1px var(--sliderOnColor);
+  }
+  
+  .--mc-player input:checked+.slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+  }
+  
+  
+  /* Rounded sliders */
+  
+  .--mc-player .slider.round {
+    border-radius: 34px;
+  }
+  
+  .--mc-player .slider.round:before {
+    border-radius: 50%;
+  }
+  
+  
+  .--mc-player .m-fadeOut {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  .--mc-player .m-fadeIn {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  .--mc-player .--mc-player-settings-panel ul li:hover {
+    background-color: var(--hoverColor);
+    cursor: pointer;
+  }
+  
+  .--mc-player .--mc-player-settings-panel ul li label:hover {
+    cursor: pointer;
+  }
+  
+  .--mc-player .--mc-player-loopbar:hover {
+    cursor: pointer;
+  }
+  
+  .--mc-player .--mc-player-status-btn:hover {
+    cursor: pointer;
+  }
+  
+  .--mc-player .--mc-player-controls:active .--mc-player-cursor,
+  .--mc-player .--mc-player-controls:hover .--mc-player-cursor  {
+    width: 16px;
+    height: 16px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  
+  .--mc-player .--mc-player-volume .--mc-player-volume-cursor-transition {
+    width: 12px;
+    height: 12px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  
+  .--mc-player .--mc-player-volume .--mc-player-volume-width-transition
+   {
+    width: 50px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  
+  .--mc-player .--mc-player-time-display.--mc-player-time-width-transition {
+    position:relative;
+    left: 10px;
+    -webkit-transition: left 0.3s ease;
+    -moz-transition: left 0.3s ease;
+    transition: left 0.3s ease;
+  }
+  
+  .--mc-player .--mc-player-settings-speed:hover .--mc-player-speed-btn {
+    opacity: 1;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  
+  .--mc-player .--mc-player-status-btn:hover {
+    opacity: 1;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  
+  .--mc-player .--mc-player-loop-btn:hover,
+  .--mc-player .--mc-player-dc-btn:hover
+   {
+    cursor: pointer;
+    opacity: 1;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  .--mc-player .--mc-player-settings-btn:hover {
+    cursor: pointer;
+    opacity: 1;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  
+  .--mc-player .--mc-player-full-screen-btn:hover {
+    cursor: pointer;
+    opacity: 1;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  /* ${theme["theme-style"]} */
+
+  
