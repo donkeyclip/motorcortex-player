@@ -1,15 +1,16 @@
 import { TimeCapsule } from "@kissmybutton/motorcortex";
 import { name, updateName } from "./config";
-import { calcClipScale, elcreate, elid, eltag } from "./helpers";
+import { calcClipScale, elcreate, elFirstClass, elid, eltag } from "./helpers";
 import setElements from "./html/setElements";
-import confStyle from "./html/style";
-import { loadingSVG, pauseSVG, playSVG } from "./html/svg";
-import confThemes from "./html/themes";
+// import { loadingSVG, pauseSVG, playSVG } from "./html/svg";
+const loadingSVG = "Loading";
+const pauseSVG = "Pause";
+const playSVG = "Play";
 import bodyListener from "./listeners/body";
 import controlsListener from "./listeners/controls";
 import donkeyclipListener from "./listeners/donkeyclip";
 import { PLAYING, showControls } from "./listeners/enums";
-import css from  "./html/style.css";
+import css from  "./html/newStyle.css";
 
 import {
   DURATION_CHANGE,
@@ -155,9 +156,9 @@ class Player {
       this.options.clip = newOptions.clip;
     }
     if (newOptions.controls === false) {
-      elid(this.name).style.display = "none";
+      this.elements.mcPlayer.style.display = "none";
     } else if (newOptions.controls === true) {
-      elid(this.name).style.display = "unset";
+      this.elements.mcPlayer.style.display = "unset";
     }
 
     if (
@@ -372,7 +373,8 @@ class Player {
   }
 
   eventBroadcast(eventName, state) {
-    const controlsEl = elid(`${this.name}-controls`);
+    const {mcPlayer} = this.elements;
+    const controlsEl = elFirstClass(mcPlayer,`--mcp-controls`);
     if (eventName === STATE_CHANGE) {
       if (this.options.currentScript) {
         this.options.currentScript.dataset.status = state;
@@ -594,40 +596,43 @@ class Player {
   }
 
   setTheme() {
-    // //remove previous style if exists
+    // remove previous style if exists
     // elid(this.name + "-style") &&
-    //   eltag(`head`)[0].removeChild(elid(this.name + "-style"));
-
+    // eltag(`head`)[0].removeChild(elid(this.name + "-style"));
     // replace multiple spaces with one space
     this.options.theme.replace(/\s\s+/g, ` `);
     this.options.theme.trim();
-    debugger;
-    if (
-      !this.options.theme.includes("position-ontop") &&
-      !this.options.theme.includes("position-bottom")
-    ) {
-      this.options.theme += " position-ontop";
-    }
-    if (this.options.theme.includes("position-ontop")){
-      this.elements.mcPlayer.classList.add("position-ontop");
-    } else {
-      this.elements.mcPlayer.classList.add("position-bottom");
-    }
+    const POSITION_ON_TOP = "position-ontop";
+    const POSITION_BOTTOM ="position-bottom";
 
-    if (this.options.theme.includes("default")){
+    if (
+      !this.options.theme.includes(POSITION_ON_TOP) &&
+      !this.options.theme.includes(POSITION_BOTTOM)
+    ) {
+      this.options.theme += ` ${POSITION_ON_TOP}`;
+    }
+    if (this.options.theme.includes(POSITION_ON_TOP))
+      this.elements.mcPlayer.classList.add(POSITION_ON_TOP);
+    else 
+      this.elements.mcPlayer.classList.add(POSITION_BOTTOM);
+
+    if (this.options.theme.includes("default"))
       this.elements.mcPlayer.classList.add("theme-default");
-    }
-    const theme = {};
-    for (const i in this.options.theme.split(` `)) {
-      const confTheme = confThemes(this.options.theme.split(` `)[i], this.name);
-      for (const q in confTheme || {}) {
-        theme[q] = confTheme[q];
-      }
-    }
+    else if (this.options.theme.includes("transparent"))
+      this.elements.mcPlayer.classList.add("theme-transparent");
+    else if (this.options.theme.includes("dark"))
+      this.elements.mcPlayer.classList.add("theme-dark");
+    else if (this.options.theme.includes("whiteGold"))
+      this.elements.mcPlayer.classList.add("theme-whiteGold");
+    else if (this.options.theme.includes("darkGold"))
+      this.elements.mcPlayer.classList.add("theme-darkGold");
+    else if (this.options.theme.includes("mc-green"))
+      this.elements.mcPlayer.classList.add("theme-mc-green");
+    else if (this.options.theme.includes("mc-blue"))
+      this.elements.mcPlayer.classList.add("theme-mc-blue");
+
+
     if (!elid("--mc-player-style")){
-      // const css = import("./html/style.css");
-      console.log(css);
-      // const css = confStyle(theme, this.name, this.options);
       const style = elcreate("style");
       style.id = "--mc-player-style";
       style.styleSheet
@@ -667,7 +672,7 @@ class Player {
     const positionY =
       (targetZone * step - 1) * (this.options.speedValues.length - 1) * -16;
 
-    elid(`${this.name}-speed-cursor`).style.top = `${positionY}px`;
+    elFirstClass(this.elements.mcPlayer,`--mcp-speed-cursor`).style.top = `${positionY}px`;
   }
 
   calculateSpeed(step, arrayOfValues, currentPercentage) {
@@ -694,13 +699,12 @@ class Player {
   }
 
   createPreviewDisplay() {
-    this.previewClip = this.clip.paste(elid(`${this.name}-hover-display-clip`));
-    const previewClip = elid(`${this.name}-hover-display`);
-    window.previewClip = this.previewClip;
+    const previewHost= elFirstClass(this.elements.mcPlayer,`--mcp-preview-host`);
+    this.previewClip = this.clip.paste(previewHost);
 
-    previewClip.style.position = "absolute";
-    previewClip.style.background = this.options.backgroundColor;
-    previewClip.style.zIndex = 1;
+    previewHost.style.position = "absolute";
+    previewHost.style.background = this.options.backgroundColor;
+    previewHost.style.zIndex = 1;
     this.setPreviewDimentions();
   }
 
@@ -735,8 +739,9 @@ class Player {
     this.previewClip.ownClip.rootElement.style.left = `${transform.position.left}px`;
     this.previewClip.ownClip.rootElement.style.top = `${transform.position.top}px`;
 
-    elid(`${this.name}-hover-display`).style.width = `${width}px`;
-    elid(`${this.name}-hover-display`).style.height = `${height}px`;
+    const previewElement= elFirstClass(this.elements.mcPlayer,`--mcp-preview`);
+    previewElement.style.width = `${width}px`;
+    previewElement.style.height = `${height}px`;
 
     previewClip.style.boxSizing = "border-box";
   }

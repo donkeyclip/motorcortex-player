@@ -2,6 +2,7 @@ import {
   addMouseUpAndMoveListeners,
   addStartListeners,
   elid,
+  elFirstClass,
   removeMouseUpAndMoveListeners,
 } from "../helpers";
 import { SPEED_CHANGE } from "./events";
@@ -51,8 +52,8 @@ export function add(_this) {
       _this.options.speedValues,
       percentage
     );
-    elid(`${_this.name}-speed-runtime`).innerHTML = `${speed}0`;
-    elid(`${_this.name}-speed-cursor`).style.top = `${positionY}px`;
+    elFirstClass(_this.elements.mcPlayer,`--mcp-speed-runtime`).innerHTML = `${speed}0`;
+    elFirstClass(_this.elements.mcPlayer,`--mcp-speed-cursor`).style.top = `${positionY}px`;
     _this.clip.executionSpeed = speed;
     _this.eventBroadcast(SPEED_CHANGE, _this.clip.executionSpeed);
   };
@@ -62,7 +63,7 @@ export function add(_this) {
 
     e.preventDefault();
     removeMouseUpAndMoveListeners(onMouseUpSpeedBar, onCursorMoveSpeedBar);
-    elid(`${_this.name}-speed-runtime`).innerHTML = "Speed";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-speed-runtime`).innerHTML = "Speed";
     const speedDisplay = _this.clip.speed == 1 ? "Normal" : _this.clip.speed;
 
     _this.elements.speedCurrent.innerHTML = speedDisplay;

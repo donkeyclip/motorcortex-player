@@ -1,4 +1,4 @@
-import { addListener, el, elid } from "../helpers";
+import { addListener, el, elFirstClass, elid } from "../helpers";
 
 export default (_this) => {
   function handleFullScreenChange() {
@@ -25,7 +25,7 @@ export default (_this) => {
         -(e.target.dataset.zone * step - 1) *
         ((_this.options.speedValues.length - 1) * 16);
 
-      elid(`${_this.name}-speed-cursor`).style.top = `${positionY}px`;
+      elFirstClass(_this.elements.mcPlayer,`--mcp-speed-cursor`).style.top = `${positionY}px`;
     }
   });
 };

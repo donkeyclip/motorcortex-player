@@ -13,6 +13,9 @@ export function el(selector) {
 export function elid(id) {
   return document.getElementById(id);
 }
+export function elFirstClass(player,className) {
+  return player.getElementsByClassName(className)[0];
+}
 export function eltag(tag) {
   return document.getElementsByTagName(tag);
 }

@@ -4,24 +4,12 @@ export const playSVG = `
 </svg>`;
 
 export const dcSVG = `
-  <svg class="svg" style="transform:scale(0.55)" version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="1705.000000pt" height="1903.000000pt" viewBox="0 0 1705.000000 1903.000000"
- preserveAspectRatio="xMidYMid meet">
-<metadata>
-Created by potrace 1.15, written by Peter Selinger 2001-2017
-</metadata>
-<g transform="translate(0.000000,1903.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
-<path d="M0 9515 l0 -9515 1583 0 1582 0 4430 4655 c2437 2561 4457 4687 4490
-4726 33 38 1164 1227 2513 2642 l2452 2572 0 2192 c0 1206 -2 2193 -4 2193 -3
-0 -1597 -1652 -3542 -3671 l-3538 -3671 -31 35 c-16 20 -1497 1683 -3290 3696
-l-3260 3661 -1692 0 -1693 0 0 -9515z m5504 2412 c1253 -1413 2279 -2574 2282
--2580 3 -9 -3274 -3438 -4597 -4811 -5 -6 -9 1968 -9 4999 l0 5010 24 -25 c13
--14 1048 -1181 2300 -2593z"/>
-<path d="M13924 7584 c-34 -17 -2029 -2158 -2029 -2178 0 -15 5121 -5400 5141
--5404 12 -3 14 295 14 2241 l0 2245 -1478 1543 c-813 849 -1490 1550 -1505
-1557 -38 16 -105 15 -143 -4z"/>
-</g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" style="" xml:space="preserve" width="841.9" height="595.3"><rect id="backgroundrect" width="100%" height="100%" x="0" y="0" fill="none" stroke="none"/>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="113.18589782714844" y1="278.33489990234375" x2="245.783203125" y2="278.33489990234375">
+  <stop offset="1.440276e-03" style="stop-color:#34C8FF"/>
+  <stop offset="1" style="stop-color:#935CFF"/>
+</linearGradient>
+<g class="currentLayer" style=""><title>Layer 1</title><path class="st0 selected" d="M471.1196716308594,226.91967210769653 v45.9 h-14.5 c-2.9,-10.2 -12.4,-17.7 -23.5,-17.7 c-13.5,0 -24.5,11 -24.5,24.5 c0,13.5 11,24.5 24.5,24.5 c11.2,0 20.6,-7.5 23.5,-17.7 h13.9 c-3.2,17.7 -18.7,31.3 -37.4,31.3 c-20.9,0 -38,-17 -38,-38 c0,-20.9 17,-38 38,-38 c9.3,0 17.9,3.4 24.5,9 V218.81967210769653 c-8.3,-3.8 -17.6,-5.9 -27.4,-5.9 c-36.6,0 -66.3,29.7 -66.3,66.3 c0,36.6 29.7,66.3 66.3,66.3 c36.6,0 66.3,-29.7 66.3,-66.3 C496.6196716308594,257.91967210769656 486.6196716308594,239.01967210769652 471.1196716308594,226.91967210769653 z" id="svg_1"/></g>
 </svg>`;
 
 export const pauseSVG = `
@@ -72,14 +60,14 @@ export const settingsSVG = `
 `;
 
 export const arrowRightSVG = `
-  <svg class="svg arrow" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
+  <svg class="svg arrow" style="transform:scale(0.06)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
     <polyline fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" points="0.375,0.375 45.63,38.087 0.375,75.8 "/>
   </svg>`;
 
 export const arrowLeftSVG = `
-  <svg class="svg arrow" class="svg" width="100%" height="100%" viewBox="0 0 50 80" xml:space="preserve">
-    <polyline fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" points="45.63,75.8 0.375,38.087 45.63,0.375 "/>
-  </svg>`;
+<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-left" class="svg-inline--fa fa-arrow-left fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <path fill="currentColor" d="M257.5 445.1l-22.2 22.2c-9.4 9.4-24.6 9.4-33.9 0L7 273c-9.4-9.4-9.4-24.6 0-33.9L201.4 44.7c9.4-9.4 24.6-9.4 33.9 0l22.2 22.2c9.5 9.5 9.3 25-.4 34.3L136.6 216H424c13.3 0 24 10.7 24 24v32c0 13.3-10.7 24-24 24H136.6l120.5 114.8c9.8 9.3 10 24.8.4 34.3z"></path>
+</svg>`;
 
 export const fullScreenSVG = `
  <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">

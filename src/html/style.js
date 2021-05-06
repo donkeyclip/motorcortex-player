@@ -281,19 +281,19 @@ ${
   ${theme["cursor-style::after"]}
 }
 
-#${name} #${name}-left-controls,#${name} #${name}-right-controls {
+#${name} #${name}-left-buttons,#${name} #${name}-right-buttons {
     display: flex;
     align-items:center;
     height: 100%;
     padding: 5px 5px 0px;
 }
-#${name} #${name}-right-controls {
+#${name} #${name}-right-buttons {
   position:absolute;
   right:0px;
 }
 
 
-#${name} #${name}-left-controls > div,#${name} #${name}-right-controls > div {
+#${name} #${name}-left-buttons > div,#${name} #${name}-right-buttons > div {
   display: inline-flex;
   align-items:center;
   margin:0 10px 0 10px;

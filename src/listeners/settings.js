@@ -1,4 +1,4 @@
-import { addListener, elid, removeListener } from "../helpers";
+import { addListener, elid, elFirstClass, removeListener } from "../helpers";
 import {
   SHOW_PREVIEW_CHANGE,
   SHOW_VOLUME_CHANGE,
@@ -7,7 +7,7 @@ import {
 
 const showIndicator = (_this, e) => {
   e && e.preventDefault();
-  const checkbox = elid(`${_this.name}-show-indicator-checkbox`);
+  const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-indicator-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
     _this.elements.indicator.style.visibility = "hidden";
@@ -20,19 +20,19 @@ const showIndicator = (_this, e) => {
 
 const showPointerEvents = (_this, e) => {
   e && e.preventDefault();
-  const checkbox = elid(`${_this.name}-pointer-events-checkbox`);
+  const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-pointer-events-checkbox`);
   if (!checkbox.checked) {
     checkbox.checked = true;
     _this.options.pointerEvents = false;
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "none";
-    elid(`${_this.name}-controls`).style.pointerEvents = "auto";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-controls`).style.pointerEvents = "auto";
     _this.elements.settingsPanel.style.pointerEvents = "auto";
   } else {
     checkbox.checked = false;
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "auto";
-    elid(`${_this.name}-controls`).style.pointerEvents = "auto";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-controls`).style.pointerEvents = "auto";
     _this.elements.settingsPanel.style.pointerEvents = "auto";
   }
   _this.eventBroadcast("show-pointer-events-change", checkbox.checked);
@@ -45,7 +45,7 @@ const showVolume = (_this, e) => {
   );
   _this.elements.volumeControl.classList.toggle(`${_this.name}-hide`);
 
-  const checkbox = elid(`${_this.name}-show-volume-checkbox`);
+  const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-volume-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
     _this.elements.volumeControl.style.visibility = "hidden";
@@ -60,19 +60,19 @@ const showVolume = (_this, e) => {
 
 const showPreview = (_this, e) => {
   e && e.preventDefault();
-  const checkbox = elid(`${_this.name}-show-preview-checkbox`);
+  const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-preview-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
-    elid(`${_this.name}-hover-display`).style.visibility = "hidden";
-    elid(`${_this.name}-hover-display`).style.display = "none";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`).style.visibility = "hidden";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`).style.display = "none";
     _this.options.preview = false;
   } else {
     if (!_this.previewClip) {
       _this.createPreviewDisplay();
     }
     checkbox.checked = true;
-    elid(`${_this.name}-hover-display`).style.visibility = "visible";
-    elid(`${_this.name}-hover-display`).style.display = "flex";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`).style.visibility = "visible";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`).style.display = "flex";
     _this.options.preview = true;
   }
   _this.eventBroadcast(SHOW_PREVIEW_CHANGE, checkbox.checked);
@@ -90,7 +90,7 @@ export function add(_this) {
 
   _this.elements.settingsButton.onclick = (e) => {
     e.preventDefault();
-    const controlsEl = elid(`${_this.name}-controls`);
+    const controlsEl = elFirstClass(_this.elements.mcPlayer,`--mcp-controls`);
 
     const showHideSettings = (e) => {
       if (_this.elements.settingsPanel.contains(e.target)) {

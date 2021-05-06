@@ -31,7 +31,7 @@ export default (config) => `
         </div>
       </div>
     </div>
-    <div id="${config.name}-left-controls" class="--mc-player-left-controls">
+    <div id="${config.name}-left-buttons" class="--mc-player-left-buttons">
       <div id="${config.name}-status-btn" class="--mc-player-status-btn">
         ${config.svg.playSVG}
         <span id="${config.name}-indicator" class="--mc-player-indicator"></span>
@@ -53,7 +53,7 @@ export default (config) => `
         <span id="${config.name}-time-total" class="--mc-player-time-total"></span>
       </div>
     </div>
-    <div id="${config.name}-right-controls" class="--mc-player-right-controls">
+    <div id="${config.name}-right-buttons" class="--mc-player-right-buttons">
       <div
         id="${config.name}-loop-btn-container" class="--mc-player-loop-btn-container"
       >

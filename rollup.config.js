@@ -1,6 +1,7 @@
 import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
+import html from 'rollup-plugin-html';
 import { terser } from "rollup-plugin-terser";
 import postcss from "rollup-plugin-postcss";
 
@@ -13,7 +14,13 @@ export default [
       { file: pkg.main, format: "cjs" },
       { file: pkg.module, format: "es" },
     ],
-    plugins: [resolve(), commonjs(), babel(),postcss({inject:false})],
+    plugins: [
+      resolve(),
+      commonjs(),
+      babel(),
+      postcss({inject:false}),
+      html({include: '**/*.html'})
+    ],
   },
   {
     input: "src/index.js",
@@ -34,6 +41,7 @@ export default [
       babel(),
       terser(),
       postcss({inject:false}),
+      html({include: '**/*.html'})
     ],
   },
 ];

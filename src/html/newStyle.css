@@ -1,0 +1,270 @@
+.--mc-player.theme-transparent{
+    --activeColor:255,0,0;
+    --defaultColor:255,255,255;
+    --backgroundColor:transparent
+}
+.--mc-player * {
+    color: rgb(var(--defaultColor));
+    font-family:'Ubuntu' !important;
+}
+
+.--mc-player {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.--mc-player * {
+    box-sizing: border-box;
+}
+
+.--mcp-background,
+.--mcp-context {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+.--mcp-background{
+    background: black;
+    z-index: -1000;
+}
+
+.--mcp-pointer-events-panel {
+    width: 100%;
+    min-height: calc(100% - 44px);
+}
+
+.--mcp-grad {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 200px;
+    z-index: 0;
+    pointer-events: none !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 00.001),
+            rgba(0, 0, 0, 00.004),
+            rgba(0, 0, 0, 00.007),
+            rgba(0, 0, 0, 00.01),
+            rgba(0, 0, 0, 0.04),
+            rgba(0, 0, 0, 0.07),
+            rgba(0, 0, 0, 0.1),
+            rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.2),
+            rgba(0, 0, 0, 0.25),
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.35),
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.65),
+            rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0.75),
+            rgba(0, 0, 0, 0.8),
+            rgba(0, 0, 0, 0.88));
+}
+
+.--mcp-controls {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    background: var(--backgroundColor);
+    height: 44px;
+    padding: 0 10px;
+}
+
+.--mcp-progressbar {
+    height: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.--mcp-totalbar,
+.--mcp-loopbar,
+.--mcp-runningbar {
+    position: relative;
+    height: 5px;
+}
+
+.--mcp-cursor {
+    width: 16px;
+    height: 16px;
+    background-color: rgb(var(--activeColor));
+    border-radius: 100%;
+    position: absolute;
+    top: -5px;
+    right: -8px;
+}
+
+.--mcp-totalbar {
+    min-width: 100%;
+    background-color: rgba(var(--defaultColor),0.2);
+}
+
+.--mcp-loopbar {
+    width: 100%;
+    background-color: grey;
+    background-color: rgba(var(--defaultColor),0.3);
+}
+
+.--mcp-runningbar {
+    background-color: rgb(var(--activeColor));
+    width: 0px;
+}
+
+.--mcp-buttons,
+.--mcp-left-buttons,
+.--mcp-right-buttons,
+.--mcp-left-buttons>div,
+.--mcp-right-buttons>div {
+    display: flex;
+    align-items: center;
+}
+
+.--mcp-buttons,
+.--mcp-left-buttons,
+.--mcp-right-buttons {
+    flex: 1;
+    height: 100%;
+}
+
+.--mcp-left-buttons>div,
+.--mcp-right-buttons>div {
+    padding: 0 5px;
+}
+
+.--mcp-left-buttons>div:hover,
+.--mcp-right-buttons>div:hover {
+    background-color: var(--defaultColor);
+    opacity: 0.3;
+    cursor: pointer;
+}
+
+.--mcp-left-buttons {
+    justify-content: flex-start;
+}
+
+.--mcp-right-buttons {
+    justify-content: flex-end;
+}
+
+.--mcp-preview {
+    min-width: 100px;
+    min-height: 100px;
+    background-color: black;
+    position: absolute;
+    bottom: 64px;
+    border: 3px solid;
+    display: flex;
+}
+
+.--mcp-preview-host {
+    flex: 1;
+    overflow: hidden;
+}
+
+.--mcp-preview-millisecond {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.--mcp-settings-panel {
+    width: 200px;
+    height: 400px;
+    position: absolute;
+    background-color: var(--backgroundColor);
+    right: 10px;
+    bottom: 50px;
+}
+
+/* 
+
+Sliders 
+
+*/
+.--mc-player .switch {
+    position: relative;
+    display: inline-block;
+    width: 32px;
+    height: 18px;
+}
+
+.--mc-player .switch input {
+    display: none;
+}
+
+.--mc-player .settings-switch {
+    position: absolute;
+    right: 24px;
+}
+
+.--mc-player .settings-switch::after {
+    clear: both;
+}
+
+.--mc-player .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #999;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.--mc-player .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.--mc-player input:checked+.slider {
+    background-color: var(--activeColor);
+}
+
+.--mc-player input:focus+.slider {
+    box-shadow: 0 0 1px var(--activeColor);
+}
+
+.--mc-player input:checked+.slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+.--mc-player .slider.round {
+    border-radius: 34px;
+}
+
+.--mc-player .slider.round:before {
+    border-radius: 50%;
+}
+
+.--mc-player .m-fadeOut {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  .--mc-player .m-fadeIn {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }

@@ -1,6 +1,7 @@
 import {
   addMouseUpAndMoveListeners,
   elid,
+  elFirstClass,
   isMobile,
   removeMouseUpAndMoveListeners,
 } from "../helpers";
@@ -11,8 +12,8 @@ export default (_this) => {
     return;
   }
 
-  const hoverMillisecondElement = elid(`${_this.name}-hover-millisecond`);
-  const hoverDisplayElement = elid(`${_this.name}-hover-display`);
+  const hoverMillisecondElement = elFirstClass(_this.elements.mcPlayer,`--mcp-hover-millisecond`);
+  const hoverDisplayElement = elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`);
   const loopBarMouseInOut = () => {
     if (!_this.options.preview) {
       return;

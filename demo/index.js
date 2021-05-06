@@ -282,5 +282,5 @@ window.player = new Player({
   clip,
   controls: true,
   preview: true,
-  theme:"default position-ontop"
+  theme:"transparent position-ontop",
 });

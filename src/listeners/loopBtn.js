@@ -1,4 +1,4 @@
-import { elid } from "../helpers";
+import { elid,elFirstClass } from "../helpers";
 import { LOOP_CHANGE } from "./events";
 
 export function trigger(_this) {
@@ -13,9 +13,9 @@ export function trigger(_this) {
   _this.elements.loopBarStart.classList.toggle(`${_this.name}-hide`);
   _this.elements.loopBarEnd.classList.toggle("m-fadeIn");
   _this.elements.loopBarEnd.classList.toggle(`${_this.name}-hide`);
-  elid(`${_this.name}-loop-time`).classList.toggle("m-fadeOut");
-  elid(`${_this.name}-loop-time`).classList.toggle("m-fadeIn");
-  elid(`${_this.name}-loop-time`).classList.toggle(`${_this.name}-hide`);
+  elFirstClass(_this.elements.mcPlayer,`--mcp-loop-time`).classList.toggle("m-fadeOut");
+  elFirstClass(_this.elements.mcPlayer,`--mcp-loop-time`).classList.toggle("m-fadeIn");
+  elFirstClass(_this.elements.mcPlayer,`--mcp-loop-time`).classList.toggle(`${_this.name}-hide`);
   _this.elements.loopEndTime.innerHTML = _this.settings.loopEndMillisecond;
   _this.elements.loopStartTime.innerHTML = _this.settings.loopStartMillisecond;
   _this.settings.needsUpdate = true;

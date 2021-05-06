@@ -1,8 +1,8 @@
-import { elid } from "../helpers";
+import { elFirstClass, elid } from "../helpers";
 import { touchstart } from "./events";
 
 export default (_this) => {
-  elid(`${_this.name}-controls`).onmouseover = () => {
+  elFirstClass(_this.elements.mcPlayer,`--mcp-controls`).onmouseover = () => {
     if (!_this.settings.loopActivated) {
       return;
     }
@@ -12,7 +12,7 @@ export default (_this) => {
     _this.elements.loopBarEnd.classList.add("m-fadeIn");
   };
 
-  elid(`${_this.name}-controls`).onmouseout = function (event) {
+  elFirstClass(_this.elements.mcPlayer,`--mcp-controls`).onmouseout = function (event) {
     const e = event.toElement || event.relatedTarget || event.target;
     if (isDescendant(this, e) || e === this) {
       return;
@@ -28,7 +28,7 @@ export default (_this) => {
   };
 
   let twt = false;
-  elid(`${_this.name}-controls`).ontouchstart = function (event) {
+  elFirstClass(_this.elements.mcPlayer,`--mcp-controls`).ontouchstart = function (event) {
     const e = event.toElement || event.relatedTarget || event.target;
     if (
       isDescendant(_this.elements.statusButton, e) ||
@@ -58,8 +58,8 @@ export default (_this) => {
   window.addEventListener(touchstart, function (event) {
     const e = event.toElement || event.relatedTarget || event.target;
     if (
-      isDescendant(elid(`${_this.name}-controls`), e) ||
-      e === elid(`${_this.name}-controls`)
+      isDescendant(elFirstClass(_this.elements.mcPlayer,`--mcp-controls`), e) ||
+      e === elFirstClass(_this.elements.mcPlayer,`--mcp-controls`)
     ) {
       return;
     }
