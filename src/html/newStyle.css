@@ -1,11 +1,14 @@
 .--mc-player.theme-transparent{
     --activeColor:255,0,0;
     --defaultColor:255,255,255;
-    --backgroundColor:transparent
+    --backgroundColor:0,0,0,0
 }
+
 .--mc-player * {
     color: rgb(var(--defaultColor));
     font-family:'Ubuntu' !important;
+    font-size:13px;
+    cursor: default;
 }
 
 .--mc-player {
@@ -73,7 +76,7 @@
     flex-direction: column;
     position: relative;
     z-index: 1;
-    background: var(--backgroundColor);
+    background: rgba(var(--backgroundColor));
     height: 44px;
     padding: 0 10px;
 }
@@ -104,7 +107,7 @@
 
 .--mcp-totalbar {
     min-width: 100%;
-    background-color: rgba(var(--defaultColor),0.2);
+    background-color: rgba(var(--defaultColor));
 }
 
 .--mcp-loopbar {
@@ -142,7 +145,7 @@
 .--mcp-left-buttons>div:hover,
 .--mcp-right-buttons>div:hover {
     background-color: var(--defaultColor);
-    opacity: 0.3;
+    filter:brightness(0.7);
     cursor: pointer;
 }
 
@@ -180,13 +183,44 @@
 }
 
 .--mcp-settings-panel {
-    width: 200px;
-    height: 400px;
+    width: 167px;
     position: absolute;
-    background-color: var(--backgroundColor);
+    background-color: rgba(0,0,0,0.9);
     right: 10px;
     bottom: 50px;
 }
+.--mcp-main-settings{
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    margin: 0px;
+}
+.--mcp-main-settings li {
+    flex:1;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.--mcp-main-settings li * {
+    cursor: pointer;
+}
+.--mcp-main-settings li:hover {
+    background-color: rgba(var(--activeColor),0.2);
+}
+.--mcp-main-settings li > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:48px;
+}
+.--mcp-main-settings li > p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex:1;
+}
+
 
 /* 
 
@@ -204,10 +238,6 @@ Sliders
     display: none;
 }
 
-.--mc-player .settings-switch {
-    position: absolute;
-    right: 24px;
-}
 
 .--mc-player .settings-switch::after {
     clear: both;
@@ -238,11 +268,11 @@ Sliders
 }
 
 .--mc-player input:checked+.slider {
-    background-color: var(--activeColor);
+    background-color: rgb(var(--activeColor));
 }
 
 .--mc-player input:focus+.slider {
-    box-shadow: 0 0 1px var(--activeColor);
+    box-shadow: 0 0 1px rgb(var(--activeColor));
 }
 
 .--mc-player input:checked+.slider:before {
