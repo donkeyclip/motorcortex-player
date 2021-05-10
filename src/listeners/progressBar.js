@@ -6,7 +6,7 @@ import {
 
 export default (_this) => {
   _this.listeners.onCursorMove = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.loopBar.getBoundingClientRect();
     let positionX = clientX - viewportOffset.left;

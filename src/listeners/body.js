@@ -13,19 +13,19 @@ export default (_this) => {
   addListener("mozfullscreenchange", handleFullScreenChange);
   addListener("MSFullscreenChange", handleFullScreenChange);
 
-  el("body")[0].addEventListener("click", (e) => {
-    if (e.target.className === `${_this.name}-speed-value`) {
-      _this.clip.executionSpeed = e.target.dataset.speedValue;
-      const speedDisplay = _this.clip.speed == 1 ? "Normal" : _this.clip.speed;
-      _this.elements.speedCurrent.innerHTML = speedDisplay;
+  // el("body")[0].addEventListener("click", (e) => {
+  //   if (e.target.className === `${_this.name}-speed-value`) {
+  //     _this.clip.executionSpeed = e.target.dataset.speedValue;
+  //     const speedDisplay = _this.clip.speed == 1 ? "Normal" : _this.clip.speed;
+  //     _this.elements.speedCurrent.innerHTML = speedDisplay;
 
-      const step = 1 / (_this.options.speedValues.length - 1);
+  //     const step = 1 / (_this.options.speedValues.length - 1);
 
-      const positionY =
-        -(e.target.dataset.zone * step - 1) *
-        ((_this.options.speedValues.length - 1) * 16);
+  //     const positionY =
+  //       -(e.target.dataset.zone * step - 1) *
+  //       ((_this.options.speedValues.length - 1) * 16);
 
-      elFirstClass(_this.elements.mcPlayer,`--mcp-speed-cursor`).style.top = `${positionY}px`;
-    }
-  });
+  //     elFirstClass(_this.elements.mcPlayer,`--mcp-speed-cursor`).style.top = `${positionY}px`;
+  //   }
+  // });
 };

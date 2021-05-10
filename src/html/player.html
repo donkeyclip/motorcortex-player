@@ -2,6 +2,7 @@
 <div class="--mcp-context">
     <div class="--mcp-grad"></div>
     <div class="--mcp-pointer-events-panel"></div>
+    <div class="--mcp-listener-helper"></div>
     <div class="--mcp-controls">
         <div class="--mcp-progressbar">
             <div class="--mcp-preview">
@@ -10,6 +11,7 @@
             </div>
             <div class="--mcp-totalbar">
                 <div class="--mcp-loopbar">
+                    <div class="--mcp-loopbar-color"></div>
                     <div class="--mcp-loop-boundaries --mcp-loopbar-start">
                     </div>
                     <div class="--mcp-loop-boundaries --mcp-loopbar-end">
@@ -91,9 +93,9 @@
                 </div>
             </li>
             <li class="--mcp-settings-speed-show">
-                <p>Speed</p>
+                <p>Speed &#8594;</p>
                 <div>
-                    <div class="--mcp-speed-btn">&#8594;</div>
+                    <div class="--mcp-speed-btn"></div>
                     <span class="--mcp-speed-current"></span>
                 </div>
             </li>
@@ -103,15 +105,8 @@
                 <div class="--mcp-speed-btn"> &#8592;</div>
                 <div class="--mcp-speed-runtime">Speed</div>
             </li>
-            <li>
-                <div class="--mcp-speed-value-helperbar"></div>
-                <div class="--mcp-speed-value-bar">
-                    <div class="--mcp-speed-value-step --mcp-speed-cursor">
-                        <div></div>
-                    </div>
-                </div>
-                <div class="--mcp-speed-value">
-                </div>
+            <li class="--mcp-no-hover">
+                <ul class="--mcp-speed-values"></ul>
             </li>
         </ul>
     </div>

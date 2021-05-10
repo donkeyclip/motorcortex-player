@@ -9,6 +9,7 @@
     font-family:'Ubuntu' !important;
     font-size:13px;
     cursor: default;
+    user-select: none;
 }
 
 .--mc-player {
@@ -78,10 +79,11 @@
     z-index: 1;
     background: rgba(var(--backgroundColor));
     height: 44px;
-    padding: 0 10px;
+    padding: 0 15px;
 }
 
 .--mcp-progressbar {
+    position: relative;
     height: 10px;
     display: flex;
     justify-content: center;
@@ -107,15 +109,23 @@
 
 .--mcp-totalbar {
     min-width: 100%;
-    background-color: rgba(var(--defaultColor));
+    background-color: rgba(var(--defaultColor),0.3);
 }
 
 .--mcp-loopbar {
     width: 100%;
-    background-color: grey;
-    background-color: rgba(var(--defaultColor),0.3);
+    padding: 10px 0px;
+    top: -10px;
+    position: relative;
 }
-
+.--mcp-loopbar-color{
+    position: absolute;
+    left: 0px;
+    bottom: 5px;
+    background-color: rgba(var(--defaultColor),0.3);
+    width: 100%;
+    height: 5px;
+}
 .--mcp-runningbar {
     background-color: rgb(var(--activeColor));
     width: 0px;
@@ -162,14 +172,17 @@
     min-height: 100px;
     background-color: black;
     position: absolute;
-    bottom: 64px;
+    bottom: 50px;
     border: 3px solid;
     display: flex;
+    box-sizing: content-box;
 }
 
 .--mcp-preview-host {
     flex: 1;
     overflow: hidden;
+    width: 100%;
+    height: 100%;
 }
 
 .--mcp-preview-millisecond {
@@ -181,43 +194,97 @@
     left: 50%;
     transform: translateX(-50%);
 }
+.--mcp-loop-boundaries{
+    position: relative;
+}
+.--mcp-loop-boundaries:after {
+    content:"";
+    top:-4px;
+    left: -6px;
+    width: 13px;
+    height: 13px;
+    background-color: #aeaeae;
+    position: absolute;
+    border-radius: 100%;
+    z-index: 100;
+}
+.--mcp-loopbar-start{
+    left: -5px;
+}
+.--mcp-loopbar-end{
+    right: 5px;
+}
+.--mcp-loopbar,
+.--mcp-loopbar-color,
+.--mcp-runningbar,
+.--mcp-status-btn,
+.--mcp-loop-boundaries,
+.--mcp-cursor
+{
+    cursor: pointer;
+}
 
+.--mcp-listener-helper{
+    pointer-events: none;
+}
 .--mcp-settings-panel {
     width: 167px;
     position: absolute;
-    background-color: rgba(0,0,0,0.9);
-    right: 10px;
+    background-color: rgba(28,28,28,0.9);
+    right: 15px;
     bottom: 50px;
+    transition: all ease .2s;
+    z-index: 1000;
 }
-.--mcp-main-settings{
+.--mcp-settings-panel  ul{
     list-style-type: none;
     display: flex;
     flex-direction: column;
     padding: 5px;
     margin: 0px;
+    flex: 1;
 }
-.--mcp-main-settings li {
+.--mcp-settings-speed-hide{
+    border-bottom:1px solid rgba(255,255,255,0.2);
+}
+ul.--mcp-speed-values{
+    padding: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ul.--mcp-speed-values li{
+    width: 100%;
+}
+ul.--mcp-speed-values li p{
+    width: 100%;
+    text-align: center;
+}
+.--mcp-settings-panel  ul li {
     flex:1;
     display: flex;
     align-items: center;
     cursor: pointer;
+    min-height: 40px;
 }
-.--mcp-main-settings li * {
+.--mcp-settings-panel  ul li * {
     cursor: pointer;
 }
-.--mcp-main-settings li:hover {
+.--mcp-settings-panel  ul li:not(.--mcp-no-hover):hover {
     background-color: rgba(var(--activeColor),0.2);
 }
-.--mcp-main-settings li > div {
+
+.--mcp-settings-panel  ul li > div {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;;
     width:48px;
+    flex: 1;
 }
-.--mcp-main-settings li > p {
+.--mcp-main-settings ul li > p {
     display: flex;
     align-items: center;
-    justify-content: center;
+    padding-left: 10px;
     flex:1;
 }
 
@@ -230,8 +297,8 @@ Sliders
 .--mc-player .switch {
     position: relative;
     display: inline-block;
-    width: 32px;
-    height: 18px;
+    width: 36px;
+    height: 14px;
 }
 
 .--mc-player .switch input {
@@ -258,17 +325,20 @@ Sliders
 .--mc-player .slider:before {
     position: absolute;
     content: "";
-    height: 16px;
-    width: 16px;
-    left: 1px;
-    bottom: 1px;
-    background-color: white;
+    height: 20px;
+    width: 20px;
+    left: 0px;
+    bottom: -3px;
+    background-color: #cfcfcf;
     -webkit-transition: .4s;
     transition: .4s;
 }
 
 .--mc-player input:checked+.slider {
     background-color: rgb(var(--activeColor));
+}
+.--mc-player input:checked+.slider:before{
+    background-color: white;
 }
 
 .--mc-player input:focus+.slider {

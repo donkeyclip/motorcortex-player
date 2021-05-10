@@ -118,7 +118,7 @@ export function add(_this) {
   };
   const listeners = _this.listeners;
   listeners.onCursorMoveVolumeBar = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = elements.volumeBarHelper.getBoundingClientRect();
     let positionX = clientX - viewportOffset.left;
@@ -150,7 +150,7 @@ export function add(_this) {
     volumeDrag = false;
     elements.listenerHelper.style.pointerEvents = "none";
 
-    e.preventDefault();
+    // e.preventDefault();
     if (_this.settings.volume > 0) {
       _this.settings.previousVolume = _this.settings.volume;
     }
@@ -164,7 +164,7 @@ export function add(_this) {
     volumeDrag = true;
     elements.listenerHelper.style.pointerEvents = "auto";
 
-    e.preventDefault();
+    // e.preventDefault();
     listeners.onCursorMoveVolumeBar(e);
     addMouseUpAndMoveListeners(
       listeners.onMouseUpVolumeBar,

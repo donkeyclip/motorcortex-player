@@ -7,7 +7,7 @@ import {
 
 export default (_this) => {
   _this.listeners.onCursorMoveLoopEnd = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.totalBar.getBoundingClientRect();
     let positionX = clientX - viewportOffset.left;
@@ -55,15 +55,15 @@ export default (_this) => {
       _this.settings.loopJourney = true;
     }
 
-    _this.elements.loopEndTime.innerHTML = _this.settings.loopEndMillisecond;
-    _this.elements.loopStartTime.innerHTML =
-      _this.settings.loopStartMillisecond;
+    // _this.elements.loopEndTime.innerHTML = _this.settings.loopEndMillisecond;
+    // _this.elements.loopStartTime.innerHTML =
+    //   _this.settings.loopStartMillisecond;
   };
 
   _this.listeners.onMouseUpLoopEnd = (e) => {
     _this.elements.listenerHelper.style.pointerEvents = "none";
     _this.settings.resizeLoop = false;
-    e.preventDefault();
+    // e.preventDefault();
     const { loopBar, totalBar, runningBar } = _this.elements;
 
     runningBar.style.width =
@@ -122,7 +122,7 @@ export default (_this) => {
       _this.clip.pause();
       _this.settings.playAfterResize = true;
     }
-    e.preventDefault();
+    // e.preventDefault();
     _this.elements.runningBar.style.width = `${_this.elements.runningBar.offsetWidth}px`;
 
     const loopBar = _this.elements.loopBar;

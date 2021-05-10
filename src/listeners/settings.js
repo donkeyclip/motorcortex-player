@@ -6,7 +6,7 @@ import {
 } from "./events";
 
 const showIndicator = (_this, e) => {
-  e && e.preventDefault();
+  // e && e.preventDefault();
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-indicator-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
@@ -19,7 +19,7 @@ const showIndicator = (_this, e) => {
 };
 
 const showPointerEvents = (_this, e) => {
-  e && e.preventDefault();
+  // e && e.preventDefault();
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-pointer-events-checkbox`);
   if (!checkbox.checked) {
     checkbox.checked = true;
@@ -39,7 +39,7 @@ const showPointerEvents = (_this, e) => {
 };
 
 const showVolume = (_this, e) => {
-  e && e.preventDefault();
+  // e && e.preventDefault();
   _this.elements.volumeControl.classList.toggle(
     `${_this.name}-volume-width-transition`
   );
@@ -59,20 +59,20 @@ const showVolume = (_this, e) => {
 };
 
 const showPreview = (_this, e) => {
-  e && e.preventDefault();
+  // e && e.preventDefault();
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-preview-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
-    elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`).style.visibility = "hidden";
-    elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`).style.display = "none";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.visibility = "hidden";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.display = "none";
     _this.options.preview = false;
   } else {
     if (!_this.previewClip) {
       _this.createPreviewDisplay();
     }
     checkbox.checked = true;
-    elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`).style.visibility = "visible";
-    elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`).style.display = "flex";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.visibility = "visible";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.display = "flex";
     _this.options.preview = true;
   }
   _this.eventBroadcast(SHOW_PREVIEW_CHANGE, checkbox.checked);
@@ -89,7 +89,7 @@ export function add(_this) {
   _this.elements.settingsShowPreview.onclick = (e) => showPreview(_this, e);
 
   _this.elements.settingsButton.onclick = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const controlsEl = elFirstClass(_this.elements.mcPlayer,`--mcp-controls`);
 
     const showHideSettings = (e) => {

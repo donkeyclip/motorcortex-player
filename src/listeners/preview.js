@@ -12,8 +12,8 @@ export default (_this) => {
     return;
   }
 
-  const hoverMillisecondElement = elFirstClass(_this.elements.mcPlayer,`--mcp-hover-millisecond`);
-  const hoverDisplayElement = elFirstClass(_this.elements.mcPlayer,`--mcp-hover-display`);
+  const hoverMillisecondElement = elFirstClass(_this.elements.mcPlayer,`--mcp-preview-millisecond`);
+  const hoverDisplayElement = elFirstClass(_this.elements.mcPlayer,`--mcp-preview`);
   const loopBarMouseInOut = () => {
     if (!_this.options.preview) {
       return;

@@ -9,7 +9,7 @@ const playSVG = "Play";
 import bodyListener from "./listeners/body";
 import controlsListener from "./listeners/controls";
 import donkeyclipListener from "./listeners/donkeyclip";
-import { PLAYING, showControls } from "./listeners/enums";
+import { PLAYING,TRANSITIONAL,ARMED, showControls } from "./listeners/enums";
 import css from  "./html/newStyle.css";
 
 import {
@@ -291,6 +291,7 @@ class Player {
     makeJouney,
     executeOnMillisecondChange = true
   ) {
+
     if (this.state !== state) {
       this.state = state;
       this.eventBroadcast(STATE_CHANGE, state);
@@ -303,59 +304,17 @@ class Player {
 
     const {
       loopActivated,
-      loopEndMillisecond,
-      loopStartMillisecond,
     } = this.settings;
+    if (loopActivated && this.clip.speed){
+      this.calculateJourney(millisecond);
+    }
 
     const duration = this.clip.duration;
-
     const { totalBar, loopBar } = this.elements;
-
     const loopBarWidth = loopBar.offsetWidth;
     const loopBarLeft = loopBar.offsetLeft / totalBar.offsetWidth;
     const localMillisecond = millisecond - duration * loopBarLeft;
     const localDuration = (duration / totalBar.offsetWidth) * loopBarWidth;
-
-    if (
-      millisecond >= loopEndMillisecond &&
-      loopActivated &&
-      this.clip.speed >= 0
-    ) {
-      this.createJourney(loopStartMillisecond + 1, {
-        after:
-          this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == PLAYING
-            ? "play"
-            : null,
-      });
-      return 1;
-    } else if (
-      millisecond >= loopEndMillisecond &&
-      loopActivated &&
-      this.clip.speed < 0
-    ) {
-      this.createJourney(loopEndMillisecond - 1, {
-        after:
-          this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == PLAYING
-            ? "play"
-            : null,
-      });
-      return 1;
-    } else if (
-      millisecond <= loopStartMillisecond &&
-      loopActivated &&
-      this.clip.speed >= 0
-    ) {
-      this.createJourney(loopStartMillisecond + this.clip.speed >= 0 ? 1 : -1, {
-        after:
-          this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == PLAYING
-            ? "play"
-            : null,
-      });
-      return 1;
-    }
 
     if (makeJouney) {
       this.createJourney(millisecond, {
@@ -371,7 +330,30 @@ class Player {
       this.options.onMillisecondChange(millisecond);
     }
   }
-
+  calculateJourney(millisecond){
+    const {
+      loopEndMillisecond,
+      loopStartMillisecond,
+    } = this.settings;
+    const atEndOfLoop = millisecond > loopEndMillisecond || millisecond === this.clip.duration;
+    const atStartOfLoop = millisecond < loopStartMillisecond || millisecond === 0;
+    const positiveSpeed = this.clip.speed > 0;
+    if (this.clip.runTimeInfo.state === PLAYING){
+      if (positiveSpeed){
+        if (atEndOfLoop){
+          this.createJourney(loopStartMillisecond + 1);
+          return true;
+        }
+      } else {
+         if(atStartOfLoop) {
+          this.createJourney(loopEndMillisecond - 1,{after:"play"});
+          return true;
+        }
+      }
+      
+    }
+    return false;
+  }
   eventBroadcast(eventName, state) {
     const {mcPlayer} = this.elements;
     const controlsEl = elFirstClass(mcPlayer,`--mcp-controls`);
@@ -650,29 +632,29 @@ class Player {
     const currentSpeed = this.clip.speed == 1 ? "Normal" : this.clip.speed;
     this.elements.speedCurrent.innerHTML = currentSpeed;
 
-    const targetZone = (() => {
-      for (let i = 0; i < this.options.speedValues.length - 1; i++) {
-        if (
-          this.options.speedValues[i] <= this.clip.speed &&
-          this.options.speedValues[i + 1] > this.clip.speed
-        ) {
-          return (
-            i +
-            Math.abs(
-              (this.clip.speed - this.options.speedValues[i]) /
-                (this.options.speedValues[i] - this.options.speedValues[i + 1])
-            )
-          );
-        }
-      }
-    })();
+    // const targetZone = (() => {
+    //   for (let i = 0; i < this.options.speedValues.length - 1; i++) {
+    //     if (
+    //       this.options.speedValues[i] <= this.clip.speed &&
+    //       this.options.speedValues[i + 1] > this.clip.speed
+    //     ) {
+    //       return (
+    //         i +
+    //         Math.abs(
+    //           (this.clip.speed - this.options.speedValues[i]) /
+    //             (this.options.speedValues[i] - this.options.speedValues[i + 1])
+    //         )
+    //       );
+    //     }
+    //   }
+    // })();
 
-    const step = 1 / (this.options.speedValues.length - 1);
+    // const step = 1 / (this.options.speedValues.length - 1);
 
-    const positionY =
-      (targetZone * step - 1) * (this.options.speedValues.length - 1) * -16;
+    // const positionY =
+    //   (targetZone * step - 1) * (this.options.speedValues.length - 1) * -16;
 
-    elFirstClass(this.elements.mcPlayer,`--mcp-speed-cursor`).style.top = `${positionY}px`;
+    // elFirstClass(this.elements.mcPlayer,`--mcp-speed-cursor`).style.top = `${positionY}px`;
   }
 
   calculateSpeed(step, arrayOfValues, currentPercentage) {

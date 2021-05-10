@@ -49,7 +49,7 @@ export default (_this) => {
   window.mcPlayer = mcPlayer;
   
   _this.elements.pointerEventPanel = elFirstClass(mcPlayer,`--mcp-pointer-events-panel`);
-  // _this.elements.listenerHelper = elFirstClass(mcPlayer,`--mcp-listener-helper`);
+  _this.elements.listenerHelper = elFirstClass(mcPlayer,`--mcp-listener-helper`);
   _this.elements.loopBar = elFirstClass(mcPlayer,`--mcp-loopbar`);
   _this.elements.totalBar = elFirstClass(mcPlayer,`--mcp-totalbar`);
   _this.elements.indicator = elFirstClass(mcPlayer,`--mcp-indicator`);
@@ -61,7 +61,7 @@ export default (_this) => {
   _this.elements.runningBar = elFirstClass(mcPlayer,`--mcp-runningbar`);
   _this.elements.loopBarEnd = elFirstClass(mcPlayer,`--mcp-loopbar-end`);
   _this.elements.statusButton = elFirstClass(mcPlayer,`--mcp-status-btn`);
-  _this.elements.speedBar = elFirstClass(mcPlayer,`--mcp-speed-value-bar`);
+  _this.elements.speedBar = elFirstClass(mcPlayer,`--mcp-speed-values`);
   _this.elements.currentTime = elFirstClass(mcPlayer,`--mcp-time-current`);
   _this.elements.timeDisplay = elFirstClass(mcPlayer,`--mcp-time-display`);
   _this.elements.speedCurrent = elFirstClass(mcPlayer,`--mcp-speed-current`);
@@ -80,7 +80,7 @@ export default (_this) => {
   _this.elements.settingsShowPreview = elFirstClass(mcPlayer,`--mcp-settings-preview`);
   _this.elements.settingsPointerEvents = elFirstClass(mcPlayer,`--mcp-settings-pointer-events`
   );
-  _this.elements.speedBarHelper = elFirstClass(mcPlayer,`--mcp-speed-value-helperbar`);
+  // _this.elements.speedBarHelper = elFirstClass(mcPlayer,`--mcp-speed-value-helperbar`);
   _this.elements.settingsShowIndicator = elFirstClass(mcPlayer,`--mcp-settings-indicator`
   );
   _this.elements.settingsSpeedButtonShow = elFirstClass(mcPlayer,`--mcp-settings-speed-show`
@@ -111,10 +111,6 @@ export default (_this) => {
   _this.elements.indicator.innerHTML = _this.clip.runTimeInfo.state;
 
   _this.elements.settingsSpeedPanel.style.display = "none";
-
-  _this.elements.settingsSpeedPanel
-    .getElementsByTagName("li")[1]
-    .classList.add("no-hover");
 
   _this.elements.loopBarStart.style.left = "0%";
   _this.elements.loopBarStart.classList.add("m-fadeOut", `${_this.name}-hide`);
@@ -207,17 +203,19 @@ export default (_this) => {
   }
 
   for (const i in _this.options.speedValues) {
-    const barDiv = elcreate("div");
-    barDiv.className = `${_this.name}-speed-value-step`;
-
-    const valueDiv = elcreate("div");
-    valueDiv.className = `${_this.name}-speed-value`;
-    valueDiv.dataset.speedValue = _this.options.speedValues[i];
+    const barDiv = elcreate("li");
+    barDiv.className = `--mcp-speed-value`;
+    barDiv.dataset.speedValue = _this.options.speedValues[i];
+    barDiv.onclick = () => {
+      _this.options.speed = _this.options.speedValues[i];
+      _this.clip.speed = _this.options.speedValues[i];
+    };
+    const valueDiv = elcreate("p");
     valueDiv.innerHTML = _this.options.speedValues[i];
     valueDiv.dataset.zone = i;
-    elFirstClass(mcPlayer,`--mcp-speed-value`).prepend(valueDiv);
+    barDiv.append(valueDiv);
 
-    _this.elements.speedBar.prepend(barDiv);
+    _this.elements.speedBar.append(barDiv);
   }
 
   // show hide buttons
