@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('https://raw.githubusercontent.com/kissmybutton/teo-motorcortex-player/minify-code/src/assets/icomoon/fonts/icomoon.eot?wu9ej');
-  src:  url('https://raw.githubusercontent.com/kissmybutton/teo-motorcortex-player/minify-code/src/assets/icomoon/fonts/icomoon.eot?wu9ej#iefix') format('embedded-opentype'),
-    url('https://raw.githubusercontent.com/kissmybutton/teo-motorcortex-player/minify-code/src/assets/icomoon/fonts/icomoon.ttf?wu9ej') format('truetype'),
-    url('https://raw.githubusercontent.com/kissmybutton/teo-motorcortex-player/minify-code/src/assets/icomoon/fonts/icomoon.woff?wu9ej') format('woff'),
-    url('https://raw.githubusercontent.com/kissmybutton/teo-motorcortex-player/minify-code/src/assets/icomoon/fonts/icomoon.svg?wu9ej#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?ccy52c');
+  src:  url('fonts/icomoon.eot?ccy52c#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?ccy52c') format('truetype'),
+    url('fonts/icomoon.woff?ccy52c') format('woff'),
+    url('fonts/icomoon.svg?ccy52c#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-volume-mute-solid:before {
+  content: "\e924";
+}
+.icon-volume-up-solid:before {
+  content: "\e925";
+}
 .icon-motorcortex-logo:before {
   content: "\e903";
   color: #777;
