@@ -106,8 +106,8 @@ export function add(_this) {
     };
 
     if (_this.elements.settingsPanel.className.includes(`m-fadeOut`)) {
-      if (!controlsEl.classList.value.includes("force-show-controls")) {
-        controlsEl.classList.toggle("force-show-controls");
+      if (!controlsEl.classList.value.includes("--mcp-force-show-controls")) {
+        controlsEl.classList.toggle("--mcp-force-show-controls");
       }
       addListener(`click`, showHideSettings, false);
     } else {

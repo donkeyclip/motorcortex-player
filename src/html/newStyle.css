@@ -72,6 +72,9 @@
             rgba(0, 0, 0, 0.88));
 }
 
+.--mc-player:hover .--mcp-controls{
+    opacity: 1 !important;
+}
 .--mcp-controls {
     display: flex;
     flex-direction: column;
@@ -80,6 +83,11 @@
     background: rgba(var(--backgroundColor));
     height: 44px;
     padding: 0 15px;
+    opacity: 0;
+    transition: all ease .2s;
+}
+.--mcp-force-show-controls{
+    opacity: 1 !important;
 }
 
 .--mcp-progressbar {
@@ -136,6 +144,7 @@
 .--mcp-right-buttons,
 .--mcp-left-buttons>div,
 .--mcp-right-buttons>div {
+    z-index: 1;
     display: flex;
     align-items: center;
 }
@@ -194,6 +203,7 @@
     left: 50%;
     transform: translateX(-50%);
 }
+
 .--mcp-loop-boundaries{
     position: relative;
 }

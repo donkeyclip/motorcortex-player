@@ -11,6 +11,7 @@ import controlsListener from "./listeners/controls";
 import donkeyclipListener from "./listeners/donkeyclip";
 import { PLAYING,TRANSITIONAL,ARMED, showControls } from "./listeners/enums";
 import css from  "./html/newStyle.css";
+import icomooncss from  "./assets/icomoon/style.css";
 
 import {
   DURATION_CHANGE,
@@ -341,7 +342,7 @@ class Player {
     if (this.clip.runTimeInfo.state === PLAYING){
       if (positiveSpeed){
         if (atEndOfLoop){
-          this.createJourney(loopStartMillisecond + 1);
+          this.createJourney(loopStartMillisecond + 1,{after:"play"});
           return true;
         }
       } else {
@@ -623,6 +624,15 @@ class Player {
   
       // append player style to document
       eltag("head")[0].appendChild(style);
+
+      const styleIcomoon = elcreate("style");
+      styleIcomoon.id = "--mc-player-style";
+      styleIcomoon.styleSheet
+        ? (styleIcomoon.styleSheet.cssText = icomooncss)
+        : styleIcomoon.appendChild(document.createTextNode(icomooncss));
+  
+      // append player style to document
+      eltag("head")[0].appendChild(styleIcomoon);
     }
     
     this.eventBroadcast("theme-change", this.options.theme);
