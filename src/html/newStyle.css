@@ -146,6 +146,8 @@
     z-index: 1;
     display: flex;
     align-items: center;
+    gap: 5px;
+
 }
 
 .--mcp-buttons,
@@ -262,8 +264,14 @@
 .--mcp-btn{
     font-size: 20px;
 }
+
 .--mcp-volume-btn {
     font-size:15px;
+}
+.--mcp-volumebar{
+    width: 52px;
+    height: 3px;
+    background: rgb(var(--defaultColor));
 }
 .--mcp-btn::before {
     color:var(--defaultColor) !important;

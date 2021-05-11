@@ -13,7 +13,7 @@ const showIndicator = (_this, e) => {
     _this.elements.indicator.style.display = "none";
   } else {
     checkbox.checked = true;
-    _this.elements.indicator.style.display = "unset";
+    _this.elements.indicator.style.display = undefined;
   }
   _this.eventBroadcast("show-indicator-change", checkbox.checked);
 };
@@ -51,7 +51,7 @@ const showVolume = (_this, e) => {
     _this.elements.volumeControl.style.display = "none";
   } else {
     checkbox.checked = true;
-    _this.elements.volumeControl.style.display = "unset";
+    _this.elements.volumeControl.style.display = undefined;
   }
   _this.eventBroadcast(SHOW_VOLUME_CHANGE, checkbox.checked);
 };

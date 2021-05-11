@@ -103,7 +103,7 @@ export default (_this) => {
   if (!_this.options.showIndicator) {
     _this.elements.indicator.style.display = "none";
   } else {
-    _this.elements.indicator.style.display = "unset";
+    _this.elements.indicator.style.display = undefined;
     _this.elements.statusButton.style.width = "35px";
     _this.elements.statusButton.style.height = "20px";
     _this.elements.statusButton.style.bottom = "5px";
@@ -197,7 +197,7 @@ export default (_this) => {
       `${_this.name}-volume-width-transition`
     );
   } else {
-    _this.elements.volumeControl.style.display = "unset";
+    _this.elements.volumeControl.style.display = undefined;
   }
 
   for (const i in _this.options.speedValues) {

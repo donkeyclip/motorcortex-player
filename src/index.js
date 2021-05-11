@@ -159,7 +159,7 @@ class Player {
     if (newOptions.controls === false) {
       this.elements.mcPlayer.style.display = "none";
     } else if (newOptions.controls === true) {
-      this.elements.mcPlayer.style.display = "unset";
+      this.elements.mcPlayer.style.display = undefined;
     }
 
     if (
