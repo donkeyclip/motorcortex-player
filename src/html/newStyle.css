@@ -1,10 +1,10 @@
 .--mc-player.theme-transparent{
     --activeColor:255,0,0;
-    --defaultColor:255,255,255;
+    --defaultColor:239,238,236;
     --backgroundColor:0,0,0,0
 }
 
-.--mc-player * {
+.--mc-player *{
     color: rgb(var(--defaultColor));
     font-family:'Ubuntu' !important;
     font-size:13px;
@@ -92,7 +92,6 @@
 
 .--mcp-progressbar {
     position: relative;
-    height: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -154,19 +153,16 @@
 .--mcp-right-buttons {
     flex: 1;
     height: 100%;
+    gap:20px;
 }
 
-.--mcp-left-buttons>div,
-.--mcp-right-buttons>div {
-    padding: 0 5px;
-}
 
-.--mcp-left-buttons>div:hover,
+/* .--mcp-left-buttons>div:hover,
 .--mcp-right-buttons>div:hover {
     background-color: var(--defaultColor);
     filter:brightness(0.7);
     cursor: pointer;
-}
+} */
 
 .--mcp-left-buttons {
     justify-content: flex-start;
@@ -229,11 +225,20 @@
 .--mcp-runningbar,
 .--mcp-status-btn,
 .--mcp-loop-boundaries,
-.--mcp-cursor
+.--mcp-cursor,
+.--mcp-btn
 {
     cursor: pointer;
 }
-
+.--mcp-status-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+}
+.--mcp-indicator{
+    font-size: 12px;
+}
 .--mcp-listener-helper{
     pointer-events: none;
 }
@@ -256,6 +261,15 @@
 }
 .--mcp-btn{
     font-size: 20px;
+}
+.--mcp-volume-btn {
+    font-size:15px;
+}
+.--mcp-btn::before {
+    color:var(--defaultColor) !important;
+}
+.--mcp-btn::before:hover {
+    filter: brightness(40);    
 }
 .--mcp-settings-speed-hide{
     border-bottom:1px solid rgba(255,255,255,0.2);
@@ -375,9 +389,11 @@ Sliders
 .--mc-player .m-fadeOut {
     visibility: hidden !important;
     opacity: 0 !important;
+    display: none;
   }
   
   .--mc-player .m-fadeIn {
+    display: unset;
     visibility: visible !important;
     opacity: 1 !important;
   }

@@ -10,10 +10,10 @@ const showIndicator = (_this, e) => {
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-indicator-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
-    _this.elements.indicator.style.visibility = "hidden";
+    _this.elements.indicator.style.display = "none";
   } else {
     checkbox.checked = true;
-    _this.elements.indicator.style.visibility = "visible";
+    _this.elements.indicator.style.display = "unset";
   }
   _this.eventBroadcast("show-indicator-change", checkbox.checked);
 };
@@ -48,12 +48,10 @@ const showVolume = (_this, e) => {
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-volume-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
-    _this.elements.volumeControl.style.visibility = "hidden";
-    _this.elements.timeDisplay.style.left = "45px";
+    _this.elements.volumeControl.style.display = "none";
   } else {
     checkbox.checked = true;
-    _this.elements.volumeControl.style.visibility = "visible";
-    _this.elements.timeDisplay.style.left = "";
+    _this.elements.volumeControl.style.display = "unset";
   }
   _this.eventBroadcast(SHOW_VOLUME_CHANGE, checkbox.checked);
 };
@@ -63,15 +61,14 @@ const showPreview = (_this, e) => {
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-preview-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
-    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.visibility = "hidden";
     elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.display = "none";
+    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.display = "unset";
     _this.options.preview = false;
   } else {
     if (!_this.previewClip) {
       _this.createPreviewDisplay();
     }
     checkbox.checked = true;
-    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.visibility = "visible";
     elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.display = "flex";
     _this.options.preview = true;
   }

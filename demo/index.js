@@ -283,7 +283,4 @@ window.player = new Player({
   controls: true,
   preview: true,
   theme:"transparent position-ontop",
-  speed:2,
-  loop:true
 });
-clip.play();

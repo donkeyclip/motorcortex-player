@@ -101,9 +101,9 @@ export default (_this) => {
   _this.elements.settingsPanel.classList.add("m-fadeOut", `${_this.name}-hide`);
 
   if (!_this.options.showIndicator) {
-    _this.elements.indicator.style.visibility = "hidden";
+    _this.elements.indicator.style.display = "none";
   } else {
-    _this.elements.indicator.style.visibility = "visible";
+    _this.elements.indicator.style.display = "unset";
     _this.elements.statusButton.style.width = "35px";
     _this.elements.statusButton.style.height = "20px";
     _this.elements.statusButton.style.bottom = "5px";
@@ -191,15 +191,13 @@ export default (_this) => {
   // _this.elements.listenerHelper.style.pointerEvents = "none";
 
   if (!_this.options.showVolume) {
-    _this.elements.timeDisplay.style.left = "45px";
-    _this.elements.volumeControl.style.visibility = "hidden";
+    _this.elements.volumeControl.style.display = "none";
     _this.elements.volumeControl.classList.toggle(`${_this.name}-hide`);
     _this.elements.volumeControl.classList.toggle(
       `${_this.name}-volume-width-transition`
     );
   } else {
-    _this.elements.timeDisplay.style.left = "";
-    _this.elements.volumeControl.style.visibility = "visible";
+    _this.elements.volumeControl.style.display = "unset";
   }
 
   for (const i in _this.options.speedValues) {
