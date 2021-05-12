@@ -26,6 +26,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-angle-left:before {
+  content: "\e926";
+}
+.icon-angle-right:before {
+  content: "\e927";
+}
 .icon-volume-off:before {
   content: "\e924";
 }
