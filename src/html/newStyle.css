@@ -6,7 +6,7 @@
 
 .--mc-player *{
     color: rgb(var(--defaultColor));
-    font-family:'Ubuntu' !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size:13px;
     cursor: default;
     user-select: none;
@@ -244,23 +244,7 @@
 .--mcp-listener-helper{
     pointer-events: none;
 }
-.--mcp-settings-panel {
-    width: 167px;
-    position: absolute;
-    background-color: rgba(28,28,28,0.9);
-    right: 15px;
-    bottom: 50px;
-    transition: all ease .2s;
-    z-index: 1000;
-}
-.--mcp-settings-panel  ul{
-    list-style-type: none;
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-    margin: 0px;
-    flex: 1;
-}
+
 .--mcp-btn{
     font-size: 20px;
 }
@@ -293,14 +277,23 @@ ul.--mcp-speed-values li{
 }
 ul.--mcp-speed-values li p{
     width: 100%;
-    text-align: center;
 }
+.--mcp-settings-panel  ul{
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 0px;
+    margin: 0px;
+    flex: 1;
+}
+
 .--mcp-settings-panel  ul li {
     flex:1;
     display: flex;
     align-items: center;
     cursor: pointer;
     min-height: 40px;
+    padding: 0px 21px;
 }
 .--mcp-settings-panel  ul li * {
     cursor: pointer;
@@ -315,7 +308,32 @@ ul.--mcp-speed-values li p{
     justify-content: flex-end;;
     width:48px;
     flex: 1;
+    gap: 10px;
 }
+
+.--mcp-settings-panel {
+    width: 251px;
+    position: absolute;
+    background-color: rgba(28,28,28,0.9);
+    right: 15px;
+    bottom: 50px;
+    transition: all ease .2s;
+    z-index: 1000;
+}
+
+.--mcp-speed-values {
+    padding:0px;
+}
+.--mcp-no-hover {
+    padding: 0px !important;
+}
+
+.--mcp-settings-panel ul.--mcp-speed-settings li > div {
+    justify-content: flex-start;
+    flex:unset;
+    width: 20px;
+}
+
 .--mcp-main-settings ul li > p {
     display: flex;
     align-items: center;
