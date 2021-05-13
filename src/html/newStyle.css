@@ -116,8 +116,8 @@
 }
 
 .--mcp-cursor {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     background-color: rgb(var(--activeColor));
     border-radius: 100%;
     position: absolute;
@@ -241,6 +241,7 @@
 .--mcp-loop-boundaries,
 .--mcp-cursor,
 .--mcp-btn,
+.--mcp-volume *,
 .--mc-player svg,
 .--mc-player svg *
 {
@@ -272,9 +273,27 @@
     font-size:15px;
 }
 .--mcp-volumebar{
+    width: 0;
+    padding-left:0px;
+    padding-right:0px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition:all ease .2s;
+}
+.--mcp-volume{
+    height: 100%;
+}
+.--mcp-volume:hover {
+    padding-right:10px;
+}
+.--mcp-volume:hover .--mcp-volumebar {
     width: 52px;
-    height: 3px;
-    background: rgb(var(--defaultColor));
+    padding-left:5px;
+}
+.--mcp-volume:hover .--mcp-volume-cursor {
+    display: block;
 }
 .--mcp-btn::before {
     color:var(--defaultColor) !important;
@@ -449,4 +468,28 @@ Sliders
     display: unset;
     visibility: visible !important;
     opacity: 1 !important;
+  }
+  
+  .--mcp-volume-cursor{
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background-color: rgb(var(--defaultColor));
+    right: -8px;
+    border-radius: 100%;
+    display: none;
+  }
+  .--mcp-volumebar-color{
+    width: 100%;
+    height: 3px;
+    background-color: rgba(var(--defaultColor),0.3);
+  }
+  .--mcp-volumebar-color-active{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(var(--defaultColor));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
   }

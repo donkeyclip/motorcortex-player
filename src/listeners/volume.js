@@ -1,8 +1,8 @@
 import {
   addMouseUpAndMoveListeners,
   addStartListeners,
+  changeIcon,
   elcreate,
-  elid,
   elFirstClass,
   removeMouseUpAndMoveListeners,
 } from "../helpers";
@@ -12,19 +12,15 @@ export function trigger(_this, volume, mute) {
   const elements = _this.elements;
   if (typeof mute !== undefined) {
     if (mute === false) {
-      // elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
+      elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
       _this.clip.setVolume(_this.settings.previousVolume);
       _this.settings.volumeMute = false;
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeSVG;
-      // elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn,"volume-off","volume-on");
     } else if (mute === true) {
       _this.settings.volumeMute = true;
-      // elements.volumeBarActive.style.width = "0%";
+      elements.volumeBarActive.style.width = "0%";
       _this.clip.setVolume(0);
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeMuteSVG;
-      // elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn,"volume-on","volume-off");
     }
     _this.options.muted = _this.settings.volumeMute;
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
@@ -36,19 +32,17 @@ export function trigger(_this, volume, mute) {
       _this.settings.previousVolume = volume;
     }
 
-    // elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
+    elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
     _this.clip.setVolume(_this.settings.volume);
 
     if (_this.settings.volume > 0) {
       _this.settings.volumeMute = false;
       const SVG = document.createElement("span");
-      SVG.innerHTML = volumeSVG;
-      // elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn,"volume-off","volume-on");
     } else if (_this.settings.volume === 0) {
       _this.settings.volumeMute = true;
       const SVG = document.createElement("span");
-      SVG.innerHTML = volumeMuteSVG;
-      // elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn,"volume-off","volume-on");
     }
 
     _this.options.volume = _this.settings.volume;
@@ -62,19 +56,16 @@ export function add(_this) {
   let volumeDrag = false;
   elements.volumeBtn.onclick = () => {
     if (_this.settings.volumeMute) {
-      // elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
+      elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
       _this.clip.setVolume(_this.settings.previousVolume);
-      _this.settings.volumeMute = false;
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeSVG;
-      // elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+    elements.volumeBarActive.style.width = `${_this.settings.previousVolume * 100}%`;
+    _this.settings.volumeMute = false;
+      changeIcon(elements.volumeBtn,"volume-off","volume-on");
     } else {
       _this.settings.volumeMute = true;
-      // elements.volumeBarActive.style.width = "0%";
-      _this.clip.setVolume(0);
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeMuteSVG;
-      // elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn,"volume-on","volume-off");
+    elements.volumeBarActive.style.width = `0%`;
+    _this.clip.setVolume(0);
     }
     _this.eventBroadcast(VOLUME_CHANGE, _this.settings.previousVolume);
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
@@ -82,14 +73,7 @@ export function add(_this) {
   let volumeOpen = false;
   elements.volumeBtn.onmouseover = () => {
     volumeOpen = true;
-    elements.volumeCursor.classList.add(
-      `${_this.name}-volume-cursor-transition`
-    );
-    elements.volumeBar.classList.add(`${_this.name}-volume-width-transition`);
-    elements.volumeBarHelper.classList.add(
-      `${_this.name}-volume-width-transition`
-    );
-    elements.timeDisplay.classList.add(`${_this.name}-time-width-transition`);
+    
   };
 
   const leftControlsElement = elFirstClass(_this.elements.mcPlayer,`--mcp-left-buttons`);
@@ -103,18 +87,6 @@ export function add(_this) {
       return;
     }
     volumeOpen = false;
-    elements.volumeCursor.classList.remove(
-      `${_this.name}-volume-cursor-transition`
-    );
-    elements.volumeBar.classList.remove(
-      `${_this.name}-volume-width-transition`
-    );
-    elements.volumeBarHelper.classList.remove(
-      `${_this.name}-volume-width-transition`
-    );
-    elements.timeDisplay.classList.remove(
-      `${_this.name}-time-width-transition`
-    );
   };
   const listeners = _this.listeners;
   listeners.onCursorMoveVolumeBar = (e) => {
@@ -132,15 +104,15 @@ export function add(_this) {
     _this.settings.volume = Number(
       (positionX / elements.volumeBarHelper.offsetWidth).toFixed(2)
     );
-    // elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
+    elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
     _this.clip.setVolume(_this.settings.volume);
 
     if (_this.settings.volume >= 0) {
       const mute = _this.settings.volume === 0;
       _this.settings.volumeMute = mute;
-      const SVG = elcreate("span");
-      SVG.innerHTML = mute ? volumeMuteSVG : volumeSVG;
-      // elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
+      mute ? 
+        changeIcon(elements.volumeBtn,"volume-on","volume-off"):
+        changeIcon(elements.volumeBtn,"volume-off","volume-on");
     }
     _this.eventBroadcast(VOLUME_CHANGE, _this.settings.volume);
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);

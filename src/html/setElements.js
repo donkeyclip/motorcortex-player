@@ -75,8 +75,8 @@ export default (_this) => {
   _this.elements.settingsPanel = elFirstClass(mcPlayer,`--mcp-settings-panel`);
   _this.elements.settingsMainPanel = elFirstClass(mcPlayer,`--mcp-main-settings`);
   _this.elements.fullScreenButton = elFirstClass(mcPlayer,`--mcp-full-screen-btn`);
-  _this.elements.volumeBarHelper = elFirstClass(mcPlayer,`--mcp-volumebar-helper`);
-  _this.elements.volumeBarActive = elFirstClass(mcPlayer,`--mcp-volumebar-active`);
+  _this.elements.volumeBarHelper = elFirstClass(mcPlayer,`--mcp-volumebar`);
+  _this.elements.volumeBarActive = elFirstClass(mcPlayer,`--mcp-volumebar-color-active`);
   _this.elements.settingsSpeedPanel = elFirstClass(mcPlayer,`--mcp-speed-settings`);
   _this.elements.settingsShowVolume = elFirstClass(mcPlayer,`--mcp-settings-volume`);
   _this.elements.settingsShowPreview = elFirstClass(mcPlayer,`--mcp-settings-preview`);
@@ -90,9 +90,9 @@ export default (_this) => {
   _this.elements.settingsSpeedButtonHide = elFirstClass(mcPlayer,`--mcp-settings-speed-hide`
   );
   initializeIcons(_this.elements);
-  // _this.elements.volumeBarActive.style.width = `${
-  //   _this.settings.volume * 100
-  // }%`;
+  _this.elements.volumeBarActive.style.width = `${
+    _this.settings.volume * 100
+  }%`;
 
   _this.elements.currentTime.innerHTML = _this.timeFormat(0);
 
@@ -193,13 +193,8 @@ export default (_this) => {
   // _this.elements.listenerHelper.style.pointerEvents = "none";
 
   if (!_this.options.showVolume) {
-    _this.elements.volumeControl.style.display = "none";
-    _this.elements.volumeControl.classList.toggle(`${_this.name}-hide`);
-    _this.elements.volumeControl.classList.toggle(
-      `${_this.name}-volume-width-transition`
-    );
-  } else {
-    _this.elements.volumeControl.style.display = undefined;
+    _this.elements.volumeControl.classList.toggle("m-fadeOut");
+    
   }
 
   for (const i in _this.options.speedValues) {

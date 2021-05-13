@@ -41,17 +41,14 @@ const showPointerEvents = (_this, e) => {
 const showVolume = (_this, e) => {
   // e && e.preventDefault();
   _this.elements.volumeControl.classList.toggle(
-    `${_this.name}-volume-width-transition`
+    "m-fadeOut"
   );
-  _this.elements.volumeControl.classList.toggle(`${_this.name}-hide`);
 
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-volume-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
-    _this.elements.volumeControl.style.display = "none";
   } else {
     checkbox.checked = true;
-    _this.elements.volumeControl.style.display = undefined;
   }
   _this.eventBroadcast(SHOW_VOLUME_CHANGE, checkbox.checked);
 };
