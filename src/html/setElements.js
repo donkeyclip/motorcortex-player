@@ -215,7 +215,7 @@ export default (_this) => {
       _this.clip.speed = _this.options.speedValues[i];
       _this.elements.speedCurrent.innerHTML = _this.clip.speed;
       const iconCheckClass = "icon-check-solid";
-      elFirstClass(iconCheckClass).classList.remove(iconCheckClass);
+      elFirstClass(iconCheckClass,_this).classList.remove(iconCheckClass);
 
       this.classList.add(iconCheckClass);
     };
