@@ -327,7 +327,15 @@ ul.--mcp-speed-values li p{
 .--mcp-no-hover {
     padding: 0px !important;
 }
-
+.--mcp-speed-value-item:not(.--mcp-selected){
+    padding-left:18px;
+}
+.--mcp-speed-value-item.--mcp-selected{
+    padding-left: 10px;
+}
+.--mcp-speed-value .icon-check-solid{
+    margin-left:-5px;
+}
 .--mcp-settings-panel ul.--mcp-speed-settings li > div {
     justify-content: flex-start;
     flex:unset;

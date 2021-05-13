@@ -25,6 +25,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-pause:before {
+  content: "\e929";
+}
+.icon-play:before {
+  content: "\e901";
+  color: #999;
+}
+.icon-spinner:before {
+  content: "\e923";
+  color: #999;
+}
 .icon-check-solid:before {
   content: "\e928";
 }
@@ -47,10 +58,6 @@
 .icon-donkeyclip-logo:before {
   content: "\e900";
   color: #777;
-}
-.icon-play:before {
-  content: "\e901";
-  color: #999;
 }
 .icon-settings:before {
   content: "\e902";
@@ -190,9 +197,5 @@
 }
 .icon-loop:before {
   content: "\e922";
-  color: #999;
-}
-.icon-spinner:before {
-  content: "\e923";
   color: #999;
 }

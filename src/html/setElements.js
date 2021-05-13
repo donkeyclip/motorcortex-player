@@ -201,31 +201,47 @@ export default (_this) => {
   }
 
   for (const i in _this.options.speedValues) {
-    const barDiv = elcreate("li");
+    const iconCheckClass = "icon-check-solid";
+    const selectedClass = "--mcp-selected";
 
-    barDiv.className = `--mcp-speed-value`;
-    barDiv.dataset.speedValue = _this.options.speedValues[i];
+    //create the parent li element
+    const li = elcreate("li");
+    li.className = `--mcp-speed-value`;
+    li.dataset.speedValue = _this.options.speedValues[i];
     
+    //create the check holder
+    const span = document.createElement("span");
+    li.append(span);
+
+    //create the value of the speed
+    const valueDiv = elcreate("p");
+    const isNormal = _this.options.speedValues[i] == 1;
+    valueDiv.innerHTML = isNormal ? "Normal" :_this.options.speedValues[i];
+    valueDiv.dataset.zone = i;
+    valueDiv.classList.add("--mcp-speed-value-item");    
+
+    //add the check if this is the speed
     if (_this.options.speedValues[i] == _this.clip.speed) {
-      barDiv.classList.add("icon-check-solid");
+      span.classList.add(iconCheckClass);
+      valueDiv.classList.add(selectedClass);
     }
 
-    barDiv.onclick = function() {
+    li.append(valueDiv);
+    _this.elements.speedBar.append(li);
+
+    li.onclick = function() {
       _this.options.speed = _this.options.speedValues[i];
       _this.clip.speed = _this.options.speedValues[i];
+
       _this.elements.speedCurrent.innerHTML = _this.clip.speed;
-      const iconCheckClass = "icon-check-solid";
-      elFirstClass(iconCheckClass,_this).classList.remove(iconCheckClass);
+      
+      elFirstClass(_this.elements.mcPlayer,iconCheckClass).classList.remove(iconCheckClass);
+      span.classList.add(iconCheckClass);
 
-      this.classList.add(iconCheckClass);
+      elFirstClass(_this.elements.mcPlayer,selectedClass).classList.remove(selectedClass);
+      valueDiv.classList.add(selectedClass);
+
     };
-
-    const valueDiv = elcreate("p");
-    valueDiv.innerHTML = _this.options.speedValues[i];
-    valueDiv.dataset.zone = i;
-    barDiv.append(valueDiv);
-
-    _this.elements.speedBar.append(barDiv);
   }
 
   // show hide buttons

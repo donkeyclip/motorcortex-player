@@ -372,8 +372,8 @@ class Player {
         if (!controlsEl.classList.value.includes(showControls)) {
           controlsEl.classList.toggle(showControls);
         }
-        this.elements.statusButton.innerHTML = playSVG;
-        this.elements.statusButton.appendChild(this.elements.indicator);
+        this.elements.statusButton.classList.remove("icon-pause");
+        this.elements.statusButton.classList.add("icon-play");
         this.elements.indicator.innerHTML = `${
           state.charAt(0).toUpperCase() + state.slice(1)
         }`;
@@ -387,10 +387,9 @@ class Player {
         if (controlsEl.classList.value.includes(showControls)) {
           controlsEl.classList.toggle(showControls);
         }
-        this.elements.statusButton.innerHTML = pauseSVG;
-        this.elements.statusButton.appendChild(this.elements.indicator);
         this.elements.indicator.innerHTML = "Playing";
-        this.elements.pointerEventPanel.innerHTML = "";
+        this.elements.statusButton.classList.remove("icon-pause");
+        this.elements.statusButton.classList.add("icon-play");
         if (state !== PLAYING) {
           return;
         }
