@@ -202,12 +202,24 @@ export default (_this) => {
 
   for (const i in _this.options.speedValues) {
     const barDiv = elcreate("li");
+
     barDiv.className = `--mcp-speed-value`;
     barDiv.dataset.speedValue = _this.options.speedValues[i];
-    barDiv.onclick = () => {
+    
+    if (_this.options.speedValues[i] == _this.clip.speed) {
+      barDiv.classList.add("icon-check-solid");
+    }
+
+    barDiv.onclick = function() {
       _this.options.speed = _this.options.speedValues[i];
       _this.clip.speed = _this.options.speedValues[i];
+      _this.elements.speedCurrent.innerHTML = _this.clip.speed;
+      const iconCheckClass = "icon-check-solid";
+      elFirstClass(iconCheckClass).classList.remove(iconCheckClass);
+
+      this.classList.add(iconCheckClass);
     };
+
     const valueDiv = elcreate("p");
     valueDiv.innerHTML = _this.options.speedValues[i];
     valueDiv.dataset.zone = i;
