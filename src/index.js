@@ -1,17 +1,12 @@
 import { TimeCapsule } from "@kissmybutton/motorcortex";
 import { name, updateName } from "./config";
-import { calcClipScale, elcreate, elFirstClass, elid, eltag } from "./helpers";
+import { calcClipScale, elcreate, elFirstClass, elid, eltag,changeIcon } from "./helpers";
 import setElements from "./html/setElements";
-// import { loadingSVG, pauseSVG, playSVG } from "./html/svg";
-const loadingSVG = "";
-const pauseSVG = "";
-const playSVG = "";
 import bodyListener from "./listeners/body";
 import controlsListener from "./listeners/controls";
 import donkeyclipListener from "./listeners/donkeyclip";
-import { PLAYING,TRANSITIONAL,ARMED, showControls } from "./listeners/enums";
+import { PLAYING, showControls } from "./listeners/enums";
 import css from  "./html/newStyle.css";
-import icomooncss from  "./assets/icomoon/style.css";
 
 import {
   DURATION_CHANGE,
@@ -372,8 +367,7 @@ class Player {
         if (!controlsEl.classList.value.includes(showControls)) {
           controlsEl.classList.toggle(showControls);
         }
-        this.elements.statusButton.classList.remove("icon-play");
-        this.elements.statusButton.classList.add("icon-pause");
+        changeIcon(this.elements.statusButton,"pause","play");
         this.elements.indicator.innerHTML = `${
           state.charAt(0).toUpperCase() + state.slice(1)
         }`;
@@ -388,8 +382,7 @@ class Player {
           controlsEl.classList.toggle(showControls);
         }
         this.elements.indicator.innerHTML = "Playing";
-        this.elements.statusButton.classList.remove("icon-pause");
-        this.elements.statusButton.classList.add("icon-play");
+        changeIcon(this.elements.statusButton,"play","pause");
         if (state !== PLAYING) {
           return;
         }
@@ -623,15 +616,6 @@ class Player {
   
       // append player style to document
       eltag("head")[0].appendChild(style);
-
-      const styleIcomoon = elcreate("style");
-      styleIcomoon.id = "--mc-player-style";
-      styleIcomoon.styleSheet
-        ? (styleIcomoon.styleSheet.cssText = icomooncss)
-        : styleIcomoon.appendChild(document.createTextNode(icomooncss));
-  
-      // append player style to document
-      eltag("head")[0].appendChild(styleIcomoon);
     }
     
     this.eventBroadcast("theme-change", this.options.theme);

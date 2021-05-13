@@ -1,4 +1,4 @@
-import { elcreate, elid,elFirstClass } from "../helpers";
+import { elcreate, elid,elFirstClass,initializeIcons, changeIcon } from "../helpers";
 // import playerHTML from "./playerHTML";
 // import svg from "./svg";
 import htmlplayer from "./player.html";
@@ -64,6 +64,8 @@ export default (_this) => {
   _this.elements.speedBar = elFirstClass(mcPlayer,`--mcp-speed-values`);
   _this.elements.currentTime = elFirstClass(mcPlayer,`--mcp-time-current`);
   _this.elements.timeDisplay = elFirstClass(mcPlayer,`--mcp-time-display`);
+  _this.elements.speedButtonShow = elFirstClass(mcPlayer,`--mcp-speed-btn-show`);
+  _this.elements.speedButtonHide = elFirstClass(mcPlayer,`--mcp-speed-btn-hide`);
   _this.elements.speedCurrent = elFirstClass(mcPlayer,`--mcp-speed-current`);
   _this.elements.loopBarStart = elFirstClass(mcPlayer,`--mcp-loopbar-start`);
   _this.elements.volumeCursor = elFirstClass(mcPlayer,`--mcp-volume-cursor`);
@@ -87,7 +89,7 @@ export default (_this) => {
   );
   _this.elements.settingsSpeedButtonHide = elFirstClass(mcPlayer,`--mcp-settings-speed-hide`
   );
-  console.log("x");
+  initializeIcons(_this.elements);
   // _this.elements.volumeBarActive.style.width = `${
   //   _this.settings.volume * 100
   // }%`;
@@ -201,7 +203,8 @@ export default (_this) => {
   }
 
   for (const i in _this.options.speedValues) {
-    const iconCheckClass = "icon-check-solid";
+    if(_this.options.speedValues[i] == 0) continue;
+    const iconCheckClass = "check-solid";
     const selectedClass = "--mcp-selected";
 
     //create the parent li element
@@ -222,7 +225,7 @@ export default (_this) => {
 
     //add the check if this is the speed
     if (_this.options.speedValues[i] == _this.clip.speed) {
-      span.classList.add(iconCheckClass);
+      changeIcon(span,null,iconCheckClass);
       valueDiv.classList.add(selectedClass);
     }
 
@@ -233,10 +236,12 @@ export default (_this) => {
       _this.options.speed = _this.options.speedValues[i];
       _this.clip.speed = _this.options.speedValues[i];
 
-      _this.elements.speedCurrent.innerHTML = _this.clip.speed;
+    const isNormal = _this.clip.speed == 1;
+    _this.elements.speedCurrent.innerHTML = isNormal? "Normal":_this.clip.speed;
       
-      elFirstClass(_this.elements.mcPlayer,iconCheckClass).classList.remove(iconCheckClass);
-      span.classList.add(iconCheckClass);
+      const previousChecked = elFirstClass(_this.elements.mcPlayer,"icon-check-solid");
+      changeIcon(previousChecked,iconCheckClass);
+      changeIcon(span,null,iconCheckClass);
 
       elFirstClass(_this.elements.mcPlayer,selectedClass).classList.remove(selectedClass);
       valueDiv.classList.add(selectedClass);

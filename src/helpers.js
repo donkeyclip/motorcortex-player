@@ -7,6 +7,7 @@ import {
   touchstart,
 } from "./listeners/events";
 
+import SVG from "./assets/svg.js";
 export function el(selector) {
   return document.querySelectorAll(selector);
 }
@@ -160,3 +161,30 @@ export function removeStartListeners(callback, element = document) {
   element.removeEventListener(mousedown, callback, false);
   element.removeEventListener(touchstart, callback, false);
 }
+
+export function changeIcon(element,from,to){
+  if(from) {
+    element.classList.remove(`icon-${from}`);
+    element.innerHTML = "";
+  }
+  if(to){
+    element.classList.add(`icon-${to}`);
+    element.innerHTML = SVG[to];
+  }
+}
+export function initializeIcons(playerElements){
+
+  playerElements.loopButton.innerHTML = SVG["loop"];
+  playerElements.volumeBtn.innerHTML = SVG["volume-on"];
+  playerElements.statusButton.innerHTML = SVG["play"];
+  playerElements.settingsButton.innerHTML = SVG["settings"];
+  playerElements.donkeyclipButton.innerHTML = SVG["donkeyclip-logo"];
+  playerElements.fullScreenButton.innerHTML = SVG["expand-full"];
+  playerElements.fullScreenButton.innerHTML = SVG["expand-full"];
+  playerElements.speedButtonShow.innerHTML = SVG["angle-right"];
+  playerElements.speedButtonHide.innerHTML = SVG["angle-left"];
+}
+
+
+
+

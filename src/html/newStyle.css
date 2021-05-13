@@ -11,6 +11,17 @@
     cursor: default;
     user-select: none;
 }
+.--mc-player svg{
+    width: 22px;
+}
+.--mcp-settings-panel svg{
+    width: 10px;
+}
+.--mc-player svg,
+.--mc-player svg *{
+    fill: rgb(var(--defaultColor)) !important;
+
+}
 
 .--mc-player {
     width: 100%;
@@ -112,6 +123,7 @@
     position: absolute;
     top: -5px;
     right: -8px;
+    z-index: 10;
 }
 
 .--mcp-totalbar {
@@ -228,9 +240,16 @@
 .--mcp-status-btn,
 .--mcp-loop-boundaries,
 .--mcp-cursor,
-.--mcp-btn
+.--mcp-btn,
+.--mc-player svg,
+.--mc-player svg *
 {
     cursor: pointer;
+}
+.--mcp-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .--mcp-status-btn{
     display: flex;
@@ -328,7 +347,7 @@ ul.--mcp-speed-values li p{
     padding: 0px !important;
 }
 .--mcp-speed-value-item:not(.--mcp-selected){
-    padding-left:18px;
+    padding-left:15px;
 }
 .--mcp-speed-value-item.--mcp-selected{
     padding-left: 10px;

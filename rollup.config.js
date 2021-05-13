@@ -4,6 +4,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import html from 'rollup-plugin-html';
 import { terser } from "rollup-plugin-terser";
 import postcss from "rollup-plugin-postcss";
+import svg from "rollup-plugin-svg";
 
 import pkg from "./package.json";
 export default [
@@ -19,7 +20,8 @@ export default [
       commonjs(),
       babel(),
       postcss({inject:false}),
-      html({include: '**/*.html'})
+      html({include: '**/*.html'}),
+      svg()
     ],
   },
   {
@@ -41,7 +43,8 @@ export default [
       babel(),
       terser(),
       postcss({inject:false}),
-      html({include: '**/*.html'})
+      html({include: '**/*.html'}),
+      svg()
     ],
   },
 ];
