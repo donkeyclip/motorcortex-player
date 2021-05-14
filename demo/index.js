@@ -283,5 +283,5 @@ window.player = new Player({
   controls: true,
   preview: true,
   showVolume:true,
-  theme:"transparent position-ontop",
+  theme:"blue",
 });

@@ -1,9 +1,56 @@
+.--mc-player.theme-default{
+    --defaultColor:136,136,136;
+    --defaultColor:136,136,136;
+    --backgroundColor:245,245,245,1;
+    --loopBarColor:rgba(var(--activeColor),.2);
+    --grad-display:none;
+}
+
+.--mc-player.theme-dark{
+    --activeColor:136,136,136;
+    --defaultColor:136,136,136;
+    --backgroundColor:0,0,0,1;
+    --loopBarColor:rgba(var(--activeColor),.2);
+    --grad-display:none;
+}
+
+.--mc-player.theme-whiteGold{
+    --activeColor:161,127,26;
+    --defaultColor:136,136,136;
+    --backgroundColor:245,245,245,1;
+    --loopBarColor:rgba(var(--activeColor),.2);
+    --grad-display:none;
+}
+
+.--mc-player.theme-darkGold{
+    --activeColor:161,127,26;
+    --defaultColor:136,136,136;
+    --backgroundColor:0,0,0,1;
+    --loopBarColor:rgba(var(--activeColor),.2);
+    --grad-display:none;
+}
 .--mc-player.theme-transparent{
     --activeColor:255,0,0;
     --defaultColor:239,238,236;
-    --backgroundColor:0,0,0,0
+    --backgroundColor:0,0,0,0;
+    --loopBarColor:rgba(var(--defaultColor),.2);
+    --grad-display:block;
 }
 
+.--mc-player.theme-green{
+    --activeColor:0,184,139;
+    --defaultColor:153,153,153;
+    --backgroundColor:20,20,22,1;
+    --loopBarColor:rgba(var(--activeColor),.2);
+    --grad-display:none;
+}
+.--mc-player.theme-blue{
+    --activeColor:0,153,225;
+    --defaultColor:153,153,153;
+    --backgroundColor:20,20,22,1;
+    --loopBarColor:rgba(var(--activeColor),.2);
+    --grad-display:none;
+}
 .--mc-player *{
     color: rgb(var(--defaultColor));
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -52,6 +99,7 @@
 }
 
 .--mcp-grad {
+    display: var(--grad-display);
     position: absolute;
     bottom: 0px;
     left: 0px;
@@ -141,7 +189,7 @@
     position: absolute;
     left: 0px;
     bottom: 5px;
-    background-color: rgba(var(--defaultColor),0.3);
+    background-color: var(--loopBarColor);
     width: 100%;
     height: 5px;
 }

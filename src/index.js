@@ -595,16 +595,16 @@ class Player {
       this.elements.mcPlayer.classList.add("theme-default");
     else if (this.options.theme.includes("transparent"))
       this.elements.mcPlayer.classList.add("theme-transparent");
-    else if (this.options.theme.includes("dark"))
-      this.elements.mcPlayer.classList.add("theme-dark");
     else if (this.options.theme.includes("whiteGold"))
       this.elements.mcPlayer.classList.add("theme-whiteGold");
     else if (this.options.theme.includes("darkGold"))
       this.elements.mcPlayer.classList.add("theme-darkGold");
-    else if (this.options.theme.includes("mc-green"))
-      this.elements.mcPlayer.classList.add("theme-mc-green");
-    else if (this.options.theme.includes("mc-blue"))
-      this.elements.mcPlayer.classList.add("theme-mc-blue");
+    else if (this.options.theme.includes("green"))
+      this.elements.mcPlayer.classList.add("theme-green");
+    else if (this.options.theme.includes("blue"))
+      this.elements.mcPlayer.classList.add("theme-blue");
+    else if (this.options.theme.includes("dark"))
+      this.elements.mcPlayer.classList.add("theme-dark");
 
 
     if (!elid("--mc-player-style")){

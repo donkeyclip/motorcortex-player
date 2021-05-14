@@ -82,7 +82,6 @@ export default (_this) => {
   _this.elements.settingsShowPreview = elFirstClass(mcPlayer,`--mcp-settings-preview`);
   _this.elements.settingsPointerEvents = elFirstClass(mcPlayer,`--mcp-settings-pointer-events`
   );
-  // _this.elements.speedBarHelper = elFirstClass(mcPlayer,`--mcp-speed-value-helperbar`);
   _this.elements.settingsShowIndicator = elFirstClass(mcPlayer,`--mcp-settings-indicator`
   );
   _this.elements.settingsSpeedButtonShow = elFirstClass(mcPlayer,`--mcp-settings-speed-show`
