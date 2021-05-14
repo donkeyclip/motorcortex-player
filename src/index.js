@@ -6,7 +6,7 @@ import bodyListener from "./listeners/body";
 import controlsListener from "./listeners/controls";
 import donkeyclipListener from "./listeners/donkeyclip";
 import { PLAYING, showControls } from "./listeners/enums";
-import css from  "./html/newStyle.css";
+import css from  "./html/style.css";
 
 import {
   DURATION_CHANGE,
@@ -372,10 +372,9 @@ class Player {
           state.charAt(0).toUpperCase() + state.slice(1)
         }`;
         if (state == "blocked") {
-          this.elements.pointerEventPanel.innerHTML = `
-            <div style="width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">${loadingSVG}</div>`;
+          changeIcon(this.elements.pointerEventPanel,null,"spinner");
         } else {
-          this.elements.pointerEventPanel.innerHTML = "";
+          changeIcon(this.elements.pointerEventPanel,"spinner",null);
         }
       } else {
         if (controlsEl.classList.value.includes(showControls)) {
@@ -571,10 +570,6 @@ class Player {
   }
 
   setTheme() {
-    // remove previous style if exists
-    // elid(this.name + "-style") &&
-    // eltag(`head`)[0].removeChild(elid(this.name + "-style"));
-    // replace multiple spaces with one space
     this.options.theme.replace(/\s\s+/g, ` `);
     this.options.theme.trim();
     const POSITION_ON_TOP = "position-ontop";
@@ -624,30 +619,6 @@ class Player {
   setSpeed() {
     const currentSpeed = this.clip.speed == 1 ? "Normal" : this.clip.speed;
     this.elements.speedCurrent.innerHTML = currentSpeed;
-
-    // const targetZone = (() => {
-    //   for (let i = 0; i < this.options.speedValues.length - 1; i++) {
-    //     if (
-    //       this.options.speedValues[i] <= this.clip.speed &&
-    //       this.options.speedValues[i + 1] > this.clip.speed
-    //     ) {
-    //       return (
-    //         i +
-    //         Math.abs(
-    //           (this.clip.speed - this.options.speedValues[i]) /
-    //             (this.options.speedValues[i] - this.options.speedValues[i + 1])
-    //         )
-    //       );
-    //     }
-    //   }
-    // })();
-
-    // const step = 1 / (this.options.speedValues.length - 1);
-
-    // const positionY =
-    //   (targetZone * step - 1) * (this.options.speedValues.length - 1) * -16;
-
-    // elFirstClass(this.elements.mcPlayer,`--mcp-speed-cursor`).style.top = `${positionY}px`;
   }
 
   calculateSpeed(step, arrayOfValues, currentPercentage) {

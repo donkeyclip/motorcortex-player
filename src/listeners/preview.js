@@ -1,13 +1,11 @@
 import {
   addMouseUpAndMoveListeners,
-  elid,
   elFirstClass,
   isMobile,
   removeMouseUpAndMoveListeners,
 } from "../helpers";
 
 export default (_this) => {
-  // only on desktop devices
   if (isMobile()) {
     return;
   }

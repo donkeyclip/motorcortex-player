@@ -1,4 +1,4 @@
-import { elFirstClass, elid } from "../helpers";
+import { elFirstClass } from "../helpers";
 import { touchstart } from "./events";
 
 export default (_this) => {

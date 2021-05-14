@@ -1,4 +1,3 @@
-import { elid,elFirstClass } from "../helpers";
 import { LOOP_CHANGE } from "./events";
 
 export function trigger(_this) {
@@ -13,12 +12,7 @@ export function trigger(_this) {
   _this.elements.loopBarStart.classList.toggle(`${_this.name}-hide`);
   _this.elements.loopBarEnd.classList.toggle("m-fadeIn");
   _this.elements.loopBarEnd.classList.toggle(`${_this.name}-hide`);
-  // elFirstClass(_this.elements.mcPlayer,`--mcp-loop-time`).classList.toggle("m-fadeOut");
-  // elFirstClass(_this.elements.mcPlayer,`--mcp-loop-time`).classList.toggle("m-fadeIn");
-  // elFirstClass(_this.elements.mcPlayer,`--mcp-loop-time`).classList.toggle(`${_this.name}-hide`);
-  // _this.elements.loopEndTime.innerHTML = _this.settings.loopEndMillisecond;
-  // _this.elements.loopStartTime.innerHTML = _this.settings.loopStartMillisecond;
-  _this.settings.needsUpdate = true;
+   _this.settings.needsUpdate = true;
 
   if (!_this.settings.loopActivated) {
     _this.elements.loopBar.style.left = "0%";

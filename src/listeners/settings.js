@@ -1,12 +1,11 @@
-import { addListener, elid, elFirstClass, removeListener } from "../helpers";
+import { addListener, elFirstClass, removeListener } from "../helpers";
 import {
   SHOW_PREVIEW_CHANGE,
   SHOW_VOLUME_CHANGE,
   STATE_CHANGE,
 } from "./events";
 
-const showIndicator = (_this, e) => {
-  // e && e.preventDefault();
+const showIndicator = (_this) => {
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-indicator-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
@@ -18,8 +17,7 @@ const showIndicator = (_this, e) => {
   _this.eventBroadcast("show-indicator-change", checkbox.checked);
 };
 
-const showPointerEvents = (_this, e) => {
-  // e && e.preventDefault();
+const showPointerEvents = (_this) => {
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-pointer-events-checkbox`);
   if (!checkbox.checked) {
     checkbox.checked = true;
@@ -38,8 +36,7 @@ const showPointerEvents = (_this, e) => {
   _this.eventBroadcast("show-pointer-events-change", checkbox.checked);
 };
 
-const showVolume = (_this, e) => {
-  // e && e.preventDefault();
+const showVolume = (_this) => {
   _this.elements.volumeControl.classList.toggle(
     "m-fadeOut"
   );
@@ -53,8 +50,7 @@ const showVolume = (_this, e) => {
   _this.eventBroadcast(SHOW_VOLUME_CHANGE, checkbox.checked);
 };
 
-const showPreview = (_this, e) => {
-  // e && e.preventDefault();
+const showPreview = (_this) => {
   const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-preview-checkbox`);
   if (checkbox.checked) {
     checkbox.checked = false;
@@ -73,17 +69,16 @@ const showPreview = (_this, e) => {
 };
 
 export function add(_this) {
-  _this.elements.settingsShowIndicator.onclick = (e) => showIndicator(_this, e);
+  _this.elements.settingsShowIndicator.onclick = () => showIndicator(_this);
 
-  _this.elements.settingsPointerEvents.onclick = (e) =>
-    showPointerEvents(_this, e);
+  _this.elements.settingsPointerEvents.onclick = () =>
+    showPointerEvents(_this);
 
-  _this.elements.settingsShowVolume.onclick = (e) => showVolume(_this, e);
+  _this.elements.settingsShowVolume.onclick = () => showVolume(_this);
 
-  _this.elements.settingsShowPreview.onclick = (e) => showPreview(_this, e);
+  _this.elements.settingsShowPreview.onclick = () => showPreview(_this);
 
-  _this.elements.settingsButton.onclick = (e) => {
-    // e.preventDefault();
+  _this.elements.settingsButton.onclick = () => {
     const controlsEl = elFirstClass(_this.elements.mcPlayer,`--mcp-controls`);
 
     const showHideSettings = (e) => {

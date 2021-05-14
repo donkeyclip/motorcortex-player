@@ -1,6 +1,5 @@
-import { elcreate, elid,elFirstClass,initializeIcons, changeIcon } from "../helpers";
-// import playerHTML from "./playerHTML";
-// import svg from "./svg";
+import { elcreate, elFirstClass,initializeIcons, changeIcon } from "../helpers";
+
 import htmlplayer from "./player.html";
 export default (_this) => {
   _this.elements = {};
@@ -11,18 +10,7 @@ export default (_this) => {
   if (!clipIframe.offsetHeight) {
     clipIframe.style.height = _this.clip.props.containerParams.height;
   }
-  //load ubuntu font
 
-  const linkPreconnect = document.createElement("link");
-  linkPreconnect.rel = "preconnect";
-  linkPreconnect.href = "https://fonts.gstatic.com";
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href =
-    "https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap";
-  const head = document.getElementsByTagName("head")[0];
-  head.appendChild(linkPreconnect);
-  head.appendChild(link);
   clipIframe.style.display = `flex`;
   clipIframe.style.justifyContent = `center`;
   clipIframe.style.alignItems = `center`;
@@ -119,52 +107,6 @@ export default (_this) => {
   _this.elements.loopBarEnd.style.left = "100%";
   _this.elements.loopBarEnd.classList.add("m-fadeOut", `${_this.name}-hide`);
 
-  // _this.elements.loopStartTime = elFirstClass(mcPlayer,`--mcp-loopbar-start-time`);
-
-  // _this.elements.loopEndTime = elFirstClass(mcPlayer,`--mcp-loopbar-end-time`);
-
-  // _this.elements.editableLoopStartTime = document.createElement("input");
-
-  // _this.elements.editableLoopStartTime.type = "text";
-
-  // _this.elements.editableLoopStartTime.size =
-  //   elFirstClass(mcPlayer,`--mcp-time-total`).innerHTML.length + 1;
-
-  // _this.elements.editableLoopStartTime.maxLength = elFirstClass(mcPlayer,`--mcp-time-total`
-  // ).innerHTML.length;
-
-  // _this.elements.editableLoopStartTime.style.height = elFirstClass(mcPlayer,`--mcp-time-total`
-  // ).offsetHeight;
-
-  // _this.elements.editableLoopStartTime.value = elFirstClass(mcPlayer,`--mcp-loopbar-start-time`
-  // ).innerHTML;
-
-  // _this.elements.editableLoopStartTime.style.fontSize = "8px";
-
-  // _this.elements.editableLoopEndTime = document.createElement("input");
-
-  // _this.elements.editableLoopEndTime.type = "text";
-
-  // _this.elements.editableLoopEndTime.size =
-  //   elFirstClass(mcPlayer,`--mcp-time-total`).innerHTML.length + 1;
-
-  // _this.elements.editableLoopEndTime.maxLength = elFirstClass(mcPlayer,`--mcp-time-total`
-  // ).innerHTML.length;
-
-  // _this.elements.editableLoopEndTime.style.height = elFirstClass(mcPlayer,`--mcp-time-total`
-  // ).offsetHeight;
-
-  // _this.elements.editableLoopEndTime.value = elFirstClass(mcPlayer,`--mcp-loopbar-start-time`
-  // ).innerHTML;
-
-  // _this.elements.editableLoopEndTime.pattern = "d*";
-
-  // _this.elements.editableLoopEndTime.style.fontSize = "8px";
-
-  // elFirstClass(mcPlayer,`--mcp-loop-time`).classList.add(
-  //   "m-fadeOut",
-  //   `${_this.name}-hide`
-  // );
 
   elFirstClass(mcPlayer,`--mcp-preview`).classList.add("m-fadeOut");
 
@@ -189,7 +131,6 @@ export default (_this) => {
     elFirstClass(mcPlayer,`--mcp-controls`).style.pointerEvents = "auto";
     _this.elements.settingsPanel.style.pointerEvents = "auto";
   }
-  // _this.elements.listenerHelper.style.pointerEvents = "none";
 
   if (!_this.options.showVolume) {
     _this.elements.volumeControl.classList.toggle("m-fadeOut");

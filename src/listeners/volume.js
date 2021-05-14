@@ -2,11 +2,9 @@ import {
   addMouseUpAndMoveListeners,
   addStartListeners,
   changeIcon,
-  elcreate,
   elFirstClass,
   removeMouseUpAndMoveListeners,
 } from "../helpers";
-import { volumeMuteSVG, volumeSVG } from "../html/svg";
 import { MUTE_CHANGE, VOLUME_CHANGE } from "./events";
 export function trigger(_this, volume, mute) {
   const elements = _this.elements;
@@ -37,11 +35,9 @@ export function trigger(_this, volume, mute) {
 
     if (_this.settings.volume > 0) {
       _this.settings.volumeMute = false;
-      const SVG = document.createElement("span");
       changeIcon(elements.volumeBtn,"volume-off","volume-on");
     } else if (_this.settings.volume === 0) {
       _this.settings.volumeMute = true;
-      const SVG = document.createElement("span");
       changeIcon(elements.volumeBtn,"volume-off","volume-on");
     }
 
@@ -118,11 +114,10 @@ export function add(_this) {
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
   };
 
-  listeners.onMouseUpVolumeBar = (e) => {
+  listeners.onMouseUpVolumeBar = () => {
     volumeDrag = false;
     elements.listenerHelper.style.pointerEvents = "none";
 
-    // e.preventDefault();
     if (_this.settings.volume > 0) {
       _this.settings.previousVolume = _this.settings.volume;
     }
@@ -136,7 +131,6 @@ export function add(_this) {
     volumeDrag = true;
     elements.listenerHelper.style.pointerEvents = "auto";
 
-    // e.preventDefault();
     listeners.onCursorMoveVolumeBar(e);
     addMouseUpAndMoveListeners(
       listeners.onMouseUpVolumeBar,
