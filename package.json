@@ -63,9 +63,9 @@
     "@kissmybutton/motorcortex": "^6.4.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.13.16",
-    "@babel/core": "7.14.2",
-    "@babel/eslint-parser": "7.14.2",
+    "@babel/cli": "7.14.3",
+    "@babel/core": "7.14.3",
+    "@babel/eslint-parser": "7.14.3",
     "@babel/plugin-proposal-nullish-coalescing-operator": "7.14.2",
     "@babel/preset-env": "7.14.2",
     "@commitlint/cli": "12.1.4",
