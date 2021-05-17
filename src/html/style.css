@@ -98,6 +98,18 @@
     min-height: calc(100% - 44px);
 }
 
+.--mcp-pointer-events-panel.loading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.8)
+}
+.--mcp-pointer-events-panel.loading svg {
+    animation:spin 4s linear infinite;
+}
+
+@keyframes spin { 100% { transform:rotate(360deg); } }
+
 .--mcp-grad {
     display: var(--grad-display);
     position: absolute;
@@ -502,7 +514,7 @@ Sliders
 .--mc-player .m-fadeOut {
     visibility: hidden !important;
     opacity: 0 !important;
-    display: none;
+    display: none !important;
   }
   
   .--mc-player .m-fadeIn {

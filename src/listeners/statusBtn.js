@@ -1,6 +1,5 @@
 export default (_this) => {
-  _this.elements.statusButton.onclick = (e) => {
-    // e.preventDefault();
+  _this.elements.statusButton.onclick = () => {
     switch (_this.clip.runTimeInfo.state) {
       case "playing":
         _this.clip.pause();

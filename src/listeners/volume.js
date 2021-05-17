@@ -6,6 +6,7 @@ import {
   removeMouseUpAndMoveListeners,
 } from "../helpers";
 import { MUTE_CHANGE, VOLUME_CHANGE } from "./events";
+import { VOLUME_OFF, VOLUME_ON } from "./enums";
 export function trigger(_this, volume, mute) {
   const elements = _this.elements;
   if (typeof mute !== undefined) {
@@ -13,12 +14,12 @@ export function trigger(_this, volume, mute) {
       elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
       _this.clip.setVolume(_this.settings.previousVolume);
       _this.settings.volumeMute = false;
-      changeIcon(elements.volumeBtn,"volume-off","volume-on");
+      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     } else if (mute === true) {
       _this.settings.volumeMute = true;
       elements.volumeBarActive.style.width = "0%";
       _this.clip.setVolume(0);
-      changeIcon(elements.volumeBtn,"volume-on","volume-off");
+      changeIcon(elements.volumeBtn, VOLUME_ON, VOLUME_OFF);
     }
     _this.options.muted = _this.settings.volumeMute;
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
@@ -35,10 +36,10 @@ export function trigger(_this, volume, mute) {
 
     if (_this.settings.volume > 0) {
       _this.settings.volumeMute = false;
-      changeIcon(elements.volumeBtn,"volume-off","volume-on");
+      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     } else if (_this.settings.volume === 0) {
       _this.settings.volumeMute = true;
-      changeIcon(elements.volumeBtn,"volume-off","volume-on");
+      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     }
 
     _this.options.volume = _this.settings.volume;
@@ -54,14 +55,16 @@ export function add(_this) {
     if (_this.settings.volumeMute) {
       elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
       _this.clip.setVolume(_this.settings.previousVolume);
-    elements.volumeBarActive.style.width = `${_this.settings.previousVolume * 100}%`;
-    _this.settings.volumeMute = false;
-      changeIcon(elements.volumeBtn,"volume-off","volume-on");
+      elements.volumeBarActive.style.width = `${
+        _this.settings.previousVolume * 100
+      }%`;
+      _this.settings.volumeMute = false;
+      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     } else {
       _this.settings.volumeMute = true;
-      changeIcon(elements.volumeBtn,"volume-on","volume-off");
-    elements.volumeBarActive.style.width = `0%`;
-    _this.clip.setVolume(0);
+      changeIcon(elements.volumeBtn, VOLUME_ON, VOLUME_OFF);
+      elements.volumeBarActive.style.width = `0%`;
+      _this.clip.setVolume(0);
     }
     _this.eventBroadcast(VOLUME_CHANGE, _this.settings.previousVolume);
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
@@ -69,10 +72,12 @@ export function add(_this) {
   let volumeOpen = false;
   elements.volumeBtn.onmouseover = () => {
     volumeOpen = true;
-    
   };
 
-  const leftControlsElement = elFirstClass(_this.elements.mcPlayer,`--mcp-left-buttons`);
+  const leftControlsElement = elFirstClass(
+    _this.elements.mcPlayer,
+    `--mcp-left-buttons`
+  );
   leftControlsElement.onmouseout = () => {
     if (!volumeOpen || volumeDrag) {
       return;
@@ -106,9 +111,9 @@ export function add(_this) {
     if (_this.settings.volume >= 0) {
       const mute = _this.settings.volume === 0;
       _this.settings.volumeMute = mute;
-      mute ? 
-        changeIcon(elements.volumeBtn,"volume-on","volume-off"):
-        changeIcon(elements.volumeBtn,"volume-off","volume-on");
+      mute
+        ? changeIcon(elements.volumeBtn, VOLUME_ON, VOLUME_OFF)
+        : changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     }
     _this.eventBroadcast(VOLUME_CHANGE, _this.settings.volume);
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
