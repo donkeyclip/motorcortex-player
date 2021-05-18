@@ -1,13 +1,6 @@
 import { TimeCapsule } from "@kissmybutton/motorcortex";
 import { name, updateName } from "./config";
-import {
-  calcClipScale,
-  elcreate,
-  elFirstClass,
-  elid,
-  eltag,
-  changeIcon,
-} from "./helpers";
+import { calcClipScale, elcreate, elid, eltag, changeIcon } from "./helpers";
 import setElements from "./html/setElements";
 import bodyListener from "./listeners/body";
 import donkeyclipListener from "./listeners/donkeyclip";
@@ -310,9 +303,9 @@ class Player {
     }
     return false;
   }
-  broadcastNotPlaying(controlsEl, state) {
-    if (!controlsEl.classList.value.includes(showControls)) {
-      controlsEl.classList.toggle(showControls);
+  broadcastNotPlaying(state) {
+    if (!this.elements.controls.classList.value.includes(showControls)) {
+      this.elements.controls.classList.toggle(showControls);
     }
     changeIcon(this.elements.statusButton, "pause", "play");
     this.elements.indicator.innerHTML = `${
@@ -327,9 +320,9 @@ class Player {
     }
   }
 
-  broadcastPlaying(controlsEl, state) {
-    if (controlsEl.classList.value.includes(showControls)) {
-      controlsEl.classList.toggle(showControls);
+  broadcastPlaying(state) {
+    if (this.elements.controls.classList.value.includes(showControls)) {
+      this.elements.controls.classList.toggle(showControls);
     }
     this.elements.indicator.innerHTML = "Playing";
     changeIcon(this.elements.statusButton, "play", "pause");
@@ -431,8 +424,6 @@ class Player {
     }
   }
   eventBroadcast(eventName, state) {
-    const { mcPlayer } = this.elements;
-    const controlsEl = elFirstClass(mcPlayer, `--mcp-controls`);
     if (eventName === STATE_CHANGE) {
       if (this.options.currentScript) {
         this.options.currentScript.dataset.status = state;
@@ -440,9 +431,9 @@ class Player {
       if (
         ["paused", "idle", "transitional", "armed", "blocked"].includes(state)
       ) {
-        this.broadcastNotPlaying(controlsEl, state);
+        this.broadcastNotPlaying(state);
       } else {
-        this.broadcastPlaying(controlsEl, state);
+        this.broadcastPlaying(state);
       }
     } else if (eventName === DURATION_CHANGE) {
       this.broadcastDurationChange();
@@ -635,15 +626,11 @@ class Player {
   }
 
   createPreviewDisplay() {
-    const previewHost = elFirstClass(
-      this.elements.mcPlayer,
-      `--mcp-preview-host`
-    );
-    this.previewClip = this.clip.paste(previewHost);
+    this.previewClip = this.clip.paste(this.elements.previewHost);
 
-    previewHost.style.position = "absolute";
-    previewHost.style.background = this.options.backgroundColor;
-    previewHost.style.zIndex = 1;
+    this.elements.previewHost.style.position = "absolute";
+    this.elements.previewHost.style.background = this.options.backgroundColor;
+    this.elements.previewHost.style.zIndex = 1;
     this.setPreviewDimentions();
   }
 
@@ -678,12 +665,8 @@ class Player {
     this.previewClip.ownClip.rootElement.style.left = `${transform.position.left}px`;
     this.previewClip.ownClip.rootElement.style.top = `${transform.position.top}px`;
 
-    const previewElement = elFirstClass(
-      this.elements.mcPlayer,
-      `--mcp-preview`
-    );
-    previewElement.style.width = `${width}px`;
-    previewElement.style.height = `${height}px`;
+    this.elements.preview.style.width = `${width}px`;
+    this.elements.preview.style.height = `${height}px`;
 
     previewClip.style.boxSizing = "border-box";
   }

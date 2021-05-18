@@ -146,6 +146,9 @@
 .--mc-player:hover .--mcp-controls{
     opacity: 1 !important;
 }
+.--mcp-controls:active {
+    opacity: 1 !important;
+}
 .--mcp-controls {
     display: flex;
     flex-direction: column;
@@ -341,13 +344,18 @@
 .--mcp-volume:hover {
     padding-right:10px;
 }
-.--mcp-volume:hover .--mcp-volumebar {
+.--mcp-volume:hover .--mcp-volumebar,
+.--mcp-volume:active .--mcp-volumebar
+ {
     width: 52px;
     padding-left:5px;
 }
-.--mcp-volume:hover .--mcp-volume-cursor {
+.--mcp-volume:hover .--mcp-volume-cursor,
+.--mcp-volume:active .--mcp-volume-cursor
+ {
     display: block;
 }
+
 .--mcp-btn::before {
     color:var(--defaultColor) !important;
 }

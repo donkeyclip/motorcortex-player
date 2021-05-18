@@ -1,4 +1,4 @@
-import { addListener, elFirstClass, removeListener } from "../helpers";
+import { addListener, removeListener } from "../helpers";
 import {
   SHOW_PREVIEW_CHANGE,
   SHOW_VOLUME_CHANGE,
@@ -6,81 +6,83 @@ import {
 } from "./events";
 
 const showIndicator = (_this) => {
-  const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-indicator-checkbox`);
-  if (checkbox.checked) {
-    checkbox.checked = false;
+  if (_this.elements.showIndicatorCheckbox.checked) {
+    _this.elements.showIndicatorCheckbox.checked = false;
     _this.elements.indicator.style.display = "none";
   } else {
-    checkbox.checked = true;
+    _this.elements.showIndicatorCheckbox.checked = true;
     _this.elements.indicator.style.display = undefined;
   }
-  _this.eventBroadcast("show-indicator-change", checkbox.checked);
+  _this.eventBroadcast(
+    "show-indicator-change",
+    _this.elements.showIndicatorCheckbox.checked
+  );
 };
 
 const showPointerEvents = (_this) => {
-  const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-pointer-events-checkbox`);
-  if (!checkbox.checked) {
-    checkbox.checked = true;
+  if (!_this.elements.showPointerEventsCheckbox.checked) {
+    _this.elements.showPointerEventsCheckbox.checked = true;
     _this.options.pointerEvents = false;
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "none";
-    elFirstClass(_this.elements.mcPlayer,`--mcp-controls`).style.pointerEvents = "auto";
+    _this.elements.controls.style.pointerEvents = "auto";
     _this.elements.settingsPanel.style.pointerEvents = "auto";
   } else {
-    checkbox.checked = false;
+    _this.elements.showPointerEventsCheckbox.checked = false;
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "auto";
-    elFirstClass(_this.elements.mcPlayer,`--mcp-controls`).style.pointerEvents = "auto";
+    _this.elements.controls.style.pointerEvents = "auto";
     _this.elements.settingsPanel.style.pointerEvents = "auto";
   }
-  _this.eventBroadcast("show-pointer-events-change", checkbox.checked);
+  _this.eventBroadcast(
+    "show-pointer-events-change",
+    _this.elements.showPointerEventsCheckbox.checked
+  );
 };
 
 const showVolume = (_this) => {
-  _this.elements.volumeControl.classList.toggle(
-    "m-fadeOut"
-  );
-
-  const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-volume-checkbox`);
-  if (checkbox.checked) {
-    checkbox.checked = false;
+  _this.elements.volumeControl.classList.toggle("m-fadeOut");
+  if (_this.elements.showVolumeCheckbox.checked) {
+    _this.elements.showVolumeCheckbox.checked = false;
   } else {
-    checkbox.checked = true;
+    _this.elements.showVolumeCheckbox.checked = true;
   }
-  _this.eventBroadcast(SHOW_VOLUME_CHANGE, checkbox.checked);
+  _this.eventBroadcast(
+    SHOW_VOLUME_CHANGE,
+    _this.elements.showVolumeCheckbox.checked
+  );
 };
 
 const showPreview = (_this) => {
-  const checkbox = elFirstClass(_this.elements.mcPlayer,`--mcp-show-preview-checkbox`);
-  if (checkbox.checked) {
-    checkbox.checked = false;
-    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.display = "none";
-    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.display = "unset";
+  if (_this.elements.showPreviewCheckbox.checked) {
+    _this.elements.showPreviewCheckbox.checked = false;
+    _this.elements.preview.style.display = "none";
+    _this.elements.preview.style.display = "unset";
     _this.options.preview = false;
   } else {
     if (!_this.previewClip) {
       _this.createPreviewDisplay();
     }
-    checkbox.checked = true;
-    elFirstClass(_this.elements.mcPlayer,`--mcp-preview`).style.display = "flex";
+    _this.elements.showPreviewCheckbox.checked = true;
+    _this.elements.preview.style.display = "flex";
     _this.options.preview = true;
   }
-  _this.eventBroadcast(SHOW_PREVIEW_CHANGE, checkbox.checked);
+  _this.eventBroadcast(
+    SHOW_PREVIEW_CHANGE,
+    _this.elements.showPreviewCheckbox.checked
+  );
 };
 
 export function add(_this) {
   _this.elements.settingsShowIndicator.onclick = () => showIndicator(_this);
 
-  _this.elements.settingsPointerEvents.onclick = () =>
-    showPointerEvents(_this);
+  _this.elements.settingsPointerEvents.onclick = () => showPointerEvents(_this);
 
   _this.elements.settingsShowVolume.onclick = () => showVolume(_this);
 
   _this.elements.settingsShowPreview.onclick = () => showPreview(_this);
 
   _this.elements.settingsButton.onclick = () => {
-    const controlsEl = elFirstClass(_this.elements.mcPlayer,`--mcp-controls`);
-
     const showHideSettings = (e) => {
       if (_this.elements.settingsPanel.contains(e.target)) {
         return true;
@@ -95,8 +97,12 @@ export function add(_this) {
     };
 
     if (_this.elements.settingsPanel.className.includes(`m-fadeOut`)) {
-      if (!controlsEl.classList.value.includes("--mcp-force-show-controls")) {
-        controlsEl.classList.toggle("--mcp-force-show-controls");
+      if (
+        !_this.elements.controls.classList.value.includes(
+          "--mcp-force-show-controls"
+        )
+      ) {
+        _this.elements.controls.classList.toggle("--mcp-force-show-controls");
       }
       addListener(`click`, showHideSettings, false);
     } else {

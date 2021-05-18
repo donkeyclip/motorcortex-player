@@ -2,7 +2,6 @@ import {
   addMouseUpAndMoveListeners,
   addStartListeners,
   changeIcon,
-  elFirstClass,
   removeMouseUpAndMoveListeners,
 } from "../helpers";
 import { MUTE_CHANGE, VOLUME_CHANGE } from "./events";
@@ -74,17 +73,16 @@ export function add(_this) {
     volumeOpen = true;
   };
 
-  const leftControlsElement = elFirstClass(
-    _this.elements.mcPlayer,
-    `--mcp-left-buttons`
-  );
-  leftControlsElement.onmouseout = () => {
+  _this.elements.leftButtons.onmouseout = () => {
     if (!volumeOpen || volumeDrag) {
       return;
     }
 
     const e = event.toElement || event.relatedTarget || event.target;
-    if (e === leftControlsElement || isDescendant(leftControlsElement, e)) {
+    if (
+      e === _this.elements.leftButtons ||
+      isDescendant(_this.elements.leftButtons, e)
+    ) {
       return;
     }
     volumeOpen = false;
