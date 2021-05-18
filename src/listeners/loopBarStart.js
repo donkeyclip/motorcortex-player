@@ -56,7 +56,7 @@ export default (_this) => {
     }
   };
 
-  _this.listeners.onMouseUpLoopStart = (e) => {
+  _this.listeners.onMouseUpLoopStart = () => {
     _this.elements.listenerHelper.style.pointerEvents = "none";
 
     _this.settings.resizeLoop = false;
