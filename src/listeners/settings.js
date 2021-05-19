@@ -1,97 +1,88 @@
-import { addListener, elid, removeListener } from "../helpers";
+import { addListener, removeListener } from "../helpers";
 import {
   SHOW_PREVIEW_CHANGE,
   SHOW_VOLUME_CHANGE,
   STATE_CHANGE,
 } from "./events";
 
-const showIndicator = (_this, e) => {
-  e && e.preventDefault();
-  const checkbox = elid(`${_this.name}-show-indicator-checkbox`);
-  if (checkbox.checked) {
-    checkbox.checked = false;
-    _this.elements.indicator.style.visibility = "hidden";
+const showIndicator = (_this) => {
+  if (_this.elements.showIndicatorCheckbox.checked) {
+    _this.elements.showIndicatorCheckbox.checked = false;
+    _this.elements.indicator.style.display = "none";
   } else {
-    checkbox.checked = true;
-    _this.elements.indicator.style.visibility = "visible";
+    _this.elements.showIndicatorCheckbox.checked = true;
+    _this.elements.indicator.style.display = undefined;
   }
-  _this.eventBroadcast("show-indicator-change", checkbox.checked);
+  _this.eventBroadcast(
+    "show-indicator-change",
+    _this.elements.showIndicatorCheckbox.checked
+  );
 };
 
-const showPointerEvents = (_this, e) => {
-  e && e.preventDefault();
-  const checkbox = elid(`${_this.name}-pointer-events-checkbox`);
-  if (!checkbox.checked) {
-    checkbox.checked = true;
+const showPointerEvents = (_this) => {
+  if (!_this.elements.showPointerEventsCheckbox.checked) {
+    _this.elements.showPointerEventsCheckbox.checked = true;
     _this.options.pointerEvents = false;
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "none";
-    elid(`${_this.name}-controls`).style.pointerEvents = "auto";
+    _this.elements.controls.style.pointerEvents = "auto";
     _this.elements.settingsPanel.style.pointerEvents = "auto";
   } else {
-    checkbox.checked = false;
+    _this.elements.showPointerEventsCheckbox.checked = false;
     _this.elements.mcPlayer.style.pointerEvents = "none";
     _this.elements.pointerEventPanel.style.pointerEvents = "auto";
-    elid(`${_this.name}-controls`).style.pointerEvents = "auto";
+    _this.elements.controls.style.pointerEvents = "auto";
     _this.elements.settingsPanel.style.pointerEvents = "auto";
   }
-  _this.eventBroadcast("show-pointer-events-change", checkbox.checked);
-};
-
-const showVolume = (_this, e) => {
-  e && e.preventDefault();
-  _this.elements.volumeControl.classList.toggle(
-    `${_this.name}-volume-width-transition`
+  _this.eventBroadcast(
+    "show-pointer-events-change",
+    _this.elements.showPointerEventsCheckbox.checked
   );
-  _this.elements.volumeControl.classList.toggle(`${_this.name}-hide`);
-
-  const checkbox = elid(`${_this.name}-show-volume-checkbox`);
-  if (checkbox.checked) {
-    checkbox.checked = false;
-    _this.elements.volumeControl.style.visibility = "hidden";
-    _this.elements.timeDisplay.style.left = "45px";
-  } else {
-    checkbox.checked = true;
-    _this.elements.volumeControl.style.visibility = "visible";
-    _this.elements.timeDisplay.style.left = "";
-  }
-  _this.eventBroadcast(SHOW_VOLUME_CHANGE, checkbox.checked);
 };
 
-const showPreview = (_this, e) => {
-  e && e.preventDefault();
-  const checkbox = elid(`${_this.name}-show-preview-checkbox`);
-  if (checkbox.checked) {
-    checkbox.checked = false;
-    elid(`${_this.name}-hover-display`).style.visibility = "hidden";
-    elid(`${_this.name}-hover-display`).style.display = "none";
+const showVolume = (_this) => {
+  _this.elements.volumeControl.classList.toggle("m-fadeOut");
+  if (_this.elements.showVolumeCheckbox.checked) {
+    _this.elements.showVolumeCheckbox.checked = false;
+  } else {
+    _this.elements.showVolumeCheckbox.checked = true;
+  }
+  _this.eventBroadcast(
+    SHOW_VOLUME_CHANGE,
+    _this.elements.showVolumeCheckbox.checked
+  );
+};
+
+const showPreview = (_this) => {
+  if (_this.elements.showPreviewCheckbox.checked) {
+    _this.elements.showPreviewCheckbox.checked = false;
+    _this.elements.preview.style.display = "none";
+    _this.elements.preview.style.display = "unset";
     _this.options.preview = false;
   } else {
     if (!_this.previewClip) {
       _this.createPreviewDisplay();
     }
-    checkbox.checked = true;
-    elid(`${_this.name}-hover-display`).style.visibility = "visible";
-    elid(`${_this.name}-hover-display`).style.display = "flex";
+    _this.elements.showPreviewCheckbox.checked = true;
+    _this.elements.preview.style.display = "flex";
     _this.options.preview = true;
   }
-  _this.eventBroadcast(SHOW_PREVIEW_CHANGE, checkbox.checked);
+  _this.eventBroadcast(
+    SHOW_PREVIEW_CHANGE,
+    _this.elements.showPreviewCheckbox.checked
+  );
 };
 
 export function add(_this) {
-  _this.elements.settingsShowIndicator.onclick = (e) => showIndicator(_this, e);
+  _this.elements.settingsShowIndicator.onclick = () => showIndicator(_this);
 
-  _this.elements.settingsPointerEvents.onclick = (e) =>
-    showPointerEvents(_this, e);
+  _this.elements.settingsPointerEvents.onclick = () => showPointerEvents(_this);
 
-  _this.elements.settingsShowVolume.onclick = (e) => showVolume(_this, e);
+  _this.elements.settingsShowVolume.onclick = () => showVolume(_this);
 
-  _this.elements.settingsShowPreview.onclick = (e) => showPreview(_this, e);
+  _this.elements.settingsShowPreview.onclick = () => showPreview(_this);
 
-  _this.elements.settingsButton.onclick = (e) => {
-    e.preventDefault();
-    const controlsEl = elid(`${_this.name}-controls`);
-
+  _this.elements.settingsButton.onclick = () => {
     const showHideSettings = (e) => {
       if (_this.elements.settingsPanel.contains(e.target)) {
         return true;
@@ -106,8 +97,12 @@ export function add(_this) {
     };
 
     if (_this.elements.settingsPanel.className.includes(`m-fadeOut`)) {
-      if (!controlsEl.classList.value.includes("force-show-controls")) {
-        controlsEl.classList.toggle("force-show-controls");
+      if (
+        !_this.elements.controls.classList.value.includes(
+          "--mcp-force-show-controls"
+        )
+      ) {
+        _this.elements.controls.classList.toggle("--mcp-force-show-controls");
       }
       addListener(`click`, showHideSettings, false);
     } else {

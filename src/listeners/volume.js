@@ -1,12 +1,11 @@
 import {
   addMouseUpAndMoveListeners,
   addStartListeners,
-  elcreate,
-  elid,
+  changeIcon,
   removeMouseUpAndMoveListeners,
 } from "../helpers";
-import { volumeMuteSVG, volumeSVG } from "../html/svg";
 import { MUTE_CHANGE, VOLUME_CHANGE } from "./events";
+import { VOLUME_OFF, VOLUME_ON } from "./enums";
 export function trigger(_this, volume, mute) {
   const elements = _this.elements;
   if (typeof mute !== undefined) {
@@ -14,16 +13,12 @@ export function trigger(_this, volume, mute) {
       elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
       _this.clip.setVolume(_this.settings.previousVolume);
       _this.settings.volumeMute = false;
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeSVG;
-      elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     } else if (mute === true) {
       _this.settings.volumeMute = true;
       elements.volumeBarActive.style.width = "0%";
       _this.clip.setVolume(0);
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeMuteSVG;
-      elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn, VOLUME_ON, VOLUME_OFF);
     }
     _this.options.muted = _this.settings.volumeMute;
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
@@ -40,14 +35,10 @@ export function trigger(_this, volume, mute) {
 
     if (_this.settings.volume > 0) {
       _this.settings.volumeMute = false;
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeSVG;
-      elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     } else if (_this.settings.volume === 0) {
       _this.settings.volumeMute = true;
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeMuteSVG;
-      elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     }
 
     _this.options.volume = _this.settings.volume;
@@ -63,17 +54,16 @@ export function add(_this) {
     if (_this.settings.volumeMute) {
       elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
       _this.clip.setVolume(_this.settings.previousVolume);
+      elements.volumeBarActive.style.width = `${
+        _this.settings.previousVolume * 100
+      }%`;
       _this.settings.volumeMute = false;
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeSVG;
-      elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
+      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     } else {
       _this.settings.volumeMute = true;
-      elements.volumeBarActive.style.width = "0%";
+      changeIcon(elements.volumeBtn, VOLUME_ON, VOLUME_OFF);
+      elements.volumeBarActive.style.width = `0%`;
       _this.clip.setVolume(0);
-      const SVG = document.createElement("span");
-      SVG.innerHTML = volumeMuteSVG;
-      elements.volumeBtn.getElementsByTagName("svg")[0].replaceWith(SVG);
     }
     _this.eventBroadcast(VOLUME_CHANGE, _this.settings.previousVolume);
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
@@ -81,43 +71,25 @@ export function add(_this) {
   let volumeOpen = false;
   elements.volumeBtn.onmouseover = () => {
     volumeOpen = true;
-    elements.volumeCursor.classList.add(
-      `${_this.name}-volume-cursor-transition`
-    );
-    elements.volumeBar.classList.add(`${_this.name}-volume-width-transition`);
-    elements.volumeBarHelper.classList.add(
-      `${_this.name}-volume-width-transition`
-    );
-    elements.timeDisplay.classList.add(`${_this.name}-time-width-transition`);
   };
 
-  const leftControlsElement = elid(`${_this.name}-left-controls`);
-  leftControlsElement.onmouseout = () => {
+  _this.elements.leftButtons.onmouseout = () => {
     if (!volumeOpen || volumeDrag) {
       return;
     }
 
     const e = event.toElement || event.relatedTarget || event.target;
-    if (e === leftControlsElement || isDescendant(leftControlsElement, e)) {
+    if (
+      e === _this.elements.leftButtons ||
+      isDescendant(_this.elements.leftButtons, e)
+    ) {
       return;
     }
     volumeOpen = false;
-    elements.volumeCursor.classList.remove(
-      `${_this.name}-volume-cursor-transition`
-    );
-    elements.volumeBar.classList.remove(
-      `${_this.name}-volume-width-transition`
-    );
-    elements.volumeBarHelper.classList.remove(
-      `${_this.name}-volume-width-transition`
-    );
-    elements.timeDisplay.classList.remove(
-      `${_this.name}-time-width-transition`
-    );
   };
   const listeners = _this.listeners;
   listeners.onCursorMoveVolumeBar = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = elements.volumeBarHelper.getBoundingClientRect();
     let positionX = clientX - viewportOffset.left;
@@ -137,19 +109,18 @@ export function add(_this) {
     if (_this.settings.volume >= 0) {
       const mute = _this.settings.volume === 0;
       _this.settings.volumeMute = mute;
-      const SVG = elcreate("span");
-      SVG.innerHTML = mute ? volumeMuteSVG : volumeSVG;
-      elements.volumeBtn.getElementsByTagName(`svg`)[0].replaceWith(SVG);
+      mute
+        ? changeIcon(elements.volumeBtn, VOLUME_ON, VOLUME_OFF)
+        : changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
     }
     _this.eventBroadcast(VOLUME_CHANGE, _this.settings.volume);
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
   };
 
-  listeners.onMouseUpVolumeBar = (e) => {
+  listeners.onMouseUpVolumeBar = () => {
     volumeDrag = false;
     elements.listenerHelper.style.pointerEvents = "none";
 
-    e.preventDefault();
     if (_this.settings.volume > 0) {
       _this.settings.previousVolume = _this.settings.volume;
     }
@@ -163,7 +134,6 @@ export function add(_this) {
     volumeDrag = true;
     elements.listenerHelper.style.pointerEvents = "auto";
 
-    e.preventDefault();
     listeners.onCursorMoveVolumeBar(e);
     addMouseUpAndMoveListeners(
       listeners.onMouseUpVolumeBar,
