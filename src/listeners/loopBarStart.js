@@ -7,7 +7,6 @@ import {
 
 export default (_this) => {
   _this.listeners.onCursorMoveLoopStart = (e) => {
-    e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.totalBar.getBoundingClientRect();
     let positionX = Math.round(clientX - viewportOffset.left);
@@ -49,10 +48,6 @@ export default (_this) => {
       _this.elements.runningBar.style.width = "0px";
     }
 
-    _this.elements.loopEndTime.innerHTML = _this.settings.loopEndMillisecond;
-    _this.elements.loopStartTime.innerHTML =
-      _this.settings.loopStartMillisecond;
-
     if (
       _this.settings.loopStartMillisecond >
       _this.clip.runTimeInfo.currentMillisecond
@@ -61,12 +56,12 @@ export default (_this) => {
     }
   };
 
-  _this.listeners.onMouseUpLoopStart = (e) => {
+  _this.listeners.onMouseUpLoopStart = () => {
     _this.elements.listenerHelper.style.pointerEvents = "none";
 
     _this.settings.resizeLoop = false;
 
-    e.preventDefault();
+    // e.preventDefault();
     if (_this.settings.loopJourney) {
       _this.createProgressDrag(_this.elements.runningBar.offsetWidth);
       _this.settings.loopJourney = false;
@@ -131,7 +126,6 @@ export default (_this) => {
 
     _this.settings.resizeLoop = true;
 
-    e.preventDefault();
     _this.settings.needsUpdate = true;
 
     if (_this.clip.runTimeInfo.state === `playing`) {

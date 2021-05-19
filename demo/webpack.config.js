@@ -1,5 +1,4 @@
 const path = require("path");
-const webpack = require("webpack");
 
 module.exports = {
   entry: "./demo/index.js",
@@ -22,6 +21,10 @@ module.exports = {
         test: /\.js?$/,
         use: ["babel-loader"],
         exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
       },
     ],
   },

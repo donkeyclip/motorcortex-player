@@ -1,14 +1,12 @@
 import { TimeCapsule } from "@kissmybutton/motorcortex";
 import { name, updateName } from "./config";
-import { calcClipScale, elcreate, elid, eltag } from "./helpers";
+import { calcClipScale, elcreate, elid, eltag, changeIcon } from "./helpers";
 import setElements from "./html/setElements";
-import confStyle from "./html/style";
-import { loadingSVG, pauseSVG, playSVG } from "./html/svg";
-import confThemes from "./html/themes";
 import bodyListener from "./listeners/body";
-import controlsListener from "./listeners/controls";
 import donkeyclipListener from "./listeners/donkeyclip";
 import { PLAYING, showControls } from "./listeners/enums";
+import css from "./html/style.css";
+
 import {
   DURATION_CHANGE,
   LOOP_CHANGE,
@@ -27,7 +25,6 @@ import {
 import loopBarEndListener from "./listeners/loopBarEnd";
 import loopBarStartListener from "./listeners/loopBarStart";
 import { add as loopAdd, trigger as loopTrigger } from "./listeners/loopBtn";
-import loopStartEndListener from "./listeners/loopStartEnd";
 import previewListener from "./listeners/preview";
 import progressBarListener from "./listeners/progressBar";
 import {
@@ -53,7 +50,7 @@ class Player {
     options.preview ||= false;
     options.showVolume ||= false;
     options.showIndicator ||= false;
-    options.theme ||= "transparent on-top";
+    options.theme ||= "transparent position-ontop";
     options.host ||= options.clip.props.host;
     options.buttons ||= {};
     options.timeFormat ||= "ss";
@@ -152,79 +149,39 @@ class Player {
       this.clip = newOptions.clip;
       this.options.clip = newOptions.clip;
     }
+
     if (newOptions.controls === false) {
-      elid(this.name).style.display = "none";
+      this.elements.mcPlayer.style.display = "none";
     } else if (newOptions.controls === true) {
-      elid(this.name).style.display = "unset";
+      this.elements.mcPlayer.style.display = undefined;
     }
 
-    if (
-      typeof newOptions.loop !== "undefined" &&
-      (this.options.loop !== newOptions.loop || (initial && this.options.loop))
-    ) {
-      loopTrigger(this);
-    }
+    const checkObject = {
+      loop: () => loopTrigger(this),
+      fullscreen: () => fullscreenTrigger(this),
+      muted: () => volumeTrigger(this, undefined, newOptions.mute),
+      volume: () => volumeTrigger(this, newOptions.volume),
+      speed: () => speedTrigger(this, newOptions.speed),
+      scaleToFit: () => {
+        this.options.scaleToFit = newOptions.scaleToFit;
+        this.scaleClipHost();
+      },
+      showVolume: () => settingsTrigger(this, "showVolume"),
+      preview: () => settingsTrigger(this, "showPreview"),
+      theme: () => {
+        this.options.theme = newOptions.theme;
+        this.setTheme();
+      },
+    };
 
-    if (
-      typeof newOptions.fullscreen !== "undefined" &&
-      (this.options.fullscreen !== newOptions.fullscreen ||
-        (initial && this.options.fullscreen))
-    ) {
-      fullscreenTrigger(this);
-    }
-
-    if (
-      typeof newOptions.muted !== "undefined" &&
-      (this.options.muted !== newOptions.muted ||
-        (initial && this.options.muted))
-    ) {
-      volumeTrigger(this, undefined, newOptions.mute);
-    }
-    if (
-      typeof newOptions.volume !== "undefined" &&
-      (this.options.volume !== newOptions.volume ||
-        (initial && this.options.volume))
-    ) {
-      volumeTrigger(this, newOptions.volume, undefined);
-    }
-
-    if (
-      typeof newOptions.speed !== "undefined" &&
-      (this.options.speed !== newOptions.speed ||
-        (initial && this.options.speed))
-    ) {
-      speedTrigger(this, newOptions.speed);
-    }
-
-    if (
-      typeof newOptions.scaleToFit !== "undefined" &&
-      (this.options.scaleToFit !== newOptions.scaleToFit ||
-        (initial && this.options.scaleToFit))
-    ) {
-      //this is to prevent infinite loop
-      this.options.scaleToFit = newOptions.scaleToFit;
-      this.scaleClipHost();
-    }
-
-    if (
-      typeof newOptions.showVolume !== "undefined" &&
-      this.options.showVolume !== newOptions.showVolume
-    ) {
-      settingsTrigger(this, "showVolume");
-    }
-
-    if (
-      typeof newOptions.preview !== "undefined" &&
-      this.options.preview !== newOptions.preview
-    ) {
-      settingsTrigger(this, "showPreview");
-    }
-    if (
-      typeof newOptions.theme !== "undefined" &&
-      this.options.theme !== newOptions.theme
-    ) {
-      this.options.theme = newOptions.theme;
-      this.setTheme();
+    for (const key in checkObject) {
+      if (
+        typeof newOptions[key] !== "undefined" &&
+        (this.options[key] !== newOptions[key] ||
+          (initial && this.options[key]))
+      ) {
+        checkObject[key]();
+      }
     }
 
     this.options = { ...this.options, ...newOptions };
@@ -298,61 +255,17 @@ class Player {
       return 1;
     }
 
-    const {
-      loopActivated,
-      loopEndMillisecond,
-      loopStartMillisecond,
-    } = this.settings;
+    const { loopActivated } = this.settings;
+    if (loopActivated && this.clip.speed) {
+      this.calculateJourney(millisecond);
+    }
 
     const duration = this.clip.duration;
-
     const { totalBar, loopBar } = this.elements;
-
     const loopBarWidth = loopBar.offsetWidth;
     const loopBarLeft = loopBar.offsetLeft / totalBar.offsetWidth;
     const localMillisecond = millisecond - duration * loopBarLeft;
     const localDuration = (duration / totalBar.offsetWidth) * loopBarWidth;
-
-    if (
-      millisecond >= loopEndMillisecond &&
-      loopActivated &&
-      this.clip.speed >= 0
-    ) {
-      this.createJourney(loopStartMillisecond + 1, {
-        after:
-          this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == PLAYING
-            ? "play"
-            : null,
-      });
-      return 1;
-    } else if (
-      millisecond >= loopEndMillisecond &&
-      loopActivated &&
-      this.clip.speed < 0
-    ) {
-      this.createJourney(loopEndMillisecond - 1, {
-        after:
-          this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == PLAYING
-            ? "play"
-            : null,
-      });
-      return 1;
-    } else if (
-      millisecond <= loopStartMillisecond &&
-      loopActivated &&
-      this.clip.speed >= 0
-    ) {
-      this.createJourney(loopStartMillisecond + this.clip.speed >= 0 ? 1 : -1, {
-        after:
-          this.settings.playAfterResize ||
-          this.clip.runTimeInfo.state == PLAYING
-            ? "play"
-            : null,
-      });
-      return 1;
-    }
 
     if (makeJouney) {
       this.createJourney(millisecond, {
@@ -368,114 +281,164 @@ class Player {
       this.options.onMillisecondChange(millisecond);
     }
   }
+  calculateJourney(millisecond) {
+    const { loopEndMillisecond, loopStartMillisecond } = this.settings;
+    const atEndOfLoop =
+      millisecond > loopEndMillisecond || millisecond === this.clip.duration;
+    const atStartOfLoop =
+      millisecond < loopStartMillisecond || millisecond === 0;
+    const positiveSpeed = this.clip.speed > 0;
+    if (this.clip.runTimeInfo.state === PLAYING) {
+      if (positiveSpeed) {
+        if (atEndOfLoop) {
+          this.createJourney(loopStartMillisecond + 1, { after: "play" });
+          return true;
+        }
+      } else {
+        if (atStartOfLoop) {
+          this.createJourney(loopEndMillisecond - 1, { after: "play" });
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  broadcastNotPlaying(state) {
+    if (!this.elements.controls.classList.value.includes(showControls)) {
+      this.elements.controls.classList.toggle(showControls);
+    }
+    changeIcon(this.elements.statusButton, "pause", "play");
+    this.elements.indicator.innerHTML = `${
+      state.charAt(0).toUpperCase() + state.slice(1)
+    }`;
+    if (state == "blocked") {
+      changeIcon(this.elements.pointerEventPanel, null, "spinner");
+      this.elements.pointerEventPanel.classList.add("loading");
+    } else {
+      changeIcon(this.elements.pointerEventPanel, "spinner", null);
+      this.elements.pointerEventPanel.classList.remove("loading");
+    }
+  }
 
+  broadcastPlaying(state) {
+    if (this.elements.controls.classList.value.includes(showControls)) {
+      this.elements.controls.classList.toggle(showControls);
+    }
+    this.elements.indicator.innerHTML = "Playing";
+    changeIcon(this.elements.statusButton, "play", "pause");
+    if (state !== PLAYING) {
+      return;
+    }
+
+    if (
+      this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
+      this.clip.speed >= 0
+    ) {
+      this.createJourney(1, { after: "play" });
+    } else if (
+      (this.clip.runTimeInfo.currentMillisecond === this.clip.duration ||
+        this.clip.runTimeInfo.currentMillisecond === 0) &&
+      this.clip.speed < 0
+    ) {
+      this.createJourney(this.clip.duration - 1, {
+        after: "play",
+      });
+    }
+  }
+  broadcastDurationChange() {
+    this.elements.totalTime.innerHTML = this.timeFormat(this.clip.duration);
+    this.settings.loopEndMillisecond = this.clip.duration;
+    this.elements.pointerEventPanel.innerHTML = "";
+    this.millisecondChange(this.clip.runTimeInfo.currentMillisecond);
+  }
+  broadcastVolumeChange(state) {
+    this.options.volume = state;
+    this.options.currentScript.dataset.volume = state;
+  }
+  broadcastSpeedChange(state) {
+    this.options.speed = state;
+    this.options.currentScript.dataset.speed = state;
+  }
+  broadcastMuteChange(state) {
+    if (state) {
+      this.options.muted = true;
+      this.options.currentScript.dataset.muted = "";
+    } else {
+      this.options.muted = false;
+      delete this.options.currentScript.dataset.muted;
+    }
+  }
+  broadcastLoopChange(state) {
+    if (state) {
+      this.options.loop = true;
+      this.options.currentScript.dataset.loop = "";
+    } else {
+      this.options.loop = false;
+      delete this.options.currentScript.dataset.loop;
+    }
+  }
+  broadcastScaleChange(state) {
+    if (state) {
+      this.options.scaleToFit = true;
+      this.options.currentScript.dataset.scaleToFit = "";
+    } else {
+      this.options.scaleToFit = false;
+      delete this.options.currentScript.dataset.scaleToFit;
+    }
+  }
+
+  broadcastShowVolumeChange(state) {
+    if (state) {
+      this.options.showVolume = true;
+      this.options.currentScript.dataset.showVolume = "";
+    } else {
+      this.options.showVolume = false;
+      delete this.options.currentScript.dataset.showVolume;
+    }
+  }
+  broadcastShowPreviewChange(state) {
+    if (state) {
+      this.options.preview = true;
+      this.options.currentScript.dataset.preview = "";
+    } else {
+      this.options.preview = false;
+      delete this.options.currentScript.dataset.preview;
+    }
+  }
+
+  broadcastToScript(eventName, state) {
+    if (eventName === VOLUME_CHANGE) {
+      this.broadcastVolumeChange(state);
+    } else if (eventName === SPEED_CHANGE) {
+      this.broadcastSpeedChange(state);
+    } else if (eventName === MUTE_CHANGE) {
+      this.broadcastMuteChange(state);
+    } else if (eventName === LOOP_CHANGE) {
+      this.broadcastLoopChange(state);
+    } else if (eventName === SCALE_CHANGE) {
+      this.broadcastScaleChange(state);
+    } else if (eventName === SHOW_VOLUME_CHANGE) {
+      this.broadcastShowVolumeChange(state);
+    } else if (eventName === SHOW_PREVIEW_CHANGE) {
+      this.broadcastShowVolumeChange(state);
+    }
+  }
   eventBroadcast(eventName, state) {
-    const controlsEl = elid(`${this.name}-controls`);
     if (eventName === STATE_CHANGE) {
       if (this.options.currentScript) {
         this.options.currentScript.dataset.status = state;
       }
       if (
-        state === "paused" ||
-        state === "idle" ||
-        state === "transitional" ||
-        state === "armed" ||
-        state === "blocked"
+        ["paused", "idle", "transitional", "armed", "blocked"].includes(state)
       ) {
-        if (!controlsEl.classList.value.includes(showControls)) {
-          controlsEl.classList.toggle(showControls);
-        }
-        this.elements.statusButton.innerHTML = playSVG;
-        this.elements.statusButton.appendChild(this.elements.indicator);
-        this.elements.indicator.innerHTML = `${
-          state.charAt(0).toUpperCase() + state.slice(1)
-        }`;
-        if (state === "blocked") {
-          this.elements.pointerEventPanel.innerHTML = `
-            <div style="width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">${loadingSVG}</div>`;
-        } else {
-          this.elements.pointerEventPanel.innerHTML = "";
-        }
+        this.broadcastNotPlaying(state);
       } else {
-        if (controlsEl.classList.value.includes(showControls)) {
-          controlsEl.classList.toggle(showControls);
-        }
-        this.elements.statusButton.innerHTML = pauseSVG;
-        this.elements.statusButton.appendChild(this.elements.indicator);
-        this.elements.indicator.innerHTML = "Playing";
-        this.elements.pointerEventPanel.innerHTML = "";
-        if (state !== PLAYING) {
-          return;
-        }
-
-        if (
-          this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
-          this.clip.speed >= 0
-        ) {
-          this.createJourney(1, { after: "play" });
-        } else if (
-          (this.clip.runTimeInfo.currentMillisecond === this.clip.duration ||
-            this.clip.runTimeInfo.currentMillisecond === 0) &&
-          this.clip.speed < 0
-        ) {
-          this.createJourney(this.clip.duration - 1, {
-            after: "play",
-          });
-        }
+        this.broadcastPlaying(state);
       }
     } else if (eventName === DURATION_CHANGE) {
-      this.elements.totalTime.innerHTML = this.timeFormat(this.clip.duration);
-      this.settings.loopEndMillisecond = this.clip.duration;
-      this.elements.pointerEventPanel.innerHTML = "";
-      this.millisecondChange(this.clip.runTimeInfo.currentMillisecond);
+      this.broadcastDurationChange();
     } else if (this.options.currentScript) {
-      if (eventName === VOLUME_CHANGE) {
-        this.options.volume = state;
-        this.options.currentScript.dataset.volume = state;
-      } else if (eventName === SPEED_CHANGE) {
-        this.options.speed = state;
-        this.options.currentScript.dataset.speed = state;
-      } else if (eventName === MUTE_CHANGE) {
-        if (state) {
-          this.options.muted = true;
-          this.options.currentScript.dataset.muted = "";
-        } else {
-          this.options.muted = false;
-          delete this.options.currentScript.dataset.muted;
-        }
-      } else if (eventName === LOOP_CHANGE) {
-        if (state) {
-          this.options.loop = true;
-          this.options.currentScript.dataset.loop = "";
-        } else {
-          this.options.loop = false;
-          delete this.options.currentScript.dataset.loop;
-        }
-      } else if (eventName === SCALE_CHANGE) {
-        if (state) {
-          this.options.scaleToFit = true;
-          this.options.currentScript.dataset.scaleToFit = "";
-        } else {
-          this.options.scaleToFit = false;
-          delete this.options.currentScript.dataset.scaleToFit;
-        }
-      } else if (eventName === SHOW_VOLUME_CHANGE) {
-        if (state) {
-          this.options.showVolume = true;
-          this.options.currentScript.dataset.showVolume = "";
-        } else {
-          this.options.showVolume = false;
-          delete this.options.currentScript.dataset.showVolume;
-        }
-      } else if (eventName === SHOW_PREVIEW_CHANGE) {
-        if (state) {
-          this.options.preview = true;
-          this.options.currentScript.dataset.preview = "";
-        } else {
-          this.options.preview = false;
-          delete this.options.currentScript.dataset.preview;
-        }
-      }
+      this.broadcastToScript(eventName, state);
     }
   }
 
@@ -552,13 +515,11 @@ class Player {
     loopBarEndListener(this);
     progressBarListener(this);
     loopBarStartListener(this);
-    loopStartEndListener(this);
     volumeAdd(this);
     statusBtnListener(this);
     settingsAdd(this);
     speedAdd(this);
     loopAdd(this);
-    controlsListener(this);
     fullscreenAdd(this);
     donkeyclipListener(this);
     previewListener(this);
@@ -592,66 +553,53 @@ class Player {
   }
 
   setTheme() {
-    //remove previous style if exists
-    elid(this.name + "-style") &&
-      eltag(`head`)[0].removeChild(elid(this.name + "-style"));
-
-    // replace multiple spaces with one space
     this.options.theme.replace(/\s\s+/g, ` `);
     this.options.theme.trim();
+    const POSITION_ON_TOP = "position-ontop";
+    const POSITION_BOTTOM = "position-bottom";
 
     if (
-      !this.options.theme.includes("on-top") &&
-      !this.options.theme.includes("position-bottom")
+      !this.options.theme.includes(POSITION_ON_TOP) &&
+      !this.options.theme.includes(POSITION_BOTTOM)
     ) {
-      this.options.theme += " on-top";
+      this.options.theme += ` ${POSITION_ON_TOP}`;
     }
-    const theme = {};
-    for (const i in this.options.theme.split(` `)) {
-      const confTheme = confThemes(this.options.theme.split(` `)[i], this.name);
-      for (const q in confTheme || {}) {
-        theme[q] = confTheme[q];
-      }
-    }
-    const css = confStyle(theme, this.name, this.options);
-    const style = elcreate("style");
-    style.id = this.name + "-style";
-    style.styleSheet
-      ? (style.styleSheet.cssText = css)
-      : style.appendChild(document.createTextNode(css));
+    if (this.options.theme.includes(POSITION_ON_TOP))
+      this.elements.mcPlayer.classList.add(POSITION_ON_TOP);
+    else this.elements.mcPlayer.classList.add(POSITION_BOTTOM);
 
-    // append player style to document
-    eltag("head")[0].appendChild(style);
+    if (this.options.theme.includes("default"))
+      this.elements.mcPlayer.classList.add("theme-default");
+    else if (this.options.theme.includes("transparent"))
+      this.elements.mcPlayer.classList.add("theme-transparent");
+    else if (this.options.theme.includes("whiteGold"))
+      this.elements.mcPlayer.classList.add("theme-whiteGold");
+    else if (this.options.theme.includes("darkGold"))
+      this.elements.mcPlayer.classList.add("theme-darkGold");
+    else if (this.options.theme.includes("green"))
+      this.elements.mcPlayer.classList.add("theme-green");
+    else if (this.options.theme.includes("blue"))
+      this.elements.mcPlayer.classList.add("theme-blue");
+    else if (this.options.theme.includes("dark"))
+      this.elements.mcPlayer.classList.add("theme-dark");
+
+    if (!elid("--mc-player-style")) {
+      const style = elcreate("style");
+      style.id = "--mc-player-style";
+      style.styleSheet
+        ? (style.styleSheet.cssText = css)
+        : style.appendChild(document.createTextNode(css));
+
+      // append player style to document
+      eltag("head")[0].appendChild(style);
+    }
+
     this.eventBroadcast("theme-change", this.options.theme);
   }
 
   setSpeed() {
     const currentSpeed = this.clip.speed == 1 ? "Normal" : this.clip.speed;
     this.elements.speedCurrent.innerHTML = currentSpeed;
-
-    const targetZone = (() => {
-      for (let i = 0; i < this.options.speedValues.length - 1; i++) {
-        if (
-          this.options.speedValues[i] <= this.clip.speed &&
-          this.options.speedValues[i + 1] > this.clip.speed
-        ) {
-          return (
-            i +
-            Math.abs(
-              (this.clip.speed - this.options.speedValues[i]) /
-                (this.options.speedValues[i] - this.options.speedValues[i + 1])
-            )
-          );
-        }
-      }
-    })();
-
-    const step = 1 / (this.options.speedValues.length - 1);
-
-    const positionY =
-      (targetZone * step - 1) * (this.options.speedValues.length - 1) * -16;
-
-    elid(`${this.name}-speed-cursor`).style.top = `${positionY}px`;
   }
 
   calculateSpeed(step, arrayOfValues, currentPercentage) {
@@ -678,13 +626,11 @@ class Player {
   }
 
   createPreviewDisplay() {
-    this.previewClip = this.clip.paste(elid(`${this.name}-hover-display-clip`));
-    const previewClip = elid(`${this.name}-hover-display`);
-    window.previewClip = this.previewClip;
+    this.previewClip = this.clip.paste(this.elements.previewHost);
 
-    previewClip.style.position = "absolute";
-    previewClip.style.background = this.options.backgroundColor;
-    previewClip.style.zIndex = 1;
+    this.elements.previewHost.style.position = "absolute";
+    this.elements.previewHost.style.background = this.options.backgroundColor;
+    this.elements.previewHost.style.zIndex = 1;
     this.setPreviewDimentions();
   }
 
@@ -719,8 +665,8 @@ class Player {
     this.previewClip.ownClip.rootElement.style.left = `${transform.position.left}px`;
     this.previewClip.ownClip.rootElement.style.top = `${transform.position.top}px`;
 
-    elid(`${this.name}-hover-display`).style.width = `${width}px`;
-    elid(`${this.name}-hover-display`).style.height = `${height}px`;
+    this.elements.preview.style.width = `${width}px`;
+    this.elements.preview.style.height = `${height}px`;
 
     previewClip.style.boxSizing = "border-box";
   }
