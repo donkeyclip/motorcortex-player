@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.9.5](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v1.9.4...v1.9.5) (2021-05-19)
+
+
+### Bug Fixes
+
+* update rollup deps, resolve dev server issue ([ef79f9e](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/ef79f9e64e7665aa71f586732dc2668afb97a6de))
+
 ### 1.9.4 (2021-04-12)
 
 
