@@ -113,8 +113,5 @@
       "pre-commit": "lint-staged",
       "pre-push": "npm run test:prod"
     }
-  },
-  "dependencies": {
-    "rollup-plugin-import-css": "^2.0.1"
   }
 }
