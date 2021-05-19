@@ -1,4 +1,4 @@
-import { addListener} from "../helpers";
+import { addListener } from "../helpers";
 
 export default (_this) => {
   function handleFullScreenChange() {

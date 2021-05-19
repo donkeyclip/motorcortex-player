@@ -9,15 +9,15 @@ export default (_this) => {
     return;
   }
 
-  _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout = loopBarMouseInOut(
-    _this
-  );
+  _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout =
+    loopBarMouseInOut(_this);
 
   _this.elements.loopBar.onmousedown = () => {
     if (!_this.options.preview) {
       return;
     }
-    _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout = null;
+    _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout =
+      null;
     _this.elements.loopBar.onmousemove = null;
 
     addMouseUpAndMoveListeners(
@@ -35,9 +35,8 @@ export default (_this) => {
       loopBarAddListeners(_this),
       loopBarMouseMove(_this)
     );
-    _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout = loopBarMouseInOut(
-      _this
-    );
+    _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout =
+      loopBarMouseInOut(_this);
     _this.elements.loopBar.onmousemove = loopBarMouseMove(_this);
   };
 };
@@ -47,9 +46,8 @@ const loopBarAddListeners = (_this) => () => {
     return;
   }
   loopBarMouseInOut(_this)();
-  _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout = loopBarMouseInOut(
-    _this
-  );
+  _this.elements.loopBar.onmouseover = _this.elements.loopBar.onmouseout =
+    loopBarMouseInOut(_this);
   _this.elements.loopBar.onmousemove = loopBarMouseMove(_this);
   removeMouseUpAndMoveListeners(
     loopBarAddListeners(_this),

@@ -1,7 +1,7 @@
 import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
-import html from 'rollup-plugin-html';
+import html from "rollup-plugin-html";
 import { terser } from "rollup-plugin-terser";
 import postcss from "rollup-plugin-postcss";
 import svg from "rollup-plugin-svg";
@@ -19,9 +19,9 @@ export default [
       resolve(),
       commonjs(),
       babel(),
-      postcss({inject:false}),
-      html({include: '**/*.html'}),
-      svg()
+      postcss({ inject: false }),
+      html({ include: "**/*.html" }),
+      svg(),
     ],
   },
   {
@@ -42,9 +42,9 @@ export default [
       commonjs(),
       babel(),
       terser(),
-      postcss({inject:false}),
-      html({include: '**/*.html'}),
-      svg()
+      postcss({ inject: false }),
+      html({ include: "**/*.html" }),
+      svg(),
     ],
   },
 ];

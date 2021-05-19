@@ -14,7 +14,7 @@ export function el(selector) {
 export function elid(id) {
   return document.getElementById(id);
 }
-export function elFirstClass(player,className) {
+export function elFirstClass(player, className) {
   return player.getElementsByClassName(className)[0];
 }
 export function eltag(tag) {
@@ -162,18 +162,17 @@ export function removeStartListeners(callback, element = document) {
   element.removeEventListener(touchstart, callback, false);
 }
 
-export function changeIcon(element,from,to){
-  if(from) {
+export function changeIcon(element, from, to) {
+  if (from) {
     element.classList.remove(`icon-${from}`);
     element.innerHTML = "";
   }
-  if(to){
+  if (to) {
     element.classList.add(`icon-${to}`);
     element.innerHTML = SVG[to];
   }
 }
-export function initializeIcons(playerElements){
-
+export function initializeIcons(playerElements) {
   playerElements.loopButton.innerHTML = SVG["loop"];
   playerElements.volumeBtn.innerHTML = SVG["volume-on"];
   playerElements.statusButton.innerHTML = SVG["play"];
@@ -184,7 +183,3 @@ export function initializeIcons(playerElements){
   playerElements.speedButtonShow.innerHTML = SVG["angle-right"];
   playerElements.speedButtonHide.innerHTML = SVG["angle-left"];
 }
-
-
-
-

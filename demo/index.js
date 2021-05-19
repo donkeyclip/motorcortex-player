@@ -282,6 +282,6 @@ window.player = new Player({
   clip,
   controls: true,
   preview: true,
-  showVolume:true,
-  theme:"blue",
+  showVolume: true,
+  theme: "blue",
 });

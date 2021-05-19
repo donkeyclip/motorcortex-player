@@ -12,16 +12,16 @@ import donkeyclip from "./icomoon/SVG/donkeyclip-logo.svg";
 import spinner from "./icomoon/SVG/spinner.svg";
 
 export default {
-    "play":play,
-    "pause":pause,
-    "expand-full":expandFull,
-    "angle-left":angleLeft,
-    "angle-right":angleRight,
-    "settings":settings,
-    "loop":loop,
-    "volume-on":volumeOn,
-    "volume-off":volumeOff,
-    "donkeyclip-logo":donkeyclip,
-    "spinner":spinner,
-    "check-solid":checkSolid
+  play: play,
+  pause: pause,
+  "expand-full": expandFull,
+  "angle-left": angleLeft,
+  "angle-right": angleRight,
+  settings: settings,
+  loop: loop,
+  "volume-on": volumeOn,
+  "volume-off": volumeOff,
+  "donkeyclip-logo": donkeyclip,
+  spinner: spinner,
+  "check-solid": checkSolid,
 };

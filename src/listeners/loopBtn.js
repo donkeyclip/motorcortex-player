@@ -12,7 +12,7 @@ export function trigger(_this) {
   _this.elements.loopBarStart.classList.toggle(`${_this.name}-hide`);
   _this.elements.loopBarEnd.classList.toggle("m-fadeIn");
   _this.elements.loopBarEnd.classList.toggle(`${_this.name}-hide`);
-   _this.settings.needsUpdate = true;
+  _this.settings.needsUpdate = true;
 
   if (!_this.settings.loopActivated) {
     _this.elements.loopBar.style.left = "0%";
