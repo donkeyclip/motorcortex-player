@@ -281,6 +281,7 @@ class Player {
       this.options.onMillisecondChange(millisecond);
     }
   }
+
   calculateJourney(millisecond) {
     const { loopEndMillisecond, loopStartMillisecond } = this.settings;
     const atEndOfLoop =
@@ -303,6 +304,7 @@ class Player {
     }
     return false;
   }
+
   broadcastNotPlaying(state) {
     if (!this.elements.controls.classList.value.includes(showControls)) {
       this.elements.controls.classList.toggle(showControls);
@@ -345,20 +347,24 @@ class Player {
       });
     }
   }
+
   broadcastDurationChange() {
     this.elements.totalTime.innerHTML = this.timeFormat(this.clip.duration);
     this.settings.loopEndMillisecond = this.clip.duration;
     this.elements.pointerEventPanel.innerHTML = "";
     this.millisecondChange(this.clip.runTimeInfo.currentMillisecond);
   }
+
   broadcastVolumeChange(state) {
     this.options.volume = state;
     this.options.currentScript.dataset.volume = state;
   }
+
   broadcastSpeedChange(state) {
     this.options.speed = state;
     this.options.currentScript.dataset.speed = state;
   }
+
   broadcastMuteChange(state) {
     if (state) {
       this.options.muted = true;
@@ -368,6 +374,7 @@ class Player {
       delete this.options.currentScript.dataset.muted;
     }
   }
+
   broadcastLoopChange(state) {
     if (state) {
       this.options.loop = true;
@@ -377,6 +384,7 @@ class Player {
       delete this.options.currentScript.dataset.loop;
     }
   }
+
   broadcastScaleChange(state) {
     if (state) {
       this.options.scaleToFit = true;
@@ -396,6 +404,7 @@ class Player {
       delete this.options.currentScript.dataset.showVolume;
     }
   }
+
   broadcastShowPreviewChange(state) {
     if (state) {
       this.options.preview = true;
@@ -513,6 +522,7 @@ class Player {
     this.handleDrag(loopBarPositionX);
     this.handleDragEnd();
   }
+
   addEventListeners() {
     loopBarEndListener(this);
     progressBarListener(this);
