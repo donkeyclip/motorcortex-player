@@ -423,6 +423,7 @@ class Player {
       this.broadcastShowVolumeChange(state);
     }
   }
+
   eventBroadcast(eventName, state) {
     if (eventName === STATE_CHANGE) {
       if (this.options.currentScript) {
@@ -447,6 +448,7 @@ class Player {
       this.subscribeToDurationChangeCallback.bind(this)
     );
   }
+
   subscribeToDurationChangeCallback() {
     this.eventBroadcast(DURATION_CHANGE);
   }
