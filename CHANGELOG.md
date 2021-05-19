@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.0.0](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v1.9.4...v2.0.0) (2021-05-19)
+
+
+### Features
+
+* finish player minify code ([06d574d](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/06d574d06f39e54b3ab48c22598fbc34df679a71))
+* update build deps ([e68ac84](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/e68ac84423114dbfdebd9802b62079755898093f))
+
+
+### Bug Fixes
+
+* add loop boundaries ([15f4a5d](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/15f4a5dc73344bf878e37957377f56017b204fcf))
+* new minified version ([0437778](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/0437778d79dda3692deb80a0cfd13c6d4d0e6c70))
+* progress ([d00ce32](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/d00ce32664b7608655f357ab41ab911a724d78a2))
+* progress ([3569a0b](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/3569a0b2425ae30d7d75a8a0199725f3204d0eb7))
+* progress ([56e555e](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/56e555eb0400ef77166fc4233d88556afecdd24a))
+* progress refactoring ([0ead291](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/0ead29142f632fb5043c8b63673bf317e6ff61f5))
+* reduce cognitive-complexity ([07f9ea0](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/07f9ea0220ed65c18fe59eeb561f72dcbf01220b))
+* update rollup deps, resolve dev server issue ([ef79f9e](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/ef79f9e64e7665aa71f586732dc2668afb97a6de))
+
+
+### Miscellaneous Chores
+
+* release 2.0.0 ([c9ca449](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/c9ca449e8d081291dd6981bf3f5c36641d25ab81))
+
 ### 1.9.4 (2021-04-12)
 
 
