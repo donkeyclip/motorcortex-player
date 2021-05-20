@@ -1,5 +1,5 @@
 .--mc-player.theme-default{
-    --defaultColor:136,136,136;
+    --activeColor:136,136,136;
     --defaultColor:136,136,136;
     --backgroundColor:245,245,245,1;
     --loopBarColor:rgba(var(--activeColor),.2);
@@ -252,7 +252,14 @@
     display: flex;
     box-sizing: content-box;
 }
-
+.--mcp-prevent-point-events{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
 .--mcp-preview-host {
     flex: 1;
     overflow: hidden;

@@ -46,26 +46,26 @@ const timeCapsule = new TimeCapsule();
 class Player {
   constructor(options) {
     // set defaults
-    options.id ||= Date.now();
-    options.preview ||= false;
-    options.showVolume ||= false;
-    options.showIndicator ||= false;
-    options.theme ||= "transparent position-ontop";
-    options.host ||= options.clip.props.host;
-    options.buttons ||= {};
-    options.timeFormat ||= "ss";
-    options.backgroundColor ||= "black";
-    options.fullscreen ||= false;
+    options.id ??= Date.now();
+    options.preview ??= false;
+    options.showVolume ??= false;
+    options.showIndicator ??= false;
+    options.theme ??= "transparent position-ontop";
+    options.host ??= options.clip.props.host;
+    options.buttons ??= {};
+    options.timeFormat ??= "ss";
+    options.backgroundColor ??= "black";
+    options.fullscreen ??= false;
     options.scaleToFit ??= true;
-    options.pointerEvents = !!(options.pointerEvents ?? false);
-    options.onMillisecondChange ||= null;
-    options.speedValues ||= [-2, -1, -0.5, 0, 0.5, 1, 2];
+    options.pointerEvents ??= false;
+    options.onMillisecondChange ??= null;
+    options.speedValues ??= [-2, -1, -0.5, 0, 0.5, 1, 2];
 
-    options.muted ||= false;
-    options.controls = !!options.controls;
-    options.loop ||= false;
-    options.volume = typeof options.volume !== "undefined" ? options.volume : 1;
-    options.currentScript ||= null;
+    options.muted ??= false;
+    options.controls ??= true;
+    options.loop ??= false;
+    options.volume ??= 1;
+    options.currentScript ??= null;
     // remove strings
     for (const i in options.speedValues) {
       if (!isFinite(options.speedValues[i])) {
@@ -139,10 +139,10 @@ class Player {
 
   changeSettings(newOptions, initial) {
     //set defaults
-    newOptions.theme ||= "transparent on-top";
-    newOptions.speed ||= 1;
-    newOptions.volume ||= 1;
-    newOptions.clip ||= this.clip;
+    newOptions.theme ??= "transparent on-top";
+    newOptions.speed ??= 1;
+    newOptions.volume ??= 1;
+    newOptions.clip ??= this.clip;
 
     if (newOptions.clip !== this.options.clip) {
       initial = true;
@@ -174,11 +174,18 @@ class Player {
       },
     };
 
+    const checkWhenInitial = [
+      "fullscreen",
+      "muted",
+      "volume",
+      "speed",
+      "scaleToFit",
+    ];
     for (const key in checkObject) {
       if (
         typeof newOptions[key] !== "undefined" &&
         (this.options[key] !== newOptions[key] ||
-          (initial && this.options[key]))
+          (initial && this.options[key] && checkWhenInitial.includes(key)))
       ) {
         checkObject[key]();
       }
