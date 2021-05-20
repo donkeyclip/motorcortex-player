@@ -280,8 +280,6 @@ clip.addIncident(svg, 9500);
 window.clip = clip;
 window.player = new Player({
   clip,
-  controls: true,
   preview: true,
   showVolume: true,
-  theme: "blue",
 });
