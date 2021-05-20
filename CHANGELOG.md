@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.0.1](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.0...v2.0.1) (2021-05-20)
+
+
+### Bug Fixes
+
+* preview event listeners bug ([6151a08](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/6151a0857bda70954a7f98886b41cdde17d18d9f))
+
 ## [2.0.0](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v1.9.4...v2.0.0) (2021-05-19)
 
 
