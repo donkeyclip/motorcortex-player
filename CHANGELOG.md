@@ -1,5 +1,17 @@
 # Changelog
 
+### [2.0.3](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.2...v2.0.3) (2021-05-21)
+
+
+### Bug Fixes
+
+* disable player pointer events ([312bae8](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/312bae88a2016d457bf0b5ee4eda21abc67356b4))
+
+
+### Miscellaneous Chores
+
+* release 2.0.3 ([3e91b9f](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/3e91b9f8634071777b129992a3ac6e99046f2edc))
+
 ### [2.0.2](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.1...v2.0.2) (2021-05-21)
 
 
