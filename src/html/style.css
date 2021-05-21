@@ -74,6 +74,7 @@
     width: 100%;
     height: 100%;
     position: relative;
+    pointer-events: none;
 }
 
 .--mc-player * {
@@ -87,6 +88,7 @@
     width: 100%;
     height: 100%;
     position: absolute;
+    pointer-events: none;
 }
 .--mcp-background{
     background: black;
@@ -159,6 +161,7 @@
     padding: 0 15px;
     opacity: 0;
     transition: all ease .2s;
+    pointer-events: auto;
 }
 .--mcp-force-show-controls{
     opacity: 1 !important;
@@ -425,6 +428,7 @@ ul.--mcp-speed-values li p{
     bottom: 50px;
     transition: all ease .2s;
     z-index: 1000;
+    pointer-events: auto;
 }
 
 .--mcp-speed-values {
