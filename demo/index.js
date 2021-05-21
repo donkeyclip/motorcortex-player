@@ -1,6 +1,6 @@
 import MC from "@kissmybutton/motorcortex";
 import AnimeDefinition from "@kissmybutton/motorcortex-anime";
-import Player from "../dist/motorcortex-player.umd";
+import Player from "../src/";
 const Anime = MC.loadPlugin(AnimeDefinition);
 
 const css = `

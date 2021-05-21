@@ -633,8 +633,9 @@ class Player {
   }
 
   createPreviewDisplay() {
-    this.previewClip = this.clip.paste(this.elements.previewHost);
-
+    this.previewClip = this.clip.paste(this.elements.previewHost, {
+      isPreviewClip: true,
+    });
     this.elements.previewHost.style.position = "absolute";
     this.elements.previewHost.style.background = this.options.backgroundColor;
     this.elements.previewHost.style.zIndex = 1;
