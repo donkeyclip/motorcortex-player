@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.0.4](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.3...v2.0.4) (2021-05-24)
+
+
+### Bug Fixes
+
+* add position absolute to player ([d77b401](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/d77b401e99c2450ccc4a8bde34df73504e060c1e))
+
 ### [2.0.3](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.2...v2.0.3) (2021-05-21)
 
 
