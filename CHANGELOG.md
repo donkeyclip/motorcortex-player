@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.0.5](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.4...v2.0.5) (2021-05-25)
+
+
+### Miscellaneous Chores
+
+* release 2.0.5 ([1f570c7](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/1f570c719a9f8a70ae34a35a7cd4d628e81dca7e))
+
 ### [2.0.4](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.3...v2.0.4) (2021-05-24)
 
 
