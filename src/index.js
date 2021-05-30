@@ -1,5 +1,5 @@
 import { TimeCapsule } from "@kissmybutton/motorcortex";
-import { name, updateName } from "./config";
+import { name } from "./config";
 import { calcClipScale, elcreate, elid, eltag, changeIcon } from "./helpers";
 import setElements from "./html/setElements";
 import bodyListener from "./listeners/body";
@@ -79,7 +79,6 @@ class Player {
 
     this.className = name;
 
-    updateName(options.id);
     this.options = options;
     this.id = this.options.id;
     this.name = name;
