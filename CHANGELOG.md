@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.0.7](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.6...v2.0.7) (2021-05-30)
+
+
+### Bug Fixes
+
+* remove change player className ([0f794d5](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/0f794d560f5e04a24521266e1ed40b06f3f3c852))
+
 ### [2.0.6](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.5...v2.0.6) (2021-05-30)
 
 
