@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.0.9](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.8...v2.0.9) (2021-06-11)
+
+
+### Bug Fixes
+
+* add resize observer for host resize ([edfda61](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/edfda61bac3afec6a9f0988b86cf3d0871f82372))
+
 ### [2.0.8](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.7...v2.0.8) (2021-06-11)
 
 
