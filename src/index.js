@@ -45,25 +45,10 @@ const timeCapsule = new TimeCapsule();
 
 class Player {
   constructor(options) {
-    // set defaults
-    this.initializeOptions(options);
-    // remove strings
-    for (const i in options.speedValues) {
-      if (!isFinite(options.speedValues[i])) {
-        options.speedValues.splice(i, 1);
-      }
-    }
-
-    options.speedValues.sort(function (a, b) {
-      return a - b;
-    });
-
+    this.options = this.initializeOptions(options);
     this.className = name;
-
-    this.options = options;
     this.id = this.options.id;
     this.name = name;
-
     this.previewClip = null;
     this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
@@ -137,13 +122,22 @@ class Player {
     options.loop ??= false;
     options.volume ??= 1;
     options.currentScript ??= null;
+
+    // remove strings
+    for (const i in options.speedValues) {
+      if (!isFinite(options.speedValues[i])) {
+        options.speedValues.splice(i, 1);
+      }
+    }
+
+    options.speedValues.sort(function (a, b) {
+      return a - b;
+    });
+    return options;
   }
 
   changeSettings(newOptions, initial) {
-    this.initializeOptions({ ...this.options, newOptions });
-    //set defaults
-    newOptions.theme ??= "transparent on-top";
-    newOptions.volume ??= 1;
+    newOptions = this.initializeOptions({ ...this.options, ...newOptions });
 
     if (newOptions.clip !== this.options.clip) {
       initial = true;

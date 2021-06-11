@@ -54,3 +54,5 @@ window.player = new Player({
   loop: true,
   pointerEvents: false,
 });
+
+window.player.changeSettings({ pointerEvents: true, loop: false });
