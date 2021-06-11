@@ -121,19 +121,17 @@ class Player {
     if (this.options.preview) {
       this.createPreviewDisplay();
     }
-    this.resizeTimeout = setTimeout(() => {}, 20);
-    window.addEventListener(`resize`, () => {
-      clearTimeout(this.resizeTimeout);
-      this.resizeTimeout = setTimeout(() => {
-        if (this.options.preview) {
-          this.setPreviewDimentions();
-        }
-        if (this.options.scaleToFit) {
-          this.scaleClipHost();
-        }
-      }, 20);
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (this.options.preview) {
+        this.setPreviewDimentions();
+      }
+      if (this.options.scaleToFit) {
+        this.scaleClipHost();
+      }
     });
     this.changeSettings(options, true);
+    resizeObserver.observe(this.options.host);
   }
 
   changeSettings(newOptions, initial) {
