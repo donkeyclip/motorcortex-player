@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.0.8](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.7...v2.0.8) (2021-06-11)
+
+
+### Bug Fixes
+
+* fix show preview script attribute change ([757a171](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/757a171ea2ad80dcc161a62c3191146f5635e837))
+
 ### [2.0.7](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.6...v2.0.7) (2021-05-30)
 
 
