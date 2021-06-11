@@ -154,7 +154,6 @@ class Player {
     } else if (newOptions.controls === true) {
       this.elements.mcPlayer.style.display = undefined;
     }
-
     const checkObject = {
       loop: () => loopTrigger(this),
       fullscreen: () => fullscreenTrigger(this),
@@ -179,6 +178,7 @@ class Player {
       "volume",
       "speed",
       "scaleToFit",
+      "loop",
     ];
     for (const key in checkObject) {
       if (
@@ -426,7 +426,7 @@ class Player {
     } else if (eventName === SHOW_VOLUME_CHANGE) {
       this.broadcastShowVolumeChange(state);
     } else if (eventName === SHOW_PREVIEW_CHANGE) {
-      this.broadcastShowVolumeChange(state);
+      this.broadcastShowPreviewChange(state);
     }
   }
   eventBroadcast(eventName, state) {
