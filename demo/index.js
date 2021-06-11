@@ -49,6 +49,8 @@ clip.addIncident(AnimateWidth, 0);
 
 window.player = new Player({
   clip,
-  preview: true,
+  preview: false,
   showVolume: true,
+  loop: true,
+  pointerEvents: false,
 });
