@@ -10,7 +10,7 @@ const css = `
   height:100px;
   left:0px;
   top:40%;
-  color:white;
+  color:red;
   margin:auto;
   font-size:20px;
 }
@@ -53,6 +53,10 @@ window.player = new Player({
   showVolume: true,
   loop: true,
   pointerEvents: false,
+  controls: false,
+  theme: "blue",
+  autoPlay: true,
 });
-
-window.player.changeSettings({ pointerEvents: true, loop: false });
+window.player.changeSettings({ controls: true });
+window.player.pause();
+window.player.play();
