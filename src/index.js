@@ -98,6 +98,10 @@ class Player {
     });
     this.changeSettings(options, true);
     resizeObserver.observe(this.options.host);
+
+    if (this.options.autoPlay) {
+      this.play();
+    }
   }
 
   initializeOptions(options) {
@@ -136,6 +140,14 @@ class Player {
     return options;
   }
 
+  play() {
+    this.clip.play();
+  }
+
+  pause() {
+    this.clip.pause();
+  }
+
   changeSettings(newOptions, initial) {
     newOptions = this.initializeOptions({ ...this.options, ...newOptions });
 
@@ -144,11 +156,10 @@ class Player {
       this.clip = newOptions.clip;
       this.options.clip = newOptions.clip;
     }
-
     if (newOptions.controls === false) {
       this.elements.mcPlayer.style.display = "none";
     } else if (newOptions.controls === true) {
-      this.elements.mcPlayer.style.display = undefined;
+      this.elements.mcPlayer.style.display = "block";
     }
     const checkObject = {
       loop: () => loopTrigger(this),
