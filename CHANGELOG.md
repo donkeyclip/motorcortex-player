@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.0.11](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.10...v2.0.11) (2021-06-11)
+
+
+### Bug Fixes
+
+* initialize options ([2cf9e52](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/2cf9e5290d9d4fbba66e86ab8dccf99a9f319162))
+
 ### [2.0.10](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.9...v2.0.10) (2021-06-11)
 
 
