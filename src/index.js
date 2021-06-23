@@ -595,7 +595,8 @@ class Player {
       this.elements.mcPlayer.classList.add("theme-blue");
     else if (this.options.theme.includes("dark"))
       this.elements.mcPlayer.classList.add("theme-dark");
-
+    else if (this.options.theme.includes("yellow"))
+      this.elements.mcPlayer.classList.add("theme-yellow");
     if (!elid("--mc-player-style")) {
       const style = elcreate("style");
       style.id = "--mc-player-style";
