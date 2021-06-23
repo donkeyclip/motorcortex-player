@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.12...v2.1.0) (2021-06-23)
+
+
+### Features
+
+* add yellow theme ([7ab880e](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/7ab880e819b24e70174d42f008a9d2ba50c5be0b))
+
 ### [2.0.12](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.11...v2.0.12) (2021-06-17)
 
 
