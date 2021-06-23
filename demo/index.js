@@ -54,7 +54,7 @@ window.player = new Player({
   loop: true,
   pointerEvents: false,
   controls: false,
-  theme: "blue",
+  theme: "yellow",
   autoPlay: true,
 });
 window.player.changeSettings({ controls: true });
