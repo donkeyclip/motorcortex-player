@@ -325,15 +325,21 @@ class Player {
       state.charAt(0).toUpperCase() + state.slice(1)
     }`;
     if (state == "blocked") {
-      changeIcon(this.elements.pointerEventPanel, null, "spinner");
-      this.elements.pointerEventPanel.classList.add("loading");
+      this.addSpinner();
     } else {
-      changeIcon(this.elements.pointerEventPanel, "spinner", null);
-      this.elements.pointerEventPanel.classList.remove("loading");
+      this.removeSpinner();
     }
   }
-
+  addSpinner() {
+    changeIcon(this.elements.pointerEventPanel, null, "spinner");
+    this.elements.pointerEventPanel.classList.add("loading");
+  }
+  removeSpinner() {
+    changeIcon(this.elements.pointerEventPanel, "spinner", null);
+    this.elements.pointerEventPanel.classList.remove("loading");
+  }
   broadcastPlaying(state) {
+    this.removeSpinner();
     if (this.elements.controls.classList.value.includes(showControls)) {
       this.elements.controls.classList.toggle(showControls);
     }

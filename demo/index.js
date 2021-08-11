@@ -17,7 +17,7 @@ const css = `
 `;
 
 const html = `
-<div class="test">Hello World</div>`;
+<div class="test">{{ initParams.test }} </div>`;
 
 const host = document.getElementById("app");
 
@@ -31,6 +31,9 @@ const clip = new MC.HTMLClip({
   html,
   host,
   containerParams,
+  initParams: {
+    test: "hello world",
+  },
 });
 
 const AnimateWidth = new Plugin.Test(
@@ -52,11 +55,12 @@ window.player = new Player({
   preview: false,
   showVolume: true,
   loop: true,
-  pointerEvents: false,
-  controls: false,
   theme: "yellow",
-  autoPlay: true,
+  speed: 0.1,
+  // autoPlay: true,
 });
-window.player.changeSettings({ controls: true });
-window.player.pause();
-window.player.play();
+window.player.changeSettings({ pointerEvents: true });
+
+// window.player.changeInitParams({window.player.})
+// window.player.pause();
+// window.player.play();
