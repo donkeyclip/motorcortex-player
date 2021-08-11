@@ -1,5 +1,13 @@
 # Changelog
 
+### [2.1.1](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.1.0...v2.1.1) (2021-08-11)
+
+
+### Bug Fixes
+
+* add changeinitparams function in player ([8dd678b](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/8dd678b3214b66bc4295da9af3ab8c1346680f86))
+* remove spinner when content is loaded ([5325ebe](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/5325ebe713083e9442497ebc1ecdc4694cfaee6f))
+
 ## [2.1.0](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.12...v2.1.0) (2021-06-23)
 
 
