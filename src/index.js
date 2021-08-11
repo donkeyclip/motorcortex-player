@@ -1,4 +1,4 @@
-import { TimeCapsule } from "@kissmybutton/motorcortex";
+import { TimeCapsule, utils } from "@kissmybutton/motorcortex";
 import { name } from "./config";
 import { calcClipScale, elcreate, elid, eltag, changeIcon } from "./helpers";
 import setElements from "./html/setElements";
@@ -325,15 +325,36 @@ class Player {
       state.charAt(0).toUpperCase() + state.slice(1)
     }`;
     if (state == "blocked") {
-      changeIcon(this.elements.pointerEventPanel, null, "spinner");
-      this.elements.pointerEventPanel.classList.add("loading");
+      this.addSpinner();
     } else {
-      changeIcon(this.elements.pointerEventPanel, "spinner", null);
-      this.elements.pointerEventPanel.classList.remove("loading");
+      this.removeSpinner();
     }
   }
 
+  changeInitParams(initParams) {
+    this.clip.pause();
+    const definition = this.clip.exportLiveDefinition();
+    definition.props.host = this.clip.props.host;
+    definition.props.initParams = initParams;
+    this.clip.realClip.context.unmount();
+    for (const key in this.clip) {
+      delete this.clip[key];
+    }
+    this.clip = utils.clipFromDefinition(definition);
+    this.subscribeToTimer();
+    this.subscribeToDurationChange();
+  }
+
+  addSpinner() {
+    changeIcon(this.elements.pointerEventPanel, null, "spinner");
+    this.elements.pointerEventPanel.classList.add("loading");
+  }
+  removeSpinner() {
+    changeIcon(this.elements.pointerEventPanel, "spinner", null);
+    this.elements.pointerEventPanel.classList.remove("loading");
+  }
   broadcastPlaying(state) {
+    this.removeSpinner();
     if (this.elements.controls.classList.value.includes(showControls)) {
       this.elements.controls.classList.toggle(showControls);
     }
