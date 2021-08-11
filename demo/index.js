@@ -56,7 +56,7 @@ window.player = new Player({
   showVolume: true,
   loop: true,
   theme: "yellow",
-  speed: 0.1,
+  // speed: 0.1,
   // autoPlay: true,
 });
 window.player.changeSettings({ pointerEvents: true });
