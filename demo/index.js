@@ -56,11 +56,14 @@ window.player = new Player({
   showVolume: true,
   loop: true,
   theme: "yellow",
+  overflow: "visible",
+  outline: "1px dashed gray",
+  visible: "always",
   // speed: 0.1,
   // autoPlay: true,
 });
 window.player.changeSettings({ pointerEvents: true });
 
 // window.player.changeInitParams({window.player.})
-// window.player.pause();
+// window.player.pcpause();
 // window.player.play();

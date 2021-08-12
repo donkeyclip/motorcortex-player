@@ -1,314 +1,322 @@
-.--mc-player.theme-default{
-    --activeColor:136,136,136;
-    --defaultColor:136,136,136;
-    --backgroundColor:245,245,245,1;
-    --loopBarColor:rgba(var(--activeColor),.2);
-    --grad-display:none;
+.--mc-player.theme-default {
+  --activeColor: 136, 136, 136;
+  --defaultColor: 136, 136, 136;
+  --backgroundColor: 245, 245, 245, 1;
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: none;
 }
 
-.--mc-player.theme-yellow{
-    --activeColor:255,235,59;
-    --defaultColor:255,255,255;
-    --backgroundColor:66,66,66,1;
-    --loopBarColor:rgba(var(--activeColor),.2);
-    --grad-display:none;
+.--mc-player.theme-yellow {
+  --activeColor: 255, 235, 59;
+  --defaultColor: 255, 255, 255;
+  --backgroundColor: 66, 66, 66, 1;
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: none;
 }
 
-.--mc-player.theme-dark{
-    --activeColor:136,136,136;
-    --defaultColor:136,136,136;
-    --backgroundColor:0,0,0,1;
-    --loopBarColor:rgba(var(--activeColor),.2);
-    --grad-display:none;
+.--mc-player.theme-dark {
+  --activeColor: 136, 136, 136;
+  --defaultColor: 136, 136, 136;
+  --backgroundColor: 0, 0, 0, 1;
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: none;
 }
 
-.--mc-player.theme-whiteGold{
-    --activeColor:161,127,26;
-    --defaultColor:136,136,136;
-    --backgroundColor:245,245,245,1;
-    --loopBarColor:rgba(var(--activeColor),.2);
-    --grad-display:none;
+.--mc-player.theme-whiteGold {
+  --activeColor: 161, 127, 26;
+  --defaultColor: 136, 136, 136;
+  --backgroundColor: 245, 245, 245, 1;
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: none;
 }
 
-.--mc-player.theme-darkGold{
-    --activeColor:161,127,26;
-    --defaultColor:136,136,136;
-    --backgroundColor:0,0,0,1;
-    --loopBarColor:rgba(var(--activeColor),.2);
-    --grad-display:none;
+.--mc-player.theme-darkGold {
+  --activeColor: 161, 127, 26;
+  --defaultColor: 136, 136, 136;
+  --backgroundColor: 0, 0, 0, 1;
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: none;
 }
-.--mc-player.theme-transparent{
-    --activeColor:255,0,0;
-    --defaultColor:239,238,236;
-    --backgroundColor:0,0,0,0;
-    --loopBarColor:rgba(var(--defaultColor),.2);
-    --grad-display:block;
+.--mc-player.theme-transparent {
+  --activeColor: 255, 0, 0;
+  --defaultColor: 239, 238, 236;
+  --backgroundColor: 0, 0, 0, 0;
+  --loopBarColor: rgba(var(--defaultColor), 0.2);
+  --grad-display: block;
 }
 
-.--mc-player.theme-green{
-    --activeColor:0,184,139;
-    --defaultColor:153,153,153;
-    --backgroundColor:20,20,22,1;
-    --loopBarColor:rgba(var(--activeColor),.2);
-    --grad-display:none;
+.--mc-player.theme-green {
+  --activeColor: 0, 184, 139;
+  --defaultColor: 153, 153, 153;
+  --backgroundColor: 20, 20, 22, 1;
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: none;
 }
-.--mc-player.theme-blue{
-    --activeColor:0,153,225;
-    --defaultColor:153,153,153;
-    --backgroundColor:20,20,22,1;
-    --loopBarColor:rgba(var(--activeColor),.2);
-    --grad-display:none;
+.--mc-player.theme-blue {
+  --activeColor: 0, 153, 225;
+  --defaultColor: 153, 153, 153;
+  --backgroundColor: 20, 20, 22, 1;
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: none;
 }
-.--mc-player *{
-    color: rgb(var(--defaultColor));
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size:13px;
-    cursor: default;
-    user-select: none;
+.--mc-player * {
+  color: rgb(var(--defaultColor));
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 13px;
+  cursor: default;
+  user-select: none;
 }
-.--mc-player svg{
-    width: 22px;
+.--mc-player svg {
+  width: 22px;
 }
-.--mcp-settings-panel svg{
-    width: 10px;
+.--mcp-settings-panel svg {
+  width: 10px;
 }
 .--mc-player svg,
-.--mc-player svg *{
-    fill: rgb(var(--defaultColor)) !important;
-
+.--mc-player svg * {
+  fill: rgb(var(--defaultColor)) !important;
 }
 
 .--mc-player {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top:0px;
-    left: 0px;
-    pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
 }
 
 .--mc-player * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .--mcp-background,
 .--mcp-context {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
 }
-.--mcp-background{
-    background: black;
-    z-index: -1000;
+.--mcp-background {
+  background: black;
+  z-index: -1000;
 }
 
 .--mcp-pointer-events-panel {
-    width: 100%;
-    min-height: calc(100% - 44px);
+  width: 100%;
+  min-height: calc(100% - 44px);
 }
 
-.--mcp-pointer-events-panel.loading{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0,0,0,0.8)
+.--mcp-pointer-events-panel.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
 }
 .--mcp-pointer-events-panel.loading svg {
-    animation:spin 4s linear infinite;
+  animation: spin 4s linear infinite;
 }
 
-@keyframes spin { 100% { transform:rotate(360deg); } }
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 .--mcp-grad {
-    display: var(--grad-display);
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    height: 200px;
-    z-index: 0;
-    pointer-events: none !important;
-    background-image: linear-gradient(rgba(0, 0, 0, 00.001),
-            rgba(0, 0, 0, 00.004),
-            rgba(0, 0, 0, 00.007),
-            rgba(0, 0, 0, 00.01),
-            rgba(0, 0, 0, 0.04),
-            rgba(0, 0, 0, 0.07),
-            rgba(0, 0, 0, 0.1),
-            rgba(0, 0, 0, 0.15),
-            rgba(0, 0, 0, 0.2),
-            rgba(0, 0, 0, 0.25),
-            rgba(0, 0, 0, 0.3),
-            rgba(0, 0, 0, 0.35),
-            rgba(0, 0, 0, 0.4),
-            rgba(0, 0, 0, 0.45),
-            rgba(0, 0, 0, 0.5),
-            rgba(0, 0, 0, 0.55),
-            rgba(0, 0, 0, 0.6),
-            rgba(0, 0, 0, 0.65),
-            rgba(0, 0, 0, 0.7),
-            rgba(0, 0, 0, 0.75),
-            rgba(0, 0, 0, 0.8),
-            rgba(0, 0, 0, 0.88));
+  display: var(--grad-display);
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 200px;
+  z-index: 0;
+  pointer-events: none !important;
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 00.001),
+    rgba(0, 0, 0, 00.004),
+    rgba(0, 0, 0, 00.007),
+    rgba(0, 0, 0, 00.01),
+    rgba(0, 0, 0, 0.04),
+    rgba(0, 0, 0, 0.07),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.25),
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.55),
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0.65),
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.88)
+  );
 }
 
-.--mc-player:hover .--mcp-controls{
-    opacity: 1 !important;
+.--mc-player:hover .--mcp-controls {
+  opacity: 1 !important;
 }
 .--mcp-controls:active {
-    opacity: 1 !important;
+  opacity: 1 !important;
 }
 .--mcp-controls {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    z-index: 1;
-    background: rgba(var(--backgroundColor));
-    height: 44px;
-    padding: 0 15px;
-    opacity: 0;
-    transition: all ease .2s;
-    pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  background: rgba(var(--backgroundColor));
+  height: 44px;
+  padding: 0 15px;
+  opacity: 0;
+  transition: all ease 0.2s;
+  pointer-events: auto;
 }
-.--mcp-force-show-controls{
-    opacity: 1 !important;
+.--mcp-force-show-controls {
+  opacity: 1 !important;
+}
+
+.--mcp-always-show-controls {
+  opacity: 1 !important;
 }
 
 .--mcp-progressbar {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .--mcp-totalbar,
 .--mcp-loopbar,
 .--mcp-runningbar {
-    position: relative;
-    height: 5px;
+  position: relative;
+  height: 5px;
 }
 
 .--mcp-cursor {
-    width: 14px;
-    height: 14px;
-    background-color: rgb(var(--activeColor));
-    border-radius: 100%;
-    position: absolute;
-    top: -5px;
-    right: -8px;
-    z-index: 10;
+  width: 14px;
+  height: 14px;
+  background-color: rgb(var(--activeColor));
+  border-radius: 100%;
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  z-index: 10;
 }
 
 .--mcp-totalbar {
-    min-width: 100%;
-    background-color: rgba(var(--defaultColor),0.3);
+  min-width: 100%;
+  background-color: rgba(var(--defaultColor), 0.3);
 }
 
 .--mcp-loopbar {
-    width: 100%;
-    padding: 10px 0px;
-    top: -10px;
-    position: relative;
+  width: 100%;
+  padding: 10px 0px;
+  top: -10px;
+  position: relative;
 }
-.--mcp-loopbar-color{
-    position: absolute;
-    left: 0px;
-    bottom: 5px;
-    background-color: var(--loopBarColor);
-    width: 100%;
-    height: 5px;
+.--mcp-loopbar-color {
+  position: absolute;
+  left: 0px;
+  bottom: 5px;
+  background-color: var(--loopBarColor);
+  width: 100%;
+  height: 5px;
 }
 .--mcp-runningbar {
-    background-color: rgb(var(--activeColor));
-    width: 0px;
+  background-color: rgb(var(--activeColor));
+  width: 0px;
 }
 
 .--mcp-buttons,
 .--mcp-left-buttons,
 .--mcp-right-buttons,
-.--mcp-left-buttons>div,
-.--mcp-right-buttons>div {
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-
+.--mcp-left-buttons > div,
+.--mcp-right-buttons > div {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .--mcp-buttons,
 .--mcp-left-buttons,
 .--mcp-right-buttons {
-    flex: 1;
-    height: 100%;
-    gap:20px;
+  flex: 1;
+  height: 100%;
+  gap: 20px;
 }
 
-
 .--mcp-left-buttons {
-    justify-content: flex-start;
+  justify-content: flex-start;
 }
 
 .--mcp-right-buttons {
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
 
 .--mcp-preview {
-    min-width: 100px;
-    min-height: 100px;
-    background-color: black;
-    position: absolute;
-    bottom: 50px;
-    border: 3px solid;
-    display: flex;
-    box-sizing: content-box;
+  min-width: 100px;
+  min-height: 100px;
+  background-color: black;
+  position: absolute;
+  bottom: 50px;
+  border: 3px solid;
+  display: flex;
+  box-sizing: content-box;
 }
-.--mcp-prevent-point-events{
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
+.--mcp-prevent-point-events {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
 }
 .--mcp-preview-host {
-    flex: 1;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
+  flex: 1;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .--mcp-preview-millisecond {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    bottom: -24px;
-    left: 50%;
-    transform: translateX(-50%);
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.--mcp-loop-boundaries{
-    position: relative;
+.--mcp-loop-boundaries {
+  position: relative;
 }
 .--mcp-loop-boundaries:after {
-    content:"";
-    top:-4px;
-    left: -6px;
-    width: 13px;
-    height: 13px;
-    background-color: #aeaeae;
-    position: absolute;
-    border-radius: 100%;
-    z-index: 100;
+  content: "";
+  top: -4px;
+  left: -6px;
+  width: 13px;
+  height: 13px;
+  background-color: #aeaeae;
+  position: absolute;
+  border-radius: 100%;
+  z-index: 100;
 }
-.--mcp-loopbar-start{
-    left: -5px;
+.--mcp-loopbar-start {
+  left: -5px;
 }
-.--mcp-loopbar-end{
-    right: 5px;
+.--mcp-loopbar-end {
+  right: 5px;
 }
 .--mcp-loopbar,
 .--mcp-loopbar-color,
@@ -319,156 +327,152 @@
 .--mcp-btn,
 .--mcp-volume *,
 .--mc-player svg,
-.--mc-player svg *
-{
-    cursor: pointer;
+.--mc-player svg * {
+  cursor: pointer;
 }
-.--mcp-btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.--mcp-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.--mcp-status-btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3px;
+.--mcp-status-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
 }
-.--mcp-indicator{
-    font-size: 12px;
+.--mcp-indicator {
+  font-size: 12px;
 }
-.--mcp-listener-helper{
-    pointer-events: none;
+.--mcp-listener-helper {
+  pointer-events: none;
 }
 
-.--mcp-btn{
-    font-size: 20px;
+.--mcp-btn {
+  font-size: 20px;
 }
 
 .--mcp-volume-btn {
-    font-size:15px;
+  font-size: 15px;
 }
-.--mcp-volumebar{
-    width: 0;
-    padding-left:0px;
-    padding-right:0px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition:all ease .2s;
+.--mcp-volumebar {
+  width: 0;
+  padding-left: 0px;
+  padding-right: 0px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all ease 0.2s;
 }
-.--mcp-volume{
-    height: 100%;
+.--mcp-volume {
+  height: 100%;
 }
 .--mcp-volume:hover {
-    padding-right:10px;
+  padding-right: 10px;
 }
 .--mcp-volume:hover .--mcp-volumebar,
-.--mcp-volume:active .--mcp-volumebar
- {
-    width: 52px;
-    padding-left:5px;
+.--mcp-volume:active .--mcp-volumebar {
+  width: 52px;
+  padding-left: 5px;
 }
 .--mcp-volume:hover .--mcp-volume-cursor,
-.--mcp-volume:active .--mcp-volume-cursor
- {
-    display: block;
+.--mcp-volume:active .--mcp-volume-cursor {
+  display: block;
 }
 
 .--mcp-btn::before {
-    color:var(--defaultColor) !important;
+  color: var(--defaultColor) !important;
 }
 .--mcp-btn::before:hover {
-    filter: brightness(40);    
+  filter: brightness(40);
 }
-.--mcp-settings-speed-hide{
-    border-bottom:1px solid rgba(255,255,255,0.2);
+.--mcp-settings-speed-hide {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
-ul.--mcp-speed-values{
-    padding: 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+ul.--mcp-speed-values {
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-ul.--mcp-speed-values li{
-    width: 100%;
+ul.--mcp-speed-values li {
+  width: 100%;
 }
-ul.--mcp-speed-values li p{
-    width: 100%;
+ul.--mcp-speed-values li p {
+  width: 100%;
 }
-.--mcp-settings-panel  ul{
-    list-style-type: none;
-    display: flex;
-    flex-direction: column;
-    padding: 5px 0px;
-    margin: 0px;
-    flex: 1;
-}
-
-.--mcp-settings-panel  ul li {
-    flex:1;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    min-height: 40px;
-    padding: 0px 21px;
-}
-.--mcp-settings-panel  ul li * {
-    cursor: pointer;
-}
-.--mcp-settings-panel  ul li:not(.--mcp-no-hover):hover {
-    background-color: rgba(var(--activeColor),0.2);
+.--mcp-settings-panel ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0px;
+  margin: 0px;
+  flex: 1;
 }
 
-.--mcp-settings-panel  ul li > div {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;;
-    width:48px;
-    flex: 1;
-    gap: 10px;
+.--mcp-settings-panel ul li {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  min-height: 40px;
+  padding: 0px 21px;
+}
+.--mcp-settings-panel ul li * {
+  cursor: pointer;
+}
+.--mcp-settings-panel ul li:not(.--mcp-no-hover):hover {
+  background-color: rgba(var(--activeColor), 0.2);
+}
+
+.--mcp-settings-panel ul li > div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 48px;
+  flex: 1;
+  gap: 10px;
 }
 
 .--mcp-settings-panel {
-    width: 251px;
-    position: absolute;
-    background-color: rgba(28,28,28,0.9);
-    right: 15px;
-    bottom: 50px;
-    transition: all ease .2s;
-    z-index: 1000;
-    pointer-events: auto;
+  width: 251px;
+  position: absolute;
+  background-color: rgba(28, 28, 28, 0.9);
+  right: 15px;
+  bottom: 50px;
+  transition: all ease 0.2s;
+  z-index: 1000;
+  pointer-events: auto;
 }
 
 .--mcp-speed-values {
-    padding:0px;
+  padding: 0px;
 }
 .--mcp-no-hover {
-    padding: 0px !important;
+  padding: 0px !important;
 }
-.--mcp-speed-value-item:not(.--mcp-selected){
-    padding-left:15px;
+.--mcp-speed-value-item:not(.--mcp-selected) {
+  padding-left: 15px;
 }
-.--mcp-speed-value-item.--mcp-selected{
-    padding-left: 10px;
+.--mcp-speed-value-item.--mcp-selected {
+  padding-left: 10px;
 }
-.--mcp-speed-value .icon-check-solid{
-    margin-left:-5px;
+.--mcp-speed-value .icon-check-solid {
+  margin-left: -5px;
 }
 .--mcp-settings-panel ul.--mcp-speed-settings li > div {
-    justify-content: flex-start;
-    flex:unset;
-    width: 20px;
+  justify-content: flex-start;
+  flex: unset;
+  width: 20px;
 }
 
 .--mcp-main-settings ul li > p {
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-    flex:1;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  flex: 1;
 }
-
 
 /* 
 
@@ -476,102 +480,101 @@ Sliders
 
 */
 .--mc-player .switch {
-    position: relative;
-    display: inline-block;
-    width: 36px;
-    height: 14px;
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 14px;
 }
 
 .--mc-player .switch input {
-    display: none;
+  display: none;
 }
 
-
 .--mc-player .settings-switch::after {
-    clear: both;
+  clear: both;
 }
 
 .--mc-player .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #999;
-    -webkit-transition: .4s;
-    transition: .4s;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #999;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .--mc-player .slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 0px;
-    bottom: -3px;
-    background-color: #cfcfcf;
-    -webkit-transition: .4s;
-    transition: .4s;
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 0px;
+  bottom: -3px;
+  background-color: #cfcfcf;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
-.--mc-player input:checked+.slider {
-    background-color: rgb(var(--activeColor));
+.--mc-player input:checked + .slider {
+  background-color: rgb(var(--activeColor));
 }
-.--mc-player input:checked+.slider:before{
-    background-color: white;
-}
-
-.--mc-player input:focus+.slider {
-    box-shadow: 0 0 1px rgb(var(--activeColor));
+.--mc-player input:checked + .slider:before {
+  background-color: white;
 }
 
-.--mc-player input:checked+.slider:before {
-    -webkit-transform: translateX(16px);
-    -ms-transform: translateX(16px);
-    transform: translateX(16px);
+.--mc-player input:focus + .slider {
+  box-shadow: 0 0 1px rgb(var(--activeColor));
+}
+
+.--mc-player input:checked + .slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
 }
 
 .--mc-player .slider.round {
-    border-radius: 34px;
+  border-radius: 34px;
 }
 
 .--mc-player .slider.round:before {
-    border-radius: 50%;
+  border-radius: 50%;
 }
 
 .--mc-player .m-fadeOut {
-    visibility: hidden !important;
-    opacity: 0 !important;
-    display: none !important;
-  }
-  
-  .--mc-player .m-fadeIn {
-    display: unset;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  
-  .--mcp-volume-cursor{
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    background-color: rgb(var(--defaultColor));
-    right: -8px;
-    border-radius: 100%;
-    display: none;
-  }
-  .--mcp-volumebar-color{
-    width: 100%;
-    height: 3px;
-    background-color: rgba(var(--defaultColor),0.3);
-  }
-  .--mcp-volumebar-color-active{
-    width: 100%;
-    height: 100%;
-    background-color: rgb(var(--defaultColor));
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
+  visibility: hidden !important;
+  opacity: 0 !important;
+  display: none !important;
+}
+
+.--mc-player .m-fadeIn {
+  display: unset;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.--mcp-volume-cursor {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background-color: rgb(var(--defaultColor));
+  right: -8px;
+  border-radius: 100%;
+  display: none;
+}
+.--mcp-volumebar-color {
+  width: 100%;
+  height: 3px;
+  background-color: rgba(var(--defaultColor), 0.3);
+}
+.--mcp-volumebar-color-active {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(var(--defaultColor));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
