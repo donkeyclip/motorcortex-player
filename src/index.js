@@ -208,7 +208,9 @@ class Player {
         { width, height },
         {
           width: this.clip.props.host.offsetWidth,
-          height: this.clip.props.host.offsetHeight,
+          height:
+            this.clip.props.host.offsetHeight -
+            (this.options.visible == "always" ? 44 : 0),
         },
         this.options.scaleToFit === "cover"
       );
@@ -688,7 +690,9 @@ class Player {
     const transform = calcClipScale(
       {
         width: this.clip.props.containerParams.width,
-        height: this.clip.props.containerParams.height,
+        height:
+          this.clip.props.containerParams.height -
+          (this.options.visible == "always" ? 44 : 0),
       },
       {
         width: width,

@@ -9,6 +9,6 @@ export default class Anime extends Effect {
   }
   onProgress(f) {
     // if (!window.x) this.setBlock();
-    return (this.element.style.left = f * this.targetValue + "px");
+    return (this.element.style.left = f * 10 * this.targetValue + "px");
   }
 }
