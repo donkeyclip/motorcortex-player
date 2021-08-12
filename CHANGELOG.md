@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.1.1...v2.2.0) (2021-08-12)
+
+
+### Features
+
+* add outline and overflow options ([b008bb8](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/b008bb8984577088a39cde536579423f51238764))
+
+
+### Bug Fixes
+
+* add overflow, outline and visibility in player change settings function ([bcc4517](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/bcc45174581de13a97b1cfb3d5c626a4ba71a413))
+
 ### [2.1.1](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.1.0...v2.1.1) (2021-08-11)
 
 
