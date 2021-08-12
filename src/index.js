@@ -177,6 +177,21 @@ class Player {
         this.options.theme = newOptions.theme;
         this.setTheme();
       },
+      overflow: () => {
+        this.clip.props.host.shadowRoot.children[0].style.overflow =
+          newOptions.overflow;
+      },
+      outline: () => {
+        this.clip.props.host.shadowRoot.children[0].style.outline =
+          newOptions.outline;
+      },
+      visible: () => {
+        if (newOptions.visible == "always") {
+          this.elements.controls.classList.add("--mcp-always-show-controls");
+        } else if (newOptions.visible == "normal") {
+          this.elements.controls.classList.remove("--mcp-always-show-controls");
+        }
+      },
     };
 
     const checkWhenInitial = [
@@ -186,6 +201,9 @@ class Player {
       "speed",
       "scaleToFit",
       "loop",
+      "overflow",
+      "outline",
+      "visible",
     ];
     for (const key in checkObject) {
       if (

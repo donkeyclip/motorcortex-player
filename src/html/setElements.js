@@ -172,20 +172,6 @@ const addStyles = (_this) => {
 
   _this.elements.settingsPanel.classList.add("m-fadeOut", `${_this.name}-hide`);
 
-  if (_this.options.overflow) {
-    _this.clip.props.host.shadowRoot.children[0].style.overflow =
-      _this.options.overflow;
-  }
-
-  if (_this.options.outline) {
-    _this.clip.props.host.shadowRoot.children[0].style.outline =
-      _this.options.outline;
-  }
-
-  if (_this.options.visible == "always") {
-    _this.elements.controls.classList.add("--mcp-always-show-controls");
-  }
-
   if (!_this.options.showIndicator) {
     _this.elements.indicator.style.display = "none";
   } else {
