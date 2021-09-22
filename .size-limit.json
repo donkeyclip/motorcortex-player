@@ -1,0 +1,16 @@
+[
+  {
+    "path": "dist/motorcortex-player.umd.js",
+    "webpack": false
+  },
+  {
+    "path": "dist/motorcortex-player.cjs.js",
+    "webpack": false,
+    "gzip": false
+  },
+  {
+    "path": "dist/motorcortex-player.esm.js",
+    "webpack": false,
+    "gzip": false
+  }
+]
