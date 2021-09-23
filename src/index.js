@@ -1,4 +1,4 @@
-import { TimeCapsule, utils } from "@kissmybutton/motorcortex";
+import { TimeCapsule, utils } from "@donkeyclip/motorcortex";
 import { name } from "./config";
 import { calcClipScale, elcreate, elid, eltag, changeIcon } from "./helpers";
 import setElements from "./html/setElements";

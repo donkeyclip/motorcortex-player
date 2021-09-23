@@ -1,5 +1,5 @@
 {
-  "name": "@kissmybutton/motorcortex-player",
+  "name": "@donkeyclip/motorcortex-player",
   "version": "2.2.0",
   "description": "Player plugin for MotorCortex",
   "main": "dist/motorcortex-player.cjs.js",
@@ -8,7 +8,7 @@
   "author": "KissMyButton PC (kissmybutton.gr) <opensource@kissmybutton.gr>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kissmybutton/teo-motorcortex-player.git"
+    "url": "https://github.com/donkeyclip/motorcortex-player"
   },
   "license": "MIT",
   "engines": {
@@ -26,7 +26,8 @@
     "test:prod": "npm run lint",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
-    "prebuild": "rimraf dist"
+    "prebuild": "rimraf dist",
+    "prepare": "husky install"
   },
   "keywords": [
     "motorcortex",
@@ -60,7 +61,7 @@
     ]
   },
   "peerDependencies": {
-    "@kissmybutton/motorcortex": "^7.0.0"
+    "@donkeyclip/motorcortex": "^7.4.0"
   },
   "devDependencies": {
     "@babel/cli": "7.15.7",
@@ -70,7 +71,7 @@
     "@babel/preset-env": "7.15.6",
     "@commitlint/cli": "13.1.0",
     "@commitlint/config-conventional": "13.1.0",
-    "@kissmybutton/motorcortex": "7.3.0",
+    "@donkeyclip/motorcortex": "7.4.0",
     "@rollup/plugin-babel": "5.3.0",
     "@rollup/plugin-commonjs": "20.0.0",
     "@rollup/plugin-html": "0.2.3",
@@ -93,7 +94,7 @@
     "eslint-plugin-promise": "5.1.0",
     "eslint-plugin-sonarjs": "0.10.0",
     "html-loader": "2.1.2",
-    "husky": "4.3.8",
+    "husky": "^7.0.0",
     "lint-staged": "11.1.2",
     "path-browserify": "1.0.1",
     "postcss": "8.3.7",
@@ -112,13 +113,8 @@
     "webpack": "5.53.0",
     "webpack-cli": "4.8.0",
     "webpack-dev-server": "3.11.2",
-    "whatwg-fetch": "3.6.2"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run test:prod"
-    }
+    "whatwg-fetch": "3.6.2",
+    "@size-limit/preset-big-lib": "5.0.4",
+    "size-limit": "5.0.4"
   }
 }

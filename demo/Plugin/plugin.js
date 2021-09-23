@@ -1,4 +1,4 @@
-import { Effect } from "@kissmybutton/motorcortex";
+import { Effect } from "@donkeyclip/motorcortex";
 window.x = 0;
 export default class Anime extends Effect {
   onGetContext() {

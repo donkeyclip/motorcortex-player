@@ -1,4 +1,4 @@
-import MC from "@kissmybutton/motorcortex";
+import MC from "@donkeyclip/motorcortex";
 import Definition from "./Plugin";
 import Player from "../src/";
 const Plugin = MC.loadPlugin(Definition);
