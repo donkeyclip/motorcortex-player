@@ -1,5 +1,13 @@
 # Changelog
 
+### [2.2.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.0...v2.2.1) (2021-09-23)
+
+
+### Bug Fixes
+
+* update npm name ([d48b863](https://www.github.com/donkeyclip/motorcortex-player/commit/d48b863706639be5f15c073e1e18b2ed41288b72))
+* update package-lock ([b92cf2e](https://www.github.com/donkeyclip/motorcortex-player/commit/b92cf2e6472150d6736058f5f536735044f0fd4e))
+
 ## [2.2.0](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.1.1...v2.2.0) (2021-08-12)
 
 
