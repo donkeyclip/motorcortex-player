@@ -5,7 +5,7 @@ on:
       - main
 jobs:
   size:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       CI_JOB_NUMBER: 1
     steps:
