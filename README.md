@@ -1,4 +1,4 @@
-# Teo MotorCortex Player
+# MotorCortex Player
 
 ## Installation
 
@@ -8,7 +8,7 @@ or
 
 ## Purpose
 
-Teo MotorCortex Player is a video-like player specially designed for MotorCortex Clips.  
+MotorCortex Player is a video-like player specially designed for MotorCortex Clips.  
 Among other functionality, the player allows the user to play / pause and seek a Clip, control the master volume and the playback speed and more.
 
 ## Usage
@@ -16,8 +16,8 @@ Among other functionality, the player allows the user to play / pause and seek a
 The player can be used with any MotorCortex Clip. Here is an example with the minimum possible configuration:
 
 ```javascript
-const TeoPlayer = require("@donkeyclip/motorcortex-player");
-const player = new TeoPlayer({ clip: MyClip });
+import MCPlayer from "@donkeyclip/motorcortex-player";
+const player = new MCPlayer({ clip: MyClip });
 ```
 
 ## Controls
@@ -78,8 +78,8 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 
 ```javascript
 //example using player methods
-const TeoPlayer = require("@donkeyclip/motorcortex-player");
-const player = new TeoPlayer({
+import MClayer from "@donkeyclip/motorcortex-player";
+const player = new MCPlayer({
   clip: MyClip,
   onMillisecondChange: (ms) =>
     console.log("There goes another millisecond. I am gonna live forever"),
