@@ -11,7 +11,7 @@ import analyze from "rollup-plugin-analyzer";
 import cleanup from "rollup-plugin-cleanup";
 import visualizer from "rollup-plugin-visualizer";
 
-const ANALYZE = true;
+const ANALYZE = false;
 
 export default [
   {
