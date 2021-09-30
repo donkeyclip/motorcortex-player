@@ -37,11 +37,10 @@ module.exports = {
     ],
   },
   devServer: {
-    watchContentBase: true,
     host: "0.0.0.0",
     port: 8080,
     historyApiFallback: false,
     hot: false,
-    contentBase: "./demo",
+    static: "./demo",
   },
 };
