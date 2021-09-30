@@ -55,17 +55,24 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 | buttons | shows all | An object via which you can select which of the four buttons (#8: Loop via the key "loop", #9: DonkeyClip via the key "donkeyclip", #10: Options via the key "settings", #11: Full Screen via the key "fullScreen"). Enable and disable the buttons by setting their corresponding keys to true or false, accordingly |  
 | timeFormat | ms | This option allows you to set the time units on the Time (#4) of the Player. The default is ms, which means the Time will be presented in the form: < elapsed milliseconds >/< total milliseconds >. In the case you want a representation in the form: mm:ss/mm:ss you can set this option to "ss" |
 | theme | "transparent on-top" | Here you can pick one of the available themes of the player. The available themes are: "transparent", "dark", "whiteGold", "darkGold", "mc-green", "mc-blue". Screenshots of each theme are presented below. Also you can pick the position of the player controls by adding either 'on-top' or 'position-bottom' after the preferable theme |
-|volume| 1 | With this option you can define the volume value. Acceptable values are any flat number between or equal to 0 and 1 |
-|speed| 1 | A property from witch you can select the execution speed. any value positive or negative is acceptable|
-|loop|false| A boolean indicator whether the clip will initalize with the loop option on|
-|autoplay|false| With this option you can auto-start the clip when the loading is complete|
-|controls|true| This option allows you to select if the player controls will be visible, therefore availble to the users|
-|scaleToFit|true| A property to define if the clip will be auto-scaled to fit to its' host element or not|
-|pointerEvents|true| This options adds a transparent div element on top of the clip in order to prevent user events (eg selection) on the clip element|
-|backgroundColor|'transparent'| A css color value to define the players background|
-|speedValues| [-2, -1, -0.5, 0, 0.5, 1, 2] | An array of number values to provide as supported options on the speed setting panel. This option will not prevent the player to change the clip speed if programmatically the user change the speed to another value not provided in the speedValues property|
-|muted| false | A Boolean property to define if the clip will be muted on start|
-|currentScript| <script></script>| If the clip will be loaded from a script with an external source where the player will be included, you can provide the script element refernce and use all the available control properties as data-\* attributes of the script (eg currentScript=document.currentScript)|
+| volume| 1 | With this option you can define the volume value. Acceptable values are any flat number between or equal to 0 and 1 |
+| speed| 1 | A property from witch you can select the execution speed. any value positive or negative is acceptable|
+| loop|false| A boolean indicator whether the clip will initalize with the loop option on|
+| autoplay|false| With this option you can auto-start the clip when the loading is complete|
+| controls|true| This option allows you to select if the player controls will be visible, therefore availble to the users|
+| scaleToFit|true| A property to define if the clip will be auto-scaled to fit to its' host element or not|
+| overflow| "hidden" | A property to define if the you want elements outside the scene to be visible or not. Any css overflow values are acceptable|
+| outline|unset| A property to define the border style of your clip. This can be usefull on edit time. Any css border value is accepted|
+| visible|unset| A property to define if you want your clip to be above the player controls. Accepted values are undefined, "always"|
+| pointerEvents|true| This options adds a transparent div element on top of the clip in order to prevent user events (eg selection) on the clip element|
+| backgroundColor|'transparent'| A css color value to define the players background|
+| speedValues| [-2, -1, -0.5, 0, 0.5, 1, 2] | An array of number values to provide as supported options on the speed setting panel. This option will not prevent the player to change the clip speed if programmatically the user change the speed to another value not provided in the speedValues property|
+| muted| false | A Boolean property to define if the clip will be muted on start|
+| currentScript| <script></script>| If the clip will be loaded from a script with an external source where the player will be included, you can provide the script element refernce and use all the available control properties as data-\* attributes of the script (eg currentScript=document.currentScript)|
+
+overflow: "visible",
+outline: "1px dashed #333",
+visible: "always",
 
 ## Methods
 
