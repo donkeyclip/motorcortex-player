@@ -126,7 +126,7 @@ class Player {
     options.volume ??= 1;
     options.currentScript ??= null;
     if (options.millisecond) {
-      this.createJourney(options.millisecond,{},options.clip)
+      this.createJourney(options.millisecond,{},this.clip || options.clip);
     }
     // remove strings
     for (const i in options.speedValues) {
@@ -262,6 +262,7 @@ class Player {
   createJourney(millisecond, clipCommands = {},clip=undefined) {
     clip ??= this.clip;
     setTimeout(() => {
+      if(!clip.id) return;
       const def = null;
       const { before = def, after = def } = clipCommands;
       if (before) clip[before]();
@@ -362,6 +363,8 @@ class Player {
       delete this.clip[key];
     }
     this.clip = utils.clipFromDefinition(definition);
+    this.options.clip = this.clip;
+    this.initializeOptions(this.options);
     this.subscribeToTimer();
     this.subscribeToDurationChange();
   }
