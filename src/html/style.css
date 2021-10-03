@@ -8,8 +8,8 @@
 
 .--mc-player.theme-yellow {
   --activeColor: 255, 235, 59;
-  --defaultColor: 255, 255, 255;
-  --backgroundColor: 66, 66, 66, 1;
+  --defaultColor: 153, 153, 153;
+  --backgroundColor: 20, 20, 22, 1;
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
 }

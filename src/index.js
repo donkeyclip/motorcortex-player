@@ -107,7 +107,7 @@ class Player {
   initializeOptions(options) {
     options.id ??= Date.now();
     options.preview ??= false;
-    options.showVolume ??= false;
+    options.showVolume ??= Object.keys(options.clip?.audioClip?.children || []).length || false;
     options.showIndicator ??= false;
     options.theme ??= "transparent position-ontop";
     options.host ??= options.clip.props.host;
@@ -120,13 +120,14 @@ class Player {
     options.onMillisecondChange ??= null;
     options.speedValues ??= [-2, -1, -0.5, 0, 0.5, 1, 2];
     options.speed ??= 1;
-
     options.muted ??= false;
     options.controls ??= true;
     options.loop ??= false;
     options.volume ??= 1;
     options.currentScript ??= null;
-
+    if (options.millisecond) {
+      this.createJourney(options.millisecond,{},options.clip)
+    }
     // remove strings
     for (const i in options.speedValues) {
       if (!isFinite(options.speedValues[i])) {
@@ -258,8 +259,8 @@ class Player {
     !this.settings.loopActivated && loopTrigger(this);
   }
 
-  createJourney(millisecond, clipCommands = {}) {
-    const clip = this.clip;
+  createJourney(millisecond, clipCommands = {},clip=undefined) {
+    clip ??= this.clip;
     setTimeout(() => {
       const def = null;
       const { before = def, after = def } = clipCommands;

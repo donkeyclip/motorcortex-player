@@ -277,7 +277,7 @@ const showHideButtons = (_this) => {
     _this.elements.settingsButton.remove();
   }
 
-  if (_this.options.buttons.donkeyclip === false) {
+  if (!_this.options.buttons.donkeyclip) {
     _this.elements.donkeyclipButton.remove();
   }
 
