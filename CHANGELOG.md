@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.2.3](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.2...v2.2.3) (2021-10-03)
+
+
+### Bug Fixes
+
+* update init params after with change ms on settings bug ([0b1e37e](https://www.github.com/donkeyclip/motorcortex-player/commit/0b1e37e077eb162309ac3ebd11a75c158c77513d))
+
 ### [2.2.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.1...v2.2.2) (2021-10-03)
 
 
