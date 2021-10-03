@@ -1,5 +1,13 @@
 # Changelog
 
+### [2.2.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.1...v2.2.2) (2021-10-03)
+
+
+### Bug Fixes
+
+* add millisecond options and volume is visible when audio is detected ([ab69b0f](https://www.github.com/donkeyclip/motorcortex-player/commit/ab69b0fa40794ceb72c565c67341be9fd68b5664))
+* update deps ([41529f7](https://www.github.com/donkeyclip/motorcortex-player/commit/41529f7cb4a4b010db215586c0c7bd64eb5a0113))
+
 ### [2.2.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.0...v2.2.1) (2021-09-23)
 
 
