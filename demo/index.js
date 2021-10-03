@@ -57,13 +57,15 @@ const AnimateWidth = new Plugin.Test(
 );
 
 clip.addIncident(AnimateWidth, 0);
+
 const songPlayback = new MC.AudioPlayback({
   selector: "~#yeah",
   startFrom: 0,
-  duration: 3000
+  duration: 500
 });
 
 clip.addIncident(songPlayback, 0);
+
 window.player = new Player({
   clip,
   preview: false,
@@ -82,6 +84,7 @@ window.player.changeSettings({
   visible: "normal",
 });
 
-// window.player.changeInitParams({window.player.})
+window.player.changeInitParams({test: "hello world1",});
+window.player.changeInitParams({test: "hello world2",});
 // window.player.pcpause();
 // window.player.play();
