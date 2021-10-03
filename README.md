@@ -69,6 +69,7 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 | speedValues| [-2, -1, -0.5, 0, 0.5, 1, 2] | An array of number values to provide as supported options on the speed setting panel. This option will not prevent the player to change the clip speed if programmatically the user change the speed to another value not provided in the speedValues property|
 | muted| false | A Boolean property to define if the clip will be muted on start|
 | currentScript| <script></script>| If the clip will be loaded from a script with an external source where the player will be included, you can provide the script element refernce and use all the available control properties as data-\* attributes of the script (eg currentScript=document.currentScript)|
+| millisecond| 0| The millisecond from witch the clip will start|
 
 overflow: "visible",
 outline: "1px dashed #333",
