@@ -62,7 +62,7 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 | controls|true| This option allows you to select if the player controls will be visible, therefore availble to the users|
 | scaleToFit|true| A property to define if the clip will be auto-scaled to fit to its' host element or not|
 | overflow| "hidden" | A property to define if the you want elements outside the scene to be visible or not. Any css overflow values are acceptable|
-| outline|unset| A property to define the border style of your clip. This can be usefull on edit time. Any css border value is accepted|
+| outline|unset| A property to define the border style of your clip. This can be useful on edit time. Any css border value is accepted|
 | visible|unset| A property to define if you want your clip to be above the player controls. Accepted values are undefined, "always"|
 | pointerEvents|true| This options adds a transparent div element on top of the clip in order to prevent user events (eg selection) on the clip element|
 | backgroundColor|'transparent'| A css color value to define the players background|
