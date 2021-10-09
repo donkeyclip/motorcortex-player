@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.3.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.0...v2.3.1) (2021-10-09)
+
+
+### Bug Fixes
+
+* minor fixes in styles and demo ([c336cb3](https://www.github.com/donkeyclip/motorcortex-player/commit/c336cb391732d2bfc8386e53167910908f7f06ff))
+
 ## [2.3.0](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.3...v2.3.0) (2021-10-09)
 
 
