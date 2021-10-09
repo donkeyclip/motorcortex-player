@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.2.4](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.3...v2.2.4) (2021-10-09)
+
+
+### Bug Fixes
+
+* Typo fixes by misspell-fixer ([645e50a](https://www.github.com/donkeyclip/motorcortex-player/commit/645e50aaafbee87da245921c226bf147d2116907))
+
 ### [2.2.3](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.2...v2.2.3) (2021-10-03)
 
 
