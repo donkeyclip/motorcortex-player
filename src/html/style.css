@@ -1,6 +1,6 @@
 .--mc-player.theme-default {
   --activeColor: 136, 136, 136;
-  --defaultColor: 136, 136, 136;
+  --defaultColor: 255, 255, 255;
   --backgroundColor: 29, 31, 37, 1;
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
@@ -9,7 +9,7 @@
 
 .--mc-player.theme-yellow {
   --activeColor: 255, 235, 59;
-  --defaultColor: 153, 153, 153;
+  --defaultColor: 255, 255, 255;
   --backgroundColor: 29, 31, 37, 1;
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
@@ -53,7 +53,7 @@
 
 .--mc-player.theme-green {
   --activeColor: 0, 184, 139;
-  --defaultColor: 153, 153, 153;
+  --defaultColor: 255, 255, 255;
   --backgroundColor: 29, 31, 37, 1;
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
@@ -61,7 +61,7 @@
 }
 .--mc-player.theme-blue {
   --activeColor: 0, 153, 225;
-  --defaultColor: 153, 153, 153;
+  --defaultColor: 255, 255, 255;
   --backgroundColor: 29, 31, 37, 1;
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
