@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.3.4](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.3...v2.3.4) (2021-10-09)
+
+
+### Bug Fixes
+
+* remove console.log ([ac03660](https://www.github.com/donkeyclip/motorcortex-player/commit/ac036604a490ef9d6224973d780209816613810d))
+
 ### [2.3.3](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.2...v2.3.3) (2021-10-09)
 
 
