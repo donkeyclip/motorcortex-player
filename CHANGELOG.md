@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.3.3](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.2...v2.3.3) (2021-10-09)
+
+
+### Bug Fixes
+
+* player default color ([023c920](https://www.github.com/donkeyclip/motorcortex-player/commit/023c920fbda49383c3c10820e53571b6c01381e5))
+
 ### [2.3.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.1...v2.3.2) (2021-10-09)
 
 
