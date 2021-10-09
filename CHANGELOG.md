@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.3.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.1...v2.3.2) (2021-10-09)
+
+
+### Bug Fixes
+
+* remove show indicator and change controls height ([ab68ef2](https://www.github.com/donkeyclip/motorcortex-player/commit/ab68ef281779696c3543533acc07b0f8fe7acb8b))
+
 ### [2.3.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.0...v2.3.1) (2021-10-09)
 
 
