@@ -80,10 +80,7 @@ export default (_this) => {
     mcPlayer,
     `--mcp-settings-pointer-events`
   );
-  _this.elements.settingsShowIndicator = elFirstClass(
-    mcPlayer,
-    `--mcp-settings-indicator`
-  );
+
   _this.elements.settingsSpeedButtonShow = elFirstClass(
     mcPlayer,
     `--mcp-settings-speed-show`
@@ -99,10 +96,7 @@ export default (_this) => {
     mcPlayer,
     `--mcp-show-volume-checkbox`
   );
-  _this.elements.showIndicatorCheckbox = elFirstClass(
-    mcPlayer,
-    `--mcp-show-indicator-checkbox`
-  );
+ 
   _this.elements.showPreviewCheckbox = elFirstClass(
     mcPlayer,
     `--mcp-show-preview-checkbox`
@@ -198,8 +192,6 @@ const addStyles = (_this) => {
   _this.elements.preview.classList.add("m-fadeOut");
 
   _this.elements.volumeCheckbox.checked = _this.options.showVolume;
-
-  _this.elements.showIndicatorCheckbox.checked = _this.options.showIndicator;
 
   _this.elements.showPreviewCheckbox.checked = _this.options.preview;
 
