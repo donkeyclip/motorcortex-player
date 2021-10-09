@@ -50,6 +50,7 @@ export default (_this) => {
   _this.elements.donkeyclipButton = elFirstClass(mcPlayer, `--mcp-dc-btn`);
   _this.elements.timeSeparator = elFirstClass(mcPlayer, `--mcp-time-separator`);
   _this.elements.settingsPanel = elFirstClass(mcPlayer, `--mcp-settings-panel`);
+  _this.elements.background = elFirstClass(mcPlayer, `--mcp-background`);
   _this.elements.settingsMainPanel = elFirstClass(
     mcPlayer,
     `--mcp-main-settings`
@@ -172,6 +173,10 @@ const addStyles = (_this) => {
 
   _this.elements.settingsPanel.classList.add("m-fadeOut", `${_this.name}-hide`);
 
+    if(_this.options.backgroundColor){
+    _this.elements.background.style.background = _this.options.backgroundColor;
+
+  }
   if (!_this.options.showIndicator) {
     _this.elements.indicator.style.display = "none";
   } else {

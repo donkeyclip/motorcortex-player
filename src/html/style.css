@@ -1,7 +1,7 @@
 .--mc-player.theme-default {
   --activeColor: 136, 136, 136;
   --defaultColor: 136, 136, 136;
-  --backgroundColor: 245, 245, 245, 1;
+  --backgroundColor: 29, 31, 37, 1;
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
 }
@@ -9,7 +9,7 @@
 .--mc-player.theme-yellow {
   --activeColor: 255, 235, 59;
   --defaultColor: 153, 153, 153;
-  --backgroundColor: 20, 20, 22, 1;
+  --backgroundColor: 29, 31, 37, 1;
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
 }
@@ -48,13 +48,14 @@
 .--mc-player.theme-green {
   --activeColor: 0, 184, 139;
   --defaultColor: 153, 153, 153;
-  --backgroundColor: 20, 20, 22, 1;
+  --backgroundColor: 29, 31, 37, 1;
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
 }
 .--mc-player.theme-blue {
   --activeColor: 0, 153, 225;
   --defaultColor: 153, 153, 153;
+  --backgroundColor: 29, 31, 37, 1;
   --backgroundColor: 20, 20, 22, 1;
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;

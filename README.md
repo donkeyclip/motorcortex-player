@@ -152,8 +152,21 @@ All of the data attrs can be manipulated after the initialization and on-the-fly
 
 ![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/mc-blue.png)
 
+### custom
+
+All you have to do is define these variables and use the <name> in the property theme of player options
+
+````css
+.--mc-player.theme-<name> {
+  --activeColor: 136, 136, 136;
+  --defaultColor: 136, 136, 136;
+  --backgroundColor: 29, 31, 37, 1;
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: none;
+}```
 ## License
 
 [MIT License](https://opensource.org/licenses/MIT)
 
 [![Kiss My Button](https://presskit.kissmybutton.gr/logos/kissmybutton-logo-small.png)](https://kissmybutton.gr)
+````

@@ -29,7 +29,10 @@ export function addListener() {
 export function removeListener() {
   return document.removeEventListener(...arguments);
 }
+export function sanitizeCSS(css) {
+  return css.replace(/(behaviour|javascript|expression)/gm,"");
 
+}
 function isNumber(value) {
   return typeof value === "number" && isFinite(value);
 }

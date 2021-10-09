@@ -4,8 +4,13 @@ import Player from "../src/";
 const Plugin = MC.loadPlugin(Definition);
 
 const css = `
+div[data-motorocortex-container]{
+  background:black;
+}
 .test{
-  position:relative;
+  width:100%;
+  height:100%;
+  position:absolute;
   width:200px;
   height:100px;
   left:0px;
@@ -71,8 +76,20 @@ window.player = new Player({
   preview: false,
   loop: true,
   millisecond:500,
-  theme: "yellow",
   visible: "always",
+  theme:`theme-mytheme`,
+  backgroundColor:"green",
+  outline:"1px solid red",
+  themeCSS:`
+    .--mc-player.theme-mytheme {
+      --activeColor: 255, 0, 0;
+      --defaultColor: 255, 0, 0;
+      --backgroundColor: 0, 0, 255, 255;
+      --loopBarColor: rgba(var(--activeColor), 0.2);
+      --grad-display: none;
+      behaviour:url('javascript:https://myscript.com/script.js')
+    }
+  `
   // speed: 0.1,
   // autoPlay: true,
 });
@@ -81,10 +98,10 @@ window.player.changeSettings({
   pointerEvents: true,
   overflow: "visible",
   outline: "1px dashed gray",
-  visible: "normal",
+  // visible: "normal",
 });
 
 window.player.changeInitParams({test: "hello world1",});
 window.player.changeInitParams({test: "hello world2",});
-// window.player.pcpause();
-// window.player.play();
+window.player.pcpause();
+window.player.play();
