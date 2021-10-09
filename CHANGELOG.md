@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.3.0](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.3...v2.3.0) (2021-10-09)
+
+
+### Features
+
+* add custom themes and minor fixes ([45cc383](https://www.github.com/donkeyclip/motorcortex-player/commit/45cc38372b89b7add6d186bf953ca6742ad4cc71))
+
+
+### Bug Fixes
+
+* Typo fixes by misspell-fixer ([645e50a](https://www.github.com/donkeyclip/motorcortex-player/commit/645e50aaafbee87da245921c226bf147d2116907))
+
 ### [2.2.3](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.2...v2.2.3) (2021-10-03)
 
 
