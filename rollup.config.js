@@ -19,6 +19,7 @@ export default [
       resolve(),
       commonjs(),
       babel(),
+      terser(),
       postcss({ inject: false }),
       html({ include: "**/*.html" }),
       svg(),
