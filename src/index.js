@@ -109,7 +109,7 @@ class Player {
     options.preview ??= false;
     options.showVolume ??= Object.keys(options.clip?.audioClip?.children || []).length || false;
     options.showIndicator ??= false;
-    options.theme ??= "transparent position-ontop";
+    options.theme ??= "transparent";
     options.host ??= options.clip.props.host;
     options.buttons ??= {};
     options.timeFormat ??= "ss";
@@ -126,6 +126,12 @@ class Player {
     options.volume ??= 1;
     options.currentScript ??= null;
     if (options.millisecond) {
+      const clip = this.clip || options.clip;
+
+      if(options.millisecond > clip.duration ) options.millisecond = clip.duration;
+      if(options.millisecond < 0 ) options.millisecond = 0;
+      if(!isFinite(options.millisecond)) options.millisecond = 0;
+
       this.createJourney(options.millisecond,{},this.clip || options.clip);
     }
     // remove strings
@@ -625,21 +631,21 @@ class Player {
     // if (this.options.theme.includes(POSITION_ON_TOP))
     //   this.elements.mcPlayer.classList.add(POSITION_ON_TOP);
     // else this.elements.mcPlayer.classList.add(POSITION_BOTTOM);
-    if (this.options.theme.includes("default"))
+    if (this.options.theme === "default")
       this.elements.mcPlayer.classList.add("theme-default");
-    else if (this.options.theme.includes("transparent"))
+    else if (this.options.theme ==="transparent")
       this.elements.mcPlayer.classList.add("theme-transparent");
-    else if (this.options.theme.includes("whiteGold"))
+    else if (this.options.theme === "whiteGold")
       this.elements.mcPlayer.classList.add("theme-whiteGold");
-    else if (this.options.theme.includes("darkGold"))
+    else if (this.options.theme === "darkGold")
       this.elements.mcPlayer.classList.add("theme-darkGold");
-    else if (this.options.theme.includes("green"))
+    else if (this.options.theme === "green")
       this.elements.mcPlayer.classList.add("theme-green");
-    else if (this.options.theme.includes("blue"))
+    else if (this.options.theme === "blue")
       this.elements.mcPlayer.classList.add("theme-blue");
-    else if (this.options.theme.includes("dark"))
+    else if (this.options.theme === "dark")
       this.elements.mcPlayer.classList.add("theme-dark");
-    else if (this.options.theme.includes("yellow"))
+    else if (this.options.theme === "yellow")
       this.elements.mcPlayer.classList.add("theme-yellow");
     else {
       if(this.options.themeCSS && !elid("--mc-player-style-custom")){

@@ -66,7 +66,7 @@ clip.addIncident(AnimateWidth, 0);
 const songPlayback = new MC.AudioPlayback({
   selector: "~#yeah",
   startFrom: 0,
-  duration: 500
+  duration: 3000
 });
 
 clip.addIncident(songPlayback, 0);
@@ -75,33 +75,18 @@ window.player = new Player({
   clip,
   preview: false,
   loop: true,
-  millisecond:500,
   visible: "always",
-  theme:`theme-mytheme`,
-  backgroundColor:"green",
+  theme:`transparent`,
   outline:"1px solid red",
-  themeCSS:`
-    .--mc-player.theme-mytheme {
-      --activeColor: 255, 0, 0;
-      --defaultColor: 255, 0, 0;
-      --backgroundColor: 0, 0, 255, 255;
-      --loopBarColor: rgba(var(--activeColor), 0.2);
-      --grad-display: none;
-      behaviour:url('javascript:https://myscript.com/script.js')
-    }
-  `
-  // speed: 0.1,
-  // autoPlay: true,
 });
+
 
 window.player.changeSettings({
   pointerEvents: true,
-  overflow: "visible",
   outline: "1px dashed gray",
   // visible: "normal",
 });
 
 window.player.changeInitParams({test: "hello world1",});
 window.player.changeInitParams({test: "hello world2",});
-window.player.pcpause();
-window.player.play();
+

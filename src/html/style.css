@@ -56,7 +56,6 @@
   --activeColor: 0, 153, 225;
   --defaultColor: 153, 153, 153;
   --backgroundColor: 29, 31, 37, 1;
-  --backgroundColor: 20, 20, 22, 1;
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
 }
