@@ -61,11 +61,13 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
   let widthAnalysed, heightAnalysed;
 
   if (Object.prototype.hasOwnProperty.call(containerParams, "width")) {
+      console.log(containerParams.width);
     widthAnalysed = calculateDimension(containerParams.width);
   }
 
   if (Object.prototype.hasOwnProperty.call(containerParams, "height")) {
-    heightAnalysed = calculateDimension(containerParams.height);
+      console.log(containerParams);
+      heightAnalysed = calculateDimension(containerParams.height);
   }
 
   // the only case the Clip needs to be scaled is when any of the two axis of the Clip

@@ -50,7 +50,6 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 | clip | - | The MotorCortex Clip object that the Player will control |  
 | preview | false | Enable or disable the preview pane (#7) |  
 | showVolume | false | Show or hide the master volume control (#3) |  
-| showIndicator | false | Show or hide the (status) Indicator (#2) |  
 | host | null | The Player by default "wraps" the Clip and seats at the bottom of its container taking advantage of the full width of it. In case you want the Player to get rendered on a different host (element) you can pass this element here |  
 | buttons | shows all | An object via which you can select which of the four buttons (#8: Loop via the key "loop", #9: DonkeyClip via the key "donkeyclip", #10: Options via the key "settings", #11: Full Screen via the key "fullScreen"). Enable and disable the buttons by setting their corresponding keys to true or false, accordingly |  
 | timeFormat | ms | This option allows you to set the time units on the Time (#4) of the Player. The default is ms, which means the Time will be presented in the form: < elapsed milliseconds >/< total milliseconds >. In the case you want a representation in the form: mm:ss/mm:ss you can set this option to "ss" |

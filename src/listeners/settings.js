@@ -5,20 +5,6 @@ import {
   STATE_CHANGE,
 } from "./events";
 
-const showIndicator = (_this) => {
-  if (_this.elements.showIndicatorCheckbox.checked) {
-    _this.elements.showIndicatorCheckbox.checked = false;
-    _this.elements.indicator.style.display = "none";
-  } else {
-    _this.elements.showIndicatorCheckbox.checked = true;
-    _this.elements.indicator.style.display = undefined;
-  }
-  _this.eventBroadcast(
-    "show-indicator-change",
-    _this.elements.showIndicatorCheckbox.checked
-  );
-};
-
 const showPointerEvents = (_this) => {
   if (!_this.elements.showPointerEventsCheckbox.checked) {
     _this.elements.showPointerEventsCheckbox.checked = true;
@@ -74,7 +60,6 @@ const showPreview = (_this) => {
 };
 
 export function add(_this) {
-  _this.elements.settingsShowIndicator.onclick = () => showIndicator(_this);
 
   _this.elements.settingsPointerEvents.onclick = () => showPointerEvents(_this);
 

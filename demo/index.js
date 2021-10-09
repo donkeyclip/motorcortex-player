@@ -76,7 +76,7 @@ window.player = new Player({
   preview: false,
   loop: true,
   visible: "always",
-  theme:`transparent`,
+  theme:`default`,
   outline:"1px solid red",
 });
 

@@ -118,7 +118,7 @@ class Player {
     options.scaleToFit ??= true;
     options.pointerEvents ??= false;
     options.onMillisecondChange ??= null;
-    options.speedValues ??= [-2, -1, -0.5, 0, 0.5, 1, 2];
+    options.speedValues ??= [-1, 0, 0.5, 1, 2];
     options.speed ??= 1;
     options.muted ??= false;
     options.controls ??= true;
@@ -228,14 +228,13 @@ class Player {
   scaleClipHost() {
     if (this.options.scaleToFit) {
       const { width, height } = this.clip.props.containerParams;
-
       const transform = calcClipScale(
         { width, height },
         {
           width: this.clip.props.host.offsetWidth,
           height:
             this.clip.props.host.offsetHeight -
-            (this.options.visible == "always" ? 44 : 0),
+            (this.options.visible == "always" ? 50 : 0),
         },
         this.options.scaleToFit === "cover"
       );
@@ -619,18 +618,7 @@ class Player {
   setTheme() {
     this.options.theme.replace(/\s\s+/g, ` `);
     this.options.theme.trim();
-    // const POSITION_ON_TOP = "position-ontop";
-    // const POSITION_BOTTOM = "position-bottom";
 
-    // if (
-    //   !this.options.theme.includes(POSITION_ON_TOP) &&
-    //   !this.options.theme.includes(POSITION_BOTTOM)
-    // ) {
-    //   this.options.theme += ` ${POSITION_ON_TOP}`;
-    // }
-    // if (this.options.theme.includes(POSITION_ON_TOP))
-    //   this.elements.mcPlayer.classList.add(POSITION_ON_TOP);
-    // else this.elements.mcPlayer.classList.add(POSITION_BOTTOM);
     if (this.options.theme === "default")
       this.elements.mcPlayer.classList.add("theme-default");
     else if (this.options.theme ==="transparent")
@@ -647,18 +635,15 @@ class Player {
       this.elements.mcPlayer.classList.add("theme-dark");
     else if (this.options.theme === "yellow")
       this.elements.mcPlayer.classList.add("theme-yellow");
-    else {
-      if(this.options.themeCSS && !elid("--mc-player-style-custom")){
+    else if(this.options.themeCSS && !elid("--mc-player-style-custom")){
         this.options.themeCSS = sanitizeCSS(this.options.themeCSS);
-
         const customStyle = elcreate("style");
         customStyle.id = "--mc-player-style-custom";
-      customStyle.styleSheet
-          ? (customStyle.styleSheet.cssText = this.options.themeCSS)
-          : customStyle.appendChild(document.createTextNode(this.options.themeCSS));
-          eltag("head")[0].appendChild(customStyle);
-        this.elements.mcPlayer.classList.add(this.options.theme);
-    }
+        customStyle.styleSheet
+            ? (customStyle.styleSheet.cssText = this.options.themeCSS)
+            : customStyle.appendChild(document.createTextNode(this.options.themeCSS));
+            eltag("head")[0].appendChild(customStyle);
+          this.elements.mcPlayer.classList.add(this.options.theme);
     };
     
     
@@ -733,8 +718,8 @@ class Player {
       {
         width: this.clip.props.containerParams.width,
         height:
-          this.clip.props.containerParams.height -
-          (this.options.visible == "always" ? 44 : 0),
+          parseFloat(this.clip.props.containerParams.height) -
+          (this.options.visible == "always" ? 50 : 0) + "px",
       },
       {
         width: width,
