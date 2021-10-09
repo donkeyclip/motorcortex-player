@@ -99,7 +99,7 @@
     "eslint-plugin-sonarjs": "0.10.0",
     "html-loader": "2.1.2",
     "husky": "7.0.2",
-    "lint-staged": "11.2.0",
+    "lint-staged": "11.2.1",
     "path-browserify": "1.0.1",
     "postcss": "8.3.9",
     "prettier": "2.4.1",
