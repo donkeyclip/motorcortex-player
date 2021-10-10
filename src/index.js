@@ -529,11 +529,15 @@ class Player {
       const minutes = (hours % 1) * 60;
       const seconds = (minutes % 1) * 60;
 
-      const h = ("0" + parseInt(hours)).slice(-2);
-      const m = ("0" + parseInt(minutes)).slice(-2);
-      const s = ("0" + parseInt(seconds)).slice(-2);
+      // By default, JavaScript converts any floating-point number 
+      // with six or more leading zeros into e-notation
+      // to avoid this problem we round to 5 float digits
+      const h = ("0" + parseInt(hours.toFixed(50))).slice(-2);
+      const m = ("0" + parseInt(minutes.toFixed(50))).slice(-2);
+      const s = ("0" + parseInt(seconds.toFixed(50))).slice(-2);
 
       return `${h === "00" ? "" : h + ":"}${m}:${s}`;
+
     } else {
       return ms;
     }
