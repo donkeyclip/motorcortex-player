@@ -52,7 +52,7 @@ const clip = new MC.HTMLClip({
 const AnimateWidth = new Plugin.Test(
   {
     animatedAttrs: {
-      left: 100,
+      left: 10,
     },
   },
   {
@@ -74,19 +74,16 @@ clip.addIncident(songPlayback, 0);
 window.player = new Player({
   clip,
   preview: false,
-  loop: true,
-  visible: "always",
-  theme:`default`,
-  outline:"1px solid red",
+  millisecond:3000
 });
 
 
-window.player.changeSettings({
-  pointerEvents: true,
-  outline: "1px dashed gray",
-  // visible: "normal",
-});
+// window.player.changeSettings({
+//   pointerEvents: true,
+//   outline: "1px dashed gray",
+//   // visible: "normal",
+// });
 
-window.player.changeInitParams({test: "hello world1",});
-window.player.changeInitParams({test: "hello world2",});
+// window.player.changeInitParams({test: "hello world1",});
+// window.player.changeInitParams({test: "hello world2",});
 
