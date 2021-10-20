@@ -2,15 +2,15 @@ import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
 import html from "rollup-plugin-html";
-import { terser } from "rollup-plugin-terser";
 import postcss from "rollup-plugin-postcss";
 import svg from "rollup-plugin-svg";
-
+import { terser } from "rollup-plugin-terser";
 import pkg from "./package.json";
+
 export default [
   {
     input: "src/index.js",
-    external: ["@kissmybutton/motorcortex"],
+    external: ["@donkeyclip/motorcortex"],
     output: [
       { file: pkg.main, format: "cjs" },
       { file: pkg.module, format: "es" },
@@ -27,11 +27,11 @@ export default [
   },
   {
     input: "src/index.js",
-    external: ["@kissmybutton/motorcortex"],
+    external: ["@donkeyclip/motorcortex"],
     output: [
       {
         globals: {
-          "@kissmybutton/motorcortex": "MotorCortex",
+          "@donkeyclip/motorcortex": "MotorCortex",
         },
         name: pkg.name,
         file: pkg.browser,
