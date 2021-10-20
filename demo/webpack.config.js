@@ -41,9 +41,8 @@ module.exports = {
     port: 8090,
     historyApiFallback: false,
     hot: true,
-    contentBase: "./demo",
-    open: true,
-    openPage: dcPath,
+    static: path.join(__dirname),
+    open: dcPath,
     headers: {
       "Access-Control-Allow-Origin": dcPath,
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
