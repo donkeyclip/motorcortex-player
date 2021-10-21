@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.3.5](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.4...v2.3.5) (2021-10-10)
+
+
+### Bug Fixes
+
+* time display issues in float point ([dd0ae92](https://www.github.com/donkeyclip/motorcortex-player/commit/dd0ae920a7fa6ed31be3e0e3b05665f5497118b4))
+
 ### [2.3.4](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.3...v2.3.4) (2021-10-09)
 
 
