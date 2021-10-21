@@ -1,6 +1,5 @@
 import { addListener, removeListener } from "../helpers";
 import {
-  SHOW_PREVIEW_CHANGE,
   SHOW_VOLUME_CHANGE,
   STATE_CHANGE,
 } from "./events";
@@ -39,33 +38,11 @@ const showVolume = (_this) => {
   );
 };
 
-const showPreview = (_this) => {
-  if (_this.elements.showPreviewCheckbox.checked) {
-    _this.elements.showPreviewCheckbox.checked = false;
-    _this.elements.preview.style.display = "none";
-    _this.elements.preview.style.display = "unset";
-    _this.options.preview = false;
-  } else {
-    if (!_this.previewClip) {
-      _this.createPreviewDisplay();
-    }
-    _this.elements.showPreviewCheckbox.checked = true;
-    _this.elements.preview.style.display = "flex";
-    _this.options.preview = true;
-  }
-  _this.eventBroadcast(
-    SHOW_PREVIEW_CHANGE,
-    _this.elements.showPreviewCheckbox.checked
-  );
-};
-
 export function add(_this) {
 
   _this.elements.settingsPointerEvents.onclick = () => showPointerEvents(_this);
 
   _this.elements.settingsShowVolume.onclick = () => showVolume(_this);
-
-  _this.elements.settingsShowPreview.onclick = () => showPreview(_this);
 
   _this.elements.settingsButton.onclick = () => {
     const showHideSettings = (e) => {
@@ -102,7 +79,5 @@ export function trigger(_this, setting) {
     showPointerEvents(_this);
   } else if (setting === "showVolume") {
     showVolume(_this);
-  } else if (setting === "showPreview") {
-    showPreview(_this);
-  }
+  } 
 }

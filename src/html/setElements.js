@@ -72,10 +72,7 @@ export default (_this) => {
     mcPlayer,
     `--mcp-settings-volume`
   );
-  _this.elements.settingsShowPreview = elFirstClass(
-    mcPlayer,
-    `--mcp-settings-preview`
-  );
+
   _this.elements.settingsPointerEvents = elFirstClass(
     mcPlayer,
     `--mcp-settings-pointer-events`
@@ -90,16 +87,9 @@ export default (_this) => {
     `--mcp-settings-speed-hide`
   );
   _this.elements.controls = elFirstClass(mcPlayer, `--mcp-controls`);
-  _this.elements.previewHost = elFirstClass(mcPlayer, `--mcp-preview-host`);
-  _this.elements.preview = elFirstClass(mcPlayer, `--mcp-preview`);
   _this.elements.volumeCheckbox = elFirstClass(
     mcPlayer,
     `--mcp-show-volume-checkbox`
-  );
- 
-  _this.elements.showPreviewCheckbox = elFirstClass(
-    mcPlayer,
-    `--mcp-show-preview-checkbox`
   );
   _this.elements.showVolumeCheckbox = elFirstClass(
     mcPlayer,
@@ -109,10 +99,7 @@ export default (_this) => {
     mcPlayer,
     `--mcp-show-pointer-events-checkbox`
   );
-  _this.elements.previewMillisecond = elFirstClass(
-    mcPlayer,
-    `--mcp-preview-millisecond`
-  );
+
   _this.elements.leftButtons = elFirstClass(mcPlayer, `--mcp-left-buttons`);
 
   initializeIcons(_this.elements);
@@ -189,11 +176,7 @@ const addStyles = (_this) => {
   _this.elements.loopBarEnd.style.left = "100%";
   _this.elements.loopBarEnd.classList.add("m-fadeOut", `${_this.name}-hide`);
 
-  _this.elements.preview.classList.add("m-fadeOut");
-
   _this.elements.volumeCheckbox.checked = _this.options.showVolume;
-
-  _this.elements.showPreviewCheckbox.checked = _this.options.preview;
 
   _this.elements.showPointerEventsCheckbox.checked =
     _this.options.pointerEvents;

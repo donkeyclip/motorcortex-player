@@ -271,16 +271,6 @@
   justify-content: flex-end;
 }
 
-.--mcp-preview {
-  min-width: 100px;
-  min-height: 100px;
-  background-color: black;
-  position: absolute;
-  bottom: 50px;
-  border: 3px solid;
-  display: flex;
-  box-sizing: content-box;
-}
 .--mcp-prevent-point-events {
   position: absolute;
   left: 0;
@@ -288,22 +278,6 @@
   width: 100%;
   height: 100%;
   z-index: 100;
-}
-.--mcp-preview-host {
-  flex: 1;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-}
-
-.--mcp-preview-millisecond {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  bottom: -24px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .--mcp-loop-boundaries {
