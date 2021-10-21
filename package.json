@@ -84,7 +84,7 @@
     "@semantic-release/github": "8.0.1",
     "@semantic-release/npm": "8.0.1",
     "@size-limit/preset-big-lib": "^6.0.3",
-    "babel-loader": "8.2.2",
+    "babel-loader": "8.2.3",
     "commitizen": "4.2.4",
     "concurrently": "^6.3.0",
     "core-js": "^3.18.3",
