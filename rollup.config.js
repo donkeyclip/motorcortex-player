@@ -1,5 +1,6 @@
 import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
+import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
 import html from "rollup-plugin-html";
 import postcss from "rollup-plugin-postcss";
@@ -16,13 +17,13 @@ export default [
       { file: pkg.module, format: "es" },
     ],
     plugins: [
+      json(),
+      html({ fileName: "**/*.html" }),
+      svg(),
       resolve(),
       commonjs(),
       babel(),
-      terser(),
       postcss({ inject: false }),
-      html({ include: "**/*.html" }),
-      svg(),
     ],
   },
   {
@@ -39,13 +40,14 @@ export default [
       },
     ],
     plugins: [
+      json(),
+      html({ include: "**/*.html" }),
       resolve({ mainFields: ["module", "main", "browser"] }),
       commonjs(),
       babel(),
-      terser(),
-      postcss({ inject: false }),
-      html({ include: "**/*.html" }),
       svg(),
+      postcss({ inject: false }),
+      terser(),
     ],
   },
 ];

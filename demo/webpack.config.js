@@ -1,8 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
 
-const dcPath = "https://code.donkeyclip.com";
-
 module.exports = {
   context: path.resolve(__dirname),
 
@@ -25,6 +23,14 @@ module.exports = {
         use: "babel-loader",
         exclude: /node_modules/,
       },
+      {
+        test: /\.svg$/,
+        loader: "svg-inline-loader",
+      },
+      {
+        test: /\.html$/i,
+        loader: "html-loader",
+      },
     ],
   },
 
@@ -42,12 +48,5 @@ module.exports = {
     historyApiFallback: false,
     hot: true,
     static: path.join(__dirname),
-    open: dcPath,
-    headers: {
-      "Access-Control-Allow-Origin": dcPath,
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "X-Requested-With, content-type, Authorization",
-    },
   },
 };
