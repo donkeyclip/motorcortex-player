@@ -105,7 +105,6 @@ Here's a typical use of an embeddable script, with all of the supported attrs pr
   src="https://staging-api.donkeyclip.com/embed/xxxxxxxx-xxxx/"
   data-width="100%"
   data-height="100%"
-  data-preview
   data-show-volume
   data-show-indicator
   data-controls

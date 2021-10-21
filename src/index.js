@@ -12,7 +12,6 @@ import {
   LOOP_CHANGE,
   MUTE_CHANGE,
   SCALE_CHANGE,
-  SHOW_PREVIEW_CHANGE,
   SHOW_VOLUME_CHANGE,
   SPEED_CHANGE,
   STATE_CHANGE,
@@ -25,7 +24,6 @@ import {
 import loopBarEndListener from "./listeners/loopBarEnd";
 import loopBarStartListener from "./listeners/loopBarStart";
 import { add as loopAdd, trigger as loopTrigger } from "./listeners/loopBtn";
-import previewListener from "./listeners/preview";
 import progressBarListener from "./listeners/progressBar";
 import {
   add as settingsAdd,
@@ -49,12 +47,10 @@ class Player {
     this.className = name;
     this.id = this.options.id;
     this.name = name;
-    this.previewClip = null;
     this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
     this.state = this.clip.runTimeInfo.state;
     this.listeners = {};
-    this.previewScale = 0.25;
 
     this.settings = {
       volume: 1,
@@ -64,7 +60,6 @@ class Player {
       needsUpdate: true,
       resizeLoop: false,
       loopJourney: false,
-      previewJourney: null,
       loopActivated: false,
       requestingLoop: false,
       playAfterResize: false,
@@ -84,14 +79,8 @@ class Player {
     this.addEventListeners();
     this.scaleClipHost();
     this.eventBroadcast(STATE_CHANGE, this.state);
-    if (this.options.preview) {
-      this.createPreviewDisplay();
-    }
 
     const resizeObserver = new ResizeObserver(() => {
-      if (this.options.preview) {
-        this.setPreviewDimentions();
-      }
       if (this.options.scaleToFit) {
         this.scaleClipHost();
       }
@@ -106,7 +95,6 @@ class Player {
 
   initializeOptions(options) {
     options.id ??= Date.now();
-    options.preview ??= false;
     options.showVolume ??= Object.keys(options.clip?.audioClip?.children || []).length || false;
     options.showIndicator ??= false;
     options.theme ??= "transparent";
@@ -179,7 +167,6 @@ class Player {
         this.scaleClipHost();
       },
       showVolume: () => settingsTrigger(this, "showVolume"),
-      preview: () => settingsTrigger(this, "showPreview"),
       theme: () => {
         this.options.theme = newOptions.theme;
         this.setTheme();
@@ -459,15 +446,6 @@ class Player {
       delete this.options.currentScript.dataset.showVolume;
     }
   }
-  broadcastShowPreviewChange(state) {
-    if (state) {
-      this.options.preview = true;
-      this.options.currentScript.dataset.preview = "";
-    } else {
-      this.options.preview = false;
-      delete this.options.currentScript.dataset.preview;
-    }
-  }
 
   broadcastToScript(eventName, state) {
     if (eventName === VOLUME_CHANGE) {
@@ -482,9 +460,7 @@ class Player {
       this.broadcastScaleChange(state);
     } else if (eventName === SHOW_VOLUME_CHANGE) {
       this.broadcastShowVolumeChange(state);
-    } else if (eventName === SHOW_PREVIEW_CHANGE) {
-      this.broadcastShowPreviewChange(state);
-    }
+    } 
   }
   eventBroadcast(eventName, state) {
     if (eventName === STATE_CHANGE) {
@@ -589,14 +565,11 @@ class Player {
     loopAdd(this);
     fullscreenAdd(this);
     donkeyclipListener(this);
-    previewListener(this);
     bodyListener(this);
   }
 
   launchIntoFullscreen(element) {
-    if (this.options.preview) {
-      this.setPreviewDimentions();
-    }
+
 
     if (element.requestFullscreen) {
       element.requestFullscreen();
@@ -691,55 +664,6 @@ class Player {
       return "0.0";
     }
     return realSpeed;
-  }
-
-  createPreviewDisplay() {
-    this.previewClip = this.clip.paste(this.elements.previewHost, {
-      isPreviewClip: true,
-    });
-    this.elements.previewHost.style.position = "absolute";
-    this.elements.previewHost.style.background = this.options.backgroundColor;
-    this.elements.previewHost.style.zIndex = 1;
-    this.setPreviewDimentions();
-  }
-
-  setPreviewDimentions() {
-    const clip = this.clip.props.host;
-    const previewClip = this.previewClip.ownClip.props.host;
-    const clipWidth = clip.offsetWidth;
-    const clipHeight = clip.offsetHeight;
-
-    let previewWidth = clipWidth * this.previewScale;
-
-    // max width is 300
-    if (previewWidth > 300) {
-      previewWidth = 300;
-      this.previewScale = previewWidth / clipWidth;
-    }
-    const width = clipWidth * this.previewScale;
-    const height = clipHeight * this.previewScale;
-    const transform = calcClipScale(
-      {
-        width: this.clip.props.containerParams.width,
-        height:
-          parseFloat(this.clip.props.containerParams.height) -
-          (this.options.visible == "always" ? 50 : 0) + "px",
-      },
-      {
-        width: width,
-        height: height,
-      },
-      this.options.scaleToFit === "cover"
-    );
-
-    this.previewClip.ownClip.rootElement.style.transform = `scale(${transform.scale}`;
-    this.previewClip.ownClip.rootElement.style.left = `${transform.position.left}px`;
-    this.previewClip.ownClip.rootElement.style.top = `${transform.position.top}px`;
-
-    this.elements.preview.style.width = `${width}px`;
-    this.elements.preview.style.height = `${height}px`;
-
-    previewClip.style.boxSizing = "border-box";
   }
 }
 

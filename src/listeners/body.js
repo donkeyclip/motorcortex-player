@@ -4,9 +4,6 @@ export default (_this) => {
   function handleFullScreenChange() {
     _this.elements.mcPlayer.classList.toggle(`full-screen`);
     _this.clip.props.host.classList.toggle(`full-screen`);
-    if (_this.options.preview) {
-      _this.setPreviewDimentions();
-    }
   }
   addListener("fullscreenchange", handleFullScreenChange);
   addListener("webkitfullscreenchange", handleFullScreenChange);

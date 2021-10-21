@@ -4,7 +4,6 @@ export const SPEED_CHANGE = "speed-change";
 export const LOOP_CHANGE = "loop-change";
 export const SCALE_CHANGE = "scale-change";
 export const SHOW_VOLUME_CHANGE = "show-volume-change";
-export const SHOW_PREVIEW_CHANGE = "show-preview-change";
 export const STATE_CHANGE = "state-change";
 export const DURATION_CHANGE = "duration-change";
 

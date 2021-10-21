@@ -73,10 +73,10 @@ clip.addIncident(songPlayback, 0);
 
 window.player = new Player({
   clip,
+  autoPlay:true,
   preview: false,
   millisecond:3000
 });
-
 
 // window.player.changeSettings({
 //   pointerEvents: true,
