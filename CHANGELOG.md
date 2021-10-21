@@ -1,5 +1,15 @@
 # Changelog
 
+### [2.3.6](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.5...v2.3.6) (2021-10-21)
+
+
+### Bug Fixes
+
+* fix broken config ([466c64a](https://www.github.com/donkeyclip/motorcortex-player/commit/466c64a8bcc4f3a031cdc3bd6dc2c97f743411b9))
+* fix broken webpack config ([3ebfbc9](https://www.github.com/donkeyclip/motorcortex-player/commit/3ebfbc9a7d407a6abdd129c5ea5767f4b261c54f))
+* remove preview functionality ([01f5b71](https://www.github.com/donkeyclip/motorcortex-player/commit/01f5b715969cebfa0b345bd9dbfd3147a00902dc))
+* update build and demo files drop old babel config ([b357450](https://www.github.com/donkeyclip/motorcortex-player/commit/b357450c90b4aa1a8c626fb3c8b7121a93b4df01))
+
 ### [2.3.5](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.4...v2.3.5) (2021-10-10)
 
 
