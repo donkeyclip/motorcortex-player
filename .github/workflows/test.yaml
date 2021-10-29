@@ -20,7 +20,7 @@ jobs:
       HUSKY: 0
     strategy:
       matrix:
-        node: [12, 14]
+        node: [12, 14, 16]
         os: [ubuntu-latest, macos-latest]
     name: Building on ${{ matrix.os }} and node ${{ matrix.node }}
     steps:
