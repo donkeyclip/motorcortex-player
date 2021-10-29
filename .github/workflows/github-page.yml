@@ -26,7 +26,11 @@ jobs:
       - name: Build 🔧
         run: npm run build
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+        uses: peaceiris/actions-gh-pages@v3.8.0
         with:
-          branch: gh-pages
-          folder: "."
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          keep_files: true
+          exclude_assets: ".github,node_modules,.gitignore,git"
