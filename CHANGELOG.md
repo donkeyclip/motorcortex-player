@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.3.7](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.6...v2.3.7) (2021-11-03)
+
+
+### Bug Fixes
+
+* **dcode:** add init params in save clip action ([8ea31de](https://www.github.com/donkeyclip/motorcortex-player/commit/8ea31defdbf22796f31995b811d823475d0c20b9))
+
 ### [2.3.6](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.5...v2.3.6) (2021-10-21)
 
 
