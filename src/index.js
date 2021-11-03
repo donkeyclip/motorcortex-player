@@ -1,6 +1,13 @@
 import { TimeCapsule, utils } from "@donkeyclip/motorcortex";
 import { name } from "./config";
-import { calcClipScale, elcreate, elid, eltag, changeIcon, sanitizeCSS } from "./helpers";
+import {
+  calcClipScale,
+  elcreate,
+  elid,
+  eltag,
+  changeIcon,
+  sanitizeCSS,
+} from "./helpers";
 import setElements from "./html/setElements";
 import bodyListener from "./listeners/body";
 import donkeyclipListener from "./listeners/donkeyclip";
@@ -17,6 +24,7 @@ import {
   STATE_CHANGE,
   VOLUME_CHANGE,
 } from "./listeners/events";
+import { add as pointerEventsAdd } from "./listeners/pointeEvents";
 import {
   add as fullscreenAdd,
   trigger as fullscreenTrigger,
@@ -95,7 +103,8 @@ class Player {
 
   initializeOptions(options) {
     options.id ??= Date.now();
-    options.showVolume ??= Object.keys(options.clip?.audioClip?.children || []).length || false;
+    options.showVolume ??=
+      Object.keys(options.clip?.audioClip?.children || []).length || false;
     options.showIndicator ??= false;
     options.theme ??= "transparent";
     options.host ??= options.clip.props.host;
@@ -116,11 +125,12 @@ class Player {
     if (options.millisecond) {
       const clip = this.clip || options.clip;
 
-      if(options.millisecond > clip.duration ) options.millisecond = clip.duration;
-      if(options.millisecond < 0 ) options.millisecond = 0;
-      if(!isFinite(options.millisecond)) options.millisecond = 0;
+      if (options.millisecond > clip.duration)
+        options.millisecond = clip.duration;
+      if (options.millisecond < 0) options.millisecond = 0;
+      if (!isFinite(options.millisecond)) options.millisecond = 0;
 
-      this.createJourney(options.millisecond,{},this.clip || options.clip);
+      this.createJourney(options.millisecond, {}, this.clip || options.clip);
     }
     // remove strings
     for (const i in options.speedValues) {
@@ -145,7 +155,6 @@ class Player {
 
   changeSettings(newOptions, initial) {
     newOptions = this.initializeOptions({ ...this.options, ...newOptions });
-
     if (newOptions.clip !== this.options.clip) {
       initial = true;
       this.clip = newOptions.clip;
@@ -203,7 +212,9 @@ class Player {
       if (
         typeof newOptions[key] !== "undefined" &&
         (this.options[key] !== newOptions[key] ||
-          (initial && this.options[key] && checkWhenInitial.includes(key)))
+          (initial &&
+            this.options[key] !== false &&
+            checkWhenInitial.includes(key)))
       ) {
         checkObject[key]();
       }
@@ -251,10 +262,10 @@ class Player {
     !this.settings.loopActivated && loopTrigger(this);
   }
 
-  createJourney(millisecond, clipCommands = {},clip=undefined) {
+  createJourney(millisecond, clipCommands = {}, clip = undefined) {
     clip ??= this.clip;
     setTimeout(() => {
-      if(!clip.id) return;
+      if (!clip.id) return;
       const def = null;
       const { before = def, after = def } = clipCommands;
       if (before) clip[before]();
@@ -340,7 +351,7 @@ class Player {
     }`;
     if (state == "blocked") {
       this.addSpinner();
-    } else {
+    } else if (state !== "idle") {
       this.removeSpinner();
     }
   }
@@ -356,7 +367,7 @@ class Player {
     }
     this.clip = utils.clipFromDefinition(definition);
     this.options.clip = this.clip;
-    this.changeSettings(this.options,true);
+    this.changeSettings(this.options, true);
     this.subscribeToTimer();
     this.subscribeToDurationChange();
   }
@@ -365,6 +376,13 @@ class Player {
     changeIcon(this.elements.pointerEventPanel, null, "spinner");
     this.elements.pointerEventPanel.classList.add("loading");
   }
+  addPlayIcon() {
+    changeIcon(this.elements.playPausePanelContainer, null, "play");
+  }
+  addPauseIcon() {
+    changeIcon(this.elements.playPausePanelContainer, null, "pause");
+  }
+
   removeSpinner() {
     changeIcon(this.elements.pointerEventPanel, "spinner", null);
     this.elements.pointerEventPanel.classList.remove("loading");
@@ -460,16 +478,46 @@ class Player {
       this.broadcastScaleChange(state);
     } else if (eventName === SHOW_VOLUME_CHANGE) {
       this.broadcastShowVolumeChange(state);
-    } 
+    }
+  }
+  calculateThumbnail(state) {
+    const hasThumbnail = this.options.thumbnail || this.options.thumbnailColor;
+    const isZeroMs =
+      this.clip.runTimeInfo.currentMillisecond === 0 && this.clip.speed > 0;
+    const hasAutoplay = this.options.autoPlay;
+    if (state == "idle" && hasAutoplay) {
+      this.elements.playPausePanel.classList.add("hide");
+    } else if (state == "idle" && isZeroMs && hasThumbnail) {
+      this.addPlayIcon();
+      this.elements.playPausePanel.style.backgroundColor =
+        this.options.thumbnailColor || "black";
+      this.elements.playPausePanel.style.backgroundImage =
+        this.options.thumbnail && `url(${this.options.thumbnail})`;
+      this.elements.playPausePanel.classList.add("initial");
+      this.elements.pointerEventPanel.classList.add("initial");
+    } else if (state === "idle" && !hasThumbnail && isZeroMs) {
+      this.elements.playPausePanel.classList.add("hide");
+    } else {
+      this.elements.playPausePanel.style.backgroundColor = "transparent";
+      this.elements.playPausePanel.style.backgroundImage = "none";
+      this.elements.pointerEventPanel.classList.remove("initial");
+      this.elements.playPausePanel.classList.remove("initial");
+    }
   }
   eventBroadcast(eventName, state) {
     if (eventName === STATE_CHANGE) {
       if (this.options.currentScript) {
         this.options.currentScript.dataset.status = state;
       }
-      if (
-        ["paused", "idle", "transitional", "armed", "blocked"].includes(state)
-      ) {
+      this.calculateThumbnail(state);
+      const playingStates = [
+        "paused",
+        "idle",
+        "transitional",
+        "armed",
+        "blocked",
+      ];
+      if (playingStates.includes(state)) {
         this.broadcastNotPlaying(state);
       } else {
         this.broadcastPlaying(state);
@@ -505,7 +553,7 @@ class Player {
       const minutes = (hours % 1) * 60;
       const seconds = (minutes % 1) * 60;
 
-      // By default, JavaScript converts any floating-point number 
+      // By default, JavaScript converts any floating-point number
       // with six or more leading zeros into e-notation
       // to avoid this problem we round to 5 float digits
       const h = ("0" + parseInt(hours.toFixed(50))).slice(-2);
@@ -513,7 +561,6 @@ class Player {
       const s = ("0" + parseInt(seconds.toFixed(50))).slice(-2);
 
       return `${h === "00" ? "" : h + ":"}${m}:${s}`;
-
     } else {
       return ms;
     }
@@ -564,13 +611,12 @@ class Player {
     speedAdd(this);
     loopAdd(this);
     fullscreenAdd(this);
+    pointerEventsAdd(this);
     donkeyclipListener(this);
     bodyListener(this);
   }
 
   launchIntoFullscreen(element) {
-
-
     if (element.requestFullscreen) {
       element.requestFullscreen();
     } else if (element.mozRequestFullScreen) {
@@ -598,7 +644,7 @@ class Player {
 
     if (this.options.theme === "default")
       this.elements.mcPlayer.classList.add("theme-default");
-    else if (this.options.theme ==="transparent")
+    else if (this.options.theme === "transparent")
       this.elements.mcPlayer.classList.add("theme-transparent");
     else if (this.options.theme === "whiteGold")
       this.elements.mcPlayer.classList.add("theme-whiteGold");
@@ -612,18 +658,19 @@ class Player {
       this.elements.mcPlayer.classList.add("theme-dark");
     else if (this.options.theme === "yellow")
       this.elements.mcPlayer.classList.add("theme-yellow");
-    else if(this.options.themeCSS && !elid("--mc-player-style-custom")){
-        this.options.themeCSS = sanitizeCSS(this.options.themeCSS);
-        const customStyle = elcreate("style");
-        customStyle.id = "--mc-player-style-custom";
-        customStyle.styleSheet
-            ? (customStyle.styleSheet.cssText = this.options.themeCSS)
-            : customStyle.appendChild(document.createTextNode(this.options.themeCSS));
-            eltag("head")[0].appendChild(customStyle);
-          this.elements.mcPlayer.classList.add(this.options.theme);
-    };
-    
-    
+    else if (this.options.themeCSS && !elid("--mc-player-style-custom")) {
+      this.options.themeCSS = sanitizeCSS(this.options.themeCSS);
+      const customStyle = elcreate("style");
+      customStyle.id = "--mc-player-style-custom";
+      customStyle.styleSheet
+        ? (customStyle.styleSheet.cssText = this.options.themeCSS)
+        : customStyle.appendChild(
+            document.createTextNode(this.options.themeCSS)
+          );
+      eltag("head")[0].appendChild(customStyle);
+      this.elements.mcPlayer.classList.add(this.options.theme);
+    }
+
     if (!elid("--mc-player-style")) {
       const style = elcreate("style");
       style.id = "--mc-player-style";

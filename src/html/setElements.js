@@ -17,6 +17,14 @@ export default (_this) => {
     mcPlayer,
     `--mcp-pointer-events-panel`
   );
+  _this.elements.playPausePanel = elFirstClass(
+    mcPlayer,
+    `--mcp-play-pause-panel`
+  );
+  _this.elements.playPausePanelContainer = elFirstClass(
+    mcPlayer,
+    `--mcp-play-pause-panel-container`
+  );
   _this.elements.listenerHelper = elFirstClass(
     mcPlayer,
     `--mcp-listener-helper`
@@ -154,9 +162,8 @@ const addStyles = (_this) => {
 
   _this.elements.settingsPanel.classList.add("m-fadeOut", `${_this.name}-hide`);
 
-    if(_this.options.backgroundColor){
+  if (_this.options.backgroundColor) {
     _this.elements.background.style.background = _this.options.backgroundColor;
-
   }
   if (!_this.options.showIndicator) {
     _this.elements.indicator.style.display = "none";
@@ -215,7 +222,10 @@ const createSpeedValues = (_this) => {
     valueDiv.classList.add("--mcp-speed-value-item");
 
     //add the check if this is the speed
-    if (_this.options.speedValues[i] == _this.clip.speed) {
+    if (
+      _this.options.speedValues[i] == _this.options.speed ??
+      _this.clip.speed
+    ) {
       changeIcon(span, null, iconCheckClass);
       valueDiv.classList.add(selectedClass);
     }
