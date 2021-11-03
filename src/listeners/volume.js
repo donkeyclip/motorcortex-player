@@ -29,7 +29,6 @@ export function trigger(_this, volume, mute) {
     if (_this.settings.volume > 0) {
       _this.settings.previousVolume = volume;
     }
-
     elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
     _this.clip.setVolume(_this.settings.volume);
 

@@ -113,6 +113,12 @@
   z-index: -1000;
 }
 
+.--mcp-pointer-events-panel.initial {
+  width: 100%;
+  min-height: 100%;
+  z-index: 100;
+}
+
 .--mcp-pointer-events-panel {
   width: 100%;
   min-height: calc(100% - 50px);
@@ -278,6 +284,65 @@
   width: 100%;
   height: 100%;
   z-index: 100;
+}
+
+.--mcp-play-pause-panel {
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  background-position: center !important;
+}
+.--mcp-play-pause-panel.initial {
+  background-color: black;
+}
+.--mcp-play-pause-panel.initial svg {
+  width: 32px;
+  height: 32px;
+}
+.--mcp-play-pause-panel.initial .--mcp-play-pause-panel-container {
+  width: 80px;
+  height: 80px;
+}
+.--mcp-play-pause-panel.hide {
+  opacity: 0;
+}
+.remove-animation * {
+  animation-name: none !important;
+}
+
+.--mcp-play-pause-panel-container {
+  background-color: #000000c7;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.--mcp-play-pause-panel.animate .--mcp-play-pause-panel-container {
+  animation-name: scale-and-opaque;
+  animation-duration: 0.8s;
+  transform-origin: center center;
+}
+@keyframes scale-and-opaque {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
 }
 
 .--mcp-loop-boundaries {

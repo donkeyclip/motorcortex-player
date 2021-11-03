@@ -30,8 +30,7 @@ export function removeListener() {
   return document.removeEventListener(...arguments);
 }
 export function sanitizeCSS(css) {
-  return css.replace(/(behaviour|javascript|expression)/gm,"");
-
+  return css.replace(/(behaviour|javascript|expression)/gm, "");
 }
 function isNumber(value) {
   return typeof value === "number" && isFinite(value);
@@ -65,7 +64,7 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
   }
 
   if (Object.prototype.hasOwnProperty.call(containerParams, "height")) {
-      heightAnalysed = calculateDimension(containerParams.height);
+    heightAnalysed = calculateDimension(containerParams.height);
   }
 
   // the only case the Clip needs to be scaled is when any of the two axis of the Clip
