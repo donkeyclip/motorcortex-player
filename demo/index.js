@@ -1,11 +1,11 @@
-import MC from "@donkeyclip/motorcortex";
+import { loadPlugin, HTMLClip, AudioPlayback } from "@donkeyclip/motorcortex";
 import Definition from "./Plugin";
 import Player from "../src/";
-const Plugin = MC.loadPlugin(Definition);
+const Plugin = loadPlugin(Definition);
 
 const css = `
 div[data-motorocortex-container]{
-  background:black;
+  background:white;
 }
 .test{
   width:100%;
@@ -31,7 +31,7 @@ const containerParams = {
   height: "800px",
 };
 
-const clip = new MC.HTMLClip({
+const clip = new HTMLClip({
   css,
   html,
   host,
@@ -63,7 +63,7 @@ const AnimateWidth = new Plugin.Test(
 
 clip.addIncident(AnimateWidth, 0);
 
-const songPlayback = new MC.AudioPlayback({
+const songPlayback = new AudioPlayback({
   selector: "~#yeah",
   startFrom: 0,
   duration: 3000,
@@ -73,10 +73,12 @@ clip.addIncident(songPlayback, 0);
 
 window.player = new Player({
   clip,
+  volume: 0,
+  thumbnailColor: "white",
+  thumbnail:
+    "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
   autoPlay: true,
-  millisecond: 3000,
 });
-
 // window.player.changeSettings({
 //   pointerEvents: true,
 //   outline: "1px dashed gray",

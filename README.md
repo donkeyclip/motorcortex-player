@@ -69,6 +69,8 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 | muted| false | A Boolean property to define if the clip will be muted on start|
 | currentScript| <script></script>| If the clip will be loaded from a script with an external source where the player will be included, you can provide the script element refernce and use all the available control properties as data-\* attributes of the script (eg currentScript=document.currentScript)|
 | millisecond| 0| The millisecond from witch the clip will start|
+| thumbnail| - | A thumbnail image url to display in idle state|
+| thumbnailColor| - | A thumbnail background color to display in idle state|
 
 overflow: "visible",
 outline: "1px dashed #333",
