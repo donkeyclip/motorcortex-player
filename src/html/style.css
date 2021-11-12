@@ -193,6 +193,9 @@
   transition: all ease 0.2s;
   pointer-events: auto;
 }
+.--mcp-play-pause-panel #play-svg {
+  margin-left: 4px;
+}
 .--mcp-force-show-controls {
   opacity: 1 !important;
 }

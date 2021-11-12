@@ -74,10 +74,10 @@ clip.addIncident(songPlayback, 0);
 window.player = new Player({
   clip,
   volume: 0,
-  thumbnailColor: "white",
+  thumbnailColor: "black",
   thumbnail:
     "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
-  autoPlay: true,
+  // autoPlay: true,
 });
 // window.player.changeSettings({
 //   pointerEvents: true,
