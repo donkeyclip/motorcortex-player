@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.7...v2.4.0) (2021-11-17)
+
+
+### Features
+
+* add wheel event functionality ([435f935](https://www.github.com/donkeyclip/motorcortex-player/commit/435f935544dbf078e1f777bb5b9ed64a9ed802e9))
+
+
+### Bug Fixes
+
+* center play button ([306c83a](https://www.github.com/donkeyclip/motorcortex-player/commit/306c83ac0bf64ba817dd40ac1adeb3b2362458aa))
+
 ### [2.3.7](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.6...v2.3.7) (2021-11-03)
 
 
