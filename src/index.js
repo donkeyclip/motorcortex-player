@@ -29,6 +29,7 @@ import {
   add as fullscreenAdd,
   trigger as fullscreenTrigger,
 } from "./listeners/fullscreen";
+import wheelListener from "./listeners/wheelListener";
 import loopBarEndListener from "./listeners/loopBarEnd";
 import loopBarStartListener from "./listeners/loopBarStart";
 import { add as loopAdd, trigger as loopTrigger } from "./listeners/loopBtn";
@@ -614,6 +615,7 @@ class Player {
     pointerEventsAdd(this);
     donkeyclipListener(this);
     bodyListener(this);
+    if (this.options.wheelSeek) wheelListener(this);
   }
 
   launchIntoFullscreen(element) {
