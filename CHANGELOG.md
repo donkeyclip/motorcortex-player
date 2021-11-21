@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.4.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.0...v2.4.1) (2021-11-21)
+
+
+### Bug Fixes
+
+* add easing to scroller func| ([2be0d7e](https://www.github.com/donkeyclip/motorcortex-player/commit/2be0d7ed6e43a38656efa4700d267ee02c2bed41))
+
 ## [2.4.0](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.7...v2.4.0) (2021-11-17)
 
 
