@@ -288,22 +288,25 @@ class Player {
       easedProgress * this.scrollForce * this.options.speed * this.multiplier
     );
   }
-  stepper(e) {
-    this.startPosition = this.clip.runTimeInfo.currentMillisecond;
+  stepper(deltaY) {
+    this.startPosition ??= this.clip.runTimeInfo.currentMillisecond;
     this.scrollForce ??= 0;
-    this.scrollForce += Math.abs(e.deltaY);
-    const newMultiplier = e.deltaY > 0 ? 1 : -1;
+    this.scrollForce += Math.abs(deltaY);
+    const newMultiplier = deltaY > 0 ? 1 : -1;
+    this.transitionStart ??= Date.now();
     if (newMultiplier !== this.multiplier) {
-      this.scrollForce = Math.abs(e.deltaY);
+      this.transitionStart = Date.now();
+      this.startPosition = this.clip.runTimeInfo.currentMillisecond;
+      this.scrollForce = Math.abs(deltaY);
     }
     this.multiplier = newMultiplier;
-    this.transitionStart = Date.now();
+    this.endAnimation = Date.now() - this.transitionStart + 200;
     window.cancelAnimationFrame(this.requestAnimationID);
 
     const animate = () => {
-      const progress = (Date.now() - this.transitionStart) / 1000;
-      if (progress > 1) return this.cancelAnimation();
-      let journeyPosition = this.calculateJourneyPosition(progress);
+      this.progress = (Date.now() - this.transitionStart) / this.endAnimation;
+      if (this.progress >= 1) return this.cancelAnimation();
+      let journeyPosition = this.calculateJourneyPosition(this.progress);
 
       if (journeyPosition < 0) journeyPosition = 0;
       if (journeyPosition > this.clip.duration)
@@ -312,6 +315,7 @@ class Player {
 
       this.requestAnimationID = window.requestAnimationFrame(animate);
     };
+
     animate();
   }
 
