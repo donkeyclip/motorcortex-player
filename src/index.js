@@ -101,7 +101,6 @@ class Player {
       this.play();
     }
   }
-
   initializeOptions(options) {
     options.id ??= Date.now();
     options.showVolume ??=
@@ -275,6 +274,45 @@ class Player {
       this.settings.journey.destination();
       if (after) clip[after]();
     }, 0);
+  }
+  cancelAnimation() {
+    this.transitionStart = null;
+    this.startPosition = null;
+    this.scrollForce = null;
+    window.cancelAnimationFrame(this.requestAnimationID);
+  }
+  calculateJourneyPosition(progress) {
+    const easedProgress = utils.easings["easeOutQuart"](progress);
+    return (
+      this.startPosition +
+      easedProgress * this.scrollForce * this.options.speed * this.multiplier
+    );
+  }
+  stepper(e) {
+    this.startPosition = this.clip.runTimeInfo.currentMillisecond;
+    this.scrollForce ??= 0;
+    this.scrollForce += Math.abs(e.deltaY);
+    const newMultiplier = e.deltaY > 0 ? 1 : -1;
+    if (newMultiplier !== this.multiplier) {
+      this.scrollForce = Math.abs(e.deltaY);
+    }
+    this.multiplier = newMultiplier;
+    this.transitionStart = Date.now();
+    window.cancelAnimationFrame(this.requestAnimationID);
+
+    const animate = () => {
+      const progress = (Date.now() - this.transitionStart) / 1000;
+      if (progress > 1) return this.cancelAnimation();
+      let journeyPosition = this.calculateJourneyPosition(progress);
+
+      if (journeyPosition < 0) journeyPosition = 0;
+      if (journeyPosition > this.clip.duration)
+        journeyPosition = this.clip.duration;
+      this.createJourney(journeyPosition);
+
+      this.requestAnimationID = window.requestAnimationFrame(animate);
+    };
+    animate();
   }
 
   millisecondChange(
