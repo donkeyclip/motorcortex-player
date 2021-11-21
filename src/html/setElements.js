@@ -165,6 +165,9 @@ const addStyles = (_this) => {
   if (_this.options.backgroundColor) {
     _this.elements.background.style.background = _this.options.backgroundColor;
   }
+  if (_this.options.wheelSeek) {
+    window.document.body.style.overscrollBehaviorY = "contain";
+  }
   if (!_this.options.showIndicator) {
     _this.elements.indicator.style.display = "none";
   } else {
