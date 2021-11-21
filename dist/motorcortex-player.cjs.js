@@ -3688,14 +3688,7 @@ function add$4(_this) {
 }
 
 var wheelListener = (function (_this) {
-  window.addEventListener("wheel", function (e) {
-    var multiplier = e.deltaY < 0 ? -1 : 1;
-    var newPosition = _this.clip.runTimeInfo.currentMillisecond + _this.clip.duration * 0.1 * multiplier;
-    if (newPosition > _this.clip.duration) newPosition = _this.clip.duration;
-    if (newPosition < 0) newPosition = 0;
-
-    _this.createJourney(newPosition);
-  });
+  window.addEventListener("wheel", _this.stepper.bind(_this));
 });
 
 var loopBarEndListener = (function (_this) {
@@ -4518,6 +4511,55 @@ var Player = /*#__PURE__*/function () {
 
         if (after) clip[after]();
       }, 0);
+    }
+  }, {
+    key: "cancelAnimation",
+    value: function cancelAnimation() {
+      this.transitionStart = null;
+      this.startPosition = null;
+      this.scrollForce = null;
+      window.cancelAnimationFrame(this.requestAnimationID);
+    }
+  }, {
+    key: "calculateJourneyPosition",
+    value: function calculateJourneyPosition(progress) {
+      var easedProgress = motorcortex.utils.easings["easeOutQuart"](progress);
+      return this.startPosition + easedProgress * this.scrollForce * this.options.speed * this.multiplier;
+    }
+  }, {
+    key: "stepper",
+    value: function stepper(e) {
+      var _this$scrollForce,
+          _this4 = this;
+
+      this.startPosition = this.clip.runTimeInfo.currentMillisecond;
+      (_this$scrollForce = this.scrollForce) !== null && _this$scrollForce !== void 0 ? _this$scrollForce : this.scrollForce = 0;
+      this.scrollForce += Math.abs(e.deltaY);
+      var newMultiplier = e.deltaY > 0 ? 1 : -1;
+
+      if (newMultiplier !== this.multiplier) {
+        this.scrollForce = Math.abs(e.deltaY);
+      }
+
+      this.multiplier = newMultiplier;
+      this.transitionStart = Date.now();
+      window.cancelAnimationFrame(this.requestAnimationID);
+
+      var animate = function animate() {
+        var progress = (Date.now() - _this4.transitionStart) / 1000;
+        if (progress > 1) return _this4.cancelAnimation();
+
+        var journeyPosition = _this4.calculateJourneyPosition(progress);
+
+        if (journeyPosition < 0) journeyPosition = 0;
+        if (journeyPosition > _this4.clip.duration) journeyPosition = _this4.clip.duration;
+
+        _this4.createJourney(journeyPosition);
+
+        _this4.requestAnimationID = window.requestAnimationFrame(animate);
+      };
+
+      animate();
     }
   }, {
     key: "millisecondChange",
