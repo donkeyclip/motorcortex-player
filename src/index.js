@@ -165,6 +165,7 @@ class Player {
     } else if (newOptions.controls === true) {
       this.elements.mcPlayer.style.display = "block";
     }
+
     const checkObject = {
       loop: () => loopTrigger(this),
       fullscreen: () => fullscreenTrigger(this),
@@ -176,6 +177,7 @@ class Player {
         this.scaleClipHost();
       },
       showVolume: () => settingsTrigger(this, "showVolume"),
+      wheelSeek: () => wheelListener(this),
       theme: () => {
         this.options.theme = newOptions.theme;
         this.setTheme();
