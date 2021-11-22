@@ -4454,6 +4454,9 @@ var Player = /*#__PURE__*/function () {
         showVolume: function showVolume() {
           return trigger$2(_this2, "showVolume");
         },
+        wheelSeek: function wheelSeek() {
+          return wheelListener(_this2);
+        },
         theme: function theme() {
           _this2.options.theme = newOptions.theme;
 
