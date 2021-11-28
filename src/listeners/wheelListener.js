@@ -1,4 +1,6 @@
 export default (_this) => {
+  // initialize wheelseek options
+
   window.addEventListener(
     "wheel",
     (e) => {
@@ -14,7 +16,7 @@ export default (_this) => {
       const currentY = e.touches[0].clientY;
       _this.lastY ??= currentY;
       const delta = -(currentY - _this.lastY);
-      _this.stepper(delta * 1.5);
+      _this.stepper(delta);
       _this.lastY = currentY;
     },
     { passive: true }

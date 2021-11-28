@@ -71,6 +71,10 @@ Except the (mandatory) `clip` option that should be passed on the player on inst
 | millisecond| 0| The millisecond from witch the clip will start|
 | thumbnail| - | A thumbnail image url to display in idle state|
 | thumbnailColor| - | A thumbnail background color to display in idle state|
+| type| - | You can select of the types "scroller" or "presenter". If you don't define this property the default player is active|
+|scrollAnimation|false| If you set this property to true you can add animation to you scroll by extending the time of scroll|
+|maxScrollStorage|50| You can store scroll events to extend the scroll experience. This property works best with scrollAnimation set to true and it takes an interger value greater than zero|
+|sections|-| You can define sections as an array of milliseconds when you want to ankor the scroll events. (eg [0,1000,2000,3000]). Note that the zero(start) and clip's duration(end) are needed as values.
 
 overflow: "visible",
 outline: "1px dashed #333",
@@ -100,7 +104,7 @@ player.createLoop(1000, 3000);
 ## Script Usage
 
 By the use of the embeddable scripts of DonkeyClip you can create a bundle of a clip on a portable <script> that can be placed anywhere inside any html page. This script not only builds the clip but also wrapps it, out of the box, with this player.
-Here's a typical use of an embeddable script, with all of the supported attrs present:
+Here's a typical use of an embeddable script, with some of the supported attrs present:
 
 ```html
 <script

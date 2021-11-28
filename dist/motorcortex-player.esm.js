@@ -971,42 +971,6 @@ var _export = function (options, source) {
   }
 };
 
-var internalObjectKeys = objectKeysInternal;
-var enumBugKeys$1 = enumBugKeys$3; // `Object.keys` method
-// https://tc39.es/ecma262/#sec-object.keys
-// eslint-disable-next-line es/no-object-keys -- safe
-
-var objectKeys$1 = Object.keys || function keys(O) {
-  return internalObjectKeys(O, enumBugKeys$1);
-};
-
-var $$b = _export;
-var toObject$4 = toObject$6;
-var nativeKeys = objectKeys$1;
-var fails$g = fails$m;
-var FAILS_ON_PRIMITIVES = fails$g(function () {
-  nativeKeys(1);
-}); // `Object.keys` method
-// https://tc39.es/ecma262/#sec-object.keys
-
-$$b({
-  target: 'Object',
-  stat: true,
-  forced: FAILS_ON_PRIMITIVES
-}, {
-  keys: function keys(it) {
-    return nativeKeys(toObject$4(it));
-  }
-});
-
-var classof$8 = classofRaw$1; // `IsArray` abstract operation
-// https://tc39.es/ecma262/#sec-isarray
-// eslint-disable-next-line es/no-array-isarray -- safe
-
-var isArray$3 = Array.isArray || function isArray(argument) {
-  return classof$8(argument) == 'Array';
-};
-
 var wellKnownSymbol$c = wellKnownSymbol$e;
 var TO_STRING_TAG$1 = wellKnownSymbol$c('toStringTag');
 var test$1 = {};
@@ -1034,7 +998,7 @@ var tryGet = function (it, key) {
 }; // getting tag from ES6+ `Object.prototype.toString`
 
 
-var classof$7 = TO_STRING_TAG_SUPPORT$2 ? classofRaw : function (it) {
+var classof$8 = TO_STRING_TAG_SUPPORT$2 ? classofRaw : function (it) {
   var O, tag, result;
   return it === undefined ? 'Undefined' : it === null ? 'Null' // @@toStringTag case
   : typeof (tag = tryGet(O = Object$1(it), TO_STRING_TAG)) == 'string' ? tag // builtinTag case
@@ -1042,211 +1006,17 @@ var classof$7 = TO_STRING_TAG_SUPPORT$2 ? classofRaw : function (it) {
   : (result = classofRaw(O)) == 'Object' && isCallable$6(O.callee) ? 'Arguments' : result;
 };
 
-var uncurryThis$h = functionUncurryThis;
-var fails$f = fails$m;
-var isCallable$5 = isCallable$g;
-var classof$6 = classof$7;
-var getBuiltIn$3 = getBuiltIn$7;
-var inspectSource = inspectSource$3;
-
-var noop = function () {
-  /* empty */
-};
-
-var empty = [];
-var construct = getBuiltIn$3('Reflect', 'construct');
-var constructorRegExp = /^\s*(?:class|function)\b/;
-var exec$3 = uncurryThis$h(constructorRegExp.exec);
-var INCORRECT_TO_STRING = !constructorRegExp.exec(noop);
-
-var isConstructorModern = function (argument) {
-  if (!isCallable$5(argument)) return false;
-
-  try {
-    construct(noop, empty, argument);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
-var isConstructorLegacy = function (argument) {
-  if (!isCallable$5(argument)) return false;
-
-  switch (classof$6(argument)) {
-    case 'AsyncFunction':
-    case 'GeneratorFunction':
-    case 'AsyncGeneratorFunction':
-      return false;
-    // we can't check .prototype since constructors produced by .bind haven't it
-  }
-
-  return INCORRECT_TO_STRING || !!exec$3(constructorRegExp, inspectSource(argument));
-}; // `IsConstructor` abstract operation
-// https://tc39.es/ecma262/#sec-isconstructor
-
-
-var isConstructor$2 = !construct || fails$f(function () {
-  var called;
-  return isConstructorModern(isConstructorModern.call) || !isConstructorModern(Object) || !isConstructorModern(function () {
-    called = true;
-  }) || called;
-}) ? isConstructorLegacy : isConstructorModern;
-
 var global$j = global$F;
-var isArray$2 = isArray$3;
-var isConstructor$1 = isConstructor$2;
-var isObject$5 = isObject$b;
-var wellKnownSymbol$a = wellKnownSymbol$e;
-var SPECIES$4 = wellKnownSymbol$a('species');
-var Array$3 = global$j.Array; // a part of `ArraySpeciesCreate` abstract operation
-// https://tc39.es/ecma262/#sec-arrayspeciescreate
-
-var arraySpeciesConstructor$1 = function (originalArray) {
-  var C;
-
-  if (isArray$2(originalArray)) {
-    C = originalArray.constructor; // cross-realm fallback
-
-    if (isConstructor$1(C) && (C === Array$3 || isArray$2(C.prototype))) C = undefined;else if (isObject$5(C)) {
-      C = C[SPECIES$4];
-      if (C === null) C = undefined;
-    }
-  }
-
-  return C === undefined ? Array$3 : C;
-};
-
-var arraySpeciesConstructor = arraySpeciesConstructor$1; // `ArraySpeciesCreate` abstract operation
-// https://tc39.es/ecma262/#sec-arrayspeciescreate
-
-var arraySpeciesCreate$2 = function (originalArray, length) {
-  return new (arraySpeciesConstructor(originalArray))(length === 0 ? 0 : length);
-};
-
-var toPropertyKey = toPropertyKey$3;
-var definePropertyModule$3 = objectDefineProperty;
-var createPropertyDescriptor = createPropertyDescriptor$3;
-
-var createProperty$3 = function (object, key, value) {
-  var propertyKey = toPropertyKey(key);
-  if (propertyKey in object) definePropertyModule$3.f(object, propertyKey, createPropertyDescriptor(0, value));else object[propertyKey] = value;
-};
-
-var fails$e = fails$m;
-var wellKnownSymbol$9 = wellKnownSymbol$e;
-var V8_VERSION$1 = engineV8Version;
-var SPECIES$3 = wellKnownSymbol$9('species');
-
-var arrayMethodHasSpeciesSupport$3 = function (METHOD_NAME) {
-  // We can't use this feature detection in V8 since it causes
-  // deoptimization and serious performance degradation
-  // https://github.com/zloirock/core-js/issues/677
-  return V8_VERSION$1 >= 51 || !fails$e(function () {
-    var array = [];
-    var constructor = array.constructor = {};
-
-    constructor[SPECIES$3] = function () {
-      return {
-        foo: 1
-      };
-    };
-
-    return array[METHOD_NAME](Boolean).foo !== 1;
-  });
-};
-
-var $$a = _export;
-var global$i = global$F;
-var toAbsoluteIndex$1 = toAbsoluteIndex$3;
-var toIntegerOrInfinity$4 = toIntegerOrInfinity$7;
-var lengthOfArrayLike$3 = lengthOfArrayLike$5;
-var toObject$3 = toObject$6;
-var arraySpeciesCreate$1 = arraySpeciesCreate$2;
-var createProperty$2 = createProperty$3;
-var arrayMethodHasSpeciesSupport$2 = arrayMethodHasSpeciesSupport$3;
-var HAS_SPECIES_SUPPORT$1 = arrayMethodHasSpeciesSupport$2('splice');
-var TypeError$8 = global$i.TypeError;
-var max$2 = Math.max;
-var min$1 = Math.min;
-var MAX_SAFE_INTEGER$1 = 0x1FFFFFFFFFFFFF;
-var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded'; // `Array.prototype.splice` method
-// https://tc39.es/ecma262/#sec-array.prototype.splice
-// with adding support of @@species
-
-$$a({
-  target: 'Array',
-  proto: true,
-  forced: !HAS_SPECIES_SUPPORT$1
-}, {
-  splice: function splice(start, deleteCount
-  /* , ...items */
-  ) {
-    var O = toObject$3(this);
-    var len = lengthOfArrayLike$3(O);
-    var actualStart = toAbsoluteIndex$1(start, len);
-    var argumentsLength = arguments.length;
-    var insertCount, actualDeleteCount, A, k, from, to;
-
-    if (argumentsLength === 0) {
-      insertCount = actualDeleteCount = 0;
-    } else if (argumentsLength === 1) {
-      insertCount = 0;
-      actualDeleteCount = len - actualStart;
-    } else {
-      insertCount = argumentsLength - 2;
-      actualDeleteCount = min$1(max$2(toIntegerOrInfinity$4(deleteCount), 0), len - actualStart);
-    }
-
-    if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER$1) {
-      throw TypeError$8(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
-    }
-
-    A = arraySpeciesCreate$1(O, actualDeleteCount);
-
-    for (k = 0; k < actualDeleteCount; k++) {
-      from = actualStart + k;
-      if (from in O) createProperty$2(A, k, O[from]);
-    }
-
-    A.length = actualDeleteCount;
-
-    if (insertCount < actualDeleteCount) {
-      for (k = actualStart; k < len - actualDeleteCount; k++) {
-        from = k + actualDeleteCount;
-        to = k + insertCount;
-        if (from in O) O[to] = O[from];else delete O[to];
-      }
-
-      for (k = len; k > len - actualDeleteCount + insertCount; k--) delete O[k - 1];
-    } else if (insertCount > actualDeleteCount) {
-      for (k = len - actualDeleteCount; k > actualStart; k--) {
-        from = k + actualDeleteCount - 1;
-        to = k + insertCount - 1;
-        if (from in O) O[to] = O[from];else delete O[to];
-      }
-    }
-
-    for (k = 0; k < insertCount; k++) {
-      O[k + actualStart] = arguments[k + 2];
-    }
-
-    O.length = len - actualDeleteCount + insertCount;
-    return A;
-  }
-});
-
-var global$h = global$F;
-var classof$5 = classof$7;
-var String$3 = global$h.String;
+var classof$7 = classof$8;
+var String$3 = global$j.String;
 
 var toString$a = function (argument) {
-  if (classof$5(argument) === 'Symbol') throw TypeError('Cannot convert a Symbol value to a string');
+  if (classof$7(argument) === 'Symbol') throw TypeError('Cannot convert a Symbol value to a string');
   return String$3(argument);
 };
 
-var uncurryThis$g = functionUncurryThis;
-var arraySlice$2 = uncurryThis$g([].slice);
+var uncurryThis$h = functionUncurryThis;
+var arraySlice$2 = uncurryThis$h([].slice);
 
 var arraySlice$1 = arraySlice$2;
 var floor$2 = Math.floor;
@@ -1291,11 +1061,11 @@ var merge = function (array, left, right, comparefn) {
 
 var arraySort = mergeSort;
 
-var fails$d = fails$m;
+var fails$g = fails$m;
 
 var arrayMethodIsStrict$1 = function (METHOD_NAME, argument) {
   var method = [][METHOD_NAME];
-  return !!method && fails$d(function () {
+  return !!method && fails$g(function () {
     // eslint-disable-next-line no-useless-call,no-throw-literal -- required for testing
     method.call(null, argument || function () {
       throw 1;
@@ -1314,13 +1084,13 @@ var userAgent = engineUserAgent;
 var webkit = userAgent.match(/AppleWebKit\/(\d+)\./);
 var engineWebkitVersion = !!webkit && +webkit[1];
 
-var $$9 = _export;
-var uncurryThis$f = functionUncurryThis;
+var $$b = _export;
+var uncurryThis$g = functionUncurryThis;
 var aCallable = aCallable$2;
-var toObject$2 = toObject$6;
-var lengthOfArrayLike$2 = lengthOfArrayLike$5;
+var toObject$4 = toObject$6;
+var lengthOfArrayLike$3 = lengthOfArrayLike$5;
 var toString$9 = toString$a;
-var fails$c = fails$m;
+var fails$f = fails$m;
 var internalSort = arraySort;
 var arrayMethodIsStrict = arrayMethodIsStrict$1;
 var FF = engineFfVersion;
@@ -1328,19 +1098,19 @@ var IE_OR_EDGE = engineIsIeOrEdge;
 var V8 = engineV8Version;
 var WEBKIT = engineWebkitVersion;
 var test = [];
-var un$Sort = uncurryThis$f(test.sort);
-var push$1 = uncurryThis$f(test.push); // IE8-
+var un$Sort = uncurryThis$g(test.sort);
+var push$1 = uncurryThis$g(test.push); // IE8-
 
-var FAILS_ON_UNDEFINED = fails$c(function () {
+var FAILS_ON_UNDEFINED = fails$f(function () {
   test.sort(undefined);
 }); // V8 bug
 
-var FAILS_ON_NULL = fails$c(function () {
+var FAILS_ON_NULL = fails$f(function () {
   test.sort(null);
 }); // Old WebKit
 
 var STRICT_METHOD = arrayMethodIsStrict('sort');
-var STABLE_SORT = !fails$c(function () {
+var STABLE_SORT = !fails$f(function () {
   // feature detection can be too slow, so check engines versions
   if (V8) return V8 < 70;
   if (FF && FF > 3) return;
@@ -1401,17 +1171,17 @@ var getSortCompare = function (comparefn) {
 // https://tc39.es/ecma262/#sec-array.prototype.sort
 
 
-$$9({
+$$b({
   target: 'Array',
   proto: true,
   forced: FORCED$3
 }, {
   sort: function sort(comparefn) {
     if (comparefn !== undefined) aCallable(comparefn);
-    var array = toObject$2(this);
+    var array = toObject$4(this);
     if (STABLE_SORT) return comparefn === undefined ? un$Sort(array) : un$Sort(array, comparefn);
     var items = [];
-    var arrayLength = lengthOfArrayLike$2(array);
+    var arrayLength = lengthOfArrayLike$3(array);
     var itemsLength, index;
 
     for (index = 0; index < arrayLength; index++) {
@@ -1427,6 +1197,236 @@ $$9({
     while (index < arrayLength) delete array[index++];
 
     return array;
+  }
+});
+
+var internalObjectKeys = objectKeysInternal;
+var enumBugKeys$1 = enumBugKeys$3; // `Object.keys` method
+// https://tc39.es/ecma262/#sec-object.keys
+// eslint-disable-next-line es/no-object-keys -- safe
+
+var objectKeys$1 = Object.keys || function keys(O) {
+  return internalObjectKeys(O, enumBugKeys$1);
+};
+
+var $$a = _export;
+var toObject$3 = toObject$6;
+var nativeKeys = objectKeys$1;
+var fails$e = fails$m;
+var FAILS_ON_PRIMITIVES = fails$e(function () {
+  nativeKeys(1);
+}); // `Object.keys` method
+// https://tc39.es/ecma262/#sec-object.keys
+
+$$a({
+  target: 'Object',
+  stat: true,
+  forced: FAILS_ON_PRIMITIVES
+}, {
+  keys: function keys(it) {
+    return nativeKeys(toObject$3(it));
+  }
+});
+
+var classof$6 = classofRaw$1; // `IsArray` abstract operation
+// https://tc39.es/ecma262/#sec-isarray
+// eslint-disable-next-line es/no-array-isarray -- safe
+
+var isArray$3 = Array.isArray || function isArray(argument) {
+  return classof$6(argument) == 'Array';
+};
+
+var uncurryThis$f = functionUncurryThis;
+var fails$d = fails$m;
+var isCallable$5 = isCallable$g;
+var classof$5 = classof$8;
+var getBuiltIn$3 = getBuiltIn$7;
+var inspectSource = inspectSource$3;
+
+var noop = function () {
+  /* empty */
+};
+
+var empty = [];
+var construct = getBuiltIn$3('Reflect', 'construct');
+var constructorRegExp = /^\s*(?:class|function)\b/;
+var exec$3 = uncurryThis$f(constructorRegExp.exec);
+var INCORRECT_TO_STRING = !constructorRegExp.exec(noop);
+
+var isConstructorModern = function (argument) {
+  if (!isCallable$5(argument)) return false;
+
+  try {
+    construct(noop, empty, argument);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+var isConstructorLegacy = function (argument) {
+  if (!isCallable$5(argument)) return false;
+
+  switch (classof$5(argument)) {
+    case 'AsyncFunction':
+    case 'GeneratorFunction':
+    case 'AsyncGeneratorFunction':
+      return false;
+    // we can't check .prototype since constructors produced by .bind haven't it
+  }
+
+  return INCORRECT_TO_STRING || !!exec$3(constructorRegExp, inspectSource(argument));
+}; // `IsConstructor` abstract operation
+// https://tc39.es/ecma262/#sec-isconstructor
+
+
+var isConstructor$2 = !construct || fails$d(function () {
+  var called;
+  return isConstructorModern(isConstructorModern.call) || !isConstructorModern(Object) || !isConstructorModern(function () {
+    called = true;
+  }) || called;
+}) ? isConstructorLegacy : isConstructorModern;
+
+var global$i = global$F;
+var isArray$2 = isArray$3;
+var isConstructor$1 = isConstructor$2;
+var isObject$5 = isObject$b;
+var wellKnownSymbol$a = wellKnownSymbol$e;
+var SPECIES$4 = wellKnownSymbol$a('species');
+var Array$3 = global$i.Array; // a part of `ArraySpeciesCreate` abstract operation
+// https://tc39.es/ecma262/#sec-arrayspeciescreate
+
+var arraySpeciesConstructor$1 = function (originalArray) {
+  var C;
+
+  if (isArray$2(originalArray)) {
+    C = originalArray.constructor; // cross-realm fallback
+
+    if (isConstructor$1(C) && (C === Array$3 || isArray$2(C.prototype))) C = undefined;else if (isObject$5(C)) {
+      C = C[SPECIES$4];
+      if (C === null) C = undefined;
+    }
+  }
+
+  return C === undefined ? Array$3 : C;
+};
+
+var arraySpeciesConstructor = arraySpeciesConstructor$1; // `ArraySpeciesCreate` abstract operation
+// https://tc39.es/ecma262/#sec-arrayspeciescreate
+
+var arraySpeciesCreate$2 = function (originalArray, length) {
+  return new (arraySpeciesConstructor(originalArray))(length === 0 ? 0 : length);
+};
+
+var toPropertyKey = toPropertyKey$3;
+var definePropertyModule$3 = objectDefineProperty;
+var createPropertyDescriptor = createPropertyDescriptor$3;
+
+var createProperty$3 = function (object, key, value) {
+  var propertyKey = toPropertyKey(key);
+  if (propertyKey in object) definePropertyModule$3.f(object, propertyKey, createPropertyDescriptor(0, value));else object[propertyKey] = value;
+};
+
+var fails$c = fails$m;
+var wellKnownSymbol$9 = wellKnownSymbol$e;
+var V8_VERSION$1 = engineV8Version;
+var SPECIES$3 = wellKnownSymbol$9('species');
+
+var arrayMethodHasSpeciesSupport$3 = function (METHOD_NAME) {
+  // We can't use this feature detection in V8 since it causes
+  // deoptimization and serious performance degradation
+  // https://github.com/zloirock/core-js/issues/677
+  return V8_VERSION$1 >= 51 || !fails$c(function () {
+    var array = [];
+    var constructor = array.constructor = {};
+
+    constructor[SPECIES$3] = function () {
+      return {
+        foo: 1
+      };
+    };
+
+    return array[METHOD_NAME](Boolean).foo !== 1;
+  });
+};
+
+var $$9 = _export;
+var global$h = global$F;
+var toAbsoluteIndex$1 = toAbsoluteIndex$3;
+var toIntegerOrInfinity$4 = toIntegerOrInfinity$7;
+var lengthOfArrayLike$2 = lengthOfArrayLike$5;
+var toObject$2 = toObject$6;
+var arraySpeciesCreate$1 = arraySpeciesCreate$2;
+var createProperty$2 = createProperty$3;
+var arrayMethodHasSpeciesSupport$2 = arrayMethodHasSpeciesSupport$3;
+var HAS_SPECIES_SUPPORT$1 = arrayMethodHasSpeciesSupport$2('splice');
+var TypeError$8 = global$h.TypeError;
+var max$2 = Math.max;
+var min$1 = Math.min;
+var MAX_SAFE_INTEGER$1 = 0x1FFFFFFFFFFFFF;
+var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded'; // `Array.prototype.splice` method
+// https://tc39.es/ecma262/#sec-array.prototype.splice
+// with adding support of @@species
+
+$$9({
+  target: 'Array',
+  proto: true,
+  forced: !HAS_SPECIES_SUPPORT$1
+}, {
+  splice: function splice(start, deleteCount
+  /* , ...items */
+  ) {
+    var O = toObject$2(this);
+    var len = lengthOfArrayLike$2(O);
+    var actualStart = toAbsoluteIndex$1(start, len);
+    var argumentsLength = arguments.length;
+    var insertCount, actualDeleteCount, A, k, from, to;
+
+    if (argumentsLength === 0) {
+      insertCount = actualDeleteCount = 0;
+    } else if (argumentsLength === 1) {
+      insertCount = 0;
+      actualDeleteCount = len - actualStart;
+    } else {
+      insertCount = argumentsLength - 2;
+      actualDeleteCount = min$1(max$2(toIntegerOrInfinity$4(deleteCount), 0), len - actualStart);
+    }
+
+    if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER$1) {
+      throw TypeError$8(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
+    }
+
+    A = arraySpeciesCreate$1(O, actualDeleteCount);
+
+    for (k = 0; k < actualDeleteCount; k++) {
+      from = actualStart + k;
+      if (from in O) createProperty$2(A, k, O[from]);
+    }
+
+    A.length = actualDeleteCount;
+
+    if (insertCount < actualDeleteCount) {
+      for (k = actualStart; k < len - actualDeleteCount; k++) {
+        from = k + actualDeleteCount;
+        to = k + insertCount;
+        if (from in O) O[to] = O[from];else delete O[to];
+      }
+
+      for (k = len; k > len - actualDeleteCount + insertCount; k--) delete O[k - 1];
+    } else if (insertCount > actualDeleteCount) {
+      for (k = len - actualDeleteCount; k > actualStart; k--) {
+        from = k + actualDeleteCount - 1;
+        to = k + insertCount - 1;
+        if (from in O) O[to] = O[from];else delete O[to];
+      }
+    }
+
+    for (k = 0; k < insertCount; k++) {
+      O[k + actualStart] = arguments[k + 2];
+    }
+
+    O.length = len - actualDeleteCount + insertCount;
+    return A;
   }
 });
 
@@ -3052,7 +3052,7 @@ if (isForced(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNumb
 }
 
 var TO_STRING_TAG_SUPPORT$1 = toStringTagSupport;
-var classof = classof$7; // `Object.prototype.toString` method implementation
+var classof = classof$8; // `Object.prototype.toString` method implementation
 // https://tc39.es/ecma262/#sec-object.prototype.tostring
 
 var objectToString = TO_STRING_TAG_SUPPORT$1 ? {}.toString : function toString() {
@@ -3433,7 +3433,7 @@ var addStyles = function addStyles(_this) {
     _this.elements.background.style.background = _this.options.backgroundColor;
   }
 
-  if (_this.options.wheelSeek) {
+  if (_this.options.type === "scroller") {
     window.document.body.style.overscrollBehaviorY = "contain";
   }
 
@@ -3690,6 +3690,7 @@ function add$4(_this) {
 }
 
 var wheelListener = (function (_this) {
+  // initialize wheelseek options
   window.addEventListener("wheel", function (e) {
     _this.stepper(e.deltaY);
   }, {
@@ -3702,7 +3703,7 @@ var wheelListener = (function (_this) {
     (_this$lastY = _this.lastY) !== null && _this$lastY !== void 0 ? _this$lastY : _this.lastY = currentY;
     var delta = -(currentY - _this.lastY);
 
-    _this.stepper(delta * 1.5);
+    _this.stepper(delta);
 
     _this.lastY = currentY;
   }, {
@@ -4341,6 +4342,17 @@ var Player = /*#__PURE__*/function () {
     this.addEventListeners();
     this.scaleClipHost();
     this.eventBroadcast(STATE_CHANGE, this.state);
+
+    if (this.options.type == "scroller") {
+      var _this$options$section;
+
+      this.timeBucket = 0;
+      this.timeProgress = 0;
+      this.sortedSections = (_this$options$section = this.options.sections) === null || _this$options$section === void 0 ? void 0 : _this$options$section.sort(function (a, b) {
+        return a - b;
+      });
+    }
+
     var resizeObserver = new ResizeObserver(function () {
       if (_this.options.scaleToFit) {
         _this.scaleClipHost();
@@ -4357,7 +4369,7 @@ var Player = /*#__PURE__*/function () {
   _createClass(Player, [{
     key: "initializeOptions",
     value: function initializeOptions(options) {
-      var _options$id, _options$showVolume, _options$clip, _options$clip$audioCl, _options$showIndicato, _options$theme, _options$host, _options$buttons, _options$timeFormat, _options$backgroundCo, _options$fullscreen, _options$scaleToFit, _options$pointerEvent, _options$onMillisecon, _options$speedValues, _options$speed, _options$muted, _options$controls, _options$loop, _options$volume, _options$currentScrip;
+      var _options$id, _options$showVolume, _options$clip, _options$clip$audioCl, _options$showIndicato, _options$theme, _options$host, _options$buttons, _options$timeFormat, _options$backgroundCo, _options$fullscreen, _options$scaleToFit, _options$sectionsEasi, _options$pointerEvent, _options$scrollAnimat, _options$onMillisecon, _options$speedValues, _options$speed, _options$muted, _options$maxScrollSto, _options$controls, _options$loop, _options$volume, _options$currentScrip;
 
       (_options$id = options.id) !== null && _options$id !== void 0 ? _options$id : options.id = Date.now();
       (_options$showVolume = options.showVolume) !== null && _options$showVolume !== void 0 ? _options$showVolume : options.showVolume = Object.keys(((_options$clip = options.clip) === null || _options$clip === void 0 ? void 0 : (_options$clip$audioCl = _options$clip.audioClip) === null || _options$clip$audioCl === void 0 ? void 0 : _options$clip$audioCl.children) || []).length || false;
@@ -4369,11 +4381,14 @@ var Player = /*#__PURE__*/function () {
       (_options$backgroundCo = options.backgroundColor) !== null && _options$backgroundCo !== void 0 ? _options$backgroundCo : options.backgroundColor = "black";
       (_options$fullscreen = options.fullscreen) !== null && _options$fullscreen !== void 0 ? _options$fullscreen : options.fullscreen = false;
       (_options$scaleToFit = options.scaleToFit) !== null && _options$scaleToFit !== void 0 ? _options$scaleToFit : options.scaleToFit = true;
+      (_options$sectionsEasi = options.sectionsEasing) !== null && _options$sectionsEasi !== void 0 ? _options$sectionsEasi : options.sectionsEasing = "easeOutQuart";
       (_options$pointerEvent = options.pointerEvents) !== null && _options$pointerEvent !== void 0 ? _options$pointerEvent : options.pointerEvents = false;
+      (_options$scrollAnimat = options.scrollAnimation) !== null && _options$scrollAnimat !== void 0 ? _options$scrollAnimat : options.scrollAnimation = false;
       (_options$onMillisecon = options.onMillisecondChange) !== null && _options$onMillisecon !== void 0 ? _options$onMillisecon : options.onMillisecondChange = null;
       (_options$speedValues = options.speedValues) !== null && _options$speedValues !== void 0 ? _options$speedValues : options.speedValues = [-1, 0, 0.5, 1, 2];
       (_options$speed = options.speed) !== null && _options$speed !== void 0 ? _options$speed : options.speed = 1;
       (_options$muted = options.muted) !== null && _options$muted !== void 0 ? _options$muted : options.muted = false;
+      (_options$maxScrollSto = options.maxScrollStorage) !== null && _options$maxScrollSto !== void 0 ? _options$maxScrollSto : options.maxScrollStorage = 50;
       (_options$controls = options.controls) !== null && _options$controls !== void 0 ? _options$controls : options.controls = true;
       (_options$loop = options.loop) !== null && _options$loop !== void 0 ? _options$loop : options.loop = false;
       (_options$volume = options.volume) !== null && _options$volume !== void 0 ? _options$volume : options.volume = 1;
@@ -4452,8 +4467,8 @@ var Player = /*#__PURE__*/function () {
         showVolume: function showVolume() {
           return trigger$2(_this2, "showVolume");
         },
-        wheelSeek: function wheelSeek() {
-          return wheelListener(_this2);
+        type: function type() {
+          if (newOptions.type === "scroller") wheelListener(_this2);
         },
         theme: function theme() {
           _this2.options.theme = newOptions.theme;
@@ -4546,60 +4561,150 @@ var Player = /*#__PURE__*/function () {
         if (after) clip[after]();
       }, 0);
     }
+    /* SCROLLER */
+
+  }, {
+    key: "animateWithEasing",
+    value: function animateWithEasing() {
+      this.progress = (Date.now() - this.transitionStart) / this.endAnimation;
+      if (this.progress >= 1) return this.cancelAnimation();
+      var journeyPosition = this.calculateJourneyPosition(this.progress);
+      if (journeyPosition < 0) journeyPosition = 0;
+      if (journeyPosition > this.clip.duration) journeyPosition = this.clip.duration;
+      this.createJourney(journeyPosition);
+      this.requestAnimationID = window.requestAnimationFrame(this.animateWithEasing.bind(this));
+    }
+  }, {
+    key: "calculateMinMaxOfTimeProgress",
+    value: function calculateMinMaxOfTimeProgress() {
+      if (this.timeProgress >= this.clip.duration) this.timeProgress = this.clip.duration;
+      if (this.timeProgress <= 0) this.timeProgress = 0;
+    }
+  }, {
+    key: "requestAnimation",
+    value: function requestAnimation() {
+      this.requestAnimationID = window.requestAnimationFrame(this.animateTimeBucket.bind(this));
+    }
   }, {
     key: "cancelAnimation",
     value: function cancelAnimation() {
-      this.transitionStart = null;
-      this.startPosition = null;
-      this.scrollForce = null;
       window.cancelAnimationFrame(this.requestAnimationID);
+      this.requestAnimationID = null;
+    }
+  }, {
+    key: "removeTimeFromBucket",
+    value: function removeTimeFromBucket() {
+      var log = Math.log(this.timeBucket);
+      var timeRemove = Math.pow(log, 2);
+      this.timeBucket -= this.options.scrollAnimation ? log : timeRemove;
+      return timeRemove;
+    }
+  }, {
+    key: "addTimeToProgress",
+    value: function addTimeToProgress(timeRemove) {
+      this.timeProgress += timeRemove * this.multiplier * this.clip.speed;
+    }
+  }, {
+    key: "checkIfBucketHasTime",
+    value: function checkIfBucketHasTime() {
+      if (this.timeBucket <= 0) {
+        this.requestAnimationID = null;
+        return false;
+      }
+
+      return true;
     }
   }, {
     key: "calculateJourneyPosition",
     value: function calculateJourneyPosition(progress) {
-      var easedProgress = utils.easings["easeOutQuart"](progress);
-      return this.startPosition + easedProgress * this.scrollForce * this.options.speed * this.multiplier;
+      var easedProgress = utils.easings[this.options.sectionsEasing](progress);
+      return this.startPosition + easedProgress * this.options.speed * this.multiplier * this.endAnimationTime;
+    }
+  }, {
+    key: "animateTimeBucket",
+    value: function animateTimeBucket() {
+      if (!this.checkIfBucketHasTime) return;
+      this.addTimeToProgress(this.removeTimeFromBucket());
+      this.calculateMinMaxOfTimeProgress();
+
+      if (!this.options.sections) {
+        this.createJourney(this.timeProgress);
+      } else {
+        var now = Date.now() - this.startAnimationTime;
+        var progress = now / this.endAnimationTime;
+        if (progress >= 1 || this.endAnimationTime === 0) return this.cancelAnimation();
+        var sectionPosition = this.calculateJourneyPosition(progress);
+        this.createJourney(Math.ceil(sectionPosition));
+      }
+
+      this.requestAnimation();
+    }
+  }, {
+    key: "setUpTimeBucket",
+    value: function setUpTimeBucket(deltaY) {
+      var newMultiplier = deltaY > 0 ? 1 : -1;
+      deltaY = Math.ceil(Math.abs(deltaY)) * newMultiplier;
+      this.timeBucket += Math.abs(deltaY);
+      /* clear timebucket if check of direction */
+
+      if (newMultiplier != this.multiplier) this.timeBucket = Math.abs(deltaY);
+      /* check if bucket exceeds the maximum value */
+
+      if (this.timeBucket > this.options.maxScrollStorage) this.timeBucket = this.options.maxScrollStorage;
+      this.multiplier = newMultiplier;
+    }
+  }, {
+    key: "getSectionTime",
+    value: function getSectionTime(direction) {
+      var sectionIndex;
+
+      if (direction > 0) {
+        var _sectionIndex;
+
+        var newPosition = this.startPosition + this.timeBucket;
+
+        for (var i = 0; i < this.sortedSections.length; i++) {
+          if (newPosition < this.sortedSections[i]) {
+            sectionIndex = i;
+            break;
+          }
+        }
+
+        (_sectionIndex = sectionIndex) !== null && _sectionIndex !== void 0 ? _sectionIndex : sectionIndex = this.sortedSections.length - 1;
+      } else {
+        var _sectionIndex2;
+
+        var _newPosition = this.startPosition - this.timeBucket;
+
+        for (var _i = this.sortedSections.length - 1; _i >= 0; _i--) {
+          if (_newPosition > this.sortedSections[_i]) {
+            sectionIndex = _i;
+            break;
+          }
+        }
+
+        (_sectionIndex2 = sectionIndex) !== null && _sectionIndex2 !== void 0 ? _sectionIndex2 : sectionIndex = 0;
+      }
+
+      return sectionIndex;
+    }
+  }, {
+    key: "initializeSections",
+    value: function initializeSections() {
+      this.startAnimationTime = Date.now();
+      this.startPosition = this.clip.runTimeInfo.currentMillisecond;
+      this.currentSectionIndex = this.getSectionTime(this.multiplier);
+      this.endAnimationTime = Math.abs(this.startPosition - this.sortedSections[this.currentSectionIndex]);
     }
   }, {
     key: "stepper",
     value: function stepper(deltaY) {
-      var _this$startPosition,
-          _this$scrollForce,
-          _this$transitionStart,
-          _this4 = this;
-
-      (_this$startPosition = this.startPosition) !== null && _this$startPosition !== void 0 ? _this$startPosition : this.startPosition = this.clip.runTimeInfo.currentMillisecond;
-      (_this$scrollForce = this.scrollForce) !== null && _this$scrollForce !== void 0 ? _this$scrollForce : this.scrollForce = 0;
-      this.scrollForce += Math.abs(deltaY);
-      var newMultiplier = deltaY > 0 ? 1 : -1;
-      (_this$transitionStart = this.transitionStart) !== null && _this$transitionStart !== void 0 ? _this$transitionStart : this.transitionStart = Date.now();
-
-      if (newMultiplier !== this.multiplier) {
-        this.transitionStart = Date.now();
-        this.startPosition = this.clip.runTimeInfo.currentMillisecond;
-        this.scrollForce = Math.abs(deltaY);
-      }
-
-      this.multiplier = newMultiplier;
-      this.endAnimation = Date.now() - this.transitionStart + 200;
-      window.cancelAnimationFrame(this.requestAnimationID);
-
-      var animate = function animate() {
-        _this4.progress = (Date.now() - _this4.transitionStart) / _this4.endAnimation;
-        if (_this4.progress >= 1) return _this4.cancelAnimation();
-
-        var journeyPosition = _this4.calculateJourneyPosition(_this4.progress);
-
-        if (journeyPosition < 0) journeyPosition = 0;
-        if (journeyPosition > _this4.clip.duration) journeyPosition = _this4.clip.duration;
-
-        _this4.createJourney(journeyPosition);
-
-        _this4.requestAnimationID = window.requestAnimationFrame(animate);
-      };
-
-      animate();
+      this.setUpTimeBucket(deltaY);
+      if (this.options.sections) this.initializeSections();
+      if (!this.requestAnimationID) this.animateTimeBucket();
     }
+    /* scroller end*/
+
   }, {
     key: "millisecondChange",
     value: function millisecondChange(millisecond, state, roundTo, makeJouney) {
@@ -4975,7 +5080,7 @@ var Player = /*#__PURE__*/function () {
       add$5(this);
       donkeyclipListener(this);
       bodyListener(this);
-      if (this.options.wheelSeek) wheelListener(this);
+      if (this.options.type === "scroller") wheelListener(this);
     }
   }, {
     key: "launchIntoFullscreen",

@@ -159,7 +159,7 @@ const AnimateWidth = new CSSEffect(
   },
   {
     selector: ".test",
-    duration: 7000,
+    duration: 10000,
   }
 );
 
@@ -169,16 +169,20 @@ window.player = new Player({
   clip,
   volume: 0,
   speed: 1,
-  controls: false,
+  pointerEvents: true,
+  // controls: false,
   // thumbnailColor: "black",
-  wheelSeek: false,
+  type: "scroller",
+  maxScrollStorage: 100,
+  // scrollAnimation: true,
+  // sections: [0, 1000, 3000, 4000, 5000, 6000, 10000],
   // thumbnail:
   //   "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
   // autoPlay: true,
 });
-window.player.changeSettings({
-  wheelSeek: true,
-});
+// window.player.changeSettings({
+//   wheelSeek: true,
+// });
 
 // window.player.changeInitParams({test: "hello world1",});
 // window.player.changeInitParams({test: "hello world2",});
