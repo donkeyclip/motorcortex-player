@@ -89,6 +89,11 @@ class Player {
     this.scaleClipHost();
     this.eventBroadcast(STATE_CHANGE, this.state);
 
+    if (this.options.type == "scroller") {
+      this.timeBucket = 0;
+      this.timeProgress = 0;
+      this.sortedSections = this.options.sections?.sort((a, b) => a - b);
+    }
     const resizeObserver = new ResizeObserver(() => {
       if (this.options.scaleToFit) {
         this.scaleClipHost();
@@ -113,11 +118,14 @@ class Player {
     options.backgroundColor ??= "black";
     options.fullscreen ??= false;
     options.scaleToFit ??= true;
+    options.sectionsEasing ??= "easeOutQuart";
     options.pointerEvents ??= false;
+    options.scrollAnimation ??= false;
     options.onMillisecondChange ??= null;
     options.speedValues ??= [-1, 0, 0.5, 1, 2];
     options.speed ??= 1;
     options.muted ??= false;
+    options.maxScrollStorage ??= 50;
     options.controls ??= true;
     options.loop ??= false;
     options.volume ??= 1;
@@ -177,7 +185,9 @@ class Player {
         this.scaleClipHost();
       },
       showVolume: () => settingsTrigger(this, "showVolume"),
-      wheelSeek: () => wheelListener(this),
+      type: () => {
+        if (newOptions.type === "scroller") wheelListener(this);
+      },
       theme: () => {
         this.options.theme = newOptions.theme;
         this.setTheme();
@@ -277,50 +287,132 @@ class Player {
       if (after) clip[after]();
     }, 0);
   }
-  cancelAnimation() {
-    this.transitionStart = null;
-    this.startPosition = null;
-    this.scrollForce = null;
-    window.cancelAnimationFrame(this.requestAnimationID);
-  }
-  calculateJourneyPosition(progress) {
-    const easedProgress = utils.easings["easeOutQuart"](progress);
-    return (
-      this.startPosition +
-      easedProgress * this.scrollForce * this.options.speed * this.multiplier
+  /* SCROLLER */
+  animateWithEasing() {
+    this.progress = (Date.now() - this.transitionStart) / this.endAnimation;
+    if (this.progress >= 1) return this.cancelAnimation();
+    let journeyPosition = this.calculateJourneyPosition(this.progress);
+
+    if (journeyPosition < 0) journeyPosition = 0;
+    if (journeyPosition > this.clip.duration)
+      journeyPosition = this.clip.duration;
+    this.createJourney(journeyPosition);
+
+    this.requestAnimationID = window.requestAnimationFrame(
+      this.animateWithEasing.bind(this)
     );
   }
-  stepper(deltaY) {
-    this.startPosition ??= this.clip.runTimeInfo.currentMillisecond;
-    this.scrollForce ??= 0;
-    this.scrollForce += Math.abs(deltaY);
-    const newMultiplier = deltaY > 0 ? 1 : -1;
-    this.transitionStart ??= Date.now();
-    if (newMultiplier !== this.multiplier) {
-      this.transitionStart = Date.now();
-      this.startPosition = this.clip.runTimeInfo.currentMillisecond;
-      this.scrollForce = Math.abs(deltaY);
-    }
-    this.multiplier = newMultiplier;
-    this.endAnimation = Date.now() - this.transitionStart + 200;
+
+  calculateMinMaxOfTimeProgress() {
+    if (this.timeProgress >= this.clip.duration)
+      this.timeProgress = this.clip.duration;
+    if (this.timeProgress <= 0) this.timeProgress = 0;
+  }
+  requestAnimation() {
+    this.requestAnimationID = window.requestAnimationFrame(
+      this.animateTimeBucket.bind(this)
+    );
+  }
+  cancelAnimation() {
     window.cancelAnimationFrame(this.requestAnimationID);
-
-    const animate = () => {
-      this.progress = (Date.now() - this.transitionStart) / this.endAnimation;
-      if (this.progress >= 1) return this.cancelAnimation();
-      let journeyPosition = this.calculateJourneyPosition(this.progress);
-
-      if (journeyPosition < 0) journeyPosition = 0;
-      if (journeyPosition > this.clip.duration)
-        journeyPosition = this.clip.duration;
-      this.createJourney(journeyPosition);
-
-      this.requestAnimationID = window.requestAnimationFrame(animate);
-    };
-
-    animate();
+    this.requestAnimationID = null;
   }
 
+  removeTimeFromBucket() {
+    const log = Math.log(this.timeBucket);
+    const timeRemove = Math.pow(log, 2);
+    this.timeBucket -= this.options.scrollAnimation ? log : timeRemove;
+    return timeRemove;
+  }
+  addTimeToProgress(timeRemove) {
+    this.timeProgress += timeRemove * this.multiplier * this.clip.speed;
+  }
+  checkIfBucketHasTime() {
+    if (this.timeBucket <= 0) {
+      this.requestAnimationID = null;
+      return false;
+    }
+    return true;
+  }
+  calculateJourneyPosition(progress) {
+    const easedProgress = utils.easings[this.options.sectionsEasing](progress);
+    return (
+      this.startPosition +
+      easedProgress *
+        this.options.speed *
+        this.multiplier *
+        this.endAnimationTime
+    );
+  }
+  animateTimeBucket() {
+    if (!this.checkIfBucketHasTime) return;
+    this.addTimeToProgress(this.removeTimeFromBucket());
+    this.calculateMinMaxOfTimeProgress();
+    if (!this.options.sections) {
+      this.createJourney(this.timeProgress);
+    } else {
+      const now = Date.now() - this.startAnimationTime;
+      const progress = now / this.endAnimationTime;
+      if (progress >= 1 || this.endAnimationTime === 0)
+        return this.cancelAnimation();
+      const sectionPosition = this.calculateJourneyPosition(progress);
+      this.createJourney(Math.ceil(sectionPosition));
+    }
+    this.requestAnimation();
+  }
+  setUpTimeBucket(deltaY) {
+    const newMultiplier = deltaY > 0 ? 1 : -1;
+    deltaY = Math.ceil(Math.abs(deltaY)) * newMultiplier;
+    this.timeBucket += Math.abs(deltaY);
+    /* clear timebucket if check of direction */
+    if (newMultiplier != this.multiplier) this.timeBucket = Math.abs(deltaY);
+    /* check if bucket exceeds the maximum value */
+    if (this.timeBucket > this.options.maxScrollStorage)
+      this.timeBucket = this.options.maxScrollStorage;
+
+    this.multiplier = newMultiplier;
+  }
+
+  getSectionTime(direction) {
+    let sectionIndex;
+
+    if (direction > 0) {
+      const newPosition = this.startPosition + this.timeBucket;
+      for (let i = 0; i < this.sortedSections.length; i++) {
+        if (newPosition < this.sortedSections[i]) {
+          sectionIndex = i;
+          break;
+        }
+      }
+      sectionIndex ??= this.sortedSections.length - 1;
+    } else {
+      const newPosition = this.startPosition - this.timeBucket;
+      for (let i = this.sortedSections.length - 1; i >= 0; i--) {
+        if (newPosition > this.sortedSections[i]) {
+          sectionIndex = i;
+          break;
+        }
+      }
+      sectionIndex ??= 0;
+    }
+    return sectionIndex;
+  }
+
+  initializeSections() {
+    this.startAnimationTime = Date.now();
+    this.startPosition = this.clip.runTimeInfo.currentMillisecond;
+    this.currentSectionIndex = this.getSectionTime(this.multiplier);
+    this.endAnimationTime = Math.abs(
+      this.startPosition - this.sortedSections[this.currentSectionIndex]
+    );
+  }
+
+  stepper(deltaY) {
+    this.setUpTimeBucket(deltaY);
+    if (this.options.sections) this.initializeSections();
+    if (!this.requestAnimationID) this.animateTimeBucket();
+  }
+  /* scroller end*/
   millisecondChange(
     millisecond,
     state,
@@ -659,7 +751,7 @@ class Player {
     pointerEventsAdd(this);
     donkeyclipListener(this);
     bodyListener(this);
-    if (this.options.wheelSeek) wheelListener(this);
+    if (this.options.type === "scroller") wheelListener(this);
   }
 
   launchIntoFullscreen(element) {
