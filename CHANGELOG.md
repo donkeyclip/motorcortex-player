@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.4.4](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.3...v2.4.4) (2021-11-28)
+
+
+### Bug Fixes
+
+* sections and scroller ([d02f8ea](https://www.github.com/donkeyclip/motorcortex-player/commit/d02f8ea3dad9da74d3ba24bd247ee93537491332))
+
 ### [2.4.3](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.2...v2.4.3) (2021-11-22)
 
 
