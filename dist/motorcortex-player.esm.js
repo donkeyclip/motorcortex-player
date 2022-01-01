@@ -78,7 +78,7 @@ function _defineProperty(obj, key, value) {
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-var fails$m = function (exec) {
+var fails$n = function (exec) {
   try {
     return !!exec();
   } catch (error) {
@@ -86,9 +86,9 @@ var fails$m = function (exec) {
   }
 };
 
-var fails$l = fails$m; // Detect IE8's incomplete defineProperty implementation
+var fails$m = fails$n; // Detect IE8's incomplete defineProperty implementation
 
-var descriptors = !fails$l(function () {
+var descriptors = !fails$m(function () {
   // eslint-disable-next-line es/no-object-defineproperty -- required for testing
   return Object.defineProperty({}, 1, {
     get: function () {
@@ -100,9 +100,9 @@ var descriptors = !fails$l(function () {
 var FunctionPrototype$3 = Function.prototype;
 var bind$1 = FunctionPrototype$3.bind;
 var call$a = FunctionPrototype$3.call;
-var callBind = bind$1 && bind$1.bind(call$a);
+var uncurryThis$s = bind$1 && bind$1.bind(call$a, call$a);
 var functionUncurryThis = bind$1 ? function (fn) {
-  return fn && callBind(call$a, fn);
+  return fn && uncurryThis$s(fn);
 } : function (fn) {
   return fn && function () {
     return call$a.apply(fn, arguments);
@@ -148,22 +148,22 @@ var hasOwnProperty_1 = Object.hasOwn || function hasOwn(it, key) {
   return hasOwnProperty(toObject$5(it), key);
 };
 
-var DESCRIPTORS$b = descriptors;
+var DESCRIPTORS$c = descriptors;
 var hasOwn$8 = hasOwnProperty_1;
 var FunctionPrototype$2 = Function.prototype; // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 
-var getDescriptor = DESCRIPTORS$b && Object.getOwnPropertyDescriptor;
+var getDescriptor = DESCRIPTORS$c && Object.getOwnPropertyDescriptor;
 var EXISTS$1 = hasOwn$8(FunctionPrototype$2, 'name'); // additional protection from minified / mangled / dropped function names
 
 var PROPER = EXISTS$1 && function something() {
   /* empty */
 }.name === 'something';
 
-var CONFIGURABLE = EXISTS$1 && (!DESCRIPTORS$b || DESCRIPTORS$b && getDescriptor(FunctionPrototype$2, 'name').configurable);
+var CONFIGURABLE$1 = EXISTS$1 && (!DESCRIPTORS$c || DESCRIPTORS$c && getDescriptor(FunctionPrototype$2, 'name').configurable);
 var functionName = {
   EXISTS: EXISTS$1,
   PROPER: PROPER,
-  CONFIGURABLE: CONFIGURABLE
+  CONFIGURABLE: CONFIGURABLE$1
 };
 
 var objectDefineProperty = {};
@@ -190,17 +190,31 @@ var documentCreateElement$1 = function (it) {
   return EXISTS ? document$1.createElement(it) : {};
 };
 
-var DESCRIPTORS$a = descriptors;
-var fails$k = fails$m;
+var DESCRIPTORS$b = descriptors;
+var fails$l = fails$n;
 var createElement = documentCreateElement$1; // Thank's IE8 for his funny defineProperty
 
-var ie8DomDefine = !DESCRIPTORS$a && !fails$k(function () {
+var ie8DomDefine = !DESCRIPTORS$b && !fails$l(function () {
   // eslint-disable-next-line es/no-object-defineproperty -- required for testing
   return Object.defineProperty(createElement('div'), 'a', {
     get: function () {
       return 7;
     }
   }).a != 7;
+});
+
+var DESCRIPTORS$a = descriptors;
+var fails$k = fails$n; // V8 ~ Chrome 36-
+// https://bugs.chromium.org/p/v8/issues/detail?id=3334
+
+var v8PrototypeDefineBug = DESCRIPTORS$a && fails$k(function () {
+  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
+  return Object.defineProperty(function () {
+    /* empty */
+  }, 'prototype', {
+    value: 42,
+    writable: false
+  }).prototype != 42;
 });
 
 var global$C = global$G;
@@ -265,7 +279,7 @@ var engineV8Version = version;
 
 /* eslint-disable es/no-symbol -- required for testing */
 var V8_VERSION$2 = engineV8Version;
-var fails$j = fails$m; // eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
+var fails$j = fails$n; // eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
 
 var nativeSymbol = !!Object.getOwnPropertySymbols && !fails$j(function () {
   var symbol = Symbol(); // Chrome 38 Symbol has incorrect toString conversion
@@ -366,9 +380,9 @@ var store$2 = sharedStore;
 (shared$4.exports = function (key, value) {
   return store$2[key] || (store$2[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.20.1',
+  version: '3.20.2',
   mode: 'global',
-  copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
+  copyright: '© 2022 Denis Pushkarev (zloirock.ru)'
 });
 
 var uncurryThis$p = functionUncurryThis;
@@ -446,14 +460,39 @@ var toPropertyKey$3 = function (argument) {
 var global$r = global$G;
 var DESCRIPTORS$9 = descriptors;
 var IE8_DOM_DEFINE$1 = ie8DomDefine;
+var V8_PROTOTYPE_DEFINE_BUG$1 = v8PrototypeDefineBug;
 var anObject$9 = anObject$a;
 var toPropertyKey$2 = toPropertyKey$3;
 var TypeError$a = global$r.TypeError; // eslint-disable-next-line es/no-object-defineproperty -- safe
 
-var $defineProperty = Object.defineProperty; // `Object.defineProperty` method
+var $defineProperty = Object.defineProperty; // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+
+var $getOwnPropertyDescriptor$1 = Object.getOwnPropertyDescriptor;
+var ENUMERABLE = 'enumerable';
+var CONFIGURABLE = 'configurable';
+var WRITABLE = 'writable'; // `Object.defineProperty` method
 // https://tc39.es/ecma262/#sec-object.defineproperty
 
-objectDefineProperty.f = DESCRIPTORS$9 ? $defineProperty : function defineProperty(O, P, Attributes) {
+objectDefineProperty.f = DESCRIPTORS$9 ? V8_PROTOTYPE_DEFINE_BUG$1 ? function defineProperty(O, P, Attributes) {
+  anObject$9(O);
+  P = toPropertyKey$2(P);
+  anObject$9(Attributes);
+
+  if (typeof O === 'function' && P === 'prototype' && 'value' in Attributes && WRITABLE in Attributes && !Attributes[WRITABLE]) {
+    var current = $getOwnPropertyDescriptor$1(O, P);
+
+    if (current && current[WRITABLE]) {
+      O[P] = Attributes.value;
+      Attributes = {
+        configurable: CONFIGURABLE in Attributes ? Attributes[CONFIGURABLE] : current[CONFIGURABLE],
+        enumerable: ENUMERABLE in Attributes ? Attributes[ENUMERABLE] : current[ENUMERABLE],
+        writable: false
+      };
+    }
+  }
+
+  return $defineProperty(O, P, Attributes);
+} : $defineProperty : function defineProperty(O, P, Attributes) {
   anObject$9(O);
   P = toPropertyKey$2(P);
   anObject$9(Attributes);
@@ -528,7 +567,7 @@ var classofRaw$1 = function (it) {
 
 var global$q = global$G;
 var uncurryThis$m = functionUncurryThis;
-var fails$i = fails$m;
+var fails$i = fails$n;
 var classof$9 = classofRaw$1;
 var Object$2 = global$q.Object;
 var split = uncurryThis$m(''.split); // fallback for non-array-like ES3 and non-enumerable old V8 strings
@@ -879,7 +918,7 @@ var copyConstructorProperties$1 = function (target, source, exceptions) {
   }
 };
 
-var fails$h = fails$m;
+var fails$h = fails$n;
 var isCallable$7 = isCallable$g;
 var replacement = /#|\.prototype\./;
 
@@ -1074,7 +1113,7 @@ var merge = function (array, left, right, comparefn) {
 
 var arraySort = mergeSort;
 
-var fails$g = fails$m;
+var fails$g = fails$n;
 
 var arrayMethodIsStrict$1 = function (METHOD_NAME, argument) {
   var method = [][METHOD_NAME];
@@ -1103,7 +1142,7 @@ var aCallable = aCallable$2;
 var toObject$4 = toObject$6;
 var lengthOfArrayLike$3 = lengthOfArrayLike$6;
 var toString$9 = toString$a;
-var fails$f = fails$m;
+var fails$f = fails$n;
 var internalSort = arraySort;
 var arrayMethodIsStrict = arrayMethodIsStrict$1;
 var FF = engineFfVersion;
@@ -1225,7 +1264,7 @@ var objectKeys$1 = Object.keys || function keys(O) {
 var $$a = _export;
 var toObject$3 = toObject$6;
 var nativeKeys = objectKeys$1;
-var fails$e = fails$m;
+var fails$e = fails$n;
 var FAILS_ON_PRIMITIVES = fails$e(function () {
   nativeKeys(1);
 }); // `Object.keys` method
@@ -1250,7 +1289,7 @@ var isArray$3 = Array.isArray || function isArray(argument) {
 };
 
 var uncurryThis$g = functionUncurryThis;
-var fails$d = fails$m;
+var fails$d = fails$n;
 var isCallable$5 = isCallable$g;
 var classof$5 = classof$8;
 var getBuiltIn$3 = getBuiltIn$7;
@@ -1338,7 +1377,7 @@ var arraySpeciesCreate$2 = function (originalArray, length) {
   return new (arraySpeciesConstructor(originalArray))(length === 0 ? 0 : length);
 };
 
-var fails$c = fails$m;
+var fails$c = fails$n;
 var wellKnownSymbol$9 = wellKnownSymbol$e;
 var V8_VERSION$1 = engineV8Version;
 var SPECIES$3 = wellKnownSymbol$9('species');
@@ -1441,7 +1480,10 @@ $$9({
   }
 });
 
+var objectDefineProperties = {};
+
 var DESCRIPTORS$5 = descriptors;
+var V8_PROTOTYPE_DEFINE_BUG = v8PrototypeDefineBug;
 var definePropertyModule$2 = objectDefineProperty;
 var anObject$7 = anObject$a;
 var toIndexedObject$1 = toIndexedObject$5;
@@ -1449,7 +1491,7 @@ var objectKeys = objectKeys$1; // `Object.defineProperties` method
 // https://tc39.es/ecma262/#sec-object.defineproperties
 // eslint-disable-next-line es/no-object-defineproperties -- safe
 
-var objectDefineProperties = DESCRIPTORS$5 ? Object.defineProperties : function defineProperties(O, Properties) {
+objectDefineProperties.f = DESCRIPTORS$5 && !V8_PROTOTYPE_DEFINE_BUG ? Object.defineProperties : function defineProperties(O, Properties) {
   anObject$7(O);
   var props = toIndexedObject$1(Properties);
   var keys = objectKeys(Properties);
@@ -1467,7 +1509,7 @@ var html$1 = getBuiltIn$2('document', 'documentElement');
 
 /* global ActiveXObject -- old IE, WSH */
 var anObject$6 = anObject$a;
-var defineProperties = objectDefineProperties;
+var definePropertiesModule = objectDefineProperties;
 var enumBugKeys = enumBugKeys$3;
 var hiddenKeys = hiddenKeys$4;
 var html = html$1;
@@ -1552,7 +1594,7 @@ var objectCreate = Object.create || function create(O, Properties) {
     result[IE_PROTO] = O;
   } else result = NullProtoObject();
 
-  return Properties === undefined ? result : defineProperties(result, Properties);
+  return Properties === undefined ? result : definePropertiesModule.f(result, Properties);
 };
 
 var wellKnownSymbol$8 = wellKnownSymbol$e;
@@ -1744,7 +1786,7 @@ var uncurryThis$c = functionUncurryThis;
 var toIntegerOrInfinity$2 = toIntegerOrInfinity$7;
 var thisNumberValue$1 = thisNumberValue$2;
 var $repeat = stringRepeat;
-var fails$b = fails$m;
+var fails$b = fails$n;
 var RangeError = global$d.RangeError;
 var String$2 = global$d.String;
 var floor$1 = Math.floor;
@@ -1887,7 +1929,7 @@ $$5({
 
 var $$4 = _export;
 var global$c = global$G;
-var fails$a = fails$m;
+var fails$a = fails$n;
 var isArray = isArray$3;
 var isObject$2 = isObject$b;
 var toObject$1 = toObject$6;
@@ -1967,7 +2009,7 @@ var regexpFlags$1 = function () {
   return result;
 };
 
-var fails$9 = fails$m;
+var fails$9 = fails$n;
 var global$b = global$G; // babel-minify and Closure Compiler transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError
 
 var $RegExp$2 = global$b.RegExp;
@@ -1993,7 +2035,7 @@ var regexpStickyHelpers = {
   UNSUPPORTED_Y: UNSUPPORTED_Y$2
 };
 
-var fails$8 = fails$m;
+var fails$8 = fails$n;
 var global$a = global$G; // babel-minify and Closure Compiler transpiles RegExp('.', 's') -> /./s and it causes SyntaxError
 
 var $RegExp$1 = global$a.RegExp;
@@ -2002,7 +2044,7 @@ var regexpUnsupportedDotAll = fails$8(function () {
   return !(re.dotAll && re.exec('\n') && re.flags === 's');
 });
 
-var fails$7 = fails$m;
+var fails$7 = fails$n;
 var global$9 = global$G; // babel-minify and Closure Compiler transpiles RegExp('(?<a>b)', 'g') -> /(?<a>b)/g and it causes SyntaxError
 
 var $RegExp = global$9.RegExp;
@@ -2156,7 +2198,7 @@ var functionApply = typeof Reflect == 'object' && Reflect.apply || (bind ? call$
 var uncurryThis$a = functionUncurryThis;
 var redefine$4 = redefine$6.exports;
 var regexpExec$1 = regexpExec$2;
-var fails$6 = fails$m;
+var fails$6 = fails$n;
 var wellKnownSymbol$3 = wellKnownSymbol$e;
 var createNonEnumerableProperty$1 = createNonEnumerableProperty$5;
 var SPECIES$1 = wellKnownSymbol$3('species');
@@ -2360,7 +2402,7 @@ var apply$1 = functionApply;
 var call$2 = functionCall;
 var uncurryThis$7 = functionUncurryThis;
 var fixRegExpWellKnownSymbolLogic$1 = fixRegexpWellKnownSymbolLogic;
-var fails$5 = fails$m;
+var fails$5 = fails$n;
 var anObject$3 = anObject$a;
 var isCallable$3 = isCallable$g;
 var toIntegerOrInfinity = toIntegerOrInfinity$7;
@@ -2522,7 +2564,7 @@ var stringTrim = {
 };
 
 var PROPER_FUNCTION_NAME$1 = functionName.PROPER;
-var fails$4 = fails$m;
+var fails$4 = fails$n;
 var whitespaces = whitespaces$2;
 var non = '\u200B\u0085\u180E'; // check that a method works with the correct list
 // of whitespaces and has a correct name
@@ -2637,7 +2679,7 @@ var toString$2 = toString$a;
 var regExpFlags$1 = regexpFlags$1;
 var stickyHelpers = regexpStickyHelpers;
 var redefine$3 = redefine$6.exports;
-var fails$3 = fails$m;
+var fails$3 = fails$n;
 var hasOwn$1 = hasOwnProperty_1;
 var enforceInternalState = internalState.enforce;
 var setSpecies = setSpecies$1;
@@ -2898,7 +2940,7 @@ var redefine$2 = redefine$6.exports;
 var anObject$1 = anObject$a;
 var isPrototypeOf$1 = objectIsPrototypeOf;
 var $toString = toString$a;
-var fails$2 = fails$m;
+var fails$2 = fails$n;
 var regExpFlags = regexpFlags$1;
 var TO_STRING = 'toString';
 var RegExpPrototype = RegExp.prototype;
@@ -2978,7 +3020,7 @@ var inheritIfRequired = inheritIfRequired$2;
 var isPrototypeOf = objectIsPrototypeOf;
 var isSymbol = isSymbol$3;
 var toPrimitive = toPrimitive$2;
-var fails$1 = fails$m;
+var fails$1 = fails$n;
 var getOwnPropertyNames = objectGetOwnPropertyNames.f;
 var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
 var defineProperty = objectDefineProperty.f;
@@ -3580,7 +3622,7 @@ var global$1 = global$G;
 var getBuiltIn = getBuiltIn$7;
 var apply = functionApply;
 var uncurryThis = functionUncurryThis;
-var fails = fails$m;
+var fails = fails$n;
 var Array$1 = global$1.Array;
 var $stringify = getBuiltIn('JSON', 'stringify');
 var exec = uncurryThis(/./.exec);
