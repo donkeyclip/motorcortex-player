@@ -13,7 +13,7 @@ Among other functionality, the player allows the user to play/pause and seek a C
 
 ## Usage
 
-The player can be used with any MotorCortex Clip. Here is an example with the minimum possible configuration:
+The player can be used with any MotorCortex Clip. View a [demo here](https://donkeyclip.github.io/motorcortex-player/demo/) Here is an example with the minimum possible configuration:
 
 ```javascript
 import MCPlayer from "@donkeyclip/motorcortex-player";
