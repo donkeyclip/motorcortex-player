@@ -34,5 +34,12 @@ clip.addIncident(AnimateWidth, 0);
 
 window.player = new Player({
   clip,
-  showVolume: true,
+  themeCSS: `.--mc-player.theme-test {
+    --activeColor: 136, 136, 500;
+    --defaultColor: 136, 136, 136;
+    --backgroundColor: 29, 31, 37, 1;
+    --loopBarColor: rgba(var(--activeColor), 0.2);
+    --grad-display: none;
+  }`,
+  theme: "theme-test",
 });

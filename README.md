@@ -47,6 +47,7 @@ Except for the (mandatory) `clip` option that should be passed on the player on 
 | buttons | { loop: true, fullScreen: true, settings: true }| An object via which you can select which of the three buttons (#4: Loop via the key "loop", #5: Settings via the key "settings", #6: Full Screen via the key "fullScreen"). Enable and disable the buttons by setting their corresponding keys to true or false, accordingly |  
 | timeFormat | ss | This option allows you to set the time units on the Time (#3) of the Player. The default is ss, which means the Time will be presented in the form: < elapsed seconds >/< total seconds >. In the case you want a representation in the form: ms/ms you can set this option to "ms" |
 | theme | "transparent" | Here you can pick one of the available themes of the player. The available themes are: "transparent", "blue", "yellow", "green","whiteGold","darkGold","dark" and "default" |
+| themeCSS| - | Define your own theme using this property. [Checkout how to define custom themes](#custom)
 | volume| 1 | With this option you can define the volume value. Acceptable values are any number between or equal to 0 and 1 |
 | speed| 1 | A property from witch you can select the execution speed. Any value positive or negative is acceptable|
 | loop|false| A boolean indicator whether the clip will initalize with the loop option on|
@@ -124,16 +125,21 @@ player.changeInitParams({ text: "hello world" });
 
 ### custom
 
-All you have to do is define these variables and use the <name> in the property theme of player options
+All you have to do is define the following css text within the property `themeCSS` and use the name in the property theme of player options
 
-```css
-.--mc-player.theme-<name > {
-  --activeColor: 136, 136, 136;
-  --defaultColor: 136, 136, 136;
-  --backgroundColor: 29, 31, 37, 1;
-  --loopBarColor: rgba(var(--activeColor), 0.2);
-  --grad-display: none;
-}
+```javascript
+const player = new MCPlayer({
+  clip: MyClip,
+  themeCSS: `
+  .--mc-player.theme-test {
+    --activeColor: 136, 136, 500;
+    --defaultColor: 136, 136, 136;
+    --backgroundColor: 29, 31, 37, 1;
+    --loopBarColor: rgba(var(--activeColor), 0.2);
+    --grad-display: none;
+  }`,
+  theme: "theme-test",
+});
 ```
 
 ## DonkeyClip
