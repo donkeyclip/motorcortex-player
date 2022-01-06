@@ -92,13 +92,6 @@ player.createLoop(1000, 3000);
 player.changeInitParams({ text: "hello world" });
 ```
 
-```html
-<script
-  src="https://staging-api.donkeyclip.com/embed/xxxxxxxx-xxxx/"
-  data-scale-to-fit
-/>
-```
-
 ## Themes
 
 ### transparent
