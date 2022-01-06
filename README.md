@@ -154,4 +154,4 @@ https://api.donkeyclip.com/v1/embed/xxxxxxxxxx?controls=false&autoPlay&scaleToFi
 
 [MIT License](https://opensource.org/licenses/MIT)
 
-[![Donkeyclip](https://raw.githubusercontent.com/donkeyclip/presskit/b9125a84f0ab508805b1c2e427a48115b711732b/static/logos/donkey%20clip%20logo.svg)](https://donkeyclip.com)
+[<img src="https://presskit.donkeyclip.com/logos/donkey%20clip%20logo.svg" width=250></img>](https://donkeyclip.com)
