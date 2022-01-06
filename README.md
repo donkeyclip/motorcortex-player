@@ -22,7 +22,7 @@ const player = new MCPlayer({ clip: MyClip });
 
 ## Overview
 
-![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/teo-player-numbers.png)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/teo-player-numbers.png?)
 
 1. Play/pause button
 2. Master volume
@@ -97,31 +97,31 @@ player.changeInitParams({ text: "hello world" });
 
 ### transparent
 
-![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/transparent.png)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/transparent.png?)
 
 ### blue
 
-![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/blue.png)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/blue.png?)
 
 ### green
 
-![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/green.png)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/green.png?)
 
 ### yellow
 
-![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/yellow.png)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/yellow.png?)
 
 ### dark
 
-![Player Controls](https://donkey-spaces.ams3.cdn.digitaloceanspaces.com/assets/motorcortex-player/dark.png)
+![Player Controls](https://donkey-spaces.ams3.cdn.digitaloceanspaces.com/assets/motorcortex-player/dark.png?)
 
 ### darkGold
 
-![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/darkGold.png)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/darkGold.png?)
 
 ### whiteGold
 
-![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/whiteGold.png)
+![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/whiteGold.png?)
 
 ### custom
 
