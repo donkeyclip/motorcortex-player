@@ -1,5 +1,5 @@
 import { HTMLClip, CSSEffect } from "@donkeyclip/motorcortex";
-import Player from "../../src";
+import Player from "../src";
 
 const clip = new HTMLClip({
   css: `.test{ background:white;width:100%; height:100%; }`,
