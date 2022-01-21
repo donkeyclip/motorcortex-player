@@ -1,8 +1,5 @@
 import { addListener, removeListener } from "../helpers";
-import {
-  SHOW_VOLUME_CHANGE,
-  STATE_CHANGE,
-} from "./events";
+import { SHOW_VOLUME_CHANGE, STATE_CHANGE } from "./events";
 
 const showPointerEvents = (_this) => {
   if (!_this.elements.showPointerEventsCheckbox.checked) {
@@ -39,6 +36,9 @@ const showVolume = (_this) => {
 };
 
 export function add(_this) {
+  _this.elements.settingsPanel.onblur = () => {
+    _this.elements.settingsButton.click();
+  };
 
   _this.elements.settingsPointerEvents.onclick = () => showPointerEvents(_this);
 
@@ -55,6 +55,8 @@ export function add(_this) {
       if (_this.elements.settingsPanel.className.includes("m-fadeOut")) {
         removeListener("click", showHideSettings, false);
         _this.eventBroadcast(STATE_CHANGE, _this.state);
+      } else {
+        _this.elements.settingsPanel.focus();
       }
     };
 
@@ -73,11 +75,9 @@ export function add(_this) {
   };
 }
 export function trigger(_this, setting) {
-  if (setting === "showIndicator") {
-    showIndicator(_this);
-  } else if (setting === "showPointerEvents") {
+  if (setting === "showPointerEvents") {
     showPointerEvents(_this);
   } else if (setting === "showVolume") {
     showVolume(_this);
-  } 
+  }
 }

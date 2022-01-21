@@ -78,6 +78,9 @@
 .--mc-player svg {
   width: 22px;
 }
+.--mcp-settings-panel:focus {
+  outline: none;
+}
 .--mcp-settings-panel svg {
   width: 10px;
 }
