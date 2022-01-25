@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.4...v2.5.0) (2022-01-25)
+
+
+### Features
+
+* hide settings panel onblur ([4a34eb7](https://www.github.com/donkeyclip/motorcortex-player/commit/4a34eb7448e839a06d4395fd17fce7be72882417))
+
 ### [2.4.4](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.3...v2.4.4) (2021-11-28)
 
 
