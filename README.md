@@ -1,29 +1,33 @@
-# MotorCortex Player
+# MotorCortex-Player
 
-## Installation
+**Table of Contents**
 
-`~ npm install @donkeyclip/motorcortex-player`  
-or  
-`~ yarn add @donkeyclip/motorcortex-player`
+- [MotorCortex-Player](#motorcortex-player)
+  - [Demo](#demo)
+- [Intro / Features](#intro--features)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Importing](#importing)
+- [Creating Player](#creating-player)
+  - [Options](#options)
+  - [Methods](#methods)
+  - [Themes](#themes)
+  - [DonkeyClip QueryParams](#donkeyclip-queryparams)
+- [Contributing](#contributing)
+- [License](#license)
+- [Sponsored by](#sponsored-by)
 
-## Purpose
+## Demo
+[Check it out here](https://donkeyclip.github.io/motorcortex-player/demo/)
 
+# Intro / Features
 MotorCortex Player is a video-like player specially designed for MotorCortex Clips.  
 Among other functionality, the player allows the user to play/pause and seek a Clip, control the master volume and the playback speed and more.
 
-## Usage
+What does our player include?
 
-The player can be used with any MotorCortex Clip. [Checkout the demo here](https://donkeyclip.github.io/motorcortex-player/demo/). Here is an example with the minimum possible configuration:
 
-```javascript
-import MCPlayer from "@donkeyclip/motorcortex-player";
-const player = new MCPlayer({ clip: MyClip });
-```
-
-## Overview
-
-![Player Controls](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/teo-player-numbers.png?)
-
+![Player Controls Image](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/teo-player-numbers.png?)
 1. Play/pause button
 2. Master volume
 3. Time: the time passed on the Clip's playback/total clip time
@@ -36,6 +40,28 @@ const player = new MCPlayer({ clip: MyClip });
 10. Player's background-color
 11. The actual motorcortex clip
 
+# Getting Started
+
+## Installation
+
+```bash
+$ npm install --save @donkeyclip/motorcortex-player
+# OR
+$ yarn add @donkeyclip/motorcortex-player
+```
+
+## Importing
+
+```javascript
+import MCPlayer from "@donkeyclip/motorcortex-player";
+```
+
+# Creating Player
+
+The player can be used with any MotorCortex Clip. Here is an example with the minimum possible configuration:
+```javascript
+const player = new MCPlayer({ clip: MyClip });
+```
 ## Options
 
 Except for the (mandatory) `clip` option that should be passed on the player on instantiation there is a list of other supported options:  
@@ -142,16 +168,26 @@ const player = new MCPlayer({
 });
 ```
 
-## DonkeyClip
+## DonkeyClip QueryParams
 
-All player options can be exploited by donkey clips through query parameters. Any option of type boolean can be enabled without the need of the value "true". To disable options that are enabled by default you have to set the value the "false" for example:
+All player options can be exploited by donkeyclips through query parameters. Any option of type boolean can be enabled without the need of the value "true". To disable options that are enabled by default you have to set the value the "false" for example:
 
 ```
 https://api.donkeyclip.com/v1/embed/xxxxxxxxxx?controls=false&autoPlay&scaleToFit&theme=yellow&speed=2
 ```
 
-## License
+# Contributing 
+
+In general, we follow the "fork-and-pull" Git workflow, so if you want to submit patches and additions you should follow the next steps:
+1.	**Fork** the repo on GitHub
+2.	**Clone** the project to your own machine
+3.	**Commit** changes to your own branch
+4.	**Push** your work back up to your fork
+5.	Submit a **Pull request** so that we can review your changes
+
+# License
 
 [MIT License](https://opensource.org/licenses/MIT)
 
+# Sponsored by
 [<img src="https://presskit.donkeyclip.com/logos/donkey%20clip%20logo.svg" width=250></img>](https://donkeyclip.com)
