@@ -175,6 +175,12 @@ All player options can be exploited by donkeyclips through query parameters. Any
 ```
 https://api.donkeyclip.com/v1/embed/xxxxxxxxxx?controls=false&autoPlay&scaleToFit&theme=yellow&speed=2
 ```
+For development purposes you can use the following query parameters to test different MotorCortex, Player, and Bundler versions:
+- mcversion
+- playerversion
+- bundlerversion
+
+For example: `https://api.donkeyclip.com/v1/embed/xxxxxxxxxx?controls&mcversion=7.4.0&playerversion=2.5.0&bundlerversion=7.0.1`
 
 # Contributing 
 
