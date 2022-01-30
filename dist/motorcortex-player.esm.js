@@ -78,7 +78,7 @@ function _defineProperty(obj, key, value) {
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-var fails$p = function (exec) {
+var fails$q = function (exec) {
   try {
     return !!exec();
   } catch (error) {
@@ -86,9 +86,9 @@ var fails$p = function (exec) {
   }
 };
 
-var fails$o = fails$p; // Detect IE8's incomplete defineProperty implementation
+var fails$p = fails$q; // Detect IE8's incomplete defineProperty implementation
 
-var descriptors = !fails$o(function () {
+var descriptors = !fails$p(function () {
   // eslint-disable-next-line es/no-object-defineproperty -- required for testing
   return Object.defineProperty({}, 1, {
     get: function () {
@@ -97,11 +97,22 @@ var descriptors = !fails$o(function () {
   })[1] != 7;
 });
 
+var fails$o = fails$q;
+var functionBindNative = !fails$o(function () {
+  var test = function () {
+    /* empty */
+  }.bind(); // eslint-disable-next-line no-prototype-builtins -- safe
+
+
+  return typeof test != 'function' || test.hasOwnProperty('prototype');
+});
+
+var NATIVE_BIND$2 = functionBindNative;
 var FunctionPrototype$3 = Function.prototype;
-var bind$1 = FunctionPrototype$3.bind;
+var bind = FunctionPrototype$3.bind;
 var call$a = FunctionPrototype$3.call;
-var uncurryThis$u = bind$1 && bind$1.bind(call$a, call$a);
-var functionUncurryThis = bind$1 ? function (fn) {
+var uncurryThis$u = NATIVE_BIND$2 && bind.bind(call$a, call$a);
+var functionUncurryThis = NATIVE_BIND$2 ? function (fn) {
   return fn && uncurryThis$u(fn);
 } : function (fn) {
   return fn && function () {
@@ -191,8 +202,8 @@ var documentCreateElement$1 = function (it) {
 };
 
 var DESCRIPTORS$b = descriptors;
-var fails$n = fails$p;
-var createElement = documentCreateElement$1; // Thank's IE8 for his funny defineProperty
+var fails$n = fails$q;
+var createElement = documentCreateElement$1; // Thanks to IE8 for its funny defineProperty
 
 var ie8DomDefine = !DESCRIPTORS$b && !fails$n(function () {
   // eslint-disable-next-line es/no-object-defineproperty -- required for testing
@@ -204,7 +215,7 @@ var ie8DomDefine = !DESCRIPTORS$b && !fails$n(function () {
 });
 
 var DESCRIPTORS$a = descriptors;
-var fails$m = fails$p; // V8 ~ Chrome 36-
+var fails$m = fails$q; // V8 ~ Chrome 36-
 // https://bugs.chromium.org/p/v8/issues/detail?id=3334
 
 var v8PrototypeDefineBug = DESCRIPTORS$a && fails$m(function () {
@@ -227,8 +238,9 @@ var anObject$a = function (argument) {
   throw TypeError$e(String$5(argument) + ' is not an object');
 };
 
+var NATIVE_BIND$1 = functionBindNative;
 var call$9 = Function.prototype.call;
-var functionCall = call$9.bind ? call$9.bind(call$9) : function () {
+var functionCall = NATIVE_BIND$1 ? call$9.bind(call$9) : function () {
   return call$9.apply(call$9, arguments);
 };
 
@@ -279,7 +291,7 @@ var engineV8Version = version;
 
 /* eslint-disable es/no-symbol -- required for testing */
 var V8_VERSION$2 = engineV8Version;
-var fails$l = fails$p; // eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
+var fails$l = fails$q; // eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
 
 var nativeSymbol = !!Object.getOwnPropertySymbols && !fails$l(function () {
   var symbol = Symbol(); // Chrome 38 Symbol has incorrect toString conversion
@@ -380,9 +392,11 @@ var store$2 = sharedStore;
 (shared$4.exports = function (key, value) {
   return store$2[key] || (store$2[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.20.2',
+  version: '3.20.3',
   mode: 'global',
-  copyright: '© 2022 Denis Pushkarev (zloirock.ru)'
+  copyright: '© 2014-2022 Denis Pushkarev (zloirock.ru)',
+  license: 'https://github.com/zloirock/core-js/blob/v3.20.3/LICENSE',
+  source: 'https://github.com/zloirock/core-js'
 });
 
 var uncurryThis$r = functionUncurryThis;
@@ -567,7 +581,7 @@ var classofRaw$1 = function (it) {
 
 var global$s = global$I;
 var uncurryThis$o = functionUncurryThis;
-var fails$k = fails$p;
+var fails$k = fails$q;
 var classof$9 = classofRaw$1;
 var Object$2 = global$s.Object;
 var split = uncurryThis$o(''.split); // fallback for non-array-like ES3 and non-enumerable old V8 strings
@@ -918,7 +932,7 @@ var copyConstructorProperties$1 = function (target, source, exceptions) {
   }
 };
 
-var fails$j = fails$p;
+var fails$j = fails$q;
 var isCallable$7 = isCallable$g;
 var replacement = /#|\.prototype\./;
 
@@ -1113,7 +1127,7 @@ var merge = function (array, left, right, comparefn) {
 
 var arraySort = mergeSort;
 
-var fails$i = fails$p;
+var fails$i = fails$q;
 
 var arrayMethodIsStrict$1 = function (METHOD_NAME, argument) {
   var method = [][METHOD_NAME];
@@ -1142,7 +1156,7 @@ var aCallable = aCallable$2;
 var toObject$4 = toObject$6;
 var lengthOfArrayLike$3 = lengthOfArrayLike$6;
 var toString$b = toString$c;
-var fails$h = fails$p;
+var fails$h = fails$q;
 var internalSort = arraySort;
 var arrayMethodIsStrict = arrayMethodIsStrict$1;
 var FF = engineFfVersion;
@@ -1264,7 +1278,7 @@ var objectKeys$1 = Object.keys || function keys(O) {
 var $$c = _export;
 var toObject$3 = toObject$6;
 var nativeKeys = objectKeys$1;
-var fails$g = fails$p;
+var fails$g = fails$q;
 var FAILS_ON_PRIMITIVES = fails$g(function () {
   nativeKeys(1);
 }); // `Object.keys` method
@@ -1289,7 +1303,7 @@ var isArray$3 = Array.isArray || function isArray(argument) {
 };
 
 var uncurryThis$i = functionUncurryThis;
-var fails$f = fails$p;
+var fails$f = fails$q;
 var isCallable$5 = isCallable$g;
 var classof$5 = classof$8;
 var getBuiltIn$3 = getBuiltIn$7;
@@ -1377,7 +1391,7 @@ var arraySpeciesCreate$2 = function (originalArray, length) {
   return new (arraySpeciesConstructor(originalArray))(length === 0 ? 0 : length);
 };
 
-var fails$e = fails$p;
+var fails$e = fails$q;
 var wellKnownSymbol$9 = wellKnownSymbol$e;
 var V8_VERSION$1 = engineV8Version;
 var SPECIES$3 = wellKnownSymbol$9('species');
@@ -1790,7 +1804,7 @@ var stringTrim = {
 };
 
 var global$g = global$I;
-var fails$d = fails$p;
+var fails$d = fails$q;
 var uncurryThis$e = functionUncurryThis;
 var toString$8 = toString$c;
 var trim$2 = stringTrim.trim;
@@ -1851,7 +1865,7 @@ var uncurryThis$c = functionUncurryThis;
 var toIntegerOrInfinity$2 = toIntegerOrInfinity$7;
 var thisNumberValue$1 = thisNumberValue$2;
 var $repeat = stringRepeat;
-var fails$c = fails$p;
+var fails$c = fails$q;
 var RangeError = global$e.RangeError;
 var String$2 = global$e.String;
 var floor$1 = Math.floor;
@@ -1994,7 +2008,7 @@ $$6({
 
 var $$5 = _export;
 var global$d = global$I;
-var fails$b = fails$p;
+var fails$b = fails$q;
 var isArray = isArray$3;
 var isObject$2 = isObject$b;
 var toObject$1 = toObject$6;
@@ -2074,7 +2088,7 @@ var regexpFlags$1 = function () {
   return result;
 };
 
-var fails$a = fails$p;
+var fails$a = fails$q;
 var global$c = global$I; // babel-minify and Closure Compiler transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError
 
 var $RegExp$2 = global$c.RegExp;
@@ -2100,7 +2114,7 @@ var regexpStickyHelpers = {
   UNSUPPORTED_Y: UNSUPPORTED_Y$2
 };
 
-var fails$9 = fails$p;
+var fails$9 = fails$q;
 var global$b = global$I; // babel-minify and Closure Compiler transpiles RegExp('.', 's') -> /./s and it causes SyntaxError
 
 var $RegExp$1 = global$b.RegExp;
@@ -2109,7 +2123,7 @@ var regexpUnsupportedDotAll = fails$9(function () {
   return !(re.dotAll && re.exec('\n') && re.flags === 's');
 });
 
-var fails$8 = fails$p;
+var fails$8 = fails$q;
 var global$a = global$I; // babel-minify and Closure Compiler transpiles RegExp('(?<a>b)', 'g') -> /(?<a>b)/g and it causes SyntaxError
 
 var $RegExp = global$a.RegExp;
@@ -2251,19 +2265,19 @@ $$4({
   exec: exec$2
 });
 
+var NATIVE_BIND = functionBindNative;
 var FunctionPrototype = Function.prototype;
 var apply$2 = FunctionPrototype.apply;
-var bind = FunctionPrototype.bind;
 var call$4 = FunctionPrototype.call; // eslint-disable-next-line es/no-reflect -- safe
 
-var functionApply = typeof Reflect == 'object' && Reflect.apply || (bind ? call$4.bind(apply$2) : function () {
+var functionApply = typeof Reflect == 'object' && Reflect.apply || (NATIVE_BIND ? call$4.bind(apply$2) : function () {
   return call$4.apply(apply$2, arguments);
 });
 
 var uncurryThis$a = functionUncurryThis;
 var redefine$4 = redefine$6.exports;
 var regexpExec$1 = regexpExec$2;
-var fails$7 = fails$p;
+var fails$7 = fails$q;
 var wellKnownSymbol$3 = wellKnownSymbol$e;
 var createNonEnumerableProperty$1 = createNonEnumerableProperty$5;
 var SPECIES$1 = wellKnownSymbol$3('species');
@@ -2467,7 +2481,7 @@ var apply$1 = functionApply;
 var call$2 = functionCall;
 var uncurryThis$7 = functionUncurryThis;
 var fixRegExpWellKnownSymbolLogic$1 = fixRegexpWellKnownSymbolLogic;
-var fails$6 = fails$p;
+var fails$6 = fails$q;
 var anObject$3 = anObject$a;
 var isCallable$3 = isCallable$g;
 var toIntegerOrInfinity = toIntegerOrInfinity$7;
@@ -2597,7 +2611,7 @@ fixRegExpWellKnownSymbolLogic$1('replace', function (_, nativeReplace, maybeCall
 }, !REPLACE_SUPPORTS_NAMED_GROUPS || !REPLACE_KEEPS_$0 || REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE);
 
 var PROPER_FUNCTION_NAME$1 = functionName.PROPER;
-var fails$5 = fails$p;
+var fails$5 = fails$q;
 var whitespaces$1 = whitespaces$4;
 var non = '\u200B\u0085\u180E'; // check that a method works with the correct list
 // of whitespaces and has a correct name
@@ -2712,7 +2726,7 @@ var toString$3 = toString$c;
 var regExpFlags$1 = regexpFlags$1;
 var stickyHelpers = regexpStickyHelpers;
 var redefine$3 = redefine$6.exports;
-var fails$4 = fails$p;
+var fails$4 = fails$q;
 var hasOwn$1 = hasOwnProperty_1;
 var enforceInternalState = internalState.enforce;
 var setSpecies = setSpecies$1;
@@ -2973,7 +2987,7 @@ var redefine$2 = redefine$6.exports;
 var anObject$1 = anObject$a;
 var isPrototypeOf$1 = objectIsPrototypeOf;
 var $toString = toString$c;
-var fails$3 = fails$p;
+var fails$3 = fails$q;
 var regExpFlags = regexpFlags$1;
 var TO_STRING = 'toString';
 var RegExpPrototype = RegExp.prototype;
@@ -3053,7 +3067,7 @@ var inheritIfRequired = inheritIfRequired$2;
 var isPrototypeOf = objectIsPrototypeOf;
 var isSymbol = isSymbol$3;
 var toPrimitive = toPrimitive$2;
-var fails$2 = fails$p;
+var fails$2 = fails$q;
 var getOwnPropertyNames = objectGetOwnPropertyNames.f;
 var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
 var defineProperty = objectDefineProperty.f;
@@ -3655,7 +3669,7 @@ var global$2 = global$I;
 var getBuiltIn = getBuiltIn$7;
 var apply = functionApply;
 var uncurryThis$1 = functionUncurryThis;
-var fails$1 = fails$p;
+var fails$1 = fails$q;
 var Array$1 = global$2.Array;
 var $stringify = getBuiltIn('JSON', 'stringify');
 var exec = uncurryThis$1(/./.exec);
@@ -3822,7 +3836,7 @@ var wheelListener = (function (_this) {
 });
 
 var global$1 = global$I;
-var fails = fails$p;
+var fails = fails$q;
 var uncurryThis = functionUncurryThis;
 var toString = toString$c;
 var trim = stringTrim.trim;
