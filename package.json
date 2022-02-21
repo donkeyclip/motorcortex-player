@@ -64,7 +64,7 @@
     "@donkeyclip/motorcortex": ">= 7.4.0 < 8"
   },
   "devDependencies": {
-    "@babel/cli": "7.17.3",
+    "@babel/cli": "7.17.6",
     "@babel/core": "7.17.5",
     "@babel/eslint-parser": "7.17.0",
     "@babel/plugin-proposal-nullish-coalescing-operator": "7.16.7",
