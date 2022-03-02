@@ -73,7 +73,7 @@
     "@babel/preset-env": "7.16.11",
     "@commitlint/cli": "16.2.1",
     "@commitlint/config-conventional": "16.2.1",
-    "@donkeyclip/motorcortex": "7.9.2",
+    "@donkeyclip/motorcortex": "7.9.3",
     "@rollup/plugin-babel": "5.3.1",
     "@rollup/plugin-commonjs": "21.0.2",
     "@rollup/plugin-html": "0.2.4",
