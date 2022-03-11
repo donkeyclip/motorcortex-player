@@ -26,7 +26,7 @@ const AnimateWidth = new CSSEffect(
   },
   {
     selector: "#text",
-    duration: 1000,
+    duration: 15000,
   }
 );
 
