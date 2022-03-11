@@ -54,6 +54,7 @@ export default (_this) => {
     ) {
       _this.settings.loopJourney = true;
     }
+    _this.calculateProgressBarDimentions();
   };
 
   _this.listeners.onMouseUpLoopStart = () => {

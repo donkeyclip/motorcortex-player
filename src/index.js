@@ -60,7 +60,7 @@ class Player {
     this.clipClass = options.clipClass;
     this.state = this.clip.runTimeInfo.state;
     this.listeners = {};
-
+    this.cache = {};
     this.settings = {
       volume: 1,
       journey: null,
@@ -97,11 +97,12 @@ class Player {
     const resizeObserver = new ResizeObserver(() => {
       if (this.options.scaleToFit) {
         this.scaleClipHost();
+        this.calculateProgressBarDimentions();
       }
     });
     this.changeSettings(options, true);
     resizeObserver.observe(this.options.host);
-
+    this.calculateProgressBarDimentions();
     if (this.options.autoPlay) {
       this.play();
     }
@@ -436,11 +437,10 @@ class Player {
     }
 
     const duration = this.clip.duration;
-    const { totalBar, loopBar } = this.elements;
-    const loopBarWidth = loopBar.offsetWidth;
-    const loopBarLeft = loopBar.offsetLeft / totalBar.offsetWidth;
-    const localMillisecond = millisecond - duration * loopBarLeft;
-    const localDuration = (duration / totalBar.offsetWidth) * loopBarWidth;
+
+    const localMillisecond = millisecond - duration * this.cache.loopBarLeft;
+    const localDuration =
+      (duration / this.cache.totalBarWidth) * this.cache.loopBarWidth;
 
     if (makeJouney) {
       this.createJourney(millisecond, {
@@ -450,11 +450,19 @@ class Player {
     this.elements.runningBar.style.width =
       (localMillisecond / localDuration) * 100 + `%`;
 
-    this.elements.currentTime.innerHTML = this.timeFormat(millisecond);
+    const newTime = this.timeFormat(millisecond);
+    if (this.elements.currentTime.innerHTML !== newTime)
+      this.elements.currentTime.innerHTML = newTime;
 
     if (this.options.onMillisecondChange && executeOnMillisecondChange) {
       this.options.onMillisecondChange(millisecond);
     }
+  }
+  calculateProgressBarDimentions() {
+    const { totalBar, loopBar } = this.elements;
+    this.cache.loopBarWidth = loopBar.offsetWidth;
+    this.cache.totalBarWidth = totalBar.offsetWidth;
+    this.cache.loopBarLeft = loopBar.offsetLeft / this.cache.totalBarWidth;
   }
   calculateJourney(millisecond) {
     const { loopEndMillisecond, loopStartMillisecond } = this.settings;

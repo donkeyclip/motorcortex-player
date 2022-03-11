@@ -3903,6 +3903,8 @@ var loopBarEndListener = (function (_this) {
       _this.settings.loopStartMillisecond = _this.settings.loopEndMillisecond;
       _this.settings.loopJourney = true;
     }
+
+    _this.calculateProgressBarDimentions();
   };
 
   _this.listeners.onMouseUpLoopEnd = function () {
@@ -4007,6 +4009,8 @@ var loopBarStartListener = (function (_this) {
     if (_this.settings.loopStartMillisecond > _this.clip.runTimeInfo.currentMillisecond) {
       _this.settings.loopJourney = true;
     }
+
+    _this.calculateProgressBarDimentions();
   };
 
   _this.listeners.onMouseUpLoopStart = function () {
@@ -4465,6 +4469,7 @@ var Player = /*#__PURE__*/function () {
     this.clipClass = options.clipClass;
     this.state = this.clip.runTimeInfo.state;
     this.listeners = {};
+    this.cache = {};
     this.settings = {
       volume: 1,
       journey: null,
@@ -4505,10 +4510,13 @@ var Player = /*#__PURE__*/function () {
     var resizeObserver = new ResizeObserver(function () {
       if (_this.options.scaleToFit) {
         _this.scaleClipHost();
+
+        _this.calculateProgressBarDimentions();
       }
     });
     this.changeSettings(options, true);
     resizeObserver.observe(this.options.host);
+    this.calculateProgressBarDimentions();
 
     if (this.options.autoPlay) {
       this.play();
@@ -4876,13 +4884,8 @@ var Player = /*#__PURE__*/function () {
       }
 
       var duration = this.clip.duration;
-      var _this$elements = this.elements,
-          totalBar = _this$elements.totalBar,
-          loopBar = _this$elements.loopBar;
-      var loopBarWidth = loopBar.offsetWidth;
-      var loopBarLeft = loopBar.offsetLeft / totalBar.offsetWidth;
-      var localMillisecond = millisecond - duration * loopBarLeft;
-      var localDuration = duration / totalBar.offsetWidth * loopBarWidth;
+      var localMillisecond = millisecond - duration * this.cache.loopBarLeft;
+      var localDuration = duration / this.cache.totalBarWidth * this.cache.loopBarWidth;
 
       if (makeJouney) {
         this.createJourney(millisecond, {
@@ -4891,11 +4894,22 @@ var Player = /*#__PURE__*/function () {
       }
 
       this.elements.runningBar.style.width = localMillisecond / localDuration * 100 + "%";
-      this.elements.currentTime.innerHTML = this.timeFormat(millisecond);
+      var newTime = this.timeFormat(millisecond);
+      if (this.elements.currentTime.innerHTML !== newTime) this.elements.currentTime.innerHTML = newTime;
 
       if (this.options.onMillisecondChange && executeOnMillisecondChange) {
         this.options.onMillisecondChange(millisecond);
       }
+    }
+  }, {
+    key: "calculateProgressBarDimentions",
+    value: function calculateProgressBarDimentions() {
+      var _this$elements = this.elements,
+          totalBar = _this$elements.totalBar,
+          loopBar = _this$elements.loopBar;
+      this.cache.loopBarWidth = loopBar.offsetWidth;
+      this.cache.totalBarWidth = totalBar.offsetWidth;
+      this.cache.loopBarLeft = loopBar.offsetLeft / this.cache.totalBarWidth;
     }
   }, {
     key: "calculateJourney",
