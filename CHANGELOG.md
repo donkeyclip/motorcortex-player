@@ -1,5 +1,17 @@
 # Changelog
 
+### [2.5.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.5.0...v2.5.1) (2022-03-14)
+
+
+### Bug Fixes
+
+* handle error in request and exit fullscreen ([843d270](https://www.github.com/donkeyclip/motorcortex-player/commit/843d270ee54d145c07b07ab477744edd7a1e7bd2))
+
+
+### Performance Improvements
+
+* add cache for offsetwidth of progress bar ([2660be3](https://www.github.com/donkeyclip/motorcortex-player/commit/2660be3b268971e920d7deeaf827a865d73cf520))
+
 ## [2.5.0](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.4...v2.5.0) (2022-01-25)
 
 
