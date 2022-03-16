@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.5.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.5.1...v2.5.2) (2022-03-16)
+
+
+### Bug Fixes
+
+* update mc version ([1e41730](https://www.github.com/donkeyclip/motorcortex-player/commit/1e4173028eb2218fe9b9ccd4957e17d49252ee73))
+
 ### [2.5.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.5.0...v2.5.1) (2022-03-14)
 
 
