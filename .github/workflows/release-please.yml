@@ -16,7 +16,7 @@ jobs:
       HUSKY_SKIP_HOOKS: 1
       HUSKY: 0
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3.0.0
     - name: Get package name
       id: name
       uses: notiz-dev/github-action-json-property@release
@@ -29,11 +29,11 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         release-type: node
         package-name: ${{steps.name.outputs.prop}}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3.0.0
       if: ${{ steps.release.outputs.release_created }}
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3.0.0
       with:
-        node-version: 14
+        node-version: 16
         registry-url: 'https://registry.npmjs.org'
       if: ${{ steps.release.outputs.release_created }}
     - run: npm ci
