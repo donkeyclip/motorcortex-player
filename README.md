@@ -12,22 +12,32 @@
   - [Options](#options)
   - [Methods](#methods)
   - [Themes](#themes)
+    - [transparent](#transparent)
+    - [blue](#blue)
+    - [green](#green)
+    - [yellow](#yellow)
+    - [dark](#dark)
+    - [darkGold](#darkgold)
+    - [whiteGold](#whitegold)
+    - [custom](#custom)
   - [DonkeyClip QueryParams](#donkeyclip-queryparams)
 - [Contributing](#contributing)
 - [License](#license)
 - [Sponsored by](#sponsored-by)
 
 ## Demo
+
 [Check it out here](https://donkeyclip.github.io/motorcortex-player/demo/)
 
 # Intro / Features
-MotorCortex Player is a video-like player specially designed for MotorCortex Clips.  
+
+MotorCortex Player is a video-like player specially designed for MotorCortex Clips.
 Among other functionality, the player allows the user to play/pause and seek a Clip, control the master volume and the playback speed and more.
 
 What does our player include?
 
-
 ![Player Controls Image](https://donkey-spaces.ams3.digitaloceanspaces.com/assets/motorcortex-player/teo-player-numbers.png?)
+
 1. Play/pause button
 2. Master volume
 3. Time: the time passed on the Clip's playback/total clip time
@@ -59,18 +69,20 @@ import MCPlayer from "@donkeyclip/motorcortex-player";
 # Creating Player
 
 The player can be used with any MotorCortex Clip. Here is an example with the minimum possible configuration:
+
 ```javascript
 const player = new MCPlayer({ clip: MyClip });
 ```
+
 ## Options
 
-Except for the (mandatory) `clip` option that should be passed on the player on instantiation there is a list of other supported options:  
-| Option | Default value | Description |  
-| ------------- |:-------------:| -----|  
-| clip | - | The MotorCortex Clip object that the Player will control |  
-| showVolume | false | Show or hide the master volume control (#2) |  
-| host | null | The Player by default "wraps" the Clip and seats at the bottom of its container taking advantage of the full width of it. In case you want the Player to get rendered on a different host (element) you can pass this element here |  
-| buttons | { loop: true, fullScreen: true, settings: true }| An object via which you can select which of the three buttons (#4: Loop via the key "loop", #5: Settings via the key "settings", #6: Full Screen via the key "fullScreen"). Enable and disable the buttons by setting their corresponding keys to true or false, accordingly |  
+Except for the (mandatory) `clip` option that should be passed on the player on instantiation there is a list of other supported options:
+| Option | Default value | Description |
+| ------------- |:-------------:| -----|
+| clip | - | The MotorCortex Clip object that the Player will control |
+| showVolume | false | Show or hide the master volume control (#2) |
+| host | null | The Player by default "wraps" the Clip and seats at the bottom of its container taking advantage of the full width of it. In case you want the Player to get rendered on a different host (element) you can pass this element here |
+| buttons | { loop: true, fullScreen: true, settings: true }| An object via which you can select which of the three buttons (#4: Loop via the key "loop", #5: Settings via the key "settings", #6: Full Screen via the key "fullScreen"). Enable and disable the buttons by setting their corresponding keys to true or false, accordingly |
 | timeFormat | ss | This option allows you to set the time units on the Time (#3) of the Player. The default is ss, which means the Time will be presented in the form: < elapsed seconds >/< total seconds >. In the case you want a representation in the form: ms/ms you can set this option to "ms" |
 | theme | "transparent" | Here you can pick one of the available themes of the player. The available themes are: "transparent", "blue", "yellow", "green","whiteGold","darkGold","dark" and "default" |
 | themeCSS| - | Define your own theme using this property. [Checkout how to define custom themes](#custom)
@@ -175,25 +187,29 @@ All player options can be exploited by donkeyclips through query parameters. Any
 ```
 https://api.donkeyclip.com/v1/embed/xxxxxxxxxx?controls=false&autoPlay&scaleToFit&theme=yellow&speed=2
 ```
+
 For development purposes you can use the following query parameters to test different MotorCortex, Player, and Bundler versions:
+
 - mcversion
 - playerversion
 - bundlerversion
 
 For example: `https://api.donkeyclip.com/v1/embed/xxxxxxxxxx?controls&mcversion=7.4.0&playerversion=2.5.0&bundlerversion=7.0.1`
 
-# Contributing 
+# Contributing
 
 In general, we follow the "fork-and-pull" Git workflow, so if you want to submit patches and additions you should follow the next steps:
-1.	**Fork** the repo on GitHub
-2.	**Clone** the project to your own machine
-3.	**Commit** changes to your own branch
-4.	**Push** your work back up to your fork
-5.	Submit a **Pull request** so that we can review your changes
+
+1. **Fork** the repo on GitHub
+2. **Clone** the project to your own machine
+3. **Commit** changes to your own branch
+4. **Push** your work back up to your fork
+5. Submit a **Pull request** so that we can review your changes
 
 # License
 
 [MIT License](https://opensource.org/licenses/MIT)
 
 # Sponsored by
+
 [<img src="https://presskit.donkeyclip.com/logos/donkey%20clip%20logo.svg" width=250></img>](https://donkeyclip.com)
