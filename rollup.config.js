@@ -5,6 +5,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import html from "rollup-plugin-html";
 import postcss from "rollup-plugin-postcss";
 import svg from "rollup-plugin-svg";
+import cleanup from "rollup-plugin-cleanup";
 import { terser } from "rollup-plugin-terser";
 import pkg from "./package.json";
 
@@ -12,10 +13,7 @@ export default [
   {
     input: "src/index.js",
     external: ["@donkeyclip/motorcortex"],
-    output: [
-      { file: pkg.main, format: "cjs" },
-      { file: pkg.module, format: "es" },
-    ],
+    output: [{ dir: pkg.module, format: "es" }],
     plugins: [
       json(),
       html({ fileName: "**/*.html" }),
@@ -31,6 +29,7 @@ export default [
     external: ["@donkeyclip/motorcortex"],
     output: [
       {
+        inlineDynamicImports: true,
         globals: {
           "@donkeyclip/motorcortex": "MotorCortex",
         },
@@ -47,6 +46,7 @@ export default [
       babel(),
       svg(),
       postcss({ inject: false }),
+      cleanup({ comments: "none" }),
       terser(),
     ],
   },
