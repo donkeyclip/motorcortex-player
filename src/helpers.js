@@ -1,3 +1,5 @@
+import { TimeCapsule } from "@donkeyclip/motorcortex";
+import SVG from "./assets/svg.js";
 import {
   mousedown,
   mousemove,
@@ -7,28 +9,17 @@ import {
   touchstart,
 } from "./listeners/events";
 
-import SVG from "./assets/svg.js";
-export function el(selector) {
-  return document.querySelectorAll(selector);
-}
-export function elid(id) {
-  return document.getElementById(id);
-}
+export const timeCapsule = new TimeCapsule();
+export const el = document.querySelectorAll;
+export const elid = document.getElementById;
 export function elFirstClass(player, className) {
   return player.getElementsByClassName(className)[0];
 }
-export function eltag(tag) {
-  return document.getElementsByTagName(tag);
-}
-export function elcreate(tag) {
-  return document.createElement(tag);
-}
-export function addListener() {
-  return document.addEventListener(...arguments);
-}
-export function removeListener() {
-  return document.removeEventListener(...arguments);
-}
+export const eltag = document.getElementsByTagName;
+export const elcreate = document.createElement;
+
+export const addListener = document.addEventListener;
+export const removeListener = document.removeEventListener;
 export function sanitizeCSS(css) {
   return css.replace(/(behaviour|javascript|expression)/gm, "");
 }
@@ -186,7 +177,7 @@ export function initializeIcons(playerElements) {
   playerElements.speedButtonHide.innerHTML = SVG["angle-left"];
 }
 
-export function initializeOptions(options) {
+export function initializeOptions(options, clip) {
   options.id ??= Date.now();
   options.showVolume ??=
     Object.keys(options.clip?.audioClip?.children || []).length || false;
@@ -211,14 +202,14 @@ export function initializeOptions(options) {
   options.volume ??= 1;
   options.currentScript ??= null;
   if (options.millisecond) {
-    const clip = this.clip || options.clip;
+    clip ||= options.clip;
 
     if (options.millisecond > clip.duration)
       options.millisecond = clip.duration;
     if (options.millisecond < 0) options.millisecond = 0;
     if (!isFinite(options.millisecond)) options.millisecond = 0;
 
-    this.createJourney(options.millisecond, {}, this.clip || options.clip);
+    createJourney(options.millisecond, clip);
   }
   // remove strings
   for (const i in options.speedValues) {
@@ -231,4 +222,17 @@ export function initializeOptions(options) {
     return a - b;
   });
   return options;
+}
+
+export function createJourney(millisecond, clip, clipCommands = {}) {
+  setTimeout(() => {
+    if (!clip.id) return;
+    const def = null;
+    const { before = def, after = def } = clipCommands;
+    if (before) clip[before]();
+    this.settings.journey = timeCapsule.startJourney(clip);
+    this.settings.journey.station(millisecond);
+    this.settings.journey.destination();
+    if (after) clip[after]();
+  }, 0);
 }

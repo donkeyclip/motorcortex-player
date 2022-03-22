@@ -1,6 +1,7 @@
 import {
   addMouseUpAndMoveListeners,
   addStartListeners,
+  createJourney,
   removeMouseUpAndMoveListeners,
   removeStartListeners,
 } from "../helpers";
@@ -62,7 +63,6 @@ export default (_this) => {
 
     _this.settings.resizeLoop = false;
 
-    // e.preventDefault();
     if (_this.settings.loopJourney) {
       _this.createProgressDrag(_this.elements.runningBar.offsetWidth);
       _this.settings.loopJourney = false;
@@ -111,7 +111,7 @@ export default (_this) => {
           loopms = _this.settings.loopEndMillisecond - 1;
         }
         _this.settings.needsUpdate = true;
-        _this.createJourney(loopms, {
+        createJourney(loopms, _this.clip, {
           before: "pause",
           after: "play",
         });
