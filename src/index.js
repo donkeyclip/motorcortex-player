@@ -1,4 +1,4 @@
-import { TimeCapsule, utils } from "@donkeyclip/motorcortex";
+import {  utils } from "@donkeyclip/motorcortex";
 import { name } from "./config";
 import {
   calcClipScale,
@@ -8,6 +8,7 @@ import {
   changeIcon,
   sanitizeCSS,
   initializeOptions,
+  timeCapsule,
 } from "./helpers";
 import setElements from "./html/setElements";
 import bodyListener from "./listeners/body";
@@ -42,7 +43,7 @@ import {
 import { add as speedAdd, trigger as speedTrigger } from "./listeners/speed";
 import statusBtnListener from "./listeners/statusBtn";
 import { add as volumeAdd, trigger as volumeTrigger } from "./listeners/volume";
-const timeCapsule = new TimeCapsule();
+
 
 const themeKeyToClass = {
   default: "theme-default",
@@ -246,23 +247,9 @@ class Player {
     this.elements.loopBar.style.width = `${
       ((msEnd - msStart) / this.clip.duration) * 100
     }%`;
-    this.createJourney(msStart);
+    this.createJourney(msStart, this.clip);
     this.elements.runningBar.style.width = "0%";
     !this.settings.loopActivated && loopTrigger(this);
-  }
-
-  createJourney(millisecond, clipCommands = {}, clip = undefined) {
-    clip ??= this.clip;
-    setTimeout(() => {
-      if (!clip.id) return;
-      const def = null;
-      const { before = def, after = def } = clipCommands;
-      if (before) clip[before]();
-      this.settings.journey = timeCapsule.startJourney(clip);
-      this.settings.journey.station(millisecond);
-      this.settings.journey.destination();
-      if (after) clip[after]();
-    }, 0);
   }
 
   calculateMinMaxOfTimeProgress() {
@@ -311,14 +298,14 @@ class Player {
     this.addTimeToProgress(this.removeTimeFromBucket());
     this.calculateMinMaxOfTimeProgress();
     if (!this.options.sections) {
-      this.createJourney(this.timeProgress);
+      this.createJourney(this.timeProgress, this.clip);
     } else {
       const now = Date.now() - this.startAnimationTime;
       const progress = now / this.endAnimationTime;
       if (progress >= 1 || this.endAnimationTime === 0)
         return this.cancelAnimation();
       const sectionPosition = this.calculateJourneyPosition(progress);
-      this.createJourney(Math.ceil(sectionPosition));
+      this.createJourney(Math.ceil(sectionPosition), this.clip);
     }
     this.requestAnimation();
   }
@@ -403,7 +390,7 @@ class Player {
       (duration / this.cache.totalBarWidth) * this.cache.loopBarWidth;
 
     if (makeJouney) {
-      this.createJourney(millisecond, {
+      this.createJourney(millisecond, this.clip, {
         after: this.settings.playAfterResize ? "play" : null,
       });
     }
@@ -434,12 +421,16 @@ class Player {
     if (this.clip.runTimeInfo.state === PLAYING) {
       if (positiveSpeed) {
         if (atEndOfLoop) {
-          this.createJourney(loopStartMillisecond + 1, { after: "play" });
+          createJourney(loopStartMillisecond + 1, this.clip, {
+            after: "play",
+          });
           return true;
         }
       } else {
         if (atStartOfLoop) {
-          this.createJourney(loopEndMillisecond - 1, { after: "play" });
+          createJourney(loopEndMillisecond - 1, this.clip, {
+            after: "play",
+          });
           return true;
         }
       }
@@ -493,13 +484,13 @@ class Player {
       this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
       this.clip.speed >= 0
     ) {
-      this.createJourney(1, { after: "play" });
+      createJourney(1, this.clip, { after: "play" });
     } else if (
       (this.clip.runTimeInfo.currentMillisecond === this.clip.duration ||
         this.clip.runTimeInfo.currentMillisecond === 0) &&
       this.clip.speed < 0
     ) {
-      this.createJourney(this.clip.duration - 1, {
+      createJourney(this.clip.duration - 1, this.clip, {
         after: "play",
       });
     }
