@@ -6,9 +6,10 @@ import {
 } from "../helpers";
 import { MUTE_CHANGE, VOLUME_CHANGE } from "./events";
 import { VOLUME_OFF, VOLUME_ON } from "./enums";
+
 export function trigger(_this, volume, mute) {
   const elements = _this.elements;
-  if (typeof mute !== undefined) {
+  if (typeof mute !== "undefined") {
     if (mute === false) {
       elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
       _this.clip.setVolume(_this.settings.previousVolume);
@@ -24,26 +25,28 @@ export function trigger(_this, volume, mute) {
     _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
   }
 
-  if (typeof volume !== undefined) {
-    _this.settings.volume = volume;
-    if (_this.settings.volume > 0) {
-      _this.settings.previousVolume = volume;
-    }
-    elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
-    _this.clip.setVolume(_this.settings.volume);
-
-    if (_this.settings.volume > 0) {
-      _this.settings.volumeMute = false;
-      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
-    } else if (_this.settings.volume === 0) {
-      _this.settings.volumeMute = true;
-      changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
-    }
-
-    _this.options.volume = _this.settings.volume;
-    _this.eventBroadcast(VOLUME_CHANGE, _this.settings.volume);
-    _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
+  if (typeof volume === "undefined") {
+    return;
   }
+
+  _this.settings.volume = volume;
+  if (_this.settings.volume > 0) {
+    _this.settings.previousVolume = volume;
+  }
+  elements.volumeBarActive.style.width = `${_this.settings.volume * 100}%`;
+  _this.clip.setVolume(_this.settings.volume);
+
+  if (_this.settings.volume > 0) {
+    _this.settings.volumeMute = false;
+    changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
+  } else if (_this.settings.volume === 0) {
+    _this.settings.volumeMute = true;
+    changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
+  }
+
+  _this.options.volume = _this.settings.volume;
+  _this.eventBroadcast(VOLUME_CHANGE, _this.settings.volume);
+  _this.eventBroadcast(MUTE_CHANGE, _this.settings.volumeMute);
 }
 export function add(_this) {
   const elements = _this.elements;
@@ -72,12 +75,12 @@ export function add(_this) {
     volumeOpen = true;
   };
 
-  _this.elements.leftButtons.onmouseout = (el) => {
+  _this.elements.leftButtons.onmouseout = () => {
     if (!volumeOpen || volumeDrag) {
       return;
     }
 
-    const e = el || event.toElement || event.relatedTarget || event.target;
+    const e = event.toElement || event.relatedTarget || event.target;
     if (
       e === _this.elements.leftButtons ||
       isDescendant(_this.elements.leftButtons, e)
@@ -88,10 +91,9 @@ export function add(_this) {
   };
   const listeners = _this.listeners;
   listeners.onCursorMoveVolumeBar = (e) => {
-    // e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
-    const viewportOffset = elements.volumeBarHelper.getBoundingClientRect();
-    let positionX = clientX - viewportOffset.left;
+    let positionX =
+      clientX - elements.volumeBarHelper.getBoundingClientRect().left;
 
     if (positionX < 0) {
       positionX = 0;

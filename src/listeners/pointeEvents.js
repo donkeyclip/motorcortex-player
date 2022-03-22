@@ -2,7 +2,7 @@ import { changeIcon } from "../helpers";
 
 let timeout = setTimeout(() => {}, 0);
 
-function addPlayIcon(playPausePanelContainer) {
+export function addPlayIcon(playPausePanelContainer) {
   changeIcon(playPausePanelContainer, null, "play");
 }
 function addPauseIcon(playPausePanelContainer) {

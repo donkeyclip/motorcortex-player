@@ -3,12 +3,12 @@ import {
   elFirstClass,
   initializeIcons,
   changeIcon,
+  el,
 } from "../helpers";
 
 import htmlplayer from "./player.html";
 
 export default (_this) => {
-  _this.elements = {};
   initializePlayer(_this);
 
   const { mcPlayer } = _this.elements;
@@ -131,13 +131,13 @@ const initializePlayer = (_this) => {
   clipIframe.style.overflow = "hidden";
   _this.clip.props.host.style.position = `relative`;
   _this.clip.props.host.style.zIndex = 0;
-  _this.elements.mcPlayer = elcreate(`div`);
+  _this.elements.mcPlayer = elcreate("div");
 
   _this.elements.mcPlayer.id = `${_this.name}`;
   _this.elements.mcPlayer.className = `${_this.className}`;
   _this.elements.mcPlayer.innerHTML = htmlplayer;
   if (typeof _this.options.host === "string") {
-    const nodelist = document.querySelectorAll(_this.options.host);
+    const nodelist = el(_this.options.host);
     for (const i in nodelist) {
       if (isNaN(i)) {
         continue;
@@ -214,7 +214,7 @@ const createSpeedValues = (_this) => {
     li.dataset.speedValue = _this.options.speedValues[i];
 
     //create the check holder
-    const span = document.createElement("span");
+    const span = elcreate("span");
     li.append(span);
 
     //create the value of the speed

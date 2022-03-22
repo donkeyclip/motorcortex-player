@@ -10,16 +10,24 @@ import {
 } from "./listeners/events";
 
 export const timeCapsule = new TimeCapsule();
-export const el = document.querySelectorAll;
-export const elid = document.getElementById;
+
+export const el = document.querySelectorAll.bind(document);
+export const elid = document.getElementById.bind(document);
 export function elFirstClass(player, className) {
   return player.getElementsByClassName(className)[0];
 }
-export const eltag = document.getElementsByTagName;
-export const elcreate = document.createElement;
+export const eltag = document.getElementsByTagName.bind(document);
+export const elcreate = document.createElement.bind(document);
 
-export const addListener = document.addEventListener;
-export const removeListener = document.removeEventListener;
+export const addListener = document.addEventListener.bind(document);
+export function addListenerWithElement(element = document, ...rest) {
+  return element.addEventListener(...rest);
+}
+export function removeListenerWithElement(element = document, ...rest) {
+  return element.removeEventListener(...rest);
+}
+
+export const removeListener = document.removeEventListener.bind(document);
 export function sanitizeCSS(css) {
   return css.replace(/(behaviour|javascript|expression)/gm, "");
 }
@@ -128,31 +136,27 @@ export function isMobile() {
 }
 
 export function addMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
-  document.addEventListener(mouseup, callbackForUp, false);
-  document.addEventListener(touchend, callbackForUp, false);
-  document.addEventListener(mousemove, callbackForMove, false);
-  document.addEventListener(touchmove, callbackForMove, false);
+  addListener(mouseup, callbackForUp, false);
+  addListener(touchend, callbackForUp, false);
+  addListener(mousemove, callbackForMove, false);
+  addListener(touchmove, callbackForMove, false);
 }
 
 export function removeMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
-  document.removeEventListener(mouseup, callbackForUp, false);
-  document.removeEventListener(touchend, callbackForUp, false);
-  document.removeEventListener(mousemove, callbackForMove, false);
-  document.removeEventListener(touchmove, callbackForMove, false);
+  removeListener(mouseup, callbackForUp, false);
+  removeListener(touchend, callbackForUp, false);
+  removeListener(mousemove, callbackForMove, false);
+  removeListener(touchmove, callbackForMove, false);
 }
 
-export function addStartListeners(
-  callback,
-  element = document,
-  passive = false
-) {
-  element.addEventListener(mousedown, callback, { passive }, false);
-  element.addEventListener(touchstart, callback, { passive }, false);
+export function addStartListeners(callback, element, passive = false) {
+  addListenerWithElement(element, mousedown, callback, { passive });
+  addListenerWithElement(element, touchstart, callback, { passive });
 }
 
-export function removeStartListeners(callback, element = document) {
-  element.removeEventListener(mousedown, callback, false);
-  element.removeEventListener(touchstart, callback, false);
+export function removeStartListeners(callback, element) {
+  removeListenerWithElement(element, callback, false);
+  removeListenerWithElement(element, touchstart, callback, false);
 }
 
 export function changeIcon(element, from, to) {
@@ -166,21 +170,20 @@ export function changeIcon(element, from, to) {
   }
 }
 export function initializeIcons(playerElements) {
-  playerElements.loopButton.innerHTML = SVG["loop"];
+  playerElements.loopButton.innerHTML = SVG.loop;
   playerElements.volumeBtn.innerHTML = SVG["volume-on"];
-  playerElements.statusButton.innerHTML = SVG["play"];
-  playerElements.settingsButton.innerHTML = SVG["settings"];
+  playerElements.statusButton.innerHTML = SVG.play;
+  playerElements.settingsButton.innerHTML = SVG.settings;
   playerElements.donkeyclipButton.innerHTML = SVG["donkeyclip-logo"];
-  playerElements.fullScreenButton.innerHTML = SVG["expand-full"];
   playerElements.fullScreenButton.innerHTML = SVG["expand-full"];
   playerElements.speedButtonShow.innerHTML = SVG["angle-right"];
   playerElements.speedButtonHide.innerHTML = SVG["angle-left"];
 }
 
-export function initializeOptions(options, clip) {
+export function initializeOptions(options, _this) {
   options.id ??= Date.now();
-  options.showVolume ??=
-    Object.keys(options.clip?.audioClip?.children || []).length || false;
+  options.showVolume ??= !!Object.keys(options.clip?.audioClip?.children || [])
+    .length;
   options.showIndicator ??= false;
   options.theme ??= "transparent";
   options.host ??= options.clip.props.host;
@@ -201,15 +204,15 @@ export function initializeOptions(options, clip) {
   options.loop ??= false;
   options.volume ??= 1;
   options.currentScript ??= null;
-  if (options.millisecond) {
-    clip ||= options.clip;
 
+  if (options.millisecond) {
+    const clip = this.clip;
     if (options.millisecond > clip.duration)
       options.millisecond = clip.duration;
     if (options.millisecond < 0) options.millisecond = 0;
     if (!isFinite(options.millisecond)) options.millisecond = 0;
 
-    createJourney(options.millisecond, clip);
+    createJourney(options.millisecond, _this);
   }
   // remove strings
   for (const i in options.speedValues) {
@@ -224,15 +227,14 @@ export function initializeOptions(options, clip) {
   return options;
 }
 
-export function createJourney(millisecond, clip, clipCommands = {}) {
+export function createJourney(millisecond, _this, { before, after } = {}) {
+  const clip = _this.clip;
   setTimeout(() => {
     if (!clip.id) return;
-    const def = null;
-    const { before = def, after = def } = clipCommands;
     if (before) clip[before]();
-    this.settings.journey = timeCapsule.startJourney(clip);
-    this.settings.journey.station(millisecond);
-    this.settings.journey.destination();
+    _this.settings.journey = timeCapsule.startJourney(clip);
+    _this.settings.journey.station(millisecond);
+    _this.settings.journey.destination();
     if (after) clip[after]();
   }, 0);
 }
