@@ -4,11 +4,10 @@ import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
 import html from "rollup-plugin-html";
 import postcss from "rollup-plugin-postcss";
-import svg from "rollup-plugin-svg";
 import cleanup from "rollup-plugin-cleanup";
 import { terser } from "rollup-plugin-terser";
 import pkg from "./package.json";
-
+import svgo from "rollup-plugin-svgo";
 export default [
   {
     input: "src/index.js",
@@ -16,8 +15,8 @@ export default [
     output: [{ dir: pkg.module, format: "es" }],
     plugins: [
       json(),
+      svgo({ multipass: true }),
       html({ fileName: "**/*.html" }),
-      svg(),
       resolve(),
       commonjs(),
       babel(),
@@ -40,11 +39,11 @@ export default [
     ],
     plugins: [
       json(),
+      svgo({ multipass: true }),
       html({ include: "**/*.html" }),
       resolve({ mainFields: ["module", "main", "browser"] }),
       commonjs(),
       babel(),
-      svg(),
       postcss({ inject: false }),
       cleanup({ comments: "none" }),
       terser(),
