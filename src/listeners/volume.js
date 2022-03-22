@@ -72,12 +72,12 @@ export function add(_this) {
     volumeOpen = true;
   };
 
-  _this.elements.leftButtons.onmouseout = () => {
+  _this.elements.leftButtons.onmouseout = (el) => {
     if (!volumeOpen || volumeDrag) {
       return;
     }
 
-    const e = event.toElement || event.relatedTarget || event.target;
+    const e = el || event.toElement || event.relatedTarget || event.target;
     if (
       e === _this.elements.leftButtons ||
       isDescendant(_this.elements.leftButtons, e)

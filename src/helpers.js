@@ -185,3 +185,50 @@ export function initializeIcons(playerElements) {
   playerElements.speedButtonShow.innerHTML = SVG["angle-right"];
   playerElements.speedButtonHide.innerHTML = SVG["angle-left"];
 }
+
+export function initializeOptions(options) {
+  options.id ??= Date.now();
+  options.showVolume ??=
+    Object.keys(options.clip?.audioClip?.children || []).length || false;
+  options.showIndicator ??= false;
+  options.theme ??= "transparent";
+  options.host ??= options.clip.props.host;
+  options.buttons ??= {};
+  options.timeFormat ??= "ss";
+  options.backgroundColor ??= "black";
+  options.fullscreen ??= false;
+  options.scaleToFit ??= true;
+  options.sectionsEasing ??= "easeOutQuart";
+  options.pointerEvents ??= false;
+  options.scrollAnimation ??= false;
+  options.onMillisecondChange ??= null;
+  options.speedValues ??= [-1, 0, 0.5, 1, 2];
+  options.speed ??= 1;
+  options.muted ??= false;
+  options.maxScrollStorage ??= 50;
+  options.controls ??= true;
+  options.loop ??= false;
+  options.volume ??= 1;
+  options.currentScript ??= null;
+  if (options.millisecond) {
+    const clip = this.clip || options.clip;
+
+    if (options.millisecond > clip.duration)
+      options.millisecond = clip.duration;
+    if (options.millisecond < 0) options.millisecond = 0;
+    if (!isFinite(options.millisecond)) options.millisecond = 0;
+
+    this.createJourney(options.millisecond, {}, this.clip || options.clip);
+  }
+  // remove strings
+  for (const i in options.speedValues) {
+    if (!isFinite(options.speedValues[i])) {
+      options.speedValues.splice(i, 1);
+    }
+  }
+
+  options.speedValues.sort(function (a, b) {
+    return a - b;
+  });
+  return options;
+}
