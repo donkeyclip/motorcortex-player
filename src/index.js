@@ -1,4 +1,4 @@
-import {  utils } from "@donkeyclip/motorcortex";
+import { utils } from "@donkeyclip/motorcortex";
 import { name } from "./config";
 import {
   calcClipScale,
@@ -9,6 +9,7 @@ import {
   sanitizeCSS,
   initializeOptions,
   timeCapsule,
+  createJourney,
 } from "./helpers";
 import setElements from "./html/setElements";
 import bodyListener from "./listeners/body";
@@ -26,12 +27,12 @@ import {
   STATE_CHANGE,
   VOLUME_CHANGE,
 } from "./listeners/events";
-import { add as pointerEventsAdd } from "./listeners/pointeEvents";
+import { add as pointerEventsAdd, addPlayIcon } from "./listeners/pointeEvents";
 import {
   add as fullscreenAdd,
   trigger as fullscreenTrigger,
 } from "./listeners/fullscreen";
-import wheelListener from "./listeners/wheelListener";
+
 import loopBarEndListener from "./listeners/loopBarEnd";
 import loopBarStartListener from "./listeners/loopBarStart";
 import { add as loopAdd, trigger as loopTrigger } from "./listeners/loopBtn";
@@ -44,7 +45,18 @@ import { add as speedAdd, trigger as speedTrigger } from "./listeners/speed";
 import statusBtnListener from "./listeners/statusBtn";
 import { add as volumeAdd, trigger as volumeTrigger } from "./listeners/volume";
 
+let wheelListener;
 
+function initScroller(_this) {
+  if (wheelListener) {
+    wheelListener(_this);
+    return;
+  }
+  import("./listeners/wheelListener").then((w) => {
+    wheelListener = w;
+    w(_this);
+  });
+}
 const themeKeyToClass = {
   default: "theme-default",
   transparent: "theme-transparent",
@@ -72,13 +84,14 @@ function removeSpinner(pointerEventPanel) {
  * (such as a Scene or a Clip) can both privide info regarding their timing
  * state but also provide an interface for interacting/altering the timing of it
  */
-class Player {
+export default class Player {
   constructor(options) {
-    this.options = initializeOptions(options);
+    this.elements = {};
+    this.clip = options.clip; // host to apply the timer
+    this.options = initializeOptions(options, this);
     this.className = name;
     this.id = this.options.id;
     this.name = name;
-    this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
     this.state = this.clip.runTimeInfo.state;
     this.listeners = {};
@@ -128,7 +141,6 @@ class Player {
     if (this.options.autoPlay) {
       this.play();
     }
-    this.elements = undefined;
   }
 
   play() {
@@ -140,7 +152,7 @@ class Player {
   }
 
   changeSettings(newOptions, initial) {
-    newOptions = initializeOptions({ ...this.options, ...newOptions });
+    newOptions = initializeOptions({ ...this.options, ...newOptions }, this);
     if (newOptions.clip !== this.options.clip) {
       initial = true;
       this.clip = newOptions.clip;
@@ -164,7 +176,7 @@ class Player {
       },
       showVolume: () => settingsTrigger(this, "showVolume"),
       type: () => {
-        if (newOptions.type === "scroller") wheelListener(this);
+        if (newOptions.type === "scroller") initScroller(this);
       },
       theme: () => {
         this.options.theme = newOptions.theme;
@@ -247,7 +259,7 @@ class Player {
     this.elements.loopBar.style.width = `${
       ((msEnd - msStart) / this.clip.duration) * 100
     }%`;
-    this.createJourney(msStart, this.clip);
+    createJourney(msStart, this);
     this.elements.runningBar.style.width = "0%";
     !this.settings.loopActivated && loopTrigger(this);
   }
@@ -298,14 +310,14 @@ class Player {
     this.addTimeToProgress(this.removeTimeFromBucket());
     this.calculateMinMaxOfTimeProgress();
     if (!this.options.sections) {
-      this.createJourney(this.timeProgress, this.clip);
+      createJourney(this.timeProgress, this);
     } else {
       const now = Date.now() - this.startAnimationTime;
       const progress = now / this.endAnimationTime;
       if (progress >= 1 || this.endAnimationTime === 0)
         return this.cancelAnimation();
       const sectionPosition = this.calculateJourneyPosition(progress);
-      this.createJourney(Math.ceil(sectionPosition), this.clip);
+      createJourney(Math.ceil(sectionPosition), this);
     }
     this.requestAnimation();
   }
@@ -390,7 +402,7 @@ class Player {
       (duration / this.cache.totalBarWidth) * this.cache.loopBarWidth;
 
     if (makeJouney) {
-      this.createJourney(millisecond, this.clip, {
+      createJourney(millisecond, this, {
         after: this.settings.playAfterResize ? "play" : null,
       });
     }
@@ -421,14 +433,14 @@ class Player {
     if (this.clip.runTimeInfo.state === PLAYING) {
       if (positiveSpeed) {
         if (atEndOfLoop) {
-          createJourney(loopStartMillisecond + 1, this.clip, {
+          createJourney(loopStartMillisecond + 1, this, {
             after: "play",
           });
           return true;
         }
       } else {
         if (atStartOfLoop) {
-          createJourney(loopEndMillisecond - 1, this.clip, {
+          createJourney(loopEndMillisecond - 1, this, {
             after: "play",
           });
           return true;
@@ -484,13 +496,13 @@ class Player {
       this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
       this.clip.speed >= 0
     ) {
-      createJourney(1, this.clip, { after: "play" });
+      createJourney(1, this, { after: "play" });
     } else if (
       (this.clip.runTimeInfo.currentMillisecond === this.clip.duration ||
         this.clip.runTimeInfo.currentMillisecond === 0) &&
       this.clip.speed < 0
     ) {
-      createJourney(this.clip.duration - 1, this.clip, {
+      createJourney(this.clip.duration - 1, this, {
         after: "play",
       });
     }
@@ -570,7 +582,7 @@ class Player {
     if (state == "idle" && hasAutoplay) {
       this.elements.playPausePanel.classList.add("hide");
     } else if (state == "idle" && isZeroMs && hasThumbnail) {
-      this.addPlayIcon();
+      addPlayIcon(this.elements.playPausePanelContainer);
       this.elements.playPausePanel.style.backgroundColor =
         this.options.thumbnailColor || "black";
       this.elements.playPausePanel.style.backgroundImage =
@@ -652,7 +664,6 @@ class Player {
       loopBarPositionX = 0;
     }
     const { duration } = this.clip;
-    const { journey } = this.settings;
     const { loopBar, totalBar, runningBar, currentTime } = this.elements;
 
     const totalBarPositionX = loopBarPositionX + loopBar.offsetLeft;
@@ -666,7 +677,7 @@ class Player {
     runningBar.style.width =
       (loopBarPositionX / loopBar.offsetWidth) * 100 + `%`;
 
-    journey.station(millisecond);
+    this.settings.journey.station(millisecond);
 
     if (this.options.onMillisecondChange && executeOnMillisecondChange) {
       this.options.onMillisecondChange(millisecond);
@@ -695,7 +706,7 @@ class Player {
     pointerEventsAdd(this);
     donkeyclipListener(this);
     bodyListener(this);
-    if (this.options.type === "scroller") wheelListener(this);
+    if (this.options.type === "scroller") initScroller(this);
   }
 
   setTheme() {
@@ -737,5 +748,3 @@ class Player {
     this.elements.speedCurrent.innerHTML = currentSpeed;
   }
 }
-
-export default Player;

@@ -98,7 +98,7 @@ export default (_this) => {
         loopms = _this.settings.loopEndMillisecond - 1;
       }
       _this.settings.needsUpdate = true;
-      createJourney(loopms, _this.clip, {
+      createJourney(loopms, _this, {
         before: "pause",
         after: "play",
       });
