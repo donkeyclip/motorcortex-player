@@ -1,4 +1,14 @@
+import { changeIcon } from "../helpers";
+
 let timeout = setTimeout(() => {}, 0);
+
+function addPlayIcon(playPausePanelContainer) {
+  changeIcon(playPausePanelContainer, null, "play");
+}
+function addPauseIcon(playPausePanelContainer) {
+  changeIcon(playPausePanelContainer, null, "pause");
+}
+
 export function trigger(_this) {
   clearTimeout(timeout);
   _this.elements.playPausePanel.classList.remove("animate");
@@ -9,10 +19,10 @@ export function trigger(_this) {
   _this.elements.playPausePanel.classList.remove("remove-animation");
   if (_this.clip.runTimeInfo.state !== "playing") {
     _this.play();
-    _this.addPlayIcon();
+    addPlayIcon(_this.elements.playPausePanelContainer);
   } else {
     _this.pause();
-    _this.addPauseIcon();
+    addPauseIcon(_this.elements.playPausePanelContainer);
   }
   _this.elements.playPausePanel.classList.add("animate");
   timeout = setTimeout(() => {

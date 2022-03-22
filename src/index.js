@@ -7,6 +7,7 @@ import {
   eltag,
   changeIcon,
   sanitizeCSS,
+  initializeOptions,
 } from "./helpers";
 import setElements from "./html/setElements";
 import bodyListener from "./listeners/body";
@@ -43,16 +44,36 @@ import statusBtnListener from "./listeners/statusBtn";
 import { add as volumeAdd, trigger as volumeTrigger } from "./listeners/volume";
 const timeCapsule = new TimeCapsule();
 
+const themeKeyToClass = {
+  default: "theme-default",
+  transparent: "theme-transparent",
+  whiteGold: "theme-whiteGold",
+  darkGold: "theme-darkGold",
+  green: "theme-green",
+  blue: "theme-blue",
+  dark: "theme-dark",
+  yellow: "theme-yellow",
+};
+
+function addSpinner(pointerEventPanel) {
+  changeIcon(pointerEventPanel, null, "spinner");
+  pointerEventPanel.classList.add("loading");
+}
+
+function removeSpinner(pointerEventPanel) {
+  changeIcon(pointerEventPanel, "spinner", null);
+  pointerEventPanel.classList.remove("loading");
+}
+
 /**
  * @classdesc
  * Timer's purpose is to provide an interface through which any TimedIncident
  * (such as a Scene or a Clip) can both privide info regarding their timing
  * state but also provide an interface for interacting/altering the timing of it
  */
-
 class Player {
   constructor(options) {
-    this.options = this.initializeOptions(options);
+    this.options = initializeOptions(options);
     this.className = name;
     this.id = this.options.id;
     this.name = name;
@@ -89,7 +110,7 @@ class Player {
     this.scaleClipHost();
     this.eventBroadcast(STATE_CHANGE, this.state);
 
-    if (this.options.type == "scroller") {
+    if (this.options.type === "scroller") {
       this.timeBucket = 0;
       this.timeProgress = 0;
       this.sortedSections = this.options.sections?.sort((a, b) => a - b);
@@ -106,52 +127,7 @@ class Player {
     if (this.options.autoPlay) {
       this.play();
     }
-  }
-  initializeOptions(options) {
-    options.id ??= Date.now();
-    options.showVolume ??=
-      Object.keys(options.clip?.audioClip?.children || []).length || false;
-    options.showIndicator ??= false;
-    options.theme ??= "transparent";
-    options.host ??= options.clip.props.host;
-    options.buttons ??= {};
-    options.timeFormat ??= "ss";
-    options.backgroundColor ??= "black";
-    options.fullscreen ??= false;
-    options.scaleToFit ??= true;
-    options.sectionsEasing ??= "easeOutQuart";
-    options.pointerEvents ??= false;
-    options.scrollAnimation ??= false;
-    options.onMillisecondChange ??= null;
-    options.speedValues ??= [-1, 0, 0.5, 1, 2];
-    options.speed ??= 1;
-    options.muted ??= false;
-    options.maxScrollStorage ??= 50;
-    options.controls ??= true;
-    options.loop ??= false;
-    options.volume ??= 1;
-    options.currentScript ??= null;
-    if (options.millisecond) {
-      const clip = this.clip || options.clip;
-
-      if (options.millisecond > clip.duration)
-        options.millisecond = clip.duration;
-      if (options.millisecond < 0) options.millisecond = 0;
-      if (!isFinite(options.millisecond)) options.millisecond = 0;
-
-      this.createJourney(options.millisecond, {}, this.clip || options.clip);
-    }
-    // remove strings
-    for (const i in options.speedValues) {
-      if (!isFinite(options.speedValues[i])) {
-        options.speedValues.splice(i, 1);
-      }
-    }
-
-    options.speedValues.sort(function (a, b) {
-      return a - b;
-    });
-    return options;
+    this.elements = undefined;
   }
 
   play() {
@@ -163,7 +139,7 @@ class Player {
   }
 
   changeSettings(newOptions, initial) {
-    newOptions = this.initializeOptions({ ...this.options, ...newOptions });
+    newOptions = initializeOptions({ ...this.options, ...newOptions });
     if (newOptions.clip !== this.options.clip) {
       initial = true;
       this.clip = newOptions.clip;
@@ -288,21 +264,6 @@ class Player {
       if (after) clip[after]();
     }, 0);
   }
-  /* SCROLLER */
-  animateWithEasing() {
-    this.progress = (Date.now() - this.transitionStart) / this.endAnimation;
-    if (this.progress >= 1) return this.cancelAnimation();
-    let journeyPosition = this.calculateJourneyPosition(this.progress);
-
-    if (journeyPosition < 0) journeyPosition = 0;
-    if (journeyPosition > this.clip.duration)
-      journeyPosition = this.clip.duration;
-    this.createJourney(journeyPosition);
-
-    this.requestAnimationID = window.requestAnimationFrame(
-      this.animateWithEasing.bind(this)
-    );
-  }
 
   calculateMinMaxOfTimeProgress() {
     if (this.timeProgress >= this.clip.duration)
@@ -361,6 +322,7 @@ class Player {
     }
     this.requestAnimation();
   }
+
   setUpTimeBucket(deltaY) {
     const newMultiplier = deltaY > 0 ? 1 : -1;
     deltaY = Math.ceil(Math.abs(deltaY)) * newMultiplier;
@@ -417,7 +379,6 @@ class Player {
   millisecondChange(
     millisecond,
     state,
-    roundTo,
     makeJouney,
     executeOnMillisecondChange = true
   ) {
@@ -431,8 +392,7 @@ class Player {
       return 1;
     }
 
-    const { loopActivated } = this.settings;
-    if (loopActivated && this.clip.speed) {
+    if (this.settings.loopActivated && this.clip.speed) {
       this.calculateJourney(millisecond);
     }
 
@@ -486,6 +446,7 @@ class Player {
     }
     return false;
   }
+
   broadcastNotPlaying(state) {
     if (!this.elements.controls.classList.value.includes(showControls)) {
       this.elements.controls.classList.toggle(showControls);
@@ -495,9 +456,9 @@ class Player {
       state.charAt(0).toUpperCase() + state.slice(1)
     }`;
     if (state == "blocked") {
-      this.addSpinner();
+      addSpinner(this.elements.pointerEventPanel);
     } else if (state !== "idle") {
-      this.removeSpinner();
+      removeSpinner(this.elements.pointerEventPanel);
     }
   }
 
@@ -517,23 +478,8 @@ class Player {
     this.subscribeToDurationChange();
   }
 
-  addSpinner() {
-    changeIcon(this.elements.pointerEventPanel, null, "spinner");
-    this.elements.pointerEventPanel.classList.add("loading");
-  }
-  addPlayIcon() {
-    changeIcon(this.elements.playPausePanelContainer, null, "play");
-  }
-  addPauseIcon() {
-    changeIcon(this.elements.playPausePanelContainer, null, "pause");
-  }
-
-  removeSpinner() {
-    changeIcon(this.elements.pointerEventPanel, "spinner", null);
-    this.elements.pointerEventPanel.classList.remove("loading");
-  }
   broadcastPlaying(state) {
-    this.removeSpinner();
+    removeSpinner(this.elements.pointerEventPanel);
     if (this.elements.controls.classList.value.includes(showControls)) {
       this.elements.controls.classList.toggle(showControls);
     }
@@ -693,22 +639,21 @@ class Player {
   }
 
   timeFormat(ms) {
-    if (this.options.timeFormat === "ss") {
-      const hours = ms / 1000 / 60 / 60;
-      const minutes = (hours % 1) * 60;
-      const seconds = (minutes % 1) * 60;
-
-      // By default, JavaScript converts any floating-point number
-      // with six or more leading zeros into e-notation
-      // to avoid this problem we round to 5 float digits
-      const h = ("0" + parseInt(hours.toFixed(50))).slice(-2);
-      const m = ("0" + parseInt(minutes.toFixed(50))).slice(-2);
-      const s = ("0" + parseInt(seconds.toFixed(50))).slice(-2);
-
-      return `${h === "00" ? "" : h + ":"}${m}:${s}`;
-    } else {
+    if (this.options.timeFormat !== "ss") {
       return ms;
     }
+    const hours = ms / 1000 / 60 / 60;
+    const minutes = (hours % 1) * 60;
+    const seconds = (minutes % 1) * 60;
+
+    // By default, JavaScript converts any floating-point number
+    // with six or more leading zeros into e-notation
+    // to avoid this problem we round to 5 float digits
+    const h = ("0" + parseInt(hours.toFixed(50))).slice(-2);
+    const m = ("0" + parseInt(minutes.toFixed(50))).slice(-2);
+    const s = ("0" + parseInt(seconds.toFixed(50))).slice(-2);
+
+    return `${h === "00" ? "" : h + ":"}${m}:${s}`;
   }
 
   handleDrag(loopBarPositionX, executeOnMillisecondChange = true) {
@@ -762,65 +707,22 @@ class Player {
     if (this.options.type === "scroller") wheelListener(this);
   }
 
-  launchIntoFullscreen(element) {
-    try {
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen();
-      } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  exitFullscreen() {
-    try {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   setTheme() {
     this.options.theme.replace(/\s\s+/g, ` `);
     this.options.theme.trim();
 
-    if (this.options.theme === "default")
-      this.elements.mcPlayer.classList.add("theme-default");
-    else if (this.options.theme === "transparent")
-      this.elements.mcPlayer.classList.add("theme-transparent");
-    else if (this.options.theme === "whiteGold")
-      this.elements.mcPlayer.classList.add("theme-whiteGold");
-    else if (this.options.theme === "darkGold")
-      this.elements.mcPlayer.classList.add("theme-darkGold");
-    else if (this.options.theme === "green")
-      this.elements.mcPlayer.classList.add("theme-green");
-    else if (this.options.theme === "blue")
-      this.elements.mcPlayer.classList.add("theme-blue");
-    else if (this.options.theme === "dark")
-      this.elements.mcPlayer.classList.add("theme-dark");
-    else if (this.options.theme === "yellow")
-      this.elements.mcPlayer.classList.add("theme-yellow");
-    else if (this.options.themeCSS && !elid("--mc-player-style-custom")) {
+    const themeClass = themeKeyToClass[this.options.theme];
+    if (themeClass) {
+      this.elements.mcPlayer.classList.add(themeClass);
+    } else if (this.options.themeCSS && !elid("--mc-player-style-custom")) {
       this.options.themeCSS = sanitizeCSS(this.options.themeCSS);
       const customStyle = elcreate("style");
       customStyle.id = "--mc-player-style-custom";
-      customStyle.styleSheet
-        ? (customStyle.styleSheet.cssText = this.options.themeCSS)
-        : customStyle.appendChild(
-            document.createTextNode(this.options.themeCSS)
-          );
+      if (customStyle.styleSheet) {
+        customStyle.styleSheet.cssText = this.options.themeCSS;
+      } else {
+        customStyle.appendChild(document.createTextNode(this.options.themeCSS));
+      }
       eltag("head")[0].appendChild(customStyle);
       this.elements.mcPlayer.classList.add(this.options.theme);
     }
@@ -842,29 +744,6 @@ class Player {
   setSpeed() {
     const currentSpeed = this.clip.speed == 1 ? "Normal" : this.clip.speed;
     this.elements.speedCurrent.innerHTML = currentSpeed;
-  }
-
-  calculateSpeed(step, arrayOfValues, currentPercentage) {
-    const botLimitIndex = Math.floor(currentPercentage / step);
-
-    if (botLimitIndex === arrayOfValues.length - 1) {
-      return arrayOfValues[botLimitIndex].toFixed(1);
-    }
-
-    const limitZonePercentage = (currentPercentage / step) % 1;
-
-    const limitZoneLength = Math.abs(
-      arrayOfValues[botLimitIndex] - arrayOfValues[botLimitIndex + 1]
-    );
-
-    const realZoneSpeed = limitZonePercentage * limitZoneLength;
-
-    const realSpeed = (realZoneSpeed + arrayOfValues[botLimitIndex]).toFixed(1);
-
-    if (realSpeed == 0) {
-      return "0.0";
-    }
-    return realSpeed;
   }
 }
 
