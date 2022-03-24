@@ -20,10 +20,10 @@ export const eltag = document.getElementsByTagName.bind(document);
 export const elcreate = document.createElement.bind(document);
 
 export const addListener = document.addEventListener.bind(document);
-export function addListenerWithElement(element = document, ...rest) {
+export function addListenerWithElement(element, ...rest) {
   return element.addEventListener(...rest);
 }
-export function removeListenerWithElement(element = document, ...rest) {
+export function removeListenerWithElement(element, ...rest) {
   return element.removeEventListener(...rest);
 }
 
@@ -35,10 +35,7 @@ function isNumber(value) {
   return typeof value === "number" && isFinite(value);
 }
 
-const numberPartRegexp = new RegExp(
-  "^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)",
-  "gi"
-);
+const numberPartRegexp = /"^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)"/gi;
 
 function calculateDimension(dimensionToMatch) {
   const widthNumberPart = dimensionToMatch.match(numberPartRegexp)[0];
@@ -149,12 +146,16 @@ export function removeMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
   removeListener(touchmove, callbackForMove, false);
 }
 
-export function addStartListeners(callback, element, passive = false) {
+export function addStartListeners(
+  callback,
+  element = document,
+  passive = false
+) {
   addListenerWithElement(element, mousedown, callback, { passive });
   addListenerWithElement(element, touchstart, callback, { passive });
 }
 
-export function removeStartListeners(callback, element) {
+export function removeStartListeners(callback, element = document) {
   removeListenerWithElement(element, callback, false);
   removeListenerWithElement(element, touchstart, callback, false);
 }
@@ -169,6 +170,7 @@ export function changeIcon(element, from, to) {
     element.innerHTML = SVG[to];
   }
 }
+
 export function initializeIcons(playerElements) {
   playerElements.loopButton.innerHTML = SVG.loop;
   playerElements.volumeBtn.innerHTML = SVG["volume-on"];
@@ -179,7 +181,9 @@ export function initializeIcons(playerElements) {
   playerElements.speedButtonShow.innerHTML = SVG["angle-right"];
   playerElements.speedButtonHide.innerHTML = SVG["angle-left"];
 }
-
+export function sortFunc(a, b) {
+  return a - b;
+}
 export function initializeOptions(options, _this) {
   options.id ??= Date.now();
   options.showVolume ??= !!Object.keys(options.clip?.audioClip?.children || [])
@@ -206,7 +210,7 @@ export function initializeOptions(options, _this) {
   options.currentScript ??= null;
 
   if (options.millisecond) {
-    const clip = this.clip;
+    const clip = _this.clip;
     if (options.millisecond > clip.duration)
       options.millisecond = clip.duration;
     if (options.millisecond < 0) options.millisecond = 0;
@@ -221,9 +225,7 @@ export function initializeOptions(options, _this) {
     }
   }
 
-  options.speedValues.sort(function (a, b) {
-    return a - b;
-  });
+  options.speedValues.sort(sortFunc);
   return options;
 }
 
