@@ -10,6 +10,7 @@ import {
   initializeOptions,
   timeCapsule,
   createJourney,
+  sortFunc,
 } from "./helpers";
 import setElements from "./html/setElements";
 import bodyListener from "./listeners/body";
@@ -127,7 +128,7 @@ export default class Player {
     if (this.options.type === "scroller") {
       this.timeBucket = 0;
       this.timeProgress = 0;
-      this.sortedSections = this.options.sections?.sort((a, b) => a - b);
+      this.options.sections?.sort(sortFunc);
     }
     const resizeObserver = new ResizeObserver(() => {
       if (this.options.scaleToFit) {
@@ -337,20 +338,20 @@ export default class Player {
 
   getSectionTime(direction) {
     let sectionIndex;
-
+    const sortedSections = this.options.sections;
     if (direction > 0) {
       const newPosition = this.startPosition + this.timeBucket;
-      for (let i = 0; i < this.sortedSections.length; i++) {
-        if (newPosition < this.sortedSections[i]) {
+      for (let i = 0; i < sortedSections.length; i++) {
+        if (newPosition < sortedSections[i]) {
           sectionIndex = i;
           break;
         }
       }
-      sectionIndex ??= this.sortedSections.length - 1;
+      sectionIndex ??= sortedSections.length - 1;
     } else {
       const newPosition = this.startPosition - this.timeBucket;
-      for (let i = this.sortedSections.length - 1; i >= 0; i--) {
-        if (newPosition > this.sortedSections[i]) {
+      for (let i = sortedSections.length - 1; i >= 0; i--) {
+        if (newPosition > sortedSections[i]) {
           sectionIndex = i;
           break;
         }
@@ -365,7 +366,7 @@ export default class Player {
     this.startPosition = this.clip.runTimeInfo.currentMillisecond;
     this.currentSectionIndex = this.getSectionTime(this.multiplier);
     this.endAnimationTime = Math.abs(
-      this.startPosition - this.sortedSections[this.currentSectionIndex]
+      this.startPosition - this.options.sections[this.currentSectionIndex]
     );
   }
 
@@ -378,6 +379,7 @@ export default class Player {
   millisecondChange(
     millisecond,
     state,
+    _,
     makeJouney,
     executeOnMillisecondChange = true
   ) {

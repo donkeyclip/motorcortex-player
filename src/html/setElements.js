@@ -139,10 +139,9 @@ const initializePlayer = (_this) => {
   if (typeof _this.options.host === "string") {
     const nodelist = el(_this.options.host);
     for (const i in nodelist) {
-      if (isNaN(i)) {
-        continue;
+      if (!isNaN(i)) {
+        nodelist[i].appendChild(_this.elements.mcPlayer);
       }
-      nodelist[i].appendChild(_this.elements.mcPlayer);
     }
   } else {
     _this.options.host.appendChild(_this.elements.mcPlayer);
@@ -240,10 +239,8 @@ const createSpeedValues = (_this) => {
       _this.options.speed = _this.options.speedValues[i];
       _this.clip.speed = _this.options.speedValues[i];
 
-      const isNormal = _this.clip.speed == 1;
-      _this.elements.speedCurrent.innerHTML = isNormal
-        ? "Normal"
-        : _this.clip.speed;
+      _this.elements.speedCurrent.innerHTML =
+        _this.clip.speed == 1 ? "Normal" : _this.clip.speed;
 
       const previousChecked = elFirstClass(
         _this.elements.mcPlayer,
