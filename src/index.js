@@ -45,19 +45,8 @@ import {
 import { add as speedAdd, trigger as speedTrigger } from "./listeners/speed";
 import statusBtnListener from "./listeners/statusBtn";
 import { add as volumeAdd, trigger as volumeTrigger } from "./listeners/volume";
+import wheelListener from "./listeners/wheelListener";
 
-let wheelListener;
-
-function initScroller(_this) {
-  if (wheelListener) {
-    wheelListener(_this);
-    return;
-  }
-  import("./listeners/wheelListener").then((w) => {
-    wheelListener = w;
-    w(_this);
-  });
-}
 const themeKeyToClass = {
   default: "theme-default",
   transparent: "theme-transparent",
@@ -177,7 +166,7 @@ export default class Player {
       },
       showVolume: () => settingsTrigger(this, "showVolume"),
       type: () => {
-        if (newOptions.type === "scroller") initScroller(this);
+        if (newOptions.type === "scroller") wheelListener(this);
       },
       theme: () => {
         this.options.theme = newOptions.theme;
@@ -708,7 +697,7 @@ export default class Player {
     pointerEventsAdd(this);
     donkeyclipListener(this);
     bodyListener(this);
-    if (this.options.type === "scroller") initScroller(this);
+    if (this.options.type === "scroller") wheelListener(this);
   }
 
   setTheme() {
