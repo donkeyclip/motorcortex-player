@@ -35,7 +35,7 @@ function isNumber(value) {
   return typeof value === "number" && isFinite(value);
 }
 
-const numberPartRegexp = /"^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)"/gi;
+const numberPartRegexp = /"^[+-]?(\d+([.]\d*)?|[.]\d+)"/gi;
 
 function calculateDimension(dimensionToMatch) {
   const widthNumberPart = dimensionToMatch.match(numberPartRegexp)[0];
