@@ -213,8 +213,8 @@ export function initializeOptions(options, _this) {
     const clip = _this.clip;
     if (options.millisecond > clip.duration)
       options.millisecond = clip.duration;
-    if (options.millisecond < 0) options.millisecond = 0;
-    if (!isFinite(options.millisecond)) options.millisecond = 0;
+    if (options.millisecond < 0 || !isFinite(options.millisecond))
+      options.millisecond = 0;
 
     createJourney(options.millisecond, _this);
   }
