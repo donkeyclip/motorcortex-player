@@ -68,6 +68,8 @@ function removeSpinner(pointerEventPanel) {
   pointerEventPanel.classList.remove("loading");
 }
 
+const timeCache = [];
+
 /**
  * @classdesc
  * Timer's purpose is to provide an interface through which any TimedIncident
@@ -217,13 +219,13 @@ export default class Player {
 
   scaleClipHost() {
     if (this.options.scaleToFit) {
-      const { width, height } = this.clip.props.containerParams;
+      const props = this.clip.props;
       const transform = calcClipScale(
-        { width, height },
+        props.containerParams,
         {
-          width: this.clip.props.host.offsetWidth,
+          width: props.host.offsetWidth,
           height:
-            this.clip.props.host.offsetHeight -
+            props.host.offsetHeight -
             (this.options.visible == "always" ? 50 : 0),
         },
         this.options.scaleToFit === "cover"
@@ -636,31 +638,37 @@ export default class Player {
     if (this.options.timeFormat !== "ss") {
       return ms;
     }
-    const hours = ms / 1000 / 60 / 60;
-    const minutes = (hours % 1) * 60;
-    const seconds = (minutes % 1) * 60;
 
-    // By default, JavaScript converts any floating-point number
-    // with six or more leading zeros into e-notation
-    // to avoid this problem we round to 5 float digits
-    const h = ("0" + parseInt(hours.toFixed(50))).slice(-2);
-    const m = ("0" + parseInt(minutes.toFixed(50))).slice(-2);
-    const s = ("0" + parseInt(seconds.toFixed(50))).slice(-2);
+    // If the diff from previous calculated value is less than a second, return the cached result
+    if (ms - timeCache[0] < 1000) {
+      return timeCache[1];
+    }
 
-    return `${h === "00" ? "" : h + ":"}${m}:${s}`;
+    let date = new Date(ms).toISOString().slice(11, 19);
+    if (date.startsWith("00")) {
+      date = date.slice(3);
+    }
+
+    if (timeCache[0] == null || ms - timeCache[0] < 2000) {
+      // Make sure to round our cache number to the first second of the minute
+      // So we don't get any stale cache results
+      timeCache[0] = Math.floor(ms / 100) * 100;
+      timeCache[1] = date;
+    }
+
+    return date;
   }
 
   handleDrag(loopBarPositionX, executeOnMillisecondChange = true) {
     if (!isFinite(loopBarPositionX)) {
       loopBarPositionX = 0;
     }
-    const { duration } = this.clip;
     const { loopBar, totalBar, runningBar, currentTime } = this.elements;
 
     const totalBarPositionX = loopBarPositionX + loopBar.offsetLeft;
 
     const millisecond = Math.round(
-      (duration * totalBarPositionX) / totalBar.offsetWidth
+      (this.clip.duration * totalBarPositionX) / totalBar.offsetWidth
     );
 
     currentTime.innerHTML = this.timeFormat(millisecond);
