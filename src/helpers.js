@@ -35,7 +35,7 @@ function isNumber(value) {
   return typeof value === "number" && isFinite(value);
 }
 
-const numberPartRegexp = /"^[+-]?(\d+([.]\d*)?|[.]\d+)"/gi;
+const numberPartRegexp = /^[+-]?(\d+([.]\d*)?|[.]\d+)/gi;
 
 function calculateDimension(dimensionToMatch) {
   const widthNumberPart = dimensionToMatch.match(numberPartRegexp)[0];
@@ -53,13 +53,19 @@ function calculateDimension(dimensionToMatch) {
 }
 
 export function calcClipScale(containerParams, platoDims, cover = false) {
-  let widthAnalysed, heightAnalysed;
+  if (!containerParams) {
+    return {
+      scale: 1,
+      position: {},
+    };
+  }
 
-  if (Object.prototype.hasOwnProperty.call(containerParams, "width")) {
+  let widthAnalysed, heightAnalysed;
+  if (containerParams.width) {
     widthAnalysed = calculateDimension(containerParams.width);
   }
 
-  if (Object.prototype.hasOwnProperty.call(containerParams, "height")) {
+  if (containerParams.height) {
     heightAnalysed = calculateDimension(containerParams.height);
   }
 
@@ -89,7 +95,7 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
   const finalScale = boundaryToUse ? scaleDifHeight : scaleDifWidth;
 
   const position = {};
-  if (widthAnalysed !== null) {
+  if (widthAnalysed != null) {
     let clipWidth = widthAnalysed.number * finalScale;
     if (widthAnalysed.unit !== "px") {
       clipWidth *= platoDims.width / 100;
@@ -99,7 +105,7 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
     position.left = blankSpace / 2;
   }
 
-  if (widthAnalysed !== null) {
+  if (heightAnalysed != null) {
     let clipHeight = heightAnalysed.number * finalScale;
     if (heightAnalysed.unit !== "px") {
       clipHeight *= platoDims.height / 100;
@@ -114,6 +120,7 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
     position: position,
   };
 }
+
 export function createUID() {
   let dt = new Date().getTime();
   return "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
