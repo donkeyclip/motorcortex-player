@@ -639,20 +639,29 @@ export default class Player {
       return ms;
     }
 
+    const diff = ms - timeCache[0];
     // If the diff from previous calculated value is less than a second, return the cached result
-    if (ms - timeCache[0] < 1000) {
+    if (0 < diff && diff < 1000) {
       return timeCache[1];
     }
 
-    let date = new Date(ms).toISOString().slice(11, 19);
-    if (date.startsWith("00")) {
-      date = date.slice(3);
-    }
+    const hours = ms / 1000 / 60 / 60;
+    const minutes = (hours % 1) * 60;
+    const seconds = (minutes % 1) * 60;
+
+    // By default, JavaScript converts any floating-point number
+    // with six or more leading zeros into e-notation
+    // to avoid this problem we round to 5 float digits
+    const h = ("0" + parseInt(hours.toFixed(5))).slice(-2);
+    const m = ("0" + parseInt(minutes.toFixed(5))).slice(-2);
+    const s = ("0" + parseInt(seconds.toFixed(5))).slice(-2);
+
+    const date = `${h === "00" ? "" : h + ":"}${m}:${s}`;
 
     if (timeCache[0] == null || ms - timeCache[0] < 2000) {
-      // Make sure to round our cache number to the first second of the minute
-      // So we don't get any stale cache results
-      timeCache[0] = Math.floor(ms / 100) * 100;
+      // Make sure to round our cache number to the beginning of the second
+      // So we don't get any stale cache results, as we would if we cached 1009 for example
+      timeCache[0] = Math.floor(ms / 1000) * 1000;
       timeCache[1] = date;
     }
 
