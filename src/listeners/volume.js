@@ -41,7 +41,7 @@ export function trigger(_this, volume, mute) {
     changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
   } else if (_this.settings.volume === 0) {
     _this.settings.volumeMute = true;
-    changeIcon(elements.volumeBtn, VOLUME_OFF, VOLUME_ON);
+    changeIcon(elements.volumeBtn, VOLUME_ON, VOLUME_OFF);
   }
 
   _this.options.volume = _this.settings.volume;
