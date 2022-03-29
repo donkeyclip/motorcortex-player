@@ -74,6 +74,7 @@
   font-size: 13px;
   cursor: default;
   user-select: none;
+  box-sizing: border-box;
 }
 .--mc-player svg {
   width: 22px;
@@ -97,10 +98,6 @@
   top: 0px;
   left: 0px;
   pointer-events: none;
-}
-
-.--mc-player * {
-  box-sizing: border-box;
 }
 
 .--mcp-background,
@@ -388,6 +385,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 20px;
 }
 .--mcp-status-btn {
   display: flex;
@@ -400,10 +398,6 @@
 }
 .--mcp-listener-helper {
   pointer-events: none;
-}
-
-.--mcp-btn {
-  font-size: 20px;
 }
 
 .--mcp-volume-btn {
@@ -528,9 +522,9 @@ ul.--mcp-speed-values li p {
   flex: 1;
 }
 
-/* 
+/*
 
-Sliders 
+Sliders
 
 */
 .--mc-player .switch {
@@ -575,9 +569,6 @@ Sliders
 .--mc-player input:checked + .slider {
   background-color: rgb(var(--activeColor));
 }
-.--mc-player input:checked + .slider:before {
-  background-color: white;
-}
 
 .--mc-player input:focus + .slider {
   box-shadow: 0 0 1px rgb(var(--activeColor));
@@ -587,6 +578,7 @@ Sliders
   -webkit-transform: translateX(16px);
   -ms-transform: translateX(16px);
   transform: translateX(16px);
+  background-color: white;
 }
 
 .--mc-player .slider.round {
