@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.6.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.5.2...v2.6.0) (2022-03-30)
+
+
+### Features
+
+* compress css and html on bundle ([f1ac448](https://github.com/donkeyclip/motorcortex-player/commit/f1ac4480371c30b02e9798fe0f675acf18210b3b))
+
+
+### Bug Fixes
+
+* broken regexp for number matching ([eaa2c73](https://github.com/donkeyclip/motorcortex-player/commit/eaa2c73d773a5bbd5a265d20d178981b6a0402c2))
+* correctly set clip size for the container ([eaa2c73](https://github.com/donkeyclip/motorcortex-player/commit/eaa2c73d773a5bbd5a265d20d178981b6a0402c2))
+* correctly set volume off icon when volume is 0 ([fadcfa0](https://github.com/donkeyclip/motorcortex-player/commit/fadcfa04d01621f889ae27ff734d85ba189a1f05))
+* timeformating correct rounding for all digits not just the first 2 ([12663ea](https://github.com/donkeyclip/motorcortex-player/commit/12663ea3ccf8c927767ef56c645ac9615b7540f1))
+
+
+### Performance Improvements
+
+* cache time formating calculations as they are executed multiple times per second ([a6616c9](https://github.com/donkeyclip/motorcortex-player/commit/a6616c9da24c46c25056d6e72ed40203441ad134))
+
 ### [2.5.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.5.1...v2.5.2) (2022-03-16)
 
 
