@@ -19,7 +19,7 @@
     "lint": "npm run lint:js",
     "lint:fix": "npm run lint:js -- --fix",
     "build": "npm run build:lib && npm run build:demo",
-    "build:lib": "rollup -c",
+    "build:lib": "rimraf dist && rollup -c",
     "start": "npm run build:lib && concurrently -c \"cyan.bold,magenta.bold\" \"npm:build:lib -- -w\"  \"npm:start:demo\" ",
     "start:demo": "webpack serve --config ./demo/webpack.config.js --mode=development --progress ",
     "build:demo": "webpack --mode=production --config ./demo/webpack.config.js",

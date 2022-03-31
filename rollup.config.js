@@ -10,13 +10,15 @@ import { terser } from "rollup-plugin-terser";
 import pkg from "./package.json";
 
 import analyze from "rollup-plugin-analyzer";
-import svgo from "rollup-plugin-svgo";
 const ANALYZE = false;
 export default [
   {
     input: "src/index.js",
     external: ["@donkeyclip/motorcortex"],
-    output: [{ dir: pkg.module, format: "es" }],
+    output: [
+      { dir: pkg.module, format: "es" },
+      { dir: pkg.main, format: "cjs" },
+    ],
     plugins: [
       json(),
       html({
@@ -31,7 +33,6 @@ export default [
           minifyCSS: true,
         },
       }),
-      svgo({ multipass: true }),
       svg(),
       resolve(),
       commonjs(),
@@ -55,7 +56,6 @@ export default [
     ],
     plugins: [
       json(),
-      svgo({ multipass: true }),
       svg(),
       html({
         include: "**/*.html",
