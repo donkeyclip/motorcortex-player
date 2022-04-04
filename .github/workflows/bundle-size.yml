@@ -11,7 +11,7 @@ on:
 jobs:
   pkg-size-report:
     name: Package Size Report
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
