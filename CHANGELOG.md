@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.6.1...v2.7.0) (2022-04-08)
+
+
+### Features
+
+* drop explorer 11 support ([56db337](https://github.com/donkeyclip/motorcortex-player/commit/56db3376cff27283b69ac6af1f778cafc747884a))
+* update compatibility with motorcortex ([0ea4f9d](https://github.com/donkeyclip/motorcortex-player/commit/0ea4f9d5744dada521d600fee6f58df69ef3c13a))
+
 ### [2.6.1](https://github.com/donkeyclip/motorcortex-player/compare/v2.6.0...v2.6.1) (2022-03-31)
 
 
