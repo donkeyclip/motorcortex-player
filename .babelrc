@@ -3,22 +3,8 @@
     [
       "@babel/preset-env",
       {
-        "targets": "> 0.25%, not dead",
-        "useBuiltIns": "usage",
-        "corejs": "3.18"
-      }
-    ]
-  ],
-  "exclude": [
-    "node_modules/**"
-  ],
-  "plugins": [
-    "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-syntax-jsx",
-    [
-      "@babel/plugin-transform-react-jsx",
-      {
-        "pragma": "MotorCortex.utils.createDOMElement"
+        "targets": "defaults, not ie 11",
+        "corejs": "3.21"
       }
     ]
   ]
