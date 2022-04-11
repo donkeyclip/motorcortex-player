@@ -223,7 +223,7 @@ export function initializeOptions(options, _this) {
     if (options.millisecond < 0 || !isFinite(options.millisecond))
       options.millisecond = 0;
 
-    createJourney(options.millisecond, _this);
+    _this.goToMillisecond(options.millisecond);
   }
   // remove strings
   for (const i in options.speedValues) {
@@ -234,16 +234,4 @@ export function initializeOptions(options, _this) {
 
   options.speedValues.sort(sortFunc);
   return options;
-}
-
-export function createJourney(millisecond, _this, { before, after } = {}) {
-  const clip = _this.clip;
-  setTimeout(() => {
-    if (!clip.id) return;
-    if (before) clip[before]();
-    _this.settings.journey = timeCapsule.startJourney(clip);
-    _this.settings.journey.station(millisecond);
-    _this.settings.journey.destination();
-    if (after) clip[after]();
-  }, 0);
 }

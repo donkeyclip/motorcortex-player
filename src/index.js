@@ -9,7 +9,6 @@ import {
   sanitizeCSS,
   initializeOptions,
   timeCapsule,
-  createJourney,
   sortFunc,
 } from "./helpers";
 import setElements from "./html/setElements";
@@ -242,6 +241,18 @@ export default class Player {
     this.eventBroadcast(SCALE_CHANGE, this.options.scaleToFit);
   }
 
+  goToMillisecond(ms, { before, after } = {}) {
+    const clip = this.clip;
+    setTimeout(() => {
+      if (!clip.id) return;
+      if (before) clip[before]();
+      this.settings.journey = timeCapsule.startJourney(clip);
+      this.settings.journey.station(ms);
+      this.settings.journey.destination();
+      if (after) clip[after]();
+    }, 0);
+  }
+
   createLoop(msStart, msEnd) {
     this.settings.loopStartMillisecond = msStart;
     this.settings.loopEndMillisecond = msEnd;
@@ -251,7 +262,7 @@ export default class Player {
     this.elements.loopBar.style.width = `${
       ((msEnd - msStart) / this.clip.duration) * 100
     }%`;
-    createJourney(msStart, this);
+    this.goToMillisecond(msStart);
     this.elements.runningBar.style.width = "0%";
     !this.settings.loopActivated && loopTrigger(this);
   }
@@ -302,14 +313,14 @@ export default class Player {
     this.addTimeToProgress(this.removeTimeFromBucket());
     this.calculateMinMaxOfTimeProgress();
     if (!this.options.sections) {
-      createJourney(this.timeProgress, this);
+      this.goToMillisecond(this.timeProgress);
     } else {
-      const now = Date.now() - this.startAnimationTime;
-      const progress = now / this.endAnimationTime;
+      const progress =
+        (Date.now() - this.startAnimationTime) / this.endAnimationTime;
       if (progress >= 1 || this.endAnimationTime === 0)
         return this.cancelAnimation();
       const sectionPosition = this.calculateJourneyPosition(progress);
-      createJourney(Math.ceil(sectionPosition), this);
+      this.goToMillisecond(Math.ceil(sectionPosition));
     }
     this.requestAnimation();
   }
@@ -395,7 +406,7 @@ export default class Player {
       (duration / this.cache.totalBarWidth) * this.cache.loopBarWidth;
 
     if (makeJouney) {
-      createJourney(millisecond, this, {
+      this.goToMillisecond(millisecond, {
         after: this.settings.playAfterResize ? "play" : null,
       });
     }
@@ -426,14 +437,14 @@ export default class Player {
     if (this.clip.runTimeInfo.state === PLAYING) {
       if (positiveSpeed) {
         if (atEndOfLoop) {
-          createJourney(loopStartMillisecond + 1, this, {
+          this.goToMillisecond(loopStartMillisecond + 1, {
             after: "play",
           });
           return true;
         }
       } else {
         if (atStartOfLoop) {
-          createJourney(loopEndMillisecond - 1, this, {
+          this.goToMillisecond(loopEndMillisecond - 1, {
             after: "play",
           });
           return true;
@@ -489,13 +500,13 @@ export default class Player {
       this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
       this.clip.speed >= 0
     ) {
-      createJourney(1, this, { after: "play" });
+      this.goToMillisecond(1, { after: "play" });
     } else if (
       (this.clip.runTimeInfo.currentMillisecond === this.clip.duration ||
         this.clip.runTimeInfo.currentMillisecond === 0) &&
       this.clip.speed < 0
     ) {
-      createJourney(this.clip.duration - 1, this, {
+      this.goToMillisecond(this.clip.duration - 1, {
         after: "play",
       });
     }
