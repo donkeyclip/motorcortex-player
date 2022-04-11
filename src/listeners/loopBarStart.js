@@ -1,7 +1,6 @@
 import {
   addMouseUpAndMoveListeners,
   addStartListeners,
-  createJourney,
   removeMouseUpAndMoveListeners,
   removeStartListeners,
 } from "../helpers";
@@ -111,7 +110,7 @@ export default (_this) => {
           loopms = _this.settings.loopEndMillisecond - 1;
         }
         _this.settings.needsUpdate = true;
-        createJourney(loopms, _this, {
+        _this.goToMillisecond(loopms, {
           before: "pause",
           after: "play",
         });
