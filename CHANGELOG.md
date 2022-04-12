@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.7.0...v2.8.0) (2022-04-12)
+
+
+### Features
+
+* add go to millisecond function to player ([8d43bed](https://github.com/donkeyclip/motorcortex-player/commit/8d43bedc219b0f9b72e7b313e971f913e50de6d0))
+
 ## [2.7.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.6.1...v2.7.0) (2022-04-08)
 
 
