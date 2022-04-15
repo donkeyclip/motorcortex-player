@@ -245,10 +245,10 @@ export default class Player {
   }
 
   goToMillisecond(ms, { before, after } = {}) {
-    const clip = this.clip;
-    if (ms > clip.duration) ms = clip.duration;
+    if (ms > this.clip.duration) ms = this.clip.duration;
     else if (ms < 0) ms = 0;
     setTimeout(() => {
+      const clip = this.clip;
       if (!clip.id) return;
       if (before) clip[before]();
       this.settings.journey = timeCapsule.startJourney(clip);
