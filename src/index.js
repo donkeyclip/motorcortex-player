@@ -488,7 +488,7 @@ export default class Player {
     let newClip;
     try {
       newClip = utils.clipFromDefinition(definition);
-      if (newClip.constructor.name === "js")
+      if (newClip.nonBlockingErrorClip)
         throw "Error: Params Error: Clip cannot be created!";
     } catch (e) {
       console.error(e);
