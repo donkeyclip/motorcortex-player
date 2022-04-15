@@ -47,3 +47,5 @@ window.player = new Player({
   clip,
   theme: "donkeyclipDark",
 });
+
+// player.changeInitParams({ text: 52 });
