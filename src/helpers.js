@@ -220,7 +220,7 @@ export function initializeOptions(options, _this) {
   options.showVolume ??= !!Object.keys(options.clip?.audioClip?.children || [])
     .length;
   options.showIndicator ??= false;
-  options.theme ??= "transparent";
+  options.theme ??= "donkeyclip";
   options.host ??= options.clip.props.host;
   options.buttons ??= {};
   options.timeFormat ??= "ss";
