@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.9.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.8.0...v2.9.0) (2022-04-15)
+
+
+### Features
+
+* new donkeyclip theme ([11216d9](https://github.com/donkeyclip/motorcortex-player/commit/11216d96c9ea7ccccc1ccb3d5c254d3c7343b92a))
+
+
+### Bug Fixes
+
+* add keydown events ([a1015af](https://github.com/donkeyclip/motorcortex-player/commit/a1015afb0a97716159a5a129f035aee74a5d7b8c))
+* change default theme ([3336980](https://github.com/donkeyclip/motorcortex-player/commit/33369800d0ccfbd48b7d927416dc74df4aeeb1e1))
+
 ## [2.8.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.7.0...v2.8.0) (2022-04-12)
 
 
