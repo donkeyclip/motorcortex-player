@@ -1,5 +1,13 @@
 # Changelog
 
+### [2.9.3](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.2...v2.9.3) (2022-04-15)
+
+
+### Bug Fixes
+
+* goto ms ([70fbe22](https://github.com/donkeyclip/motorcortex-player/commit/70fbe22a36b72fcc7c76e6161c92f3b1aaf06bd0))
+* remove outline ([dcbaa89](https://github.com/donkeyclip/motorcortex-player/commit/dcbaa892cf7543ad259bb1f7886f0608a80a2ba9))
+
 ### [2.9.2](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.1...v2.9.2) (2022-04-15)
 
 
