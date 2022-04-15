@@ -83,7 +83,16 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: block;
-  --grad-color: 0,0,0;
+  --grad-color: 24,25,29;
+}
+.--mc-player.theme-donkeyclipDark {
+  --activeColor: 0, 153, 225;
+  --defaultColor: 255, 255, 255;
+  --backgroundColor: 0, 0, 0, 0;
+  --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: block;
+  --grad-color: 22,22,26;
 }
 .--mc-player * {
   color: rgb(var(--defaultColor));
