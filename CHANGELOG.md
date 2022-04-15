@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.9.1](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.0...v2.9.1) (2022-04-15)
+
+
+### Bug Fixes
+
+* add donkeyclip dark theme ([0f6f861](https://github.com/donkeyclip/motorcortex-player/commit/0f6f861604fc035730cc0a4e7bf8531bb9d55491))
+
 ## [2.9.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.8.0...v2.9.0) (2022-04-15)
 
 
