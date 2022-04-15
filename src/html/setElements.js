@@ -67,6 +67,7 @@ export default (_this) => {
     mcPlayer,
     `--mcp-full-screen-btn`
   );
+  _this.elements.context = elFirstClass(mcPlayer, `--mcp-context`);
   _this.elements.volumeBarHelper = elFirstClass(mcPlayer, `--mcp-volumebar`);
   _this.elements.volumeBarActive = elFirstClass(
     mcPlayer,

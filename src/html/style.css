@@ -340,10 +340,17 @@
 .--mcp-play-pause-panel.hide {
   opacity: 0;
 }
-.remove-animation * {
-  animation-name: none !important;
-}
 
+
+.run-animation-play {
+  animation: scale-and-opaque 0.8s 1; 
+}
+.run-animation-pause {
+  animation: scale-and-opaque1 0.8s 1; 
+}
+.run-animation-idle {
+  animation: scale-and-opaque2 0.8s 1; 
+}
 .--mcp-play-pause-panel-container {
   background-color: #000000c7;
   width: 60px;
@@ -354,8 +361,7 @@
   align-items: center;
 }
 
-.--mcp-play-pause-panel.animate .--mcp-play-pause-panel-container {
-  animation-name: scale-and-opaque;
+.--mcp-play-pause-panel .--mcp-play-pause-panel-container {
   animation-duration: 0.8s;
   transform-origin: center center;
 }
@@ -369,7 +375,26 @@
     transform: scale(2);
   }
 }
-
+@keyframes scale-and-opaque1 {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+@keyframes scale-and-opaque2 {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
 .--mcp-loop-boundaries {
   position: relative;
 }
