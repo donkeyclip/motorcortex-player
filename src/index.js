@@ -57,6 +57,7 @@ const themeKeyToClass = {
   dark: "theme-dark",
   yellow: "theme-yellow",
   donkeyclip: "theme-donkeyclip",
+  donkeyclipDark: "theme-donkeyclipDark",
 };
 
 function addSpinner(pointerEventPanel) {
