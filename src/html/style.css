@@ -5,6 +5,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0,0,0;
 }
 
 .--mc-player.theme-yellow {
@@ -14,6 +15,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0,0,0;
 }
 
 .--mc-player.theme-dark {
@@ -23,6 +25,7 @@
   --backgroundSettingsColor: rgba(0, 0, 0, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0,0,0;
 }
 
 .--mc-player.theme-whiteGold {
@@ -32,6 +35,7 @@
   --backgroundSettingsColor: rgba(245, 245, 245, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0,0,0;
 }
 
 .--mc-player.theme-darkGold {
@@ -41,6 +45,7 @@
   --backgroundSettingsColor: rgba(0, 0, 0, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0,0,0;
 }
 .--mc-player.theme-transparent {
   --activeColor: 255, 0, 0;
@@ -49,6 +54,7 @@
   --backgroundSettingsColor: rgba(0, 0, 0, 0.9);
   --loopBarColor: rgba(var(--defaultColor), 0.2);
   --grad-display: block;
+  --grad-color: 0,0,0;
 }
 
 .--mc-player.theme-green {
@@ -58,6 +64,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0,0,0;
 }
 .--mc-player.theme-blue {
   --activeColor: 0, 153, 225;
@@ -66,6 +73,17 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0,0,0;
+}
+
+.--mc-player.theme-donkeyclip {
+  --activeColor: 0, 153, 225;
+  --defaultColor: 255, 255, 255;
+  --backgroundColor: 0, 0, 0, 0;
+  --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: block;
+  --grad-color: 0,0,0;
 }
 .--mc-player * {
   color: rgb(var(--defaultColor));
@@ -151,28 +169,28 @@
   z-index: 0;
   pointer-events: none !important;
   background-image: linear-gradient(
-    rgba(0, 0, 0, 00.001),
-    rgba(0, 0, 0, 00.004),
-    rgba(0, 0, 0, 00.007),
-    rgba(0, 0, 0, 00.01),
-    rgba(0, 0, 0, 0.04),
-    rgba(0, 0, 0, 0.07),
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.2),
-    rgba(0, 0, 0, 0.25),
-    rgba(0, 0, 0, 0.3),
-    rgba(0, 0, 0, 0.35),
-    rgba(0, 0, 0, 0.4),
-    rgba(0, 0, 0, 0.45),
-    rgba(0, 0, 0, 0.5),
-    rgba(0, 0, 0, 0.55),
-    rgba(0, 0, 0, 0.6),
-    rgba(0, 0, 0, 0.65),
-    rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 0.75),
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 0.88)
+    rgba(var(--grad-color), 00.001),
+    rgba(var(--grad-color), 00.004),
+    rgba(var(--grad-color), 00.007),
+    rgba(var(--grad-color), 00.01),
+    rgba(var(--grad-color), 0.04),
+    rgba(var(--grad-color), 0.07),
+    rgba(var(--grad-color), 0.1),
+    rgba(var(--grad-color), 0.15),
+    rgba(var(--grad-color), 0.2),
+    rgba(var(--grad-color), 0.25),
+    rgba(var(--grad-color), 0.3),
+    rgba(var(--grad-color), 0.35),
+    rgba(var(--grad-color), 0.4),
+    rgba(var(--grad-color), 0.45),
+    rgba(var(--grad-color), 0.5),
+    rgba(var(--grad-color), 0.55),
+    rgba(var(--grad-color), 0.6),
+    rgba(var(--grad-color), 0.65),
+    rgba(var(--grad-color), 0.7),
+    rgba(var(--grad-color), 0.75),
+    rgba(var(--grad-color), 0.8),
+    rgba(var(--grad-color), 0.88)
   );
 }
 
@@ -193,6 +211,9 @@
   opacity: 0;
   transition: all ease 0.2s;
   pointer-events: auto;
+}
+.--mcp-controls * {
+  user-select: none;
 }
 .--mcp-play-pause-panel #play-svg {
   margin-left: 4px;
