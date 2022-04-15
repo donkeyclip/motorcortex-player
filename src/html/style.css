@@ -109,6 +109,9 @@
 .--mcp-settings-panel:focus {
   outline: none;
 }
+.--mc-player * {
+  outline: none !important;
+}
 .--mcp-settings-panel svg {
   width: 10px;
 }
