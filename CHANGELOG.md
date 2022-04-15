@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.9.2](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.1...v2.9.2) (2022-04-15)
+
+
+### Miscellaneous Chores
+
+* release 2.9.2 ([d61e033](https://github.com/donkeyclip/motorcortex-player/commit/d61e033d4cf6aa667649b17eb9552a2a2b1fa51b))
+
 ### [2.9.1](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.0...v2.9.1) (2022-04-15)
 
 
