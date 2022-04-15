@@ -8,9 +8,10 @@ import {
   touchmove,
   touchstart,
 } from "./listeners/events";
+import { addPlayIcon, addPauseIcon } from "./listeners/pointeEvents";
 
 export const timeCapsule = new TimeCapsule();
-
+export let playPauseTimeout = setTimeout(() => {}, 0);
 export const el = document.querySelectorAll.bind(document);
 export const elid = document.getElementById.bind(document);
 export function elFirstClass(player, className) {
@@ -31,6 +32,29 @@ export const removeListener = document.removeEventListener.bind(document);
 export function sanitizeCSS(css) {
   return css.replace(/(behaviour|javascript|expression)/gm, "");
 }
+export const playPauseIconFunctionality = (_this) => {
+  clearTimeout(playPauseTimeout);
+  _this.elements.playPausePanel.classList.remove("hide");
+  _this.elements.playPausePanel.classList.remove("run-animation-play");
+  _this.elements.playPausePanel.classList.remove("run-animation-pause");
+  _this.elements.playPausePanel.classList.remove("run-animation-idle");
+  if (_this.clip.runTimeInfo.state === "idle") {
+    _this.play();
+    addPlayIcon(_this.elements.playPausePanelContainer);
+    _this.elements.playPausePanel.classList.add("run-animation-idle");
+  } else if (_this.clip.runTimeInfo.state !== "playing") {
+    _this.play();
+    addPlayIcon(_this.elements.playPausePanelContainer);
+    _this.elements.playPausePanel.classList.add("run-animation-play");
+  } else {
+    _this.pause();
+    addPauseIcon(_this.elements.playPausePanelContainer);
+    _this.elements.playPausePanel.classList.add("run-animation-pause");
+  }
+  playPauseTimeout = setTimeout(() => {
+    _this.elements.playPausePanel.classList.add("hide");
+  }, 800);
+};
 function isNumber(value) {
   return typeof value === "number" && isFinite(value);
 }

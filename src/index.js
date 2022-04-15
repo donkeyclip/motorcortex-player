@@ -33,6 +33,7 @@ import {
   trigger as fullscreenTrigger,
 } from "./listeners/fullscreen";
 
+import { add as keydownAdd } from "./listeners/keydown";
 import loopBarEndListener from "./listeners/loopBarEnd";
 import loopBarStartListener from "./listeners/loopBarStart";
 import { add as loopAdd, trigger as loopTrigger } from "./listeners/loopBtn";
@@ -244,6 +245,8 @@ export default class Player {
 
   goToMillisecond(ms, { before, after } = {}) {
     const clip = this.clip;
+    if (ms > clip.duration) ms = clip.duration;
+    else if (ms < 0) ms = 0;
     setTimeout(() => {
       if (!clip.id) return;
       if (before) clip[before]();
@@ -730,6 +733,7 @@ export default class Player {
     loopBarEndListener(this);
     progressBarListener(this);
     loopBarStartListener(this);
+    keydownAdd(this);
     volumeAdd(this);
     statusBtnListener(this);
     settingsAdd(this);
