@@ -225,7 +225,7 @@
   pointer-events: auto;
 }
 .--mcp-controls * {
-  user-select: none;
+  user-select: none !important;
 }
 .--mcp-play-pause-panel #play-svg {
   margin-left: 4px;
