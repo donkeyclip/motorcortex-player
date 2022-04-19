@@ -8,6 +8,7 @@ import svg from "rollup-plugin-svg";
 import cleanup from "rollup-plugin-cleanup";
 import { terser } from "rollup-plugin-terser";
 import pkg from "./package.json";
+import autoprefixer from "autoprefixer";
 
 import analyze from "rollup-plugin-analyzer";
 const ANALYZE = false;
@@ -72,7 +73,7 @@ export default [
       resolve({ mainFields: ["module", "main", "browser"] }),
       commonjs(),
       babel(),
-      postcss({ inject: false, minimize: true }),
+      postcss({ inject: false, minimize: true, plugins: [autoprefixer()] }),
       cleanup({ comments: "none" }),
       terser(),
       ANALYZE && analyze({ summaryOnly: true }),

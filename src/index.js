@@ -89,7 +89,6 @@ export default class Player {
     this.clipClass = options.clipClass;
     this.state = this.clip.runTimeInfo.state;
     this.listeners = {};
-    this.cache = {};
     this.settings = {
       volume: 1,
       journey: null,
@@ -390,6 +389,8 @@ export default class Player {
     makeJouney,
     executeOnMillisecondChange = true
   ) {
+    const { totalBar, loopBar } = this.elements;
+
     if (this.state !== state) {
       this.state = state;
       this.eventBroadcast(STATE_CHANGE, state);
@@ -406,9 +407,9 @@ export default class Player {
 
     const duration = this.clip.duration;
 
-    const localMillisecond = millisecond - duration * this.cache.loopBarLeft;
+    const localMillisecond = millisecond - duration * loopBar.offsetLeft;
     const localDuration =
-      (duration / this.cache.totalBarWidth) * this.cache.loopBarWidth;
+      (duration / totalBar.offsetWidth) * loopBar.offsetWidth;
 
     if (makeJouney) {
       this.goToMillisecond(millisecond, {
@@ -426,12 +427,7 @@ export default class Player {
       this.options.onMillisecondChange(millisecond);
     }
   }
-  calculateProgressBarDimentions() {
-    const { totalBar, loopBar } = this.elements;
-    this.cache.loopBarWidth = loopBar.offsetWidth;
-    this.cache.totalBarWidth = totalBar.offsetWidth;
-    this.cache.loopBarLeft = loopBar.offsetLeft / this.cache.totalBarWidth;
-  }
+
   calculateJourney(millisecond) {
     const { loopEndMillisecond, loopStartMillisecond } = this.settings;
     const atEndOfLoop =
