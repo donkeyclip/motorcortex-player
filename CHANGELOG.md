@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.9.4](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.3...v2.9.4) (2022-04-19)
+
+
+### Bug Fixes
+
+* user-select autoprefixes and player ([3695c2b](https://github.com/donkeyclip/motorcortex-player/commit/3695c2b52e7171940f0c2bba5a95743f6c8eddbc))
+
 ### [2.9.3](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.2...v2.9.3) (2022-04-15)
 
 
