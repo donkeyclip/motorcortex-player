@@ -1,310 +1,272 @@
 # Changelog
 
-### [2.9.3](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.2...v2.9.3) (2022-04-15)
-
+### [2.9.4](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.3...v2.9.4) (2022-04-19)
 
 ### Bug Fixes
 
-* goto ms ([70fbe22](https://github.com/donkeyclip/motorcortex-player/commit/70fbe22a36b72fcc7c76e6161c92f3b1aaf06bd0))
-* remove outline ([dcbaa89](https://github.com/donkeyclip/motorcortex-player/commit/dcbaa892cf7543ad259bb1f7886f0608a80a2ba9))
+- user-select autoprefixes and player ([3695c2b](https://github.com/donkeyclip/motorcortex-player/commit/3695c2b52e7171940f0c2bba5a95743f6c8eddbc))
+
+### [2.9.3](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.2...v2.9.3) (2022-04-15)
+
+### Bug Fixes
+
+- goto ms ([70fbe22](https://github.com/donkeyclip/motorcortex-player/commit/70fbe22a36b72fcc7c76e6161c92f3b1aaf06bd0))
+- remove outline ([dcbaa89](https://github.com/donkeyclip/motorcortex-player/commit/dcbaa892cf7543ad259bb1f7886f0608a80a2ba9))
 
 ### [2.9.2](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.1...v2.9.2) (2022-04-15)
 
-
 ### Miscellaneous Chores
 
-* release 2.9.2 ([d61e033](https://github.com/donkeyclip/motorcortex-player/commit/d61e033d4cf6aa667649b17eb9552a2a2b1fa51b))
+- release 2.9.2 ([d61e033](https://github.com/donkeyclip/motorcortex-player/commit/d61e033d4cf6aa667649b17eb9552a2a2b1fa51b))
 
 ### [2.9.1](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.0...v2.9.1) (2022-04-15)
 
-
 ### Bug Fixes
 
-* add donkeyclip dark theme ([0f6f861](https://github.com/donkeyclip/motorcortex-player/commit/0f6f861604fc035730cc0a4e7bf8531bb9d55491))
+- add donkeyclip dark theme ([0f6f861](https://github.com/donkeyclip/motorcortex-player/commit/0f6f861604fc035730cc0a4e7bf8531bb9d55491))
 
 ## [2.9.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.8.0...v2.9.0) (2022-04-15)
 
-
 ### Features
 
-* new donkeyclip theme ([11216d9](https://github.com/donkeyclip/motorcortex-player/commit/11216d96c9ea7ccccc1ccb3d5c254d3c7343b92a))
-
+- new donkeyclip theme ([11216d9](https://github.com/donkeyclip/motorcortex-player/commit/11216d96c9ea7ccccc1ccb3d5c254d3c7343b92a))
 
 ### Bug Fixes
 
-* add keydown events ([a1015af](https://github.com/donkeyclip/motorcortex-player/commit/a1015afb0a97716159a5a129f035aee74a5d7b8c))
-* change default theme ([3336980](https://github.com/donkeyclip/motorcortex-player/commit/33369800d0ccfbd48b7d927416dc74df4aeeb1e1))
+- add keydown events ([a1015af](https://github.com/donkeyclip/motorcortex-player/commit/a1015afb0a97716159a5a129f035aee74a5d7b8c))
+- change default theme ([3336980](https://github.com/donkeyclip/motorcortex-player/commit/33369800d0ccfbd48b7d927416dc74df4aeeb1e1))
 
 ## [2.8.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.7.0...v2.8.0) (2022-04-12)
 
-
 ### Features
 
-* add go to millisecond function to player ([8d43bed](https://github.com/donkeyclip/motorcortex-player/commit/8d43bedc219b0f9b72e7b313e971f913e50de6d0))
+- add go to millisecond function to player ([8d43bed](https://github.com/donkeyclip/motorcortex-player/commit/8d43bedc219b0f9b72e7b313e971f913e50de6d0))
 
 ## [2.7.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.6.1...v2.7.0) (2022-04-08)
 
-
 ### Features
 
-* drop explorer 11 support ([56db337](https://github.com/donkeyclip/motorcortex-player/commit/56db3376cff27283b69ac6af1f778cafc747884a))
-* update compatibility with motorcortex ([0ea4f9d](https://github.com/donkeyclip/motorcortex-player/commit/0ea4f9d5744dada521d600fee6f58df69ef3c13a))
+- drop explorer 11 support ([56db337](https://github.com/donkeyclip/motorcortex-player/commit/56db3376cff27283b69ac6af1f778cafc747884a))
+- update compatibility with motorcortex ([0ea4f9d](https://github.com/donkeyclip/motorcortex-player/commit/0ea4f9d5744dada521d600fee6f58df69ef3c13a))
 
 ### [2.6.1](https://github.com/donkeyclip/motorcortex-player/compare/v2.6.0...v2.6.1) (2022-03-31)
 
-
 ### Bug Fixes
 
-* drop svgo because it was messing up the svgs ([27ec6e9](https://github.com/donkeyclip/motorcortex-player/commit/27ec6e913d0930357a4f0418a0cc33bb56beed86))
+- drop svgo because it was messing up the svgs ([27ec6e9](https://github.com/donkeyclip/motorcortex-player/commit/27ec6e913d0930357a4f0418a0cc33bb56beed86))
 
 ## [2.6.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.5.2...v2.6.0) (2022-03-30)
 
-
 ### Features
 
-* compress css and html on bundle ([f1ac448](https://github.com/donkeyclip/motorcortex-player/commit/f1ac4480371c30b02e9798fe0f675acf18210b3b))
-
+- compress css and html on bundle ([f1ac448](https://github.com/donkeyclip/motorcortex-player/commit/f1ac4480371c30b02e9798fe0f675acf18210b3b))
 
 ### Bug Fixes
 
-* broken regexp for number matching ([eaa2c73](https://github.com/donkeyclip/motorcortex-player/commit/eaa2c73d773a5bbd5a265d20d178981b6a0402c2))
-* correctly set clip size for the container ([eaa2c73](https://github.com/donkeyclip/motorcortex-player/commit/eaa2c73d773a5bbd5a265d20d178981b6a0402c2))
-* correctly set volume off icon when volume is 0 ([fadcfa0](https://github.com/donkeyclip/motorcortex-player/commit/fadcfa04d01621f889ae27ff734d85ba189a1f05))
-* timeformating correct rounding for all digits not just the first 2 ([12663ea](https://github.com/donkeyclip/motorcortex-player/commit/12663ea3ccf8c927767ef56c645ac9615b7540f1))
-
+- broken regexp for number matching ([eaa2c73](https://github.com/donkeyclip/motorcortex-player/commit/eaa2c73d773a5bbd5a265d20d178981b6a0402c2))
+- correctly set clip size for the container ([eaa2c73](https://github.com/donkeyclip/motorcortex-player/commit/eaa2c73d773a5bbd5a265d20d178981b6a0402c2))
+- correctly set volume off icon when volume is 0 ([fadcfa0](https://github.com/donkeyclip/motorcortex-player/commit/fadcfa04d01621f889ae27ff734d85ba189a1f05))
+- timeformating correct rounding for all digits not just the first 2 ([12663ea](https://github.com/donkeyclip/motorcortex-player/commit/12663ea3ccf8c927767ef56c645ac9615b7540f1))
 
 ### Performance Improvements
 
-* cache time formating calculations as they are executed multiple times per second ([a6616c9](https://github.com/donkeyclip/motorcortex-player/commit/a6616c9da24c46c25056d6e72ed40203441ad134))
+- cache time formating calculations as they are executed multiple times per second ([a6616c9](https://github.com/donkeyclip/motorcortex-player/commit/a6616c9da24c46c25056d6e72ed40203441ad134))
 
 ### [2.5.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.5.1...v2.5.2) (2022-03-16)
 
-
 ### Bug Fixes
 
-* update mc version ([1e41730](https://www.github.com/donkeyclip/motorcortex-player/commit/1e4173028eb2218fe9b9ccd4957e17d49252ee73))
+- update mc version ([1e41730](https://www.github.com/donkeyclip/motorcortex-player/commit/1e4173028eb2218fe9b9ccd4957e17d49252ee73))
 
 ### [2.5.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.5.0...v2.5.1) (2022-03-14)
 
-
 ### Bug Fixes
 
-* handle error in request and exit fullscreen ([843d270](https://www.github.com/donkeyclip/motorcortex-player/commit/843d270ee54d145c07b07ab477744edd7a1e7bd2))
-
+- handle error in request and exit fullscreen ([843d270](https://www.github.com/donkeyclip/motorcortex-player/commit/843d270ee54d145c07b07ab477744edd7a1e7bd2))
 
 ### Performance Improvements
 
-* add cache for offsetwidth of progress bar ([2660be3](https://www.github.com/donkeyclip/motorcortex-player/commit/2660be3b268971e920d7deeaf827a865d73cf520))
+- add cache for offsetwidth of progress bar ([2660be3](https://www.github.com/donkeyclip/motorcortex-player/commit/2660be3b268971e920d7deeaf827a865d73cf520))
 
 ## [2.5.0](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.4...v2.5.0) (2022-01-25)
 
-
 ### Features
 
-* hide settings panel onblur ([4a34eb7](https://www.github.com/donkeyclip/motorcortex-player/commit/4a34eb7448e839a06d4395fd17fce7be72882417))
+- hide settings panel onblur ([4a34eb7](https://www.github.com/donkeyclip/motorcortex-player/commit/4a34eb7448e839a06d4395fd17fce7be72882417))
 
 ### [2.4.4](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.3...v2.4.4) (2021-11-28)
 
-
 ### Bug Fixes
 
-* sections and scroller ([d02f8ea](https://www.github.com/donkeyclip/motorcortex-player/commit/d02f8ea3dad9da74d3ba24bd247ee93537491332))
+- sections and scroller ([d02f8ea](https://www.github.com/donkeyclip/motorcortex-player/commit/d02f8ea3dad9da74d3ba24bd247ee93537491332))
 
 ### [2.4.3](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.2...v2.4.3) (2021-11-22)
 
-
 ### Bug Fixes
 
-* add wheelSeek to changeSettings ([d9bb928](https://www.github.com/donkeyclip/motorcortex-player/commit/d9bb9289b70b7f1c969ab0150c93d2320611fecd))
+- add wheelSeek to changeSettings ([d9bb928](https://www.github.com/donkeyclip/motorcortex-player/commit/d9bb9289b70b7f1c969ab0150c93d2320611fecd))
 
 ### [2.4.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.1...v2.4.2) (2021-11-21)
 
-
 ### Bug Fixes
 
-* scroller minor issues ([ea04f38](https://www.github.com/donkeyclip/motorcortex-player/commit/ea04f38a1d341fa66945f434414a31c45f960b75))
+- scroller minor issues ([ea04f38](https://www.github.com/donkeyclip/motorcortex-player/commit/ea04f38a1d341fa66945f434414a31c45f960b75))
 
 ### [2.4.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.4.0...v2.4.1) (2021-11-21)
 
-
 ### Bug Fixes
 
-* add easing to scroller func| ([2be0d7e](https://www.github.com/donkeyclip/motorcortex-player/commit/2be0d7ed6e43a38656efa4700d267ee02c2bed41))
+- add easing to scroller func| ([2be0d7e](https://www.github.com/donkeyclip/motorcortex-player/commit/2be0d7ed6e43a38656efa4700d267ee02c2bed41))
 
 ## [2.4.0](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.7...v2.4.0) (2021-11-17)
 
-
 ### Features
 
-* add wheel event functionality ([435f935](https://www.github.com/donkeyclip/motorcortex-player/commit/435f935544dbf078e1f777bb5b9ed64a9ed802e9))
-
+- add wheel event functionality ([435f935](https://www.github.com/donkeyclip/motorcortex-player/commit/435f935544dbf078e1f777bb5b9ed64a9ed802e9))
 
 ### Bug Fixes
 
-* center play button ([306c83a](https://www.github.com/donkeyclip/motorcortex-player/commit/306c83ac0bf64ba817dd40ac1adeb3b2362458aa))
+- center play button ([306c83a](https://www.github.com/donkeyclip/motorcortex-player/commit/306c83ac0bf64ba817dd40ac1adeb3b2362458aa))
 
 ### [2.3.7](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.6...v2.3.7) (2021-11-03)
 
-
 ### Bug Fixes
 
-* **dcode:** add init params in save clip action ([8ea31de](https://www.github.com/donkeyclip/motorcortex-player/commit/8ea31defdbf22796f31995b811d823475d0c20b9))
+- **dcode:** add init params in save clip action ([8ea31de](https://www.github.com/donkeyclip/motorcortex-player/commit/8ea31defdbf22796f31995b811d823475d0c20b9))
 
 ### [2.3.6](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.5...v2.3.6) (2021-10-21)
 
-
 ### Bug Fixes
 
-* fix broken config ([466c64a](https://www.github.com/donkeyclip/motorcortex-player/commit/466c64a8bcc4f3a031cdc3bd6dc2c97f743411b9))
-* fix broken webpack config ([3ebfbc9](https://www.github.com/donkeyclip/motorcortex-player/commit/3ebfbc9a7d407a6abdd129c5ea5767f4b261c54f))
-* remove preview functionality ([01f5b71](https://www.github.com/donkeyclip/motorcortex-player/commit/01f5b715969cebfa0b345bd9dbfd3147a00902dc))
-* update build and demo files drop old babel config ([b357450](https://www.github.com/donkeyclip/motorcortex-player/commit/b357450c90b4aa1a8c626fb3c8b7121a93b4df01))
+- fix broken config ([466c64a](https://www.github.com/donkeyclip/motorcortex-player/commit/466c64a8bcc4f3a031cdc3bd6dc2c97f743411b9))
+- fix broken webpack config ([3ebfbc9](https://www.github.com/donkeyclip/motorcortex-player/commit/3ebfbc9a7d407a6abdd129c5ea5767f4b261c54f))
+- remove preview functionality ([01f5b71](https://www.github.com/donkeyclip/motorcortex-player/commit/01f5b715969cebfa0b345bd9dbfd3147a00902dc))
+- update build and demo files drop old babel config ([b357450](https://www.github.com/donkeyclip/motorcortex-player/commit/b357450c90b4aa1a8c626fb3c8b7121a93b4df01))
 
 ### [2.3.5](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.4...v2.3.5) (2021-10-10)
 
-
 ### Bug Fixes
 
-* time display issues in float point ([dd0ae92](https://www.github.com/donkeyclip/motorcortex-player/commit/dd0ae920a7fa6ed31be3e0e3b05665f5497118b4))
+- time display issues in float point ([dd0ae92](https://www.github.com/donkeyclip/motorcortex-player/commit/dd0ae920a7fa6ed31be3e0e3b05665f5497118b4))
 
 ### [2.3.4](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.3...v2.3.4) (2021-10-09)
 
-
 ### Bug Fixes
 
-* remove console.log ([ac03660](https://www.github.com/donkeyclip/motorcortex-player/commit/ac036604a490ef9d6224973d780209816613810d))
+- remove console.log ([ac03660](https://www.github.com/donkeyclip/motorcortex-player/commit/ac036604a490ef9d6224973d780209816613810d))
 
 ### [2.3.3](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.2...v2.3.3) (2021-10-09)
 
-
 ### Bug Fixes
 
-* player default color ([023c920](https://www.github.com/donkeyclip/motorcortex-player/commit/023c920fbda49383c3c10820e53571b6c01381e5))
+- player default color ([023c920](https://www.github.com/donkeyclip/motorcortex-player/commit/023c920fbda49383c3c10820e53571b6c01381e5))
 
 ### [2.3.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.1...v2.3.2) (2021-10-09)
 
-
 ### Bug Fixes
 
-* remove show indicator and change controls height ([ab68ef2](https://www.github.com/donkeyclip/motorcortex-player/commit/ab68ef281779696c3543533acc07b0f8fe7acb8b))
+- remove show indicator and change controls height ([ab68ef2](https://www.github.com/donkeyclip/motorcortex-player/commit/ab68ef281779696c3543533acc07b0f8fe7acb8b))
 
 ### [2.3.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.3.0...v2.3.1) (2021-10-09)
 
-
 ### Bug Fixes
 
-* minor fixes in styles and demo ([c336cb3](https://www.github.com/donkeyclip/motorcortex-player/commit/c336cb391732d2bfc8386e53167910908f7f06ff))
+- minor fixes in styles and demo ([c336cb3](https://www.github.com/donkeyclip/motorcortex-player/commit/c336cb391732d2bfc8386e53167910908f7f06ff))
 
 ## [2.3.0](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.3...v2.3.0) (2021-10-09)
 
-
 ### Features
 
-* add custom themes and minor fixes ([45cc383](https://www.github.com/donkeyclip/motorcortex-player/commit/45cc38372b89b7add6d186bf953ca6742ad4cc71))
-
+- add custom themes and minor fixes ([45cc383](https://www.github.com/donkeyclip/motorcortex-player/commit/45cc38372b89b7add6d186bf953ca6742ad4cc71))
 
 ### Bug Fixes
 
-* Typo fixes by misspell-fixer ([645e50a](https://www.github.com/donkeyclip/motorcortex-player/commit/645e50aaafbee87da245921c226bf147d2116907))
+- Typo fixes by misspell-fixer ([645e50a](https://www.github.com/donkeyclip/motorcortex-player/commit/645e50aaafbee87da245921c226bf147d2116907))
 
 ### [2.2.3](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.2...v2.2.3) (2021-10-03)
 
-
 ### Bug Fixes
 
-* update init params after with change ms on settings bug ([0b1e37e](https://www.github.com/donkeyclip/motorcortex-player/commit/0b1e37e077eb162309ac3ebd11a75c158c77513d))
+- update init params after with change ms on settings bug ([0b1e37e](https://www.github.com/donkeyclip/motorcortex-player/commit/0b1e37e077eb162309ac3ebd11a75c158c77513d))
 
 ### [2.2.2](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.1...v2.2.2) (2021-10-03)
 
-
 ### Bug Fixes
 
-* add millisecond options and volume is visible when audio is detected ([ab69b0f](https://www.github.com/donkeyclip/motorcortex-player/commit/ab69b0fa40794ceb72c565c67341be9fd68b5664))
-* update deps ([41529f7](https://www.github.com/donkeyclip/motorcortex-player/commit/41529f7cb4a4b010db215586c0c7bd64eb5a0113))
+- add millisecond options and volume is visible when audio is detected ([ab69b0f](https://www.github.com/donkeyclip/motorcortex-player/commit/ab69b0fa40794ceb72c565c67341be9fd68b5664))
+- update deps ([41529f7](https://www.github.com/donkeyclip/motorcortex-player/commit/41529f7cb4a4b010db215586c0c7bd64eb5a0113))
 
 ### [2.2.1](https://www.github.com/donkeyclip/motorcortex-player/compare/v2.2.0...v2.2.1) (2021-09-23)
 
-
 ### Bug Fixes
 
-* update npm name ([d48b863](https://www.github.com/donkeyclip/motorcortex-player/commit/d48b863706639be5f15c073e1e18b2ed41288b72))
-* update package-lock ([b92cf2e](https://www.github.com/donkeyclip/motorcortex-player/commit/b92cf2e6472150d6736058f5f536735044f0fd4e))
+- update npm name ([d48b863](https://www.github.com/donkeyclip/motorcortex-player/commit/d48b863706639be5f15c073e1e18b2ed41288b72))
+- update package-lock ([b92cf2e](https://www.github.com/donkeyclip/motorcortex-player/commit/b92cf2e6472150d6736058f5f536735044f0fd4e))
 
 ## [2.2.0](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.1.1...v2.2.0) (2021-08-12)
 
-
 ### Features
 
-* add outline and overflow options ([b008bb8](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/b008bb8984577088a39cde536579423f51238764))
-
+- add outline and overflow options ([b008bb8](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/b008bb8984577088a39cde536579423f51238764))
 
 ### Bug Fixes
 
-* add overflow, outline and visibility in player change settings function ([bcc4517](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/bcc45174581de13a97b1cfb3d5c626a4ba71a413))
+- add overflow, outline and visibility in player change settings function ([bcc4517](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/bcc45174581de13a97b1cfb3d5c626a4ba71a413))
 
 ### [2.1.1](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.1.0...v2.1.1) (2021-08-11)
 
-
 ### Bug Fixes
 
-* add changeinitparams function in player ([8dd678b](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/8dd678b3214b66bc4295da9af3ab8c1346680f86))
-* remove spinner when content is loaded ([5325ebe](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/5325ebe713083e9442497ebc1ecdc4694cfaee6f))
+- add changeinitparams function in player ([8dd678b](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/8dd678b3214b66bc4295da9af3ab8c1346680f86))
+- remove spinner when content is loaded ([5325ebe](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/5325ebe713083e9442497ebc1ecdc4694cfaee6f))
 
 ## [2.1.0](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.12...v2.1.0) (2021-06-23)
 
-
 ### Features
 
-* add yellow theme ([7ab880e](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/7ab880e819b24e70174d42f008a9d2ba50c5be0b))
+- add yellow theme ([7ab880e](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/7ab880e819b24e70174d42f008a9d2ba50c5be0b))
 
 ### [2.0.12](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.11...v2.0.12) (2021-06-17)
 
-
 ### Miscellaneous Chores
 
-* release 2.0.12 ([62d44cd](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/62d44cd7c18609bc5b01cdc31407457e64e2d825))
+- release 2.0.12 ([62d44cd](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/62d44cd7c18609bc5b01cdc31407457e64e2d825))
 
 ### [2.0.11](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.10...v2.0.11) (2021-06-11)
 
-
 ### Bug Fixes
 
-* initialize options ([2cf9e52](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/2cf9e5290d9d4fbba66e86ab8dccf99a9f319162))
+- initialize options ([2cf9e52](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/2cf9e5290d9d4fbba66e86ab8dccf99a9f319162))
 
 ### [2.0.10](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.9...v2.0.10) (2021-06-11)
 
-
 ### Bug Fixes
 
-* initialize options before change settings ([1fbf814](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/1fbf8147ef396975da42ca576c8a6983d7e08deb))
+- initialize options before change settings ([1fbf814](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/1fbf8147ef396975da42ca576c8a6983d7e08deb))
 
 ### [2.0.9](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.8...v2.0.9) (2021-06-11)
 
-
 ### Bug Fixes
 
-* add resize observer for host resize ([edfda61](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/edfda61bac3afec6a9f0988b86cf3d0871f82372))
+- add resize observer for host resize ([edfda61](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/edfda61bac3afec6a9f0988b86cf3d0871f82372))
 
 ### [2.0.8](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.7...v2.0.8) (2021-06-11)
 
-
 ### Bug Fixes
 
-* fix show preview script attribute change ([757a171](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/757a171ea2ad80dcc161a62c3191146f5635e837))
+- fix show preview script attribute change ([757a171](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/757a171ea2ad80dcc161a62c3191146f5635e837))
 
 ### [2.0.7](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.6...v2.0.7) (2021-05-30)
 
-
 ### Bug Fixes
 
-* remove change player className ([0f794d5](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/0f794d560f5e04a24521266e1ed40b06f3f3c852))
+- remove change player className ([0f794d5](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/0f794d560f5e04a24521266e1ed40b06f3f3c852))
 
 ### [2.0.6](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.5...v2.0.6) (2021-05-30)
 
-
 ### Miscellaneous Chores
 
-* release 2.0.6 ([0e701e5](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/0e701e53b8fc0dcf3b5ad560cf4a2a7440fca0f1))
+- release 2.0.6 ([0e701e5](https://www.github.com/kissmybutton/teo-motorcortex-player/commit/0e701e53b8fc0dcf3b5ad560cf4a2a7440fca0f1))
 
 ### [2.0.5](https://www.github.com/kissmybutton/teo-motorcortex-player/compare/v2.0.4...v2.0.5) (2021-05-25)
 
