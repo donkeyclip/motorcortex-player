@@ -125,12 +125,10 @@ export default class Player {
     const resizeObserver = new ResizeObserver(() => {
       if (this.options.scaleToFit) {
         this.scaleClipHost();
-        this.calculateProgressBarDimentions();
       }
     });
     this.changeSettings(options, true);
     resizeObserver.observe(this.options.host);
-    this.calculateProgressBarDimentions();
     if (this.options.autoPlay) {
       this.play();
     }
