@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.9.5](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.4...v2.9.5) (2022-04-20)
+
+
+### Bug Fixes
+
+* progressbar dims ([5fce4b8](https://github.com/donkeyclip/motorcortex-player/commit/5fce4b85ff1f77510a061f8f016d5662a385fcfb))
+
 ### [2.9.4](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.3...v2.9.4) (2022-04-19)
 
 
