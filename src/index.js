@@ -132,6 +132,7 @@ export default class Player {
     if (this.options.autoPlay) {
       this.play();
     }
+    window.clip = this.clip;
   }
 
   play() {
@@ -482,7 +483,7 @@ export default class Player {
     let newClip;
     try {
       newClip = utils.clipFromDefinition(definition);
-      if (newClip.nonBlockingErrorClip)
+      if (newClip.nonBlockingErrorClip || newClip?.errors?.length)
         throw "Error: Params Error: Clip cannot be created!";
     } catch (e) {
       console.error(e);
