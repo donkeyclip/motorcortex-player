@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.9.6](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.5...v2.9.6) (2022-04-30)
+
+
+### Bug Fixes
+
+* add spinner and fix clip error bug ([63526cd](https://github.com/donkeyclip/motorcortex-player/commit/63526cd18efc4a075b67359e0eab07eb4b75919f))
+
 ### [2.9.5](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.4...v2.9.5) (2022-04-20)
 
 
