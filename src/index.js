@@ -470,6 +470,7 @@ export default class Player {
   }
 
   changeInitParams(initParams) {
+    const response = { result: true };
     this.clip.pause();
     const definition = this.clip.exportLiveDefinition();
     definition.props.host = this.clip.props.host;
@@ -486,6 +487,8 @@ export default class Player {
       if (newClip.nonBlockingErrorClip || newClip?.errors?.length)
         throw "Error: Params Error: Clip cannot be created!";
     } catch (e) {
+      response.result = false;
+      response.clip = newClip;
       console.error(e);
       definition.props.initParams = oldParams;
       newClip = utils.clipFromDefinition(definition);
@@ -496,6 +499,7 @@ export default class Player {
     this.changeSettings(this.options, true);
     this.subscribeToTimer();
     this.subscribeToDurationChange();
+    return response;
   }
 
   broadcastPlaying(state) {
