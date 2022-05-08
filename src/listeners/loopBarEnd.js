@@ -2,7 +2,6 @@ import {
   addMouseUpAndMoveListeners,
   addStartListeners,
   removeMouseUpAndMoveListeners,
-  removeStartListeners,
 } from "../helpers";
 
 export default (_this) => {
@@ -107,6 +106,8 @@ export default (_this) => {
   };
 
   _this.listeners.onMouseDownLoopEnd = (e) => {
+    e.stopPropagation();
+
     _this.elements.listenerHelper.style.pointerEvents = "auto";
 
     _this.settings.resizeLoop = true;
@@ -121,8 +122,6 @@ export default (_this) => {
     const loopBar = _this.elements.loopBar;
     loopBar.style.left = `${loopBar.offsetLeft}px`;
     loopBar.style.width = `${loopBar.offsetWidth}px`;
-
-    removeStartListeners(_this.listeners.onMouseDown, loopBar);
 
     _this.listeners.onCursorMoveLoopEnd(e);
     addMouseUpAndMoveListeners(

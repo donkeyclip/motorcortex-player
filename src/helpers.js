@@ -186,11 +186,6 @@ export function addStartListeners(
   addListenerWithElement(element, touchstart, callback, { passive });
 }
 
-export function removeStartListeners(callback, element = document) {
-  removeListenerWithElement(element, callback, false);
-  removeListenerWithElement(element, touchstart, callback, false);
-}
-
 export function changeIcon(element, from, to) {
   if (from) {
     element.classList.remove(`icon-${from}`);
