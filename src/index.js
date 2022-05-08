@@ -406,7 +406,8 @@ export default class Player {
 
     const duration = this.clip.duration;
 
-    const localMillisecond = millisecond - duration * loopBar.offsetLeft;
+    const localMillisecond =
+      millisecond - (duration * loopBar.offsetLeft) / totalBar.offsetWidth;
     const localDuration =
       (duration / totalBar.offsetWidth) * loopBar.offsetWidth;
 
