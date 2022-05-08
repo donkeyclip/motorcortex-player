@@ -1,5 +1,13 @@
 # Changelog
 
+### [2.9.7](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.6...v2.9.7) (2022-05-08)
+
+
+### Bug Fixes
+
+* loopbar handlers ([1d91607](https://github.com/donkeyclip/motorcortex-player/commit/1d916072a3389e4085d7aac0b28fcd32bf4c1214))
+* return result values of change init params ([f835943](https://github.com/donkeyclip/motorcortex-player/commit/f8359437232faae3245b425612e218482792cb0d))
+
 ### [2.9.6](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.5...v2.9.6) (2022-04-30)
 
 
