@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.7...v2.10.0) (2022-05-09)
+
+
+### Features
+
+* add donkeyclip button in all pages except dccom ([33c630d](https://github.com/donkeyclip/motorcortex-player/commit/33c630d73b38de52441b544904d08642a97027c5))
+
 ### [2.9.7](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.6...v2.9.7) (2022-05-08)
 
 
