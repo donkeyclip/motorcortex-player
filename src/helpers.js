@@ -218,6 +218,10 @@ export function initializeOptions(options, _this) {
   options.theme ??= "donkeyclip";
   options.host ??= options.clip.props.host;
   options.buttons ??= {};
+  options.buttons.donkeyclip =
+    ["api.donkeyclip.com", "staging-api.donkeyclip.com"].includes(
+      window.location.host
+    ) || !window.location.host.includes("donkeyclip.com");
   options.timeFormat ??= "ss";
   options.backgroundColor ??= "black";
   options.fullscreen ??= false;
