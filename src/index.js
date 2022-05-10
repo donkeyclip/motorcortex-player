@@ -123,6 +123,11 @@ export default class Player {
       this.options.sections?.sort(sortFunc);
     }
     const resizeObserver = new ResizeObserver(() => {
+      if (window.innerWidth < 450) {
+        this.elements.timeDisplay.style.display = "none";
+      } else {
+        this.elements.timeDisplay.style.display = "block";
+      }
       if (this.options.scaleToFit) {
         this.scaleClipHost();
       }

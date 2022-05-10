@@ -5,7 +5,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
-  --grad-color: 0,0,0;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-yellow {
@@ -15,7 +15,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
-  --grad-color: 0,0,0;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-dark {
@@ -25,7 +25,7 @@
   --backgroundSettingsColor: rgba(0, 0, 0, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
-  --grad-color: 0,0,0;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-whiteGold {
@@ -35,7 +35,7 @@
   --backgroundSettingsColor: rgba(245, 245, 245, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
-  --grad-color: 0,0,0;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-darkGold {
@@ -45,7 +45,7 @@
   --backgroundSettingsColor: rgba(0, 0, 0, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
-  --grad-color: 0,0,0;
+  --grad-color: 0, 0, 0;
 }
 .--mc-player.theme-transparent {
   --activeColor: 255, 0, 0;
@@ -54,7 +54,7 @@
   --backgroundSettingsColor: rgba(0, 0, 0, 0.9);
   --loopBarColor: rgba(var(--defaultColor), 0.2);
   --grad-display: block;
-  --grad-color: 0,0,0;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-green {
@@ -64,7 +64,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
-  --grad-color: 0,0,0;
+  --grad-color: 0, 0, 0;
 }
 .--mc-player.theme-blue {
   --activeColor: 0, 153, 225;
@@ -73,7 +73,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
-  --grad-color: 0,0,0;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-donkeyclip {
@@ -83,7 +83,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: block;
-  --grad-color: 24,25,29;
+  --grad-color: 24, 25, 29;
 }
 .--mc-player.theme-donkeyclipDark {
   --activeColor: 0, 153, 225;
@@ -92,7 +92,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: block;
-  --grad-color: 22,22,26;
+  --grad-color: 22, 22, 26;
 }
 .--mc-player * {
   color: rgb(var(--defaultColor));
@@ -289,10 +289,12 @@
   gap: 5px;
 }
 
+.--mcp-left-buttons {
+  flex: 1;
+}
 .--mcp-buttons,
 .--mcp-left-buttons,
 .--mcp-right-buttons {
-  flex: 1;
   height: 100%;
   gap: 20px;
 }
@@ -344,15 +346,14 @@
   opacity: 0;
 }
 
-
 .run-animation-play {
-  animation: scale-and-opaque 0.8s 1; 
+  animation: scale-and-opaque 0.8s 1;
 }
 .run-animation-pause {
-  animation: scale-and-opaque1 0.8s 1; 
+  animation: scale-and-opaque1 0.8s 1;
 }
 .run-animation-idle {
-  animation: scale-and-opaque2 0.8s 1; 
+  animation: scale-and-opaque2 0.8s 1;
 }
 .--mcp-play-pause-panel-container {
   background-color: #000000c7;
@@ -695,15 +696,14 @@ Sliders
   border-color: #fff transparent transparent transparent;
 }
 .lds-ring div:nth-child(1) {
-  animation-delay: -0.30s;
+  animation-delay: -0.3s;
 }
 .lds-ring div:nth-child(2) {
-  animation-delay: -0.20s;
+  animation-delay: -0.2s;
 }
 .lds-ring div:nth-child(3) {
-  animation-delay: -0.10s;
+  animation-delay: -0.1s;
 }
-
 
 @keyframes lds-ring {
   0% {

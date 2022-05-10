@@ -46,4 +46,5 @@ clip.addIncident(AnimateWidth, 0);
 window.player = new Player({
   clip,
   theme: "donkeyclipDark",
+  showVolume: true,
 });
