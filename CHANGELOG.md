@@ -1,5 +1,14 @@
 # Changelog
 
+### [2.10.1](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.0...v2.10.1) (2022-05-10)
+
+
+### Bug Fixes
+
+* less ifs ([3207fe9](https://github.com/donkeyclip/motorcortex-player/commit/3207fe9e65c6baf9312d27ba6ea47c7679cc8265))
+* remove typo ([326864b](https://github.com/donkeyclip/motorcortex-player/commit/326864bf901fd1f99a1d697fafc554b4739f8cbe))
+* show dcom button ([c52d7b8](https://github.com/donkeyclip/motorcortex-player/commit/c52d7b89d233185d32d350c28e4b5e35394570d9))
+
 ## [2.10.0](https://github.com/donkeyclip/motorcortex-player/compare/v2.9.7...v2.10.0) (2022-05-09)
 
 
