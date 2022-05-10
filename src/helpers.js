@@ -224,12 +224,12 @@ export function initializeOptions(options, _this) {
 
     // case the request comes from localhost
     if (window.location.host.includes("localhost")) return false;
+    // case the request happens from embed url
     if (
       ["api.donkeyclip.com", "staging-api.donkeyclip.com"].includes(
         window.location.host
       )
     )
-      // case the request happens from embed url
       return true;
     // case the request happens from a sourceless iframe
     if (
@@ -237,10 +237,9 @@ export function initializeOptions(options, _this) {
       !window.parent?.location?.host.includes("donkeyclip.com")
     )
       return true;
-    // case the request happens outside donkeyclip.com
-    if (!["donkeyclip.com"].includes(window.location.host)) return true;
     // else
-    return false;
+    // case the request happens outside donkeyclip.com
+    return !["donkeyclip.com"].includes(window.location.host);
   })();
   options.timeFormat ??= "ss";
   options.backgroundColor ??= "black";
