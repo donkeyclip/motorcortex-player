@@ -218,10 +218,30 @@ export function initializeOptions(options, _this) {
   options.theme ??= "donkeyclip";
   options.host ??= options.clip.props.host;
   options.buttons ??= {};
-  options.buttons.donkeyclip =
-    ["api.donkeyclip.com", "staging-api.donkeyclip.com"].includes(
-      window.location.host
-    ) || !window.location.host.includes("donkeyclip.com");
+  options.buttons.donkeyclip = (() => {
+    // case the user requests the dc button to be visible
+    if (options.buttons.donkeyclip) return true;
+
+    // case the request comes from localhost
+    if (window.location.host.includes("localhost")) return false;
+    if (
+      ["api.donkeyclip.com", "staging-api.donkeyclip.com"].includes(
+        window.location.host
+      )
+    )
+      // case the request happens from embed url
+      return true;
+    // case the request happens from a sourceless iframe
+    if (
+      window.location.host === "null" &&
+      !window.parent?.location?.host.includes("donkeyclip.com")
+    )
+      return true;
+    // case the request happens outside donkeyclip.com
+    if (!["donkeyclip.com"].includes(window.location.host)) return true;
+    // else
+    return false;
+  })();
   options.timeFormat ??= "ss";
   options.backgroundColor ??= "black";
   options.fullscreen ??= false;
