@@ -1,4 +1,4 @@
-function exitFullscreen() {
+export function exitFullscreen() {
   try {
     if (document.exitFullscreen) {
       document.exitFullscreen();
@@ -12,7 +12,7 @@ function exitFullscreen() {
   }
 }
 
-function launchIntoFullscreen(element) {
+export function launchIntoFullscreen(element) {
   try {
     if (element.requestFullscreen) {
       element.requestFullscreen();
