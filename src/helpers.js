@@ -166,15 +166,15 @@ export function isMobile() {
 export function addMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
   addListener(mouseup, callbackForUp, false);
   addListener(touchend, callbackForUp, false);
-  addListener(mousemove, callbackForMove, false);
-  addListener(touchmove, callbackForMove, false);
+  addListener(mousemove, callbackForMove, { passive: false });
+  addListener(touchmove, callbackForMove, { passive: false });
 }
 
 export function removeMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
   removeListener(mouseup, callbackForUp, false);
   removeListener(touchend, callbackForUp, false);
-  removeListener(mousemove, callbackForMove, false);
-  removeListener(touchmove, callbackForMove, false);
+  removeListener(mousemove, callbackForMove, { passive: false });
+  removeListener(touchmove, callbackForMove, { passive: false });
 }
 
 export function addStartListeners(

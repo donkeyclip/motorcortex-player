@@ -30,6 +30,8 @@ import {
 import { add as pointerEventsAdd, addPlayIcon } from "./listeners/pointeEvents";
 import {
   add as fullscreenAdd,
+  exitFullscreen,
+  launchIntoFullscreen,
   trigger as fullscreenTrigger,
 } from "./listeners/fullscreen";
 
@@ -147,7 +149,12 @@ export default class Player {
   pause() {
     this.clip.pause();
   }
-
+  enterFullScreen() {
+    launchIntoFullscreen(this.clip.props.host);
+  }
+  exitFullScreen() {
+    exitFullscreen();
+  }
   changeSettings(newOptions, initial) {
     newOptions = initializeOptions({ ...this.options, ...newOptions }, this);
     if (newOptions.clip !== this.options.clip) {
