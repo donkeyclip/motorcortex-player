@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.10.2](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.1...v2.10.2) (2022-06-07)
+
+
+### Bug Fixes
+
+* add enter and exit fullscreen functions, prevent scroll on progress bar move ([b573b49](https://github.com/donkeyclip/motorcortex-player/commit/b573b49d6ce6a212e6610b62527e6601c28dc0e9))
+* update readme ([952754d](https://github.com/donkeyclip/motorcortex-player/commit/952754d4e7a0a4d17dac38ced8a0fe81d000be45))
+
 ### [2.10.1](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.0...v2.10.1) (2022-05-10)
 
 
