@@ -222,9 +222,8 @@ export function initializeOptions(options, _this) {
     // case the user requests the dc button to be visible
     if (options.buttons.donkeyclip) return true;
 
-    // case the request comes from localhost
-    if (window.location.host.includes("localhost")) return false;
     // case the request happens from embed url
+    // single page clip or iframe
     if (
       ["api.donkeyclip.com", "staging-api.donkeyclip.com"].includes(
         window.location.host
@@ -232,15 +231,12 @@ export function initializeOptions(options, _this) {
     )
       return true;
     // case the request happens from a sourceless iframe
-    if (
-      window.location.host === "null" &&
-      !window.parent?.location?.host.includes("donkeyclip.com")
-    )
-      return true;
+    // outside *.donkeyclip.com
+    if (!window.parent?.location?.host.includes("donkeyclip.com")) return true;
     // else
-    // case the request happens outside donkeyclip.com
-    return !["donkeyclip.com"].includes(window.location.host);
+    return false;
   })();
+
   options.timeFormat ??= "ss";
   options.backgroundColor ??= "black";
   options.fullscreen ??= false;
