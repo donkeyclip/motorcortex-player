@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.3](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.2...v2.10.3) (2022-06-10)
+
+
+### Bug Fixes
+
+* show donkeyclip button ([67b3f98](https://github.com/donkeyclip/motorcortex-player/commit/67b3f98cefd10ff00cc1652331710b442b4ca61c))
+
 ## [2.10.2](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.1...v2.10.2) (2022-06-07)
 
 
