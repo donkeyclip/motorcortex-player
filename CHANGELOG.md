@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.4](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.3...v2.10.4) (2022-06-20)
+
+
+### Bug Fixes
+
+* access parent window in try catch ([3533bf8](https://github.com/donkeyclip/motorcortex-player/commit/3533bf8d3e40204aea9f1ec4914d67bc30e959eb))
+
 ## [2.10.3](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.2...v2.10.3) (2022-06-10)
 
 
