@@ -232,7 +232,13 @@ export function initializeOptions(options, _this) {
       return true;
     // case the request happens from a sourceless iframe
     // outside *.donkeyclip.com
-    if (!window.parent?.location?.host.includes("donkeyclip.com")) return true;
+    try {
+      if (!window.parent?.location?.host.includes("donkeyclip.com"))
+        return true;
+    } catch (e) {
+      return false;
+    }
+
     // else
     return false;
   })();
