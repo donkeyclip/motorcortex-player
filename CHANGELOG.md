@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.5](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.4...v2.10.5) (2022-06-21)
+
+
+### Bug Fixes
+
+* correctly handled undefined or empty init params ([d687d70](https://github.com/donkeyclip/motorcortex-player/commit/d687d70cf1913dc673325169df7b949d4347bbe7))
+
 ## [2.10.4](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.3...v2.10.4) (2022-06-20)
 
 
