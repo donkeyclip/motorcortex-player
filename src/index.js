@@ -487,7 +487,9 @@ export default class Player {
     this.clip.pause();
     const definition = this.clip.exportLiveDefinition();
     definition.props.host = this.clip.props.host;
-    const oldParams = JSON.parse(JSON.stringify(definition.props.initParams));
+    const oldParams = JSON.parse(
+      JSON.stringify(definition.props.initParams || {})
+    );
     definition.props.initParams = initParams;
     // unmount the previous clip
     this.clip.realClip.context.unmount();
@@ -506,7 +508,7 @@ export default class Player {
       definition.props.initParams = oldParams;
       newClip = utils.clipFromDefinition(definition);
     }
-    //assing the new clip
+    //assign the new clip
     this.clip = newClip;
     this.options.clip = this.clip;
     this.changeSettings(this.options, true);
