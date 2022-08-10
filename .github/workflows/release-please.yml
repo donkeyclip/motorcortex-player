@@ -23,7 +23,7 @@ jobs:
       with:
         path: 'package.json'
         prop_path: 'name'
-    - uses: GoogleCloudPlatform/release-please-action@v3.2.10
+    - uses: GoogleCloudPlatform/release-please-action@v3.3.0
       id: release
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
