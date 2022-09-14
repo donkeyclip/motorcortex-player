@@ -57,7 +57,7 @@
     "@rollup/plugin-html": "0.2.4",
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "13.3.0",
-    "autoprefixer": "10.4.10",
+    "autoprefixer": "10.4.11",
     "babel-loader": "8.2.5",
     "concurrently": "7.4.0",
     "core-js": "3.25.1",
