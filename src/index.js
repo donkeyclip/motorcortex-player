@@ -455,13 +455,14 @@ export default class Player {
           });
           return true;
         }
-      } else {
-        if (atStartOfLoop) {
-          this.goToMillisecond(loopEndMillisecond - 1, {
-            after: "play",
-          });
-          return true;
-        }
+        return false;
+      }
+
+      if (atStartOfLoop) {
+        this.goToMillisecond(loopEndMillisecond - 1, {
+          after: "play",
+        });
+        return true;
       }
     }
     return false;
@@ -485,7 +486,7 @@ export default class Player {
   changeInitParams(initParams) {
     const response = { result: true };
     this.clip.pause();
-    const definition = this.clip.exportLiveDefinition();
+    const definition = this.clip?.exportLiveDefinition();
     definition.props.host = this.clip.props.host;
     const oldParams = JSON.parse(
       JSON.stringify(definition.props.initParams || {})
@@ -561,38 +562,38 @@ export default class Player {
     if (state) {
       this.options.muted = true;
       this.options.currentScript.dataset.muted = "";
-    } else {
-      this.options.muted = false;
-      delete this.options.currentScript.dataset.muted;
+      return;
     }
+    this.options.muted = false;
+    delete this.options.currentScript.dataset.muted;
   }
   broadcastLoopChange(state) {
     if (state) {
       this.options.loop = true;
       this.options.currentScript.dataset.loop = "";
-    } else {
-      this.options.loop = false;
-      delete this.options.currentScript.dataset.loop;
+      return;
     }
+    this.options.loop = false;
+    delete this.options.currentScript.dataset.loop;
   }
   broadcastScaleChange(state) {
     if (state) {
       this.options.scaleToFit = true;
       this.options.currentScript.dataset.scaleToFit = "";
-    } else {
-      this.options.scaleToFit = false;
-      delete this.options.currentScript.dataset.scaleToFit;
+      return;
     }
+    this.options.scaleToFit = false;
+    delete this.options.currentScript.dataset.scaleToFit;
   }
 
   broadcastShowVolumeChange(state) {
     if (state) {
       this.options.showVolume = true;
       this.options.currentScript.dataset.showVolume = "";
-    } else {
-      this.options.showVolume = false;
-      delete this.options.currentScript.dataset.showVolume;
+      return;
     }
+    this.options.showVolume = false;
+    delete this.options.currentScript.dataset.showVolume;
   }
 
   broadcastToScript(eventName, state) {
@@ -615,24 +616,31 @@ export default class Player {
     const isZeroMs =
       this.clip.runTimeInfo.currentMillisecond === 0 && this.clip.speed > 0;
     const hasAutoplay = this.options.autoPlay;
-    if (state == "idle" && hasAutoplay) {
-      this.elements.playPausePanel.classList.add("hide");
-    } else if (state == "idle" && isZeroMs && hasThumbnail) {
-      addPlayIcon(this.elements.playPausePanelContainer);
-      this.elements.playPausePanel.style.backgroundColor =
-        this.options.thumbnailColor || "black";
-      this.elements.playPausePanel.style.backgroundImage =
-        this.options.thumbnail && `url(${this.options.thumbnail})`;
-      this.elements.playPausePanel.classList.add("initial");
-      this.elements.pointerEventPanel.classList.add("initial");
-    } else if (state === "idle" && !hasThumbnail && isZeroMs) {
-      this.elements.playPausePanel.classList.add("hide");
-    } else {
-      this.elements.playPausePanel.style.backgroundColor = "transparent";
-      this.elements.playPausePanel.style.backgroundImage = "none";
-      this.elements.pointerEventPanel.classList.remove("initial");
-      this.elements.playPausePanel.classList.remove("initial");
+    if (state === "idle") {
+      if (hasAutoplay) {
+        this.elements.playPausePanel.classList.add("hide");
+        return;
+      }
+      if (isZeroMs) {
+        if (!hasThumbnail) {
+          this.elements.playPausePanel.classList.add("hide");
+          return;
+        }
+
+        addPlayIcon(this.elements.playPausePanelContainer);
+        this.elements.playPausePanel.style.backgroundColor =
+          this.options.thumbnailColor || "black";
+        this.elements.playPausePanel.style.backgroundImage =
+          this.options.thumbnail && `url(${this.options.thumbnail})`;
+        this.elements.playPausePanel.classList.add("initial");
+        this.elements.pointerEventPanel.classList.add("initial");
+        return;
+      }
     }
+    this.elements.playPausePanel.style.backgroundColor = "transparent";
+    this.elements.playPausePanel.style.backgroundImage = "none";
+    this.elements.pointerEventPanel.classList.remove("initial");
+    this.elements.playPausePanel.classList.remove("initial");
   }
   eventBroadcast(eventName, state) {
     if (eventName === STATE_CHANGE) {
