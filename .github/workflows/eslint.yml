@@ -14,7 +14,7 @@ jobs:
       HUSKY_SKIP_HOOKS: 1
       HUSKY: 0
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3.1.0
       - name: eslint
         uses: reviewdog/action-eslint@v1.17.0
         with:
