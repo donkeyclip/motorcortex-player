@@ -54,7 +54,7 @@
     "@donkeyclip/motorcortex": "9.4.1",
     "@rollup/plugin-babel": "6.0.0",
     "@rollup/plugin-commonjs": "22.0.2",
-    "@rollup/plugin-html": "0.2.4",
+    "@rollup/plugin-html": "1.0.0",
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "15.0.0",
     "autoprefixer": "10.4.12",
