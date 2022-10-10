@@ -1,13 +1,14 @@
 import {
   addMouseUpAndMoveListeners,
   addStartListeners,
+  isMobile,
   removeMouseUpAndMoveListeners,
 } from "../helpers";
 
 export default (_this) => {
   _this.listeners.onCursorMoveLoopStart = (e) => {
     e.stopPropagation();
-    e.preventDefault();
+    if (isMobile()) e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.totalBar.getBoundingClientRect();
     let positionX = Math.round(clientX - viewportOffset.left);
