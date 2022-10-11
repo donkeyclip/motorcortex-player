@@ -53,7 +53,7 @@
     "@babel/preset-env": "7.19.4",
     "@donkeyclip/motorcortex": "9.4.1",
     "@rollup/plugin-babel": "6.0.0",
-    "@rollup/plugin-commonjs": "22.0.2",
+    "@rollup/plugin-commonjs": "23.0.0",
     "@rollup/plugin-html": "1.0.0",
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "15.0.0",
