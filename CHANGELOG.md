@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.6](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.5...v2.10.6) (2022-10-11)
+
+
+### Bug Fixes
+
+* player should check if the user is from mobile and then prevent default on progressbar move ([192f6f7](https://github.com/donkeyclip/motorcortex-player/commit/192f6f792a7636631ad4cc28c97d404ef38577fe))
+
 ## [2.10.5](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.4...v2.10.5) (2022-06-21)
 
 
