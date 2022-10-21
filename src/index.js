@@ -512,6 +512,7 @@ export default class Player {
     //assign the new clip
     this.clip = newClip;
     this.options.clip = this.clip;
+    this.elements.totalTime.innerHTML = this.timeFormat(this.clip.duration);
     this.changeSettings(this.options, true);
     this.subscribeToTimer();
     this.subscribeToDurationChange();
