@@ -180,10 +180,10 @@ const addStyles = (_this) => {
 
   _this.elements.settingsSpeedPanel.style.display = "none";
 
-  _this.elements.loopBarStart.style.left = "0%";
+  // _this.elements.loopBarStart.style.left = "0%";
   _this.elements.loopBarStart.classList.add("m-fadeOut", `${_this.name}-hide`);
 
-  _this.elements.loopBarEnd.style.left = "100%";
+  // _this.elements.loopBarEnd.style.left = "100%";
   _this.elements.loopBarEnd.classList.add("m-fadeOut", `${_this.name}-hide`);
 
   _this.elements.volumeCheckbox.checked = _this.options.showVolume;

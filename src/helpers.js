@@ -215,32 +215,12 @@ export function initializeOptions(options, _this) {
   options.showVolume ??= !!Object.keys(options.clip?.audioClip?.children || [])
     .length;
   options.showIndicator ??= false;
-  options.theme ??= "donkeyclip";
+  options.theme ??= "default";
   options.host ??= options.clip.props.host;
   options.buttons ??= {};
   options.buttons.donkeyclip = (() => {
-    // case the user requests the dc button to be visible
-    if (options.buttons.donkeyclip) return true;
-
-    // case the request happens from embed url
-    // single page clip or iframe
-    if (
-      ["api.donkeyclip.com", "staging-api.donkeyclip.com"].includes(
-        window.location.host
-      )
-    )
-      return true;
-    // case the request happens from a sourceless iframe
-    // outside *.donkeyclip.com
-    try {
-      if (!window.parent?.location?.host.includes("donkeyclip.com"))
-        return true;
-    } catch (e) {
-      return false;
-    }
-
-    // else
-    return false;
+    if (!window?.Donkeyclip?.clipId) return false;
+    return options.buttons.donkeyclip;
   })();
 
   options.timeFormat ??= "ss";
