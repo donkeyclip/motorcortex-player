@@ -219,7 +219,7 @@ export function initializeOptions(options, _this) {
   options.host ??= options.clip.props.host;
   options.buttons ??= {};
   options.buttons.donkeyclip = (() => {
-    if (!window?.Donkeyclip?.clipId) return false;
+    if (typeof window === "undefined" || !window.Donkeyclip?.clipId) return false;
     return options.buttons.donkeyclip;
   })();
 
