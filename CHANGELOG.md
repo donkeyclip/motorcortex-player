@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.10.7](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.6...v2.10.7) (2022-10-22)
+
+
+### Bug Fixes
+
+* change the total time on change initial parameters ([b457215](https://github.com/donkeyclip/motorcortex-player/commit/b45721548f34981c3dbedacd6f4acde07cfd17dc))
+* mc themes and loopbar ([44e9bee](https://github.com/donkeyclip/motorcortex-player/commit/44e9bee54e7bf92e9ced62d95053d1dc26b88ab2))
+* open dc's home if no clip id ([33e4150](https://github.com/donkeyclip/motorcortex-player/commit/33e41508db5fa201a4be8602663ba089697b5481))
+
 ## [2.10.6](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.5...v2.10.6) (2022-10-11)
 
 
