@@ -60,7 +60,7 @@
     "autoprefixer": "10.4.13",
     "babel-loader": "8.3.0",
     "concurrently": "7.5.0",
-    "core-js": "3.26.0",
+    "core-js": "3.26.1",
     "css-loader": "6.7.2",
     "eslint": "8.27.0",
     "eslint-config-prettier": "8.5.0",
