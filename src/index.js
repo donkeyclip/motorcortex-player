@@ -521,7 +521,7 @@ export default class Player {
     if (oldMillisecond > this.clip.duration)
       oldMillisecond = this.clip.duration;
     this.goToMillisecond(oldMillisecond);
-    if (wasPlaying) this.play();
+    if (wasPlaying) this.clip.play();
     return response;
   }
 
