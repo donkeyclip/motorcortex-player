@@ -488,6 +488,8 @@ export default class Player {
     this.clip.pause();
     const definition = this.clip?.exportLiveDefinition();
     definition.props.host = this.clip.props.host;
+    let oldMillisecond = this.clip.runTimeInfo.currentMillisecond;
+    const wasPlaying = this.clip.runTimeInfo.state === PLAYING;
     const oldParams = JSON.parse(
       JSON.stringify(definition.props.initParams || {})
     );
@@ -516,6 +518,10 @@ export default class Player {
     this.changeSettings(this.options, true);
     this.subscribeToTimer();
     this.subscribeToDurationChange();
+    if (oldMillisecond > this.clip.duration)
+      oldMillisecond = this.clip.duration;
+    this.goToMillisecond(oldMillisecond);
+    if (wasPlaying) this.play();
     return response;
   }
 
