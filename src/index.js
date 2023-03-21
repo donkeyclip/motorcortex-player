@@ -585,8 +585,8 @@ export default class Player {
   }
   broadcastScaleChange(state) {
     if (state) {
-      this.options.scaleToFit = true;
-      this.options.currentScript.dataset.scaleToFit = "";
+      this.options.scaleToFit = state;
+      this.options.currentScript.dataset.scaleToFit = state;
       return;
     }
     this.options.scaleToFit = false;
