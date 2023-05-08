@@ -7,7 +7,7 @@
 
 * player should keep the millisecond on change initparams, also the runtime state ([c88a9da](https://github.com/donkeyclip/motorcortex-player/commit/c88a9daabf2943d7be4f11c478dece7e2889f46e))
 * player should keep the millisecond on change initparams, also the runtime state ([d7a5607](https://github.com/donkeyclip/motorcortex-player/commit/d7a5607990fce61ff187a6d6bd17af4ed46070bc))
-* when scale event occured the player did not consider the case when scaletofit was cover ([bd29f67](https://github.com/donkeyclip/motorcortex-player/commit/bd29f67eedeca3f579b3128e55bb3c3399cc073c))
+* when scale event occurred the player did not consider the case when scaletofit was cover ([bd29f67](https://github.com/donkeyclip/motorcortex-player/commit/bd29f67eedeca3f579b3128e55bb3c3399cc073c))
 
 ## [2.10.7](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.6...v2.10.7) (2022-10-22)
 
