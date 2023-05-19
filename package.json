@@ -61,7 +61,7 @@
     "babel-loader": "8.3.0",
     "concurrently": "8.0.1",
     "core-js": "3.30.2",
-    "css-loader": "6.7.3",
+    "css-loader": "6.7.4",
     "eslint": "8.40.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-babel": "5.3.1",
