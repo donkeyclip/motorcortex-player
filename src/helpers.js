@@ -12,15 +12,15 @@ import { addPlayIcon, addPauseIcon } from "./listeners/pointeEvents";
 
 export const timeCapsule = new TimeCapsule();
 export let playPauseTimeout = setTimeout(() => {}, 0);
-export const el = document.querySelectorAll.bind(document);
-export const elid = document.getElementById.bind(document);
+// export const el = document.querySelectorAll.bind(document);
+// export const elid = document.getElementById.bind(document);
 export function elFirstClass(player, className) {
   return player.getElementsByClassName(className)[0];
 }
-export const eltag = document.getElementsByTagName.bind(document);
-export const elcreate = document.createElement.bind(document);
+// export const eltag = document.getElementsByTagName.bind(document);
+// export const elcreate = document.createElement.bind(document);
 
-export const addListener = document.addEventListener.bind(document);
+// export const addListener = document.addEventListener.bind(document);
 export function addListenerWithElement(element, ...rest) {
   return element.addEventListener(...rest);
 }
@@ -163,18 +163,34 @@ export function isMobile() {
   );
 }
 
-export function addMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
-  addListener(mouseup, callbackForUp, false);
-  addListener(touchend, callbackForUp, false);
-  addListener(mousemove, callbackForMove, { passive: false });
-  addListener(touchmove, callbackForMove, { passive: false });
+export function addMouseUpAndMoveListeners(
+  _this,
+  callbackForUp,
+  callbackForMove
+) {
+  _this.document.addEventListener(mouseup, callbackForUp, false);
+  _this.document.addEventListener(touchend, callbackForUp, false);
+  _this.document.addEventListener(mousemove, callbackForMove, {
+    passive: false,
+  });
+  _this.document.addEventListener(touchmove, callbackForMove, {
+    passive: false,
+  });
 }
 
-export function removeMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
-  removeListener(mouseup, callbackForUp, false);
-  removeListener(touchend, callbackForUp, false);
-  removeListener(mousemove, callbackForMove, { passive: false });
-  removeListener(touchmove, callbackForMove, { passive: false });
+export function removeMouseUpAndMoveListeners(
+  _this,
+  callbackForUp,
+  callbackForMove
+) {
+  _this.document.removeEventListener(mouseup, callbackForUp, false);
+  _this.document.removeEventListener(touchend, callbackForUp, false);
+  _this.document.removeEventListener(mousemove, callbackForMove, {
+    passive: false,
+  });
+  _this.document.removeEventListener(touchmove, callbackForMove, {
+    passive: false,
+  });
 }
 
 export function addStartListeners(
@@ -219,7 +235,8 @@ export function initializeOptions(options, _this) {
   options.host ??= options.clip.props.host;
   options.buttons ??= {};
   options.buttons.donkeyclip = (() => {
-    if (typeof window === "undefined" || !window.Donkeyclip?.clipId) return false;
+    if (typeof window === "undefined" || !window.Donkeyclip?.clipId)
+      return false;
     return options.buttons.donkeyclip;
   })();
 

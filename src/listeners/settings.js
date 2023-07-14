@@ -1,4 +1,3 @@
-import { addListener, removeListener } from "../helpers";
 import { SHOW_VOLUME_CHANGE, STATE_CHANGE } from "./events";
 
 const showPointerEvents = (_this) => {
@@ -53,7 +52,7 @@ export function add(_this) {
       _this.elements.settingsPanel.classList.toggle("m-fadeOut");
       _this.elements.settingsPanel.classList.toggle("m-fadeIn");
       if (_this.elements.settingsPanel.className.includes("m-fadeOut")) {
-        removeListener("click", showHideSettings, false);
+        _this.document.removeEventListener("click", showHideSettings, false);
         _this.eventBroadcast(STATE_CHANGE, _this.state);
       } else {
         _this.elements.settingsPanel.focus();
@@ -68,9 +67,9 @@ export function add(_this) {
       ) {
         _this.elements.controls.classList.toggle("--mcp-force-show-controls");
       }
-      addListener(`click`, showHideSettings, false);
+      _this.document.addEventListener(`click`, showHideSettings, false);
     } else {
-      removeListener(`click`, showHideSettings, false);
+      _this.document.removeEventListener(`click`, showHideSettings, false);
     }
   };
 }

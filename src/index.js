@@ -2,9 +2,6 @@ import { utils } from "@donkeyclip/motorcortex";
 import { name } from "./config";
 import {
   calcClipScale,
-  elcreate,
-  elid,
-  eltag,
   changeIcon,
   sanitizeCSS,
   initializeOptions,
@@ -85,6 +82,7 @@ export default class Player {
     this.elements = {};
     this.clip = options.clip; // host to apply the timer
     this.options = initializeOptions(options, this);
+    this.document = this.options.host.ownerDocument;
     this.className = name;
     this.id = this.options.id;
     this.name = name;
@@ -783,28 +781,31 @@ export default class Player {
     const themeClass = themeKeyToClass[this.options.theme];
     if (themeClass) {
       this.elements.mcPlayer.classList.add(themeClass);
-    } else if (this.options.themeCSS && !elid("--mc-player-style-custom")) {
+    } else if (
+      this.options.themeCSS &&
+      !this.document.getElementById("--mc-player-style-custom")
+    ) {
       this.options.themeCSS = sanitizeCSS(this.options.themeCSS);
-      const customStyle = elcreate("style");
+      const customStyle = this.document.createElement("style");
       customStyle.id = "--mc-player-style-custom";
       if (customStyle.styleSheet) {
         customStyle.styleSheet.cssText = this.options.themeCSS;
       } else {
         customStyle.appendChild(document.createTextNode(this.options.themeCSS));
       }
-      eltag("head")[0].appendChild(customStyle);
+      this.document.querySelector("head").appendChild(customStyle);
       this.elements.mcPlayer.classList.add(this.options.theme);
     }
 
-    if (!elid("--mc-player-style")) {
-      const style = elcreate("style");
+    if (!this.document.getElementById("--mc-player-style")) {
+      const style = this.document.createElement("style");
       style.id = "--mc-player-style";
       style.styleSheet
         ? (style.styleSheet.cssText = css)
         : style.appendChild(document.createTextNode(css));
 
       // append player style to document
-      eltag("head")[0].appendChild(style);
+      this.document.querySelector("head").appendChild(style);
     }
 
     this.eventBroadcast("theme-change", this.options.theme);

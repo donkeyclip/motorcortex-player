@@ -24,6 +24,7 @@ export default (_this) => {
   _this.listeners.onMouseUp = () => {
     _this.elements.listenerHelper.style.pointerEvents = "none";
     removeMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUp,
       _this.listeners.onCursorMove
     );
@@ -39,6 +40,7 @@ export default (_this) => {
     _this.handleDragStart(_this.clip);
     _this.listeners.onCursorMove(e);
     addMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUp,
       _this.listeners.onCursorMove
     );
