@@ -78,6 +78,7 @@ export default (_this) => {
       _this.settings.loopJourney = false;
     }
     removeMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUpLoopEnd,
       _this.listeners.onCursorMoveLoopEnd
     );
@@ -128,6 +129,7 @@ export default (_this) => {
 
     _this.listeners.onCursorMoveLoopEnd(e);
     addMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUpLoopEnd,
       _this.listeners.onCursorMoveLoopEnd
     );

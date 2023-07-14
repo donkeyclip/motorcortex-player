@@ -126,6 +126,7 @@ export function add(_this) {
       _this.settings.previousVolume = _this.settings.volume;
     }
     removeMouseUpAndMoveListeners(
+      _this,
       listeners.onMouseUpVolumeBar,
       listeners.onCursorMoveVolumeBar
     );
@@ -137,6 +138,7 @@ export function add(_this) {
 
     listeners.onCursorMoveVolumeBar(e);
     addMouseUpAndMoveListeners(
+      _this,
       listeners.onMouseUpVolumeBar,
       listeners.onCursorMoveVolumeBar
     );

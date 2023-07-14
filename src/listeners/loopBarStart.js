@@ -92,6 +92,7 @@ export default (_this) => {
       `%`;
 
     removeMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUpLoopStart,
       _this.listeners.onCursorMoveLoopStart
     );
@@ -138,6 +139,7 @@ export default (_this) => {
 
     _this.listeners.onCursorMoveLoopStart(e);
     addMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUpLoopStart,
       _this.listeners.onCursorMoveLoopStart
     );

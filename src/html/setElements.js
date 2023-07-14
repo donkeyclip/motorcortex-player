@@ -1,10 +1,4 @@
-import {
-  elcreate,
-  elFirstClass,
-  initializeIcons,
-  changeIcon,
-  el,
-} from "../helpers";
+import { elFirstClass, initializeIcons, changeIcon } from "../helpers";
 
 import htmlplayer from "./player.html";
 
@@ -132,13 +126,13 @@ const initializePlayer = (_this) => {
   clipIframe.style.overflow = "hidden";
   _this.clip.props.host.style.position = `relative`;
   _this.clip.props.host.style.zIndex = 0;
-  _this.elements.mcPlayer = elcreate("div");
+  _this.elements.mcPlayer = _this.document.createElement("div");
 
   _this.elements.mcPlayer.id = `${_this.name}`;
   _this.elements.mcPlayer.className = `${_this.className}`;
   _this.elements.mcPlayer.innerHTML = htmlplayer;
   if (typeof _this.options.host === "string") {
-    const nodelist = el(_this.options.host);
+    const nodelist = _this.document.querySelectorAll(_this.options.host);
     for (const i in nodelist) {
       if (!isNaN(i)) {
         nodelist[i].appendChild(_this.elements.mcPlayer);
@@ -209,16 +203,16 @@ const createSpeedValues = (_this) => {
     const selectedClass = "--mcp-selected";
 
     //create the parent li element
-    const li = elcreate("li");
+    const li = _this.document.createElement("li");
     li.className = `--mcp-speed-value`;
     li.dataset.speedValue = _this.options.speedValues[i];
 
     //create the check holder
-    const span = elcreate("span");
+    const span = _this.document.createElement("span");
     li.append(span);
 
     //create the value of the speed
-    const valueDiv = elcreate("p");
+    const valueDiv = _this.document.createElement("p");
     const isNormal = _this.options.speedValues[i] == 1;
     valueDiv.innerHTML = isNormal ? "Normal" : _this.options.speedValues[i];
     valueDiv.dataset.zone = i;
