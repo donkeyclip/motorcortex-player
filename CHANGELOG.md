@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.10.9](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.8...v2.10.9) (2023-07-14)
+
+
+### Bug Fixes
+
+* add host document functionality to incude mc clips in iframe ([7634afe](https://github.com/donkeyclip/motorcortex-player/commit/7634afeaf96c63aacb0c8d036e936be6afda52cb))
+* Typo fixes by misspell-fixer ([b8eb97f](https://github.com/donkeyclip/motorcortex-player/commit/b8eb97fa90cec7cfb029733f2fe481ae6a45cdbc))
+
 ## [2.10.8](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.7...v2.10.8) (2023-03-22)
 
 
