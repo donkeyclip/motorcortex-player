@@ -17,8 +17,8 @@ export default [
     input: "src/index.js",
     external: ["@donkeyclip/motorcortex"],
     output: [
-      { dir: pkg.module, format: "es" },
-      { dir: pkg.main, format: "cjs" },
+      { file: pkg.module, format: "es" },
+      { file: "dist/motorcortex-player.umd.js", format: "cjs" },
     ],
     plugins: [
       json(),
