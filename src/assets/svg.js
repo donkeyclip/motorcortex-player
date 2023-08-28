@@ -9,7 +9,6 @@ import loop from "./icomoon/SVG/loop.svg";
 import volumeOn from "./icomoon/SVG/volume-on.svg";
 import volumeOff from "./icomoon/SVG/volume-off.svg";
 import donkeyclip from "./icomoon/SVG/donkeyclip-logo.svg";
-import spinner from "./icomoon/SVG/spinner.svg";
 
 export default {
   play: play,
@@ -22,6 +21,6 @@ export default {
   "volume-on": volumeOn,
   "volume-off": volumeOff,
   "donkeyclip-logo": donkeyclip,
-  spinner: spinner,
+  spinner: `<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`,
   "check-solid": checkSolid,
 };

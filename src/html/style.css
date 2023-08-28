@@ -5,6 +5,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-yellow {
@@ -14,6 +15,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-dark {
@@ -23,6 +25,7 @@
   --backgroundSettingsColor: rgba(0, 0, 0, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-whiteGold {
@@ -32,6 +35,7 @@
   --backgroundSettingsColor: rgba(245, 245, 245, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-darkGold {
@@ -41,6 +45,7 @@
   --backgroundSettingsColor: rgba(0, 0, 0, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0, 0, 0;
 }
 .--mc-player.theme-transparent {
   --activeColor: 255, 0, 0;
@@ -49,6 +54,7 @@
   --backgroundSettingsColor: rgba(0, 0, 0, 0.9);
   --loopBarColor: rgba(var(--defaultColor), 0.2);
   --grad-display: block;
+  --grad-color: 0, 0, 0;
 }
 
 .--mc-player.theme-green {
@@ -58,6 +64,7 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0, 0, 0;
 }
 .--mc-player.theme-blue {
   --activeColor: 0, 153, 225;
@@ -66,6 +73,33 @@
   --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
   --loopBarColor: rgba(var(--activeColor), 0.2);
   --grad-display: none;
+  --grad-color: 0, 0, 0;
+}
+
+.--mc-player.theme-donkeyclip {
+  --activeColor: 0, 153, 225;
+  --defaultColor: 255, 255, 255;
+  --backgroundColor: 0, 0, 0, 0;
+  --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: block;
+  --grad-color: 24, 25, 29;
+}
+.--mc-player.theme-donkeyclipDark {
+  --activeColor: 0, 153, 225;
+  --defaultColor: 255, 255, 255;
+  --backgroundColor: 0, 0, 0, 0;
+  --backgroundSettingsColor: rgba(29, 31, 37, 0.9);
+  --loopBarColor: rgba(var(--activeColor), 0.2);
+  --grad-display: block;
+  --grad-color: 22, 22, 26;
+}
+.--mc-player *,
+.--mc-player {
+  user-select: none !important;
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
 }
 .--mc-player * {
   color: rgb(var(--defaultColor));
@@ -73,13 +107,16 @@
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 13px;
   cursor: default;
-  user-select: none;
+  box-sizing: border-box;
 }
 .--mc-player svg {
   width: 22px;
 }
 .--mcp-settings-panel:focus {
   outline: none;
+}
+.--mc-player * {
+  outline: none !important;
 }
 .--mcp-settings-panel svg {
   width: 10px;
@@ -97,10 +134,6 @@
   top: 0px;
   left: 0px;
   pointer-events: none;
-}
-
-.--mc-player * {
-  box-sizing: border-box;
 }
 
 .--mcp-background,
@@ -134,15 +167,6 @@
   align-items: center;
   background: rgba(0, 0, 0, 0.8);
 }
-.--mcp-pointer-events-panel.loading svg {
-  animation: spin 4s linear infinite;
-}
-
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 .--mcp-grad {
   display: var(--grad-display);
@@ -154,28 +178,28 @@
   z-index: 0;
   pointer-events: none !important;
   background-image: linear-gradient(
-    rgba(0, 0, 0, 00.001),
-    rgba(0, 0, 0, 00.004),
-    rgba(0, 0, 0, 00.007),
-    rgba(0, 0, 0, 00.01),
-    rgba(0, 0, 0, 0.04),
-    rgba(0, 0, 0, 0.07),
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.2),
-    rgba(0, 0, 0, 0.25),
-    rgba(0, 0, 0, 0.3),
-    rgba(0, 0, 0, 0.35),
-    rgba(0, 0, 0, 0.4),
-    rgba(0, 0, 0, 0.45),
-    rgba(0, 0, 0, 0.5),
-    rgba(0, 0, 0, 0.55),
-    rgba(0, 0, 0, 0.6),
-    rgba(0, 0, 0, 0.65),
-    rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 0.75),
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 0.88)
+    rgba(var(--grad-color), 00.001),
+    rgba(var(--grad-color), 00.004),
+    rgba(var(--grad-color), 00.007),
+    rgba(var(--grad-color), 00.01),
+    rgba(var(--grad-color), 0.04),
+    rgba(var(--grad-color), 0.07),
+    rgba(var(--grad-color), 0.1),
+    rgba(var(--grad-color), 0.15),
+    rgba(var(--grad-color), 0.2),
+    rgba(var(--grad-color), 0.25),
+    rgba(var(--grad-color), 0.3),
+    rgba(var(--grad-color), 0.35),
+    rgba(var(--grad-color), 0.4),
+    rgba(var(--grad-color), 0.45),
+    rgba(var(--grad-color), 0.5),
+    rgba(var(--grad-color), 0.55),
+    rgba(var(--grad-color), 0.6),
+    rgba(var(--grad-color), 0.65),
+    rgba(var(--grad-color), 0.7),
+    rgba(var(--grad-color), 0.75),
+    rgba(var(--grad-color), 0.8),
+    rgba(var(--grad-color), 0.88)
   );
 }
 
@@ -196,6 +220,9 @@
   opacity: 0;
   transition: all ease 0.2s;
   pointer-events: auto;
+}
+.--mcp-controls * {
+  user-select: none !important;
 }
 .--mcp-play-pause-panel #play-svg {
   margin-left: 4px;
@@ -268,10 +295,12 @@
   gap: 5px;
 }
 
+.--mcp-left-buttons {
+  flex: 1;
+}
 .--mcp-buttons,
 .--mcp-left-buttons,
 .--mcp-right-buttons {
-  flex: 1;
   height: 100%;
   gap: 20px;
 }
@@ -322,10 +351,16 @@
 .--mcp-play-pause-panel.hide {
   opacity: 0;
 }
-.remove-animation * {
-  animation-name: none !important;
-}
 
+.run-animation-play {
+  animation: scale-and-opaque 0.8s 1;
+}
+.run-animation-pause {
+  animation: scale-and-opaque1 0.8s 1;
+}
+.run-animation-idle {
+  animation: scale-and-opaque2 0.8s 1;
+}
 .--mcp-play-pause-panel-container {
   background-color: #000000c7;
   width: 60px;
@@ -336,8 +371,7 @@
   align-items: center;
 }
 
-.--mcp-play-pause-panel.animate .--mcp-play-pause-panel-container {
-  animation-name: scale-and-opaque;
+.--mcp-play-pause-panel .--mcp-play-pause-panel-container {
   animation-duration: 0.8s;
   transform-origin: center center;
 }
@@ -351,12 +385,31 @@
     transform: scale(2);
   }
 }
-
+@keyframes scale-and-opaque1 {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+@keyframes scale-and-opaque2 {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
 .--mcp-loop-boundaries {
   position: relative;
+  display: flex !important;
 }
-.--mcp-loop-boundaries:after {
-  content: "";
+.--mcp-loop-boundaries span {
   top: -4px;
   left: -6px;
   width: 13px;
@@ -367,10 +420,10 @@
   z-index: 100;
 }
 .--mcp-loopbar-start {
-  left: -5px;
+  left: 0%;
 }
 .--mcp-loopbar-end {
-  right: 5px;
+  left: 100%;
 }
 .--mcp-loopbar,
 .--mcp-loopbar-color,
@@ -388,6 +441,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 20px;
 }
 .--mcp-status-btn {
   display: flex;
@@ -400,10 +454,6 @@
 }
 .--mcp-listener-helper {
   pointer-events: none;
-}
-
-.--mcp-btn {
-  font-size: 20px;
 }
 
 .--mcp-volume-btn {
@@ -528,9 +578,9 @@ ul.--mcp-speed-values li p {
   flex: 1;
 }
 
-/* 
+/*
 
-Sliders 
+Sliders
 
 */
 .--mc-player .switch {
@@ -575,9 +625,6 @@ Sliders
 .--mc-player input:checked + .slider {
   background-color: rgb(var(--activeColor));
 }
-.--mc-player input:checked + .slider:before {
-  background-color: white;
-}
 
 .--mc-player input:focus + .slider {
   box-shadow: 0 0 1px rgb(var(--activeColor));
@@ -587,6 +634,7 @@ Sliders
   -webkit-transform: translateX(16px);
   -ms-transform: translateX(16px);
   transform: translateX(16px);
+  background-color: white;
 }
 
 .--mc-player .slider.round {
@@ -632,3 +680,43 @@ Sliders
   align-items: center;
   position: relative;
 }
+
+/* loader */
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 18%;
+  max-width: 64px;
+  aspect-ratio: 1/1;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 1/1;
+  margin: 3px;
+  border: 3px solid #f5f5f5;
+  border-radius: 50%;
+  animation: lds-ring 1.5s cubic-bezier(0.5, 0.5, 0.5, 0.8) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.2s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.1s;
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* loader-end */

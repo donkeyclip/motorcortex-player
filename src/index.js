@@ -1,12 +1,12 @@
-import { TimeCapsule, utils } from "@donkeyclip/motorcortex";
+import { utils } from "@donkeyclip/motorcortex";
 import { name } from "./config";
 import {
   calcClipScale,
-  elcreate,
-  elid,
-  eltag,
   changeIcon,
   sanitizeCSS,
+  initializeOptions,
+  timeCapsule,
+  sortFunc,
 } from "./helpers";
 import setElements from "./html/setElements";
 import bodyListener from "./listeners/body";
@@ -24,12 +24,15 @@ import {
   STATE_CHANGE,
   VOLUME_CHANGE,
 } from "./listeners/events";
-import { add as pointerEventsAdd } from "./listeners/pointeEvents";
+import { add as pointerEventsAdd, addPlayIcon } from "./listeners/pointeEvents";
 import {
   add as fullscreenAdd,
+  exitFullscreen,
+  launchIntoFullscreen,
   trigger as fullscreenTrigger,
 } from "./listeners/fullscreen";
-import wheelListener from "./listeners/wheelListener";
+
+import { add as keydownAdd } from "./listeners/keydown";
 import loopBarEndListener from "./listeners/loopBarEnd";
 import loopBarStartListener from "./listeners/loopBarStart";
 import { add as loopAdd, trigger as loopTrigger } from "./listeners/loopBtn";
@@ -41,7 +44,32 @@ import {
 import { add as speedAdd, trigger as speedTrigger } from "./listeners/speed";
 import statusBtnListener from "./listeners/statusBtn";
 import { add as volumeAdd, trigger as volumeTrigger } from "./listeners/volume";
-const timeCapsule = new TimeCapsule();
+import wheelListener from "./listeners/wheelListener";
+
+const themeKeyToClass = {
+  default: "theme-default",
+  transparent: "theme-transparent",
+  whiteGold: "theme-whiteGold",
+  darkGold: "theme-darkGold",
+  green: "theme-green",
+  blue: "theme-blue",
+  dark: "theme-dark",
+  yellow: "theme-yellow",
+  donkeyclip: "theme-donkeyclip",
+  donkeyclipDark: "theme-donkeyclipDark",
+};
+
+function addSpinner(pointerEventPanel) {
+  changeIcon(pointerEventPanel, null, "spinner");
+  pointerEventPanel.classList.add("loading");
+}
+
+function removeSpinner(pointerEventPanel) {
+  changeIcon(pointerEventPanel, "spinner", null);
+  pointerEventPanel.classList.remove("loading");
+}
+
+const timeCache = [];
 
 /**
  * @classdesc
@@ -49,18 +77,18 @@ const timeCapsule = new TimeCapsule();
  * (such as a Scene or a Clip) can both privide info regarding their timing
  * state but also provide an interface for interacting/altering the timing of it
  */
-
-class Player {
+export default class Player {
   constructor(options) {
-    this.options = this.initializeOptions(options);
+    this.elements = {};
+    this.clip = options.clip; // host to apply the timer
+    this.options = initializeOptions(options, this);
+    this.document = this.options.host.ownerDocument;
     this.className = name;
     this.id = this.options.id;
     this.name = name;
-    this.clip = options.clip; // host to apply the timer
     this.clipClass = options.clipClass;
     this.state = this.clip.runTimeInfo.state;
     this.listeners = {};
-    this.cache = {};
     this.settings = {
       volume: 1,
       journey: null,
@@ -89,69 +117,27 @@ class Player {
     this.scaleClipHost();
     this.eventBroadcast(STATE_CHANGE, this.state);
 
-    if (this.options.type == "scroller") {
+    if (this.options.type === "scroller") {
       this.timeBucket = 0;
       this.timeProgress = 0;
-      this.sortedSections = this.options.sections?.sort((a, b) => a - b);
+      this.options.sections?.sort(sortFunc);
     }
     const resizeObserver = new ResizeObserver(() => {
+      if (window.innerWidth < 450) {
+        this.elements.timeDisplay.style.display = "none";
+      } else {
+        this.elements.timeDisplay.style.display = "block";
+      }
       if (this.options.scaleToFit) {
         this.scaleClipHost();
-        this.calculateProgressBarDimentions();
       }
     });
     this.changeSettings(options, true);
     resizeObserver.observe(this.options.host);
-    this.calculateProgressBarDimentions();
     if (this.options.autoPlay) {
       this.play();
     }
-  }
-  initializeOptions(options) {
-    options.id ??= Date.now();
-    options.showVolume ??=
-      Object.keys(options.clip?.audioClip?.children || []).length || false;
-    options.showIndicator ??= false;
-    options.theme ??= "transparent";
-    options.host ??= options.clip.props.host;
-    options.buttons ??= {};
-    options.timeFormat ??= "ss";
-    options.backgroundColor ??= "black";
-    options.fullscreen ??= false;
-    options.scaleToFit ??= true;
-    options.sectionsEasing ??= "easeOutQuart";
-    options.pointerEvents ??= false;
-    options.scrollAnimation ??= false;
-    options.onMillisecondChange ??= null;
-    options.speedValues ??= [-1, 0, 0.5, 1, 2];
-    options.speed ??= 1;
-    options.muted ??= false;
-    options.maxScrollStorage ??= 50;
-    options.controls ??= true;
-    options.loop ??= false;
-    options.volume ??= 1;
-    options.currentScript ??= null;
-    if (options.millisecond) {
-      const clip = this.clip || options.clip;
-
-      if (options.millisecond > clip.duration)
-        options.millisecond = clip.duration;
-      if (options.millisecond < 0) options.millisecond = 0;
-      if (!isFinite(options.millisecond)) options.millisecond = 0;
-
-      this.createJourney(options.millisecond, {}, this.clip || options.clip);
-    }
-    // remove strings
-    for (const i in options.speedValues) {
-      if (!isFinite(options.speedValues[i])) {
-        options.speedValues.splice(i, 1);
-      }
-    }
-
-    options.speedValues.sort(function (a, b) {
-      return a - b;
-    });
-    return options;
+    window.clip = this.clip;
   }
 
   play() {
@@ -161,9 +147,14 @@ class Player {
   pause() {
     this.clip.pause();
   }
-
+  enterFullScreen() {
+    launchIntoFullscreen(this.clip.props.host);
+  }
+  exitFullScreen() {
+    exitFullscreen();
+  }
   changeSettings(newOptions, initial) {
-    newOptions = this.initializeOptions({ ...this.options, ...newOptions });
+    newOptions = initializeOptions({ ...this.options, ...newOptions }, this);
     if (newOptions.clip !== this.options.clip) {
       initial = true;
       this.clip = newOptions.clip;
@@ -238,13 +229,13 @@ class Player {
 
   scaleClipHost() {
     if (this.options.scaleToFit) {
-      const { width, height } = this.clip.props.containerParams;
+      const props = this.clip.props;
       const transform = calcClipScale(
-        { width, height },
+        props.containerParams,
         {
-          width: this.clip.props.host.offsetWidth,
+          width: props.host.offsetWidth,
           height:
-            this.clip.props.host.offsetHeight -
+            props.host.offsetHeight -
             (this.options.visible == "always" ? 50 : 0),
         },
         this.options.scaleToFit === "cover"
@@ -261,6 +252,20 @@ class Player {
     this.eventBroadcast(SCALE_CHANGE, this.options.scaleToFit);
   }
 
+  goToMillisecond(ms, { before, after } = {}) {
+    if (ms > this.clip.duration) ms = this.clip.duration;
+    else if (ms < 0) ms = 0;
+    setTimeout(() => {
+      const clip = this.clip;
+      if (!clip.id) return;
+      if (before) clip[before]();
+      this.settings.journey = timeCapsule.startJourney(clip);
+      this.settings.journey.station(ms);
+      this.settings.journey.destination();
+      if (after) clip[after]();
+    }, 0);
+  }
+
   createLoop(msStart, msEnd) {
     this.settings.loopStartMillisecond = msStart;
     this.settings.loopEndMillisecond = msEnd;
@@ -270,38 +275,9 @@ class Player {
     this.elements.loopBar.style.width = `${
       ((msEnd - msStart) / this.clip.duration) * 100
     }%`;
-    this.createJourney(msStart);
+    this.goToMillisecond(msStart);
     this.elements.runningBar.style.width = "0%";
     !this.settings.loopActivated && loopTrigger(this);
-  }
-
-  createJourney(millisecond, clipCommands = {}, clip = undefined) {
-    clip ??= this.clip;
-    setTimeout(() => {
-      if (!clip.id) return;
-      const def = null;
-      const { before = def, after = def } = clipCommands;
-      if (before) clip[before]();
-      this.settings.journey = timeCapsule.startJourney(clip);
-      this.settings.journey.station(millisecond);
-      this.settings.journey.destination();
-      if (after) clip[after]();
-    }, 0);
-  }
-  /* SCROLLER */
-  animateWithEasing() {
-    this.progress = (Date.now() - this.transitionStart) / this.endAnimation;
-    if (this.progress >= 1) return this.cancelAnimation();
-    let journeyPosition = this.calculateJourneyPosition(this.progress);
-
-    if (journeyPosition < 0) journeyPosition = 0;
-    if (journeyPosition > this.clip.duration)
-      journeyPosition = this.clip.duration;
-    this.createJourney(journeyPosition);
-
-    this.requestAnimationID = window.requestAnimationFrame(
-      this.animateWithEasing.bind(this)
-    );
   }
 
   calculateMinMaxOfTimeProgress() {
@@ -350,17 +326,18 @@ class Player {
     this.addTimeToProgress(this.removeTimeFromBucket());
     this.calculateMinMaxOfTimeProgress();
     if (!this.options.sections) {
-      this.createJourney(this.timeProgress);
+      this.goToMillisecond(this.timeProgress);
     } else {
-      const now = Date.now() - this.startAnimationTime;
-      const progress = now / this.endAnimationTime;
+      const progress =
+        (Date.now() - this.startAnimationTime) / this.endAnimationTime;
       if (progress >= 1 || this.endAnimationTime === 0)
         return this.cancelAnimation();
       const sectionPosition = this.calculateJourneyPosition(progress);
-      this.createJourney(Math.ceil(sectionPosition));
+      this.goToMillisecond(Math.ceil(sectionPosition));
     }
     this.requestAnimation();
   }
+
   setUpTimeBucket(deltaY) {
     const newMultiplier = deltaY > 0 ? 1 : -1;
     deltaY = Math.ceil(Math.abs(deltaY)) * newMultiplier;
@@ -376,20 +353,20 @@ class Player {
 
   getSectionTime(direction) {
     let sectionIndex;
-
+    const sortedSections = this.options.sections;
     if (direction > 0) {
       const newPosition = this.startPosition + this.timeBucket;
-      for (let i = 0; i < this.sortedSections.length; i++) {
-        if (newPosition < this.sortedSections[i]) {
+      for (let i = 0; i < sortedSections.length; i++) {
+        if (newPosition < sortedSections[i]) {
           sectionIndex = i;
           break;
         }
       }
-      sectionIndex ??= this.sortedSections.length - 1;
+      sectionIndex ??= sortedSections.length - 1;
     } else {
       const newPosition = this.startPosition - this.timeBucket;
-      for (let i = this.sortedSections.length - 1; i >= 0; i--) {
-        if (newPosition > this.sortedSections[i]) {
+      for (let i = sortedSections.length - 1; i >= 0; i--) {
+        if (newPosition > sortedSections[i]) {
           sectionIndex = i;
           break;
         }
@@ -404,7 +381,7 @@ class Player {
     this.startPosition = this.clip.runTimeInfo.currentMillisecond;
     this.currentSectionIndex = this.getSectionTime(this.multiplier);
     this.endAnimationTime = Math.abs(
-      this.startPosition - this.sortedSections[this.currentSectionIndex]
+      this.startPosition - this.options.sections[this.currentSectionIndex]
     );
   }
 
@@ -417,10 +394,12 @@ class Player {
   millisecondChange(
     millisecond,
     state,
-    roundTo,
+    _,
     makeJouney,
     executeOnMillisecondChange = true
   ) {
+    const { totalBar, loopBar } = this.elements;
+
     if (this.state !== state) {
       this.state = state;
       this.eventBroadcast(STATE_CHANGE, state);
@@ -431,19 +410,19 @@ class Player {
       return 1;
     }
 
-    const { loopActivated } = this.settings;
-    if (loopActivated && this.clip.speed) {
+    if (this.settings.loopActivated && this.clip.speed) {
       this.calculateJourney(millisecond);
     }
 
     const duration = this.clip.duration;
 
-    const localMillisecond = millisecond - duration * this.cache.loopBarLeft;
+    const localMillisecond =
+      millisecond - (duration * loopBar.offsetLeft) / totalBar.offsetWidth;
     const localDuration =
-      (duration / this.cache.totalBarWidth) * this.cache.loopBarWidth;
+      (duration / totalBar.offsetWidth) * loopBar.offsetWidth;
 
     if (makeJouney) {
-      this.createJourney(millisecond, {
+      this.goToMillisecond(millisecond, {
         after: this.settings.playAfterResize ? "play" : null,
       });
     }
@@ -458,12 +437,7 @@ class Player {
       this.options.onMillisecondChange(millisecond);
     }
   }
-  calculateProgressBarDimentions() {
-    const { totalBar, loopBar } = this.elements;
-    this.cache.loopBarWidth = loopBar.offsetWidth;
-    this.cache.totalBarWidth = totalBar.offsetWidth;
-    this.cache.loopBarLeft = loopBar.offsetLeft / this.cache.totalBarWidth;
-  }
+
   calculateJourney(millisecond) {
     const { loopEndMillisecond, loopStartMillisecond } = this.settings;
     const atEndOfLoop =
@@ -474,18 +448,24 @@ class Player {
     if (this.clip.runTimeInfo.state === PLAYING) {
       if (positiveSpeed) {
         if (atEndOfLoop) {
-          this.createJourney(loopStartMillisecond + 1, { after: "play" });
+          this.goToMillisecond(loopStartMillisecond + 1, {
+            after: "play",
+          });
           return true;
         }
-      } else {
-        if (atStartOfLoop) {
-          this.createJourney(loopEndMillisecond - 1, { after: "play" });
-          return true;
-        }
+        return false;
+      }
+
+      if (atStartOfLoop) {
+        this.goToMillisecond(loopEndMillisecond - 1, {
+          after: "play",
+        });
+        return true;
       }
     }
     return false;
   }
+
   broadcastNotPlaying(state) {
     if (!this.elements.controls.classList.value.includes(showControls)) {
       this.elements.controls.classList.toggle(showControls);
@@ -495,45 +475,56 @@ class Player {
       state.charAt(0).toUpperCase() + state.slice(1)
     }`;
     if (state == "blocked") {
-      this.addSpinner();
+      addSpinner(this.elements.pointerEventPanel);
     } else if (state !== "idle") {
-      this.removeSpinner();
+      removeSpinner(this.elements.pointerEventPanel);
     }
   }
 
   changeInitParams(initParams) {
+    const response = { result: true };
     this.clip.pause();
-    const definition = this.clip.exportLiveDefinition();
+    const definition = this.clip?.exportLiveDefinition();
     definition.props.host = this.clip.props.host;
+    let oldMillisecond = this.clip.runTimeInfo.currentMillisecond;
+    const wasPlaying = this.clip.runTimeInfo.state === PLAYING;
+    const oldParams = JSON.parse(
+      JSON.stringify(definition.props.initParams || {})
+    );
     definition.props.initParams = initParams;
+    // unmount the previous clip
     this.clip.realClip.context.unmount();
     for (const key in this.clip) {
       delete this.clip[key];
     }
-    this.clip = utils.clipFromDefinition(definition);
+    let newClip;
+    try {
+      newClip = utils.clipFromDefinition(definition);
+      if (newClip.nonBlockingErrorClip || newClip?.errors?.length)
+        throw "Error: Params Error: Clip cannot be created!";
+    } catch (e) {
+      response.result = false;
+      response.clip = newClip;
+      console.error(e);
+      definition.props.initParams = oldParams;
+      newClip = utils.clipFromDefinition(definition);
+    }
+    //assign the new clip
+    this.clip = newClip;
     this.options.clip = this.clip;
+    this.elements.totalTime.innerHTML = this.timeFormat(this.clip.duration);
     this.changeSettings(this.options, true);
     this.subscribeToTimer();
     this.subscribeToDurationChange();
+    if (oldMillisecond > this.clip.duration)
+      oldMillisecond = this.clip.duration;
+    this.goToMillisecond(oldMillisecond);
+    if (wasPlaying) this.clip.play();
+    return response;
   }
 
-  addSpinner() {
-    changeIcon(this.elements.pointerEventPanel, null, "spinner");
-    this.elements.pointerEventPanel.classList.add("loading");
-  }
-  addPlayIcon() {
-    changeIcon(this.elements.playPausePanelContainer, null, "play");
-  }
-  addPauseIcon() {
-    changeIcon(this.elements.playPausePanelContainer, null, "pause");
-  }
-
-  removeSpinner() {
-    changeIcon(this.elements.pointerEventPanel, "spinner", null);
-    this.elements.pointerEventPanel.classList.remove("loading");
-  }
   broadcastPlaying(state) {
-    this.removeSpinner();
+    removeSpinner(this.elements.pointerEventPanel);
     if (this.elements.controls.classList.value.includes(showControls)) {
       this.elements.controls.classList.toggle(showControls);
     }
@@ -547,13 +538,13 @@ class Player {
       this.clip.runTimeInfo.currentMillisecond === this.clip.duration &&
       this.clip.speed >= 0
     ) {
-      this.createJourney(1, { after: "play" });
+      this.goToMillisecond(1, { after: "play" });
     } else if (
       (this.clip.runTimeInfo.currentMillisecond === this.clip.duration ||
         this.clip.runTimeInfo.currentMillisecond === 0) &&
       this.clip.speed < 0
     ) {
-      this.createJourney(this.clip.duration - 1, {
+      this.goToMillisecond(this.clip.duration - 1, {
         after: "play",
       });
     }
@@ -576,38 +567,38 @@ class Player {
     if (state) {
       this.options.muted = true;
       this.options.currentScript.dataset.muted = "";
-    } else {
-      this.options.muted = false;
-      delete this.options.currentScript.dataset.muted;
+      return;
     }
+    this.options.muted = false;
+    delete this.options.currentScript.dataset.muted;
   }
   broadcastLoopChange(state) {
     if (state) {
       this.options.loop = true;
       this.options.currentScript.dataset.loop = "";
-    } else {
-      this.options.loop = false;
-      delete this.options.currentScript.dataset.loop;
+      return;
     }
+    this.options.loop = false;
+    delete this.options.currentScript.dataset.loop;
   }
   broadcastScaleChange(state) {
     if (state) {
-      this.options.scaleToFit = true;
-      this.options.currentScript.dataset.scaleToFit = "";
-    } else {
-      this.options.scaleToFit = false;
-      delete this.options.currentScript.dataset.scaleToFit;
+      this.options.scaleToFit = state;
+      this.options.currentScript.dataset.scaleToFit = state;
+      return;
     }
+    this.options.scaleToFit = false;
+    delete this.options.currentScript.dataset.scaleToFit;
   }
 
   broadcastShowVolumeChange(state) {
     if (state) {
       this.options.showVolume = true;
       this.options.currentScript.dataset.showVolume = "";
-    } else {
-      this.options.showVolume = false;
-      delete this.options.currentScript.dataset.showVolume;
+      return;
     }
+    this.options.showVolume = false;
+    delete this.options.currentScript.dataset.showVolume;
   }
 
   broadcastToScript(eventName, state) {
@@ -630,24 +621,31 @@ class Player {
     const isZeroMs =
       this.clip.runTimeInfo.currentMillisecond === 0 && this.clip.speed > 0;
     const hasAutoplay = this.options.autoPlay;
-    if (state == "idle" && hasAutoplay) {
-      this.elements.playPausePanel.classList.add("hide");
-    } else if (state == "idle" && isZeroMs && hasThumbnail) {
-      this.addPlayIcon();
-      this.elements.playPausePanel.style.backgroundColor =
-        this.options.thumbnailColor || "black";
-      this.elements.playPausePanel.style.backgroundImage =
-        this.options.thumbnail && `url(${this.options.thumbnail})`;
-      this.elements.playPausePanel.classList.add("initial");
-      this.elements.pointerEventPanel.classList.add("initial");
-    } else if (state === "idle" && !hasThumbnail && isZeroMs) {
-      this.elements.playPausePanel.classList.add("hide");
-    } else {
-      this.elements.playPausePanel.style.backgroundColor = "transparent";
-      this.elements.playPausePanel.style.backgroundImage = "none";
-      this.elements.pointerEventPanel.classList.remove("initial");
-      this.elements.playPausePanel.classList.remove("initial");
+    if (state === "idle") {
+      if (hasAutoplay) {
+        this.elements.playPausePanel.classList.add("hide");
+        return;
+      }
+      if (isZeroMs) {
+        if (!hasThumbnail) {
+          this.elements.playPausePanel.classList.add("hide");
+          return;
+        }
+
+        addPlayIcon(this.elements.playPausePanelContainer);
+        this.elements.playPausePanel.style.backgroundColor =
+          this.options.thumbnailColor || "black";
+        this.elements.playPausePanel.style.backgroundImage =
+          this.options.thumbnail && `url(${this.options.thumbnail})`;
+        this.elements.playPausePanel.classList.add("initial");
+        this.elements.pointerEventPanel.classList.add("initial");
+        return;
+      }
     }
+    this.elements.playPausePanel.style.backgroundColor = "transparent";
+    this.elements.playPausePanel.style.backgroundImage = "none";
+    this.elements.pointerEventPanel.classList.remove("initial");
+    this.elements.playPausePanel.classList.remove("initial");
   }
   eventBroadcast(eventName, state) {
     if (eventName === STATE_CHANGE) {
@@ -693,36 +691,49 @@ class Player {
   }
 
   timeFormat(ms) {
-    if (this.options.timeFormat === "ss") {
-      const hours = ms / 1000 / 60 / 60;
-      const minutes = (hours % 1) * 60;
-      const seconds = (minutes % 1) * 60;
-
-      // By default, JavaScript converts any floating-point number
-      // with six or more leading zeros into e-notation
-      // to avoid this problem we round to 5 float digits
-      const h = ("0" + parseInt(hours.toFixed(50))).slice(-2);
-      const m = ("0" + parseInt(minutes.toFixed(50))).slice(-2);
-      const s = ("0" + parseInt(seconds.toFixed(50))).slice(-2);
-
-      return `${h === "00" ? "" : h + ":"}${m}:${s}`;
-    } else {
+    if (this.options.timeFormat !== "ss") {
       return ms;
     }
+
+    const diff = ms - timeCache[0];
+    // If the diff from previous calculated value is less than a second, return the cached result
+    if (0 < diff && diff < 1000) {
+      return timeCache[1];
+    }
+
+    const hours = ms / 1000 / 60 / 60;
+    const minutes = (hours % 1) * 60;
+    const seconds = (minutes % 1) * 60;
+
+    // By default, JavaScript converts any floating-point number
+    // with six or more leading zeros into e-notation
+    // to avoid this problem we round to 5 float digits
+    const h = ("0" + parseInt(hours.toFixed(5))).slice(-2);
+    const m = ("0" + parseInt(minutes.toFixed(5))).slice(-2);
+    const s = ("0" + parseInt(seconds.toFixed(5))).slice(-2);
+
+    const date = `${h === "00" ? "" : h + ":"}${m}:${s}`;
+
+    if (timeCache[0] == null || ms - timeCache[0] < 2000) {
+      // Make sure to round our cache number to the beginning of the second
+      // So we don't get any stale cache results, as we would if we cached 1009 for example
+      timeCache[0] = Math.floor(ms / 1000) * 1000;
+      timeCache[1] = date;
+    }
+
+    return date;
   }
 
   handleDrag(loopBarPositionX, executeOnMillisecondChange = true) {
     if (!isFinite(loopBarPositionX)) {
       loopBarPositionX = 0;
     }
-    const { duration } = this.clip;
-    const { journey } = this.settings;
     const { loopBar, totalBar, runningBar, currentTime } = this.elements;
 
     const totalBarPositionX = loopBarPositionX + loopBar.offsetLeft;
 
     const millisecond = Math.round(
-      (duration * totalBarPositionX) / totalBar.offsetWidth
+      (this.clip.duration * totalBarPositionX) / totalBar.offsetWidth
     );
 
     currentTime.innerHTML = this.timeFormat(millisecond);
@@ -730,7 +741,7 @@ class Player {
     runningBar.style.width =
       (loopBarPositionX / loopBar.offsetWidth) * 100 + `%`;
 
-    journey.station(millisecond);
+    this.settings.journey.station(millisecond);
 
     if (this.options.onMillisecondChange && executeOnMillisecondChange) {
       this.options.onMillisecondChange(millisecond);
@@ -750,6 +761,7 @@ class Player {
     loopBarEndListener(this);
     progressBarListener(this);
     loopBarStartListener(this);
+    keydownAdd(this);
     volumeAdd(this);
     statusBtnListener(this);
     settingsAdd(this);
@@ -762,78 +774,38 @@ class Player {
     if (this.options.type === "scroller") wheelListener(this);
   }
 
-  launchIntoFullscreen(element) {
-    try {
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen();
-      } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  exitFullscreen() {
-    try {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   setTheme() {
     this.options.theme.replace(/\s\s+/g, ` `);
     this.options.theme.trim();
 
-    if (this.options.theme === "default")
-      this.elements.mcPlayer.classList.add("theme-default");
-    else if (this.options.theme === "transparent")
-      this.elements.mcPlayer.classList.add("theme-transparent");
-    else if (this.options.theme === "whiteGold")
-      this.elements.mcPlayer.classList.add("theme-whiteGold");
-    else if (this.options.theme === "darkGold")
-      this.elements.mcPlayer.classList.add("theme-darkGold");
-    else if (this.options.theme === "green")
-      this.elements.mcPlayer.classList.add("theme-green");
-    else if (this.options.theme === "blue")
-      this.elements.mcPlayer.classList.add("theme-blue");
-    else if (this.options.theme === "dark")
-      this.elements.mcPlayer.classList.add("theme-dark");
-    else if (this.options.theme === "yellow")
-      this.elements.mcPlayer.classList.add("theme-yellow");
-    else if (this.options.themeCSS && !elid("--mc-player-style-custom")) {
+    const themeClass = themeKeyToClass[this.options.theme];
+    if (themeClass) {
+      this.elements.mcPlayer.classList.add(themeClass);
+    } else if (
+      this.options.themeCSS &&
+      !this.document.getElementById("--mc-player-style-custom")
+    ) {
       this.options.themeCSS = sanitizeCSS(this.options.themeCSS);
-      const customStyle = elcreate("style");
+      const customStyle = this.document.createElement("style");
       customStyle.id = "--mc-player-style-custom";
-      customStyle.styleSheet
-        ? (customStyle.styleSheet.cssText = this.options.themeCSS)
-        : customStyle.appendChild(
-            document.createTextNode(this.options.themeCSS)
-          );
-      eltag("head")[0].appendChild(customStyle);
+      if (customStyle.styleSheet) {
+        customStyle.styleSheet.cssText = this.options.themeCSS;
+      } else {
+        customStyle.appendChild(document.createTextNode(this.options.themeCSS));
+      }
+      this.document.querySelector("head").appendChild(customStyle);
       this.elements.mcPlayer.classList.add(this.options.theme);
     }
 
-    if (!elid("--mc-player-style")) {
-      const style = elcreate("style");
+    if (!this.document.getElementById("--mc-player-style")) {
+      const style = this.document.createElement("style");
       style.id = "--mc-player-style";
       style.styleSheet
         ? (style.styleSheet.cssText = css)
         : style.appendChild(document.createTextNode(css));
 
       // append player style to document
-      eltag("head")[0].appendChild(style);
+      this.document.querySelector("head").appendChild(style);
     }
 
     this.eventBroadcast("theme-change", this.options.theme);
@@ -843,29 +815,4 @@ class Player {
     const currentSpeed = this.clip.speed == 1 ? "Normal" : this.clip.speed;
     this.elements.speedCurrent.innerHTML = currentSpeed;
   }
-
-  calculateSpeed(step, arrayOfValues, currentPercentage) {
-    const botLimitIndex = Math.floor(currentPercentage / step);
-
-    if (botLimitIndex === arrayOfValues.length - 1) {
-      return arrayOfValues[botLimitIndex].toFixed(1);
-    }
-
-    const limitZonePercentage = (currentPercentage / step) % 1;
-
-    const limitZoneLength = Math.abs(
-      arrayOfValues[botLimitIndex] - arrayOfValues[botLimitIndex + 1]
-    );
-
-    const realZoneSpeed = limitZonePercentage * limitZoneLength;
-
-    const realSpeed = (realZoneSpeed + arrayOfValues[botLimitIndex]).toFixed(1);
-
-    if (realSpeed == 0) {
-      return "0.0";
-    }
-    return realSpeed;
-  }
 }
-
-export default Player;

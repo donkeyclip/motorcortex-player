@@ -1,12 +1,14 @@
 import {
   addMouseUpAndMoveListeners,
   addStartListeners,
+  isMobile,
   removeMouseUpAndMoveListeners,
-  removeStartListeners,
 } from "../helpers";
 
 export default (_this) => {
   _this.listeners.onCursorMoveLoopEnd = (e) => {
+    e.stopPropagation();
+    if (isMobile()) e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.totalBar.getBoundingClientRect();
     let positionX = clientX - viewportOffset.left;
@@ -53,7 +55,6 @@ export default (_this) => {
       _this.settings.loopStartMillisecond = _this.settings.loopEndMillisecond;
       _this.settings.loopJourney = true;
     }
-    _this.calculateProgressBarDimentions();
   };
 
   _this.listeners.onMouseUpLoopEnd = () => {
@@ -77,6 +78,7 @@ export default (_this) => {
       _this.settings.loopJourney = false;
     }
     removeMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUpLoopEnd,
       _this.listeners.onCursorMoveLoopEnd
     );
@@ -97,7 +99,7 @@ export default (_this) => {
         loopms = _this.settings.loopEndMillisecond - 1;
       }
       _this.settings.needsUpdate = true;
-      _this.createJourney(loopms, {
+      _this.goToMillisecond(loopms, {
         before: "pause",
         after: "play",
       });
@@ -108,6 +110,8 @@ export default (_this) => {
   };
 
   _this.listeners.onMouseDownLoopEnd = (e) => {
+    e.stopPropagation();
+
     _this.elements.listenerHelper.style.pointerEvents = "auto";
 
     _this.settings.resizeLoop = true;
@@ -123,10 +127,9 @@ export default (_this) => {
     loopBar.style.left = `${loopBar.offsetLeft}px`;
     loopBar.style.width = `${loopBar.offsetWidth}px`;
 
-    removeStartListeners(_this.listeners.onMouseDown, loopBar);
-
     _this.listeners.onCursorMoveLoopEnd(e);
     addMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUpLoopEnd,
       _this.listeners.onCursorMoveLoopEnd
     );

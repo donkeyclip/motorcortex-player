@@ -1,14 +1,8 @@
-import {
-  elcreate,
-  elFirstClass,
-  initializeIcons,
-  changeIcon,
-} from "../helpers";
+import { elFirstClass, initializeIcons, changeIcon } from "../helpers";
 
 import htmlplayer from "./player.html";
 
 export default (_this) => {
-  _this.elements = {};
   initializePlayer(_this);
 
   const { mcPlayer } = _this.elements;
@@ -67,6 +61,7 @@ export default (_this) => {
     mcPlayer,
     `--mcp-full-screen-btn`
   );
+  _this.elements.context = elFirstClass(mcPlayer, `--mcp-context`);
   _this.elements.volumeBarHelper = elFirstClass(mcPlayer, `--mcp-volumebar`);
   _this.elements.volumeBarActive = elFirstClass(
     mcPlayer,
@@ -131,18 +126,17 @@ const initializePlayer = (_this) => {
   clipIframe.style.overflow = "hidden";
   _this.clip.props.host.style.position = `relative`;
   _this.clip.props.host.style.zIndex = 0;
-  _this.elements.mcPlayer = elcreate(`div`);
+  _this.elements.mcPlayer = _this.document.createElement("div");
 
   _this.elements.mcPlayer.id = `${_this.name}`;
   _this.elements.mcPlayer.className = `${_this.className}`;
   _this.elements.mcPlayer.innerHTML = htmlplayer;
   if (typeof _this.options.host === "string") {
-    const nodelist = document.querySelectorAll(_this.options.host);
+    const nodelist = _this.document.querySelectorAll(_this.options.host);
     for (const i in nodelist) {
-      if (isNaN(i)) {
-        continue;
+      if (!isNaN(i)) {
+        nodelist[i].appendChild(_this.elements.mcPlayer);
       }
-      nodelist[i].appendChild(_this.elements.mcPlayer);
     }
   } else {
     _this.options.host.appendChild(_this.elements.mcPlayer);
@@ -180,10 +174,10 @@ const addStyles = (_this) => {
 
   _this.elements.settingsSpeedPanel.style.display = "none";
 
-  _this.elements.loopBarStart.style.left = "0%";
+  // _this.elements.loopBarStart.style.left = "0%";
   _this.elements.loopBarStart.classList.add("m-fadeOut", `${_this.name}-hide`);
 
-  _this.elements.loopBarEnd.style.left = "100%";
+  // _this.elements.loopBarEnd.style.left = "100%";
   _this.elements.loopBarEnd.classList.add("m-fadeOut", `${_this.name}-hide`);
 
   _this.elements.volumeCheckbox.checked = _this.options.showVolume;
@@ -209,16 +203,16 @@ const createSpeedValues = (_this) => {
     const selectedClass = "--mcp-selected";
 
     //create the parent li element
-    const li = elcreate("li");
+    const li = _this.document.createElement("li");
     li.className = `--mcp-speed-value`;
     li.dataset.speedValue = _this.options.speedValues[i];
 
     //create the check holder
-    const span = document.createElement("span");
+    const span = _this.document.createElement("span");
     li.append(span);
 
     //create the value of the speed
-    const valueDiv = elcreate("p");
+    const valueDiv = _this.document.createElement("p");
     const isNormal = _this.options.speedValues[i] == 1;
     valueDiv.innerHTML = isNormal ? "Normal" : _this.options.speedValues[i];
     valueDiv.dataset.zone = i;
@@ -240,10 +234,8 @@ const createSpeedValues = (_this) => {
       _this.options.speed = _this.options.speedValues[i];
       _this.clip.speed = _this.options.speedValues[i];
 
-      const isNormal = _this.clip.speed == 1;
-      _this.elements.speedCurrent.innerHTML = isNormal
-        ? "Normal"
-        : _this.clip.speed;
+      _this.elements.speedCurrent.innerHTML =
+        _this.clip.speed == 1 ? "Normal" : _this.clip.speed;
 
       const previousChecked = elFirstClass(
         _this.elements.mcPlayer,

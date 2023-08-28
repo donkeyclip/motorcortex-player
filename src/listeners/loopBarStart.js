@@ -1,12 +1,14 @@
 import {
   addMouseUpAndMoveListeners,
   addStartListeners,
+  isMobile,
   removeMouseUpAndMoveListeners,
-  removeStartListeners,
 } from "../helpers";
 
 export default (_this) => {
   _this.listeners.onCursorMoveLoopStart = (e) => {
+    e.stopPropagation();
+    if (isMobile()) e.preventDefault();
     const clientX = e.clientX || ((e.touches || [])[0] || {}).clientX;
     const viewportOffset = _this.elements.totalBar.getBoundingClientRect();
     let positionX = Math.round(clientX - viewportOffset.left);
@@ -54,7 +56,6 @@ export default (_this) => {
     ) {
       _this.settings.loopJourney = true;
     }
-    _this.calculateProgressBarDimentions();
   };
 
   _this.listeners.onMouseUpLoopStart = () => {
@@ -62,7 +63,6 @@ export default (_this) => {
 
     _this.settings.resizeLoop = false;
 
-    // e.preventDefault();
     if (_this.settings.loopJourney) {
       _this.createProgressDrag(_this.elements.runningBar.offsetWidth);
       _this.settings.loopJourney = false;
@@ -92,6 +92,7 @@ export default (_this) => {
       `%`;
 
     removeMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUpLoopStart,
       _this.listeners.onCursorMoveLoopStart
     );
@@ -111,7 +112,7 @@ export default (_this) => {
           loopms = _this.settings.loopEndMillisecond - 1;
         }
         _this.settings.needsUpdate = true;
-        _this.createJourney(loopms, {
+        _this.goToMillisecond(loopms, {
           before: "pause",
           after: "play",
         });
@@ -123,6 +124,8 @@ export default (_this) => {
   };
 
   _this.listeners.onMouseDownLoopStart = (e) => {
+    e.stopPropagation();
+
     _this.elements.listenerHelper.style.pointerEvents = "auto";
 
     _this.settings.resizeLoop = true;
@@ -134,9 +137,9 @@ export default (_this) => {
       _this.settings.playAfterResize = true;
     }
 
-    removeStartListeners(_this.listeners.onMouseDown, _this.elements.loopBar);
     _this.listeners.onCursorMoveLoopStart(e);
     addMouseUpAndMoveListeners(
+      _this,
       _this.listeners.onMouseUpLoopStart,
       _this.listeners.onCursorMoveLoopStart
     );

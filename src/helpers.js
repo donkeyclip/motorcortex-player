@@ -1,3 +1,5 @@
+import { TimeCapsule } from "@donkeyclip/motorcortex";
+import SVG from "./assets/svg.js";
 import {
   mousedown,
   mousemove,
@@ -6,40 +8,58 @@ import {
   touchmove,
   touchstart,
 } from "./listeners/events";
+import { addPlayIcon, addPauseIcon } from "./listeners/pointeEvents";
 
-import SVG from "./assets/svg.js";
-export function el(selector) {
-  return document.querySelectorAll(selector);
-}
-export function elid(id) {
-  return document.getElementById(id);
-}
+export const timeCapsule = new TimeCapsule();
+export let playPauseTimeout = setTimeout(() => {}, 0);
+// export const el = document.querySelectorAll.bind(document);
+// export const elid = document.getElementById.bind(document);
 export function elFirstClass(player, className) {
   return player.getElementsByClassName(className)[0];
 }
-export function eltag(tag) {
-  return document.getElementsByTagName(tag);
+// export const eltag = document.getElementsByTagName.bind(document);
+// export const elcreate = document.createElement.bind(document);
+
+// export const addListener = document.addEventListener.bind(document);
+export function addListenerWithElement(element, ...rest) {
+  return element.addEventListener(...rest);
 }
-export function elcreate(tag) {
-  return document.createElement(tag);
+export function removeListenerWithElement(element, ...rest) {
+  return element.removeEventListener(...rest);
 }
-export function addListener() {
-  return document.addEventListener(...arguments);
-}
-export function removeListener() {
-  return document.removeEventListener(...arguments);
-}
+
+export const removeListener = document.removeEventListener.bind(document);
 export function sanitizeCSS(css) {
   return css.replace(/(behaviour|javascript|expression)/gm, "");
 }
+export const playPauseIconFunctionality = (_this) => {
+  clearTimeout(playPauseTimeout);
+  _this.elements.playPausePanel.classList.remove("hide");
+  _this.elements.playPausePanel.classList.remove("run-animation-play");
+  _this.elements.playPausePanel.classList.remove("run-animation-pause");
+  _this.elements.playPausePanel.classList.remove("run-animation-idle");
+  if (_this.clip.runTimeInfo.state === "idle") {
+    _this.play();
+    addPlayIcon(_this.elements.playPausePanelContainer);
+    _this.elements.playPausePanel.classList.add("run-animation-idle");
+  } else if (_this.clip.runTimeInfo.state !== "playing") {
+    _this.play();
+    addPlayIcon(_this.elements.playPausePanelContainer);
+    _this.elements.playPausePanel.classList.add("run-animation-play");
+  } else {
+    _this.pause();
+    addPauseIcon(_this.elements.playPausePanelContainer);
+    _this.elements.playPausePanel.classList.add("run-animation-pause");
+  }
+  playPauseTimeout = setTimeout(() => {
+    _this.elements.playPausePanel.classList.add("hide");
+  }, 800);
+};
 function isNumber(value) {
   return typeof value === "number" && isFinite(value);
 }
 
-const numberPartRegexp = new RegExp(
-  "^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)",
-  "gi"
-);
+const numberPartRegexp = /^[+-]?(\d+([.]\d*)?|[.]\d+)/gi;
 
 function calculateDimension(dimensionToMatch) {
   const widthNumberPart = dimensionToMatch.match(numberPartRegexp)[0];
@@ -57,13 +77,19 @@ function calculateDimension(dimensionToMatch) {
 }
 
 export function calcClipScale(containerParams, platoDims, cover = false) {
-  let widthAnalysed, heightAnalysed;
+  if (!containerParams) {
+    return {
+      scale: 1,
+      position: {},
+    };
+  }
 
-  if (Object.prototype.hasOwnProperty.call(containerParams, "width")) {
+  let widthAnalysed, heightAnalysed;
+  if (containerParams.width) {
     widthAnalysed = calculateDimension(containerParams.width);
   }
 
-  if (Object.prototype.hasOwnProperty.call(containerParams, "height")) {
+  if (containerParams.height) {
     heightAnalysed = calculateDimension(containerParams.height);
   }
 
@@ -93,7 +119,7 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
   const finalScale = boundaryToUse ? scaleDifHeight : scaleDifWidth;
 
   const position = {};
-  if (widthAnalysed !== null) {
+  if (widthAnalysed != null) {
     let clipWidth = widthAnalysed.number * finalScale;
     if (widthAnalysed.unit !== "px") {
       clipWidth *= platoDims.width / 100;
@@ -103,7 +129,7 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
     position.left = blankSpace / 2;
   }
 
-  if (widthAnalysed !== null) {
+  if (heightAnalysed != null) {
     let clipHeight = heightAnalysed.number * finalScale;
     if (heightAnalysed.unit !== "px") {
       clipHeight *= platoDims.height / 100;
@@ -118,6 +144,7 @@ export function calcClipScale(containerParams, platoDims, cover = false) {
     position: position,
   };
 }
+
 export function createUID() {
   let dt = new Date().getTime();
   return "xxxxxxxx-xxxx".replace(/[xy]/g, function (c) {
@@ -136,18 +163,34 @@ export function isMobile() {
   );
 }
 
-export function addMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
-  document.addEventListener(mouseup, callbackForUp, false);
-  document.addEventListener(touchend, callbackForUp, false);
-  document.addEventListener(mousemove, callbackForMove, false);
-  document.addEventListener(touchmove, callbackForMove, false);
+export function addMouseUpAndMoveListeners(
+  _this,
+  callbackForUp,
+  callbackForMove
+) {
+  _this.document.addEventListener(mouseup, callbackForUp, false);
+  _this.document.addEventListener(touchend, callbackForUp, false);
+  _this.document.addEventListener(mousemove, callbackForMove, {
+    passive: false,
+  });
+  _this.document.addEventListener(touchmove, callbackForMove, {
+    passive: false,
+  });
 }
 
-export function removeMouseUpAndMoveListeners(callbackForUp, callbackForMove) {
-  document.removeEventListener(mouseup, callbackForUp, false);
-  document.removeEventListener(touchend, callbackForUp, false);
-  document.removeEventListener(mousemove, callbackForMove, false);
-  document.removeEventListener(touchmove, callbackForMove, false);
+export function removeMouseUpAndMoveListeners(
+  _this,
+  callbackForUp,
+  callbackForMove
+) {
+  _this.document.removeEventListener(mouseup, callbackForUp, false);
+  _this.document.removeEventListener(touchend, callbackForUp, false);
+  _this.document.removeEventListener(mousemove, callbackForMove, {
+    passive: false,
+  });
+  _this.document.removeEventListener(touchmove, callbackForMove, {
+    passive: false,
+  });
 }
 
 export function addStartListeners(
@@ -155,13 +198,8 @@ export function addStartListeners(
   element = document,
   passive = false
 ) {
-  element.addEventListener(mousedown, callback, { passive }, false);
-  element.addEventListener(touchstart, callback, { passive }, false);
-}
-
-export function removeStartListeners(callback, element = document) {
-  element.removeEventListener(mousedown, callback, false);
-  element.removeEventListener(touchstart, callback, false);
+  addListenerWithElement(element, mousedown, callback, { passive });
+  addListenerWithElement(element, touchstart, callback, { passive });
 }
 
 export function changeIcon(element, from, to) {
@@ -174,14 +212,67 @@ export function changeIcon(element, from, to) {
     element.innerHTML = SVG[to];
   }
 }
+
 export function initializeIcons(playerElements) {
-  playerElements.loopButton.innerHTML = SVG["loop"];
+  playerElements.loopButton.innerHTML = SVG.loop;
   playerElements.volumeBtn.innerHTML = SVG["volume-on"];
-  playerElements.statusButton.innerHTML = SVG["play"];
-  playerElements.settingsButton.innerHTML = SVG["settings"];
+  playerElements.statusButton.innerHTML = SVG.play;
+  playerElements.settingsButton.innerHTML = SVG.settings;
   playerElements.donkeyclipButton.innerHTML = SVG["donkeyclip-logo"];
-  playerElements.fullScreenButton.innerHTML = SVG["expand-full"];
   playerElements.fullScreenButton.innerHTML = SVG["expand-full"];
   playerElements.speedButtonShow.innerHTML = SVG["angle-right"];
   playerElements.speedButtonHide.innerHTML = SVG["angle-left"];
+}
+export function sortFunc(a, b) {
+  return a - b;
+}
+export function initializeOptions(options, _this) {
+  options.id ??= Date.now();
+  options.showVolume ??= !!Object.keys(options.clip?.audioClip?.children || [])
+    .length;
+  options.showIndicator ??= false;
+  options.theme ??= "default";
+  options.host ??= options.clip.props.host;
+  options.buttons ??= {};
+  options.buttons.donkeyclip = (() => {
+    if (typeof window === "undefined" || !window.Donkeyclip?.clipId)
+      return false;
+    return options.buttons.donkeyclip;
+  })();
+
+  options.timeFormat ??= "ss";
+  options.backgroundColor ??= "black";
+  options.fullscreen ??= false;
+  options.scaleToFit ??= true;
+  options.sectionsEasing ??= "easeOutQuart";
+  options.pointerEvents ??= false;
+  options.scrollAnimation ??= false;
+  options.onMillisecondChange ??= null;
+  options.speedValues ??= [-1, 0, 0.5, 1, 2];
+  options.speed ??= 1;
+  options.muted ??= false;
+  options.maxScrollStorage ??= 50;
+  options.controls ??= true;
+  options.loop ??= false;
+  options.volume ??= 1;
+  options.currentScript ??= null;
+
+  if (options.millisecond) {
+    const clip = _this.clip;
+    if (options.millisecond > clip.duration)
+      options.millisecond = clip.duration;
+    if (options.millisecond < 0 || !isFinite(options.millisecond))
+      options.millisecond = 0;
+
+    _this.goToMillisecond(options.millisecond);
+  }
+  // remove strings
+  for (const i in options.speedValues) {
+    if (!isFinite(options.speedValues[i])) {
+      options.speedValues.splice(i, 1);
+    }
+  }
+
+  options.speedValues.sort(sortFunc);
+  return options;
 }

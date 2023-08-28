@@ -1,15 +1,9 @@
-import { createUID } from "../helpers";
 export default (_this) => {
   _this.elements.donkeyclipButton.addEventListener("click", () => {
-    const u = createUID();
-    const popupDC = window.open(`https://donkeyclip.com?u=${u}`);
-    const definition = _this.clip.exportDefinition();
-    const clipClass = _this.clipClass;
-    window.addEventListener("message", receiveMessage, false);
-    function receiveMessage(event) {
-      if (event.data === u) {
-        popupDC.postMessage(JSON.stringify({ definition, clipClass, u }), "*");
-      }
-    }
+    const clipID = window.DonkeyClip?.clipId;
+    const staging = window.location.host.includes("staging") ? "staging." : "";
+    window.open(
+      `https://${staging}donkeyclip.com/${clipID ? `explore/donkeyclips/${clipID}` : ""}`
+    );
   });
 };
