@@ -255,6 +255,7 @@ export default class Player {
   goToMillisecond(ms, { before, after } = {}) {
     if (ms > this.clip.duration) ms = this.clip.duration;
     else if (ms < 0) ms = 0;
+
     setTimeout(() => {
       const clip = this.clip;
       if (!clip.id) return;
