@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.10](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.9...v2.10.10) (2023-08-28)
+
+
+### Bug Fixes
+
+* new esm.min files for build ([b4a339d](https://github.com/donkeyclip/motorcortex-player/commit/b4a339dc256055e23a54ba96c161745232f5096d))
+
 ## [2.10.9](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.8...v2.10.9) (2023-07-14)
 
 
