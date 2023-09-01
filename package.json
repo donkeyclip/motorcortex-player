@@ -1,6 +1,6 @@
 {
   "name": "@donkeyclip/motorcortex-player",
-  "version": "2.10.10",
+  "version": "2.10.11",
   "description": "Player plugin for MotorCortex",
   "main": "dist/motorcortex-player.esm.min.js",
   "module": "dist/motorcortex-player.esm.min.js",

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.11](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.10...v2.10.11) (2023-09-01)
+
+
+### Bug Fixes
+
+* esm build and spread issues ([#240](https://github.com/donkeyclip/motorcortex-player/issues/240)) ([e845453](https://github.com/donkeyclip/motorcortex-player/commit/e8454538c5ebc4d21b28236770ccbbd3e94342e7))
+
 ## [2.10.10](https://github.com/donkeyclip/motorcortex-player/compare/v2.10.9...v2.10.10) (2023-08-28)
 
 ### Bug Fixes
