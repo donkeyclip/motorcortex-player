@@ -154,7 +154,10 @@ export default class Player {
     exitFullscreen();
   }
   changeSettings(newOptions, initial) {
-    newOptions = initializeOptions({ ...this.options, ...newOptions }, this);
+    newOptions = initializeOptions(
+      Object.assign({}, this.options, newOptions),
+      this
+    );
     if (newOptions.clip !== this.options.clip) {
       initial = true;
       this.clip = newOptions.clip;
@@ -223,8 +226,7 @@ export default class Player {
         checkObject[key]();
       }
     }
-
-    this.options = { ...this.options, ...newOptions };
+    this.options = Object.assign({}, this.options, newOptions);
   }
 
   scaleClipHost() {
