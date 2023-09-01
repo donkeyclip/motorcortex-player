@@ -2,7 +2,7 @@
 # FILE GENERATED AUTOMATICALLY FROM TERRAFORM
 # THIS FILE SHOULD NOT BE EDITED BY HAND
 ##############################################
-name: 'size'
+name: "size"
 on:
   pull_request:
     branches:
@@ -15,12 +15,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v3.6.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v3.8.1
         with:
-          node-version: '16'
+          node-version: "16"
 
       - name: Package size report
         uses: pkg-size/action@v1
@@ -28,4 +28,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           display-size: uncompressed, gzip, brotli
-          hide-files: 'src/**,**.md,*.{js,css}.map'
+          hide-files: "src/**,**.md,*.{js,css}.map"
