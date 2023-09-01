@@ -4,7 +4,7 @@
   "description": "Player plugin for MotorCortex",
   "main": "dist/motorcortex-player.esm.min.js",
   "module": "dist/motorcortex-player.esm.min.js",
-  "browser": "dist/motorcortex-player.esm.min.js",
+  "browser": "dist/motorcortex-player.umd.js",
   "author": "DonkeyClip PC (donkeyclip.com) <opensource@donkeyclip.com>",
   "repository": {
     "type": "git",
