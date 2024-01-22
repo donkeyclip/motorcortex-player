@@ -7,6 +7,7 @@ import {
   initializeOptions,
   timeCapsule,
   sortFunc,
+  addWatermark,
 } from "./helpers";
 import setElements from "./html/setElements";
 import bodyListener from "./listeners/body";
@@ -175,6 +176,10 @@ export default class Player {
       muted: () => volumeTrigger(this, undefined, newOptions.mute),
       volume: () => volumeTrigger(this, newOptions.volume),
       speed: () => speedTrigger(this, newOptions.speed),
+      watermark: () => {
+        this.options.watermark = newOptions.watermark;
+        addWatermark(this);
+      },
       scaleToFit: () => {
         this.options.scaleToFit = newOptions.scaleToFit;
         this.scaleClipHost();
@@ -214,6 +219,7 @@ export default class Player {
       "overflow",
       "outline",
       "visible",
+      "watermark",
     ];
     for (const key in checkObject) {
       if (

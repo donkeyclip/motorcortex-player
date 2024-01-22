@@ -109,6 +109,20 @@
   cursor: default;
   box-sizing: border-box;
 }
+.--mcp-watermark {
+  background-color: whitesmoke;
+  cursor: pointer;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 5px;
+  font-size: 9px;
+  color: black;
+  z-index: 1000;
+  border-bottom-left-radius: 10px;
+  padding-left: 10px;
+}
+
 .--mc-player svg {
   width: 22px;
 }

@@ -276,3 +276,23 @@ export function initializeOptions(options, _this) {
   options.speedValues.sort(sortFunc);
   return options;
 }
+
+export const addWatermark = (_this) => {
+  if (!_this.options.watermark) return;
+  const donkeyClipWatermark = document.createElement("a");
+  donkeyClipWatermark.href = "https://donkeyclip.com";
+  donkeyClipWatermark.target = "_blank";
+  donkeyClipWatermark.className = "--mcp-watermark";
+  donkeyClipWatermark.innerHTML = "Powered by DonkeyClip";
+
+  if (typeof _this.options.host === "string") {
+    const nodelist = _this.document.querySelectorAll(_this.options.host);
+    for (const i in nodelist) {
+      if (!isNaN(i)) {
+        nodelist[i].appendChild(donkeyClipWatermark);
+      }
+    }
+  } else {
+    _this.options.host.appendChild(donkeyClipWatermark);
+  }
+};
