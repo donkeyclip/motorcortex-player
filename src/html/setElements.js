@@ -1,4 +1,9 @@
-import { elFirstClass, initializeIcons, changeIcon } from "../helpers";
+import {
+  elFirstClass,
+  initializeIcons,
+  changeIcon,
+  addWatermark,
+} from "../helpers";
 
 import htmlplayer from "./player.html";
 
@@ -119,7 +124,6 @@ const initializePlayer = (_this) => {
   if (!clipIframe.offsetHeight) {
     clipIframe.style.height = _this.clip.props.containerParams.height;
   }
-
   clipIframe.style.display = `flex`;
   clipIframe.style.justifyContent = `center`;
   clipIframe.style.alignItems = `center`;
@@ -131,6 +135,9 @@ const initializePlayer = (_this) => {
   _this.elements.mcPlayer.id = `${_this.name}`;
   _this.elements.mcPlayer.className = `${_this.className}`;
   _this.elements.mcPlayer.innerHTML = htmlplayer;
+
+  addWatermark(_this);
+
   if (typeof _this.options.host === "string") {
     const nodelist = _this.document.querySelectorAll(_this.options.host);
     for (const i in nodelist) {

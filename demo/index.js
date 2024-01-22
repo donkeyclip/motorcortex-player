@@ -46,7 +46,11 @@ clip.addIncident(AnimateWidth, 0);
 window.player = new Player({
   clip,
   showVolume: true,
+  controls: false,
+  autoPlay: true,
+  loop: true,
   buttons: {
     donkeyclip: true,
   },
+  watermark: true,
 });
