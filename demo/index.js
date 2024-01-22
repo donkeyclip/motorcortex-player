@@ -54,3 +54,5 @@ window.player = new Player({
   },
   // watermark: true,
 });
+
+window.player.changeSettings({ watermark: true });
