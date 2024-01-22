@@ -113,13 +113,13 @@
   background-color: whitesmoke;
   cursor: pointer;
   position: absolute;
-  bottom: 0px;
+  top: 0px;
   right: 0px;
   padding: 5px;
   font-size: 9px;
   color: rgba(var(--defaultColor), 0.5);
   z-index: 1000;
-  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
   padding-left: 10px;
 }
 
