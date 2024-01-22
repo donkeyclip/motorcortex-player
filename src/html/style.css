@@ -117,7 +117,7 @@
   right: 0px;
   padding: 5px;
   font-size: 9px;
-  color: rgba(var(--defaultColor), 0.5);
+  color: black;
   z-index: 1000;
   border-bottom-left-radius: 10px;
   padding-left: 10px;
