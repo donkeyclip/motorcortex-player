@@ -279,12 +279,12 @@ export function initializeOptions(options, _this) {
 
 export const addWatermark = (_this) => {
   if (!_this.options.watermark) return;
-  const donkeyClipWatermark = document.createElement("div");
+  const donkeyClipWatermark = document.createElement("a");
+  donkeyClipWatermark.href = "https://donkeyclip.com";
+  donkeyClipWatermark.target = "_blank";
   donkeyClipWatermark.className = "--mcp-watermark";
   donkeyClipWatermark.innerHTML = "Powered by DonkeyClip";
-  donkeyClipWatermark.onclick = () => {
-    window.open("https://donkeyclip.com", "_blank");
-  };
+
   if (typeof _this.options.host === "string") {
     const nodelist = _this.document.querySelectorAll(_this.options.host);
     for (const i in nodelist) {
