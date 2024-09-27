@@ -76,7 +76,7 @@
     "postcss": "8.4.31",
     "prettier": "2.8.8",
     "rimraf": "3.0.2",
-    "rollup": "2.79.1",
+    "rollup": "2.79.2",
     "rollup-plugin-analyzer": "4.0.0",
     "rollup-plugin-cleanup": "3.2.1",
     "rollup-plugin-html": "0.2.1",
